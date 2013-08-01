@@ -1,7 +1,7 @@
 <script type="text/ng-template" id="all_projects_view">
     <div class="mp-all-projects-container">
         <nav class="mp-navbar-top">
-            <a href="" class="mp-navbar-button mp-brand">Map Project</a>
+            <div class="mp-navbar-dropdown-menu" navbar-dropdown-menu></div>
             <a href="#/all_projects" class="mp-navbar-button">
                 <i class="icon-compass"></i>
             </a>
@@ -18,7 +18,7 @@
 <script type="text/ng-template" id="project_view">
     <div class="mp-map-container">
         <nav class="mp-navbar-top">
-            <a href="" class="mp-navbar-button mp-brand">Map Project</a>
+            <div class="mp-navbar-dropdown-menu" navbar-dropdown-menu></div>
             <a href="#/all_projects" class="mp-navbar-button">
                 <i class="icon-compass"></i>
             </a>
@@ -52,7 +52,7 @@
         <div class="mp-create-account-promot" ng-class="{'js-create-account-promot-show': interface.showCreateAccountPromot}">
             <p class="lead">Save your researches?</p>
             <div>
-                <a href="" class="btn btn-primary">Sign up with Facebook</a>
+                <a href="" class="btn btn-primary" ng-click="fbLogin()">Sign up with Facebook</a>
                 <!-- <a href="" class="btn btn-default">Later</a> -->
             </div>
         </div>
@@ -74,6 +74,34 @@
                 </div>
             </div>
         </div>
+    </div>
+</script>
+
+
+<script type="text/ng-template" id="navbar_dropdown_menu">
+    <a href="" class="mp-navbar-button mp-brand">Map Project</a>
+    <div class="mp-navbar-dropdown-menu-inner">
+        <a href="" class="mp-navbar-button" ng-click="fbLogin()">Login with Facebook</a>
+        <a href="" class="mp-navbar-button">Share</a>
+        <a href="" class="mp-navbar-button">Feedback</a>
+        <a href="" class="mp-navbar-button">About</a>
+    </div>
+</script>
+
+
+<script type="text/ng-template" id="navbar_dropdown_menu_logged">
+    <a href="" class="mp-navbar-button mp-brand">
+        <i class="icon-refresh icon-spin" ng-class="{hide: user.email}"></i>
+        <div class="mp-navbar-user-info" ng-class="{hide: !user.email}">
+            <img class="mp-navbar-user-info-picture" ng-src="{{user.picture}}">
+            {{user.name}}
+        </div>
+    </a>
+    <div class="mp-navbar-dropdown-menu-inner">
+        <a href="" class="mp-navbar-button">Share</a>
+        <a href="" class="mp-navbar-button">Feedback</a>
+        <a href="" class="mp-navbar-button">About</a>
+        <a href="" class="mp-navbar-button" ng-click="fbLogout()">Logout</a>
     </div>
 </script>
 

@@ -149,6 +149,36 @@ ng-view {
     }
 }
 
+// Dropdonw Menu
+.mp-navbar-user-info-picture {
+    vertical-align: top;
+    margin-top: 5px;
+    height: 40px;
+    width: 40px;
+}
+
+.mp-navbar-dropdown-menu {
+    position: relative;
+    .mp-navbar-dropdown-menu-inner {
+        display: none;
+    }
+    &:hover {
+        .mp-navbar-dropdown-menu-inner {
+            display: block;
+        }
+    }
+}
+
+.mp-navbar-dropdown-menu-inner {
+    background-color: white;
+    position: absolute;
+    width: 200px;
+    a {
+        color: $gray6;
+        font-size: 18px;
+    }
+}
+
 // Google Map Search Box
 .pac-container {
     background-color: rgba($blueDark, 0.9);
