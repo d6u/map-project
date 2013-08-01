@@ -2,19 +2,20 @@
 #= require libraries/google.map.infobox.js
 #= require libraries/socket.io.min.js
 #= require libraries/jquery.js
+#= require modules/jquery-ui-1.10.3.custom.min.js
+#= require libraries/bootstrap.min.js
 #= require modules/perfect-scrollbar-0.4.3.min.js
 #= require modules/perfect-scrollbar-0.4.3.with-mousewheel.min.js
 #= require libraries/angular.min.js
 #= require modules/angular-socket.io.coffee
 #= require modules/angular-resource.min.js
-#= require modules/angular-tp.resources.coffee
 #= require modules/angular-mp.home.index.directives.coffee
 
 
 
 # declear
 app = angular.module('mapApp',
-  ['angular-socket.io', 'angular-tp.resources', 'angular-mp.home.index.directives'])
+  ['angular-socket.io', 'angular-mp.home.index.directives'])
 
 # config
 app.config([
@@ -111,4 +112,11 @@ app.controller('ProjectCtrl',
     marker.setMap(null)
     $scope.places.splice(index, 1)
     rearrangeMarkerIcons()
+
+  $scope.displayAllMarkers = ->
+    bounds = new google.maps.LatLngBounds()
+    for place in $scope.places
+      bounds.extend(place.marker.getPosition())
+    $scope.googleMap.map.fitBounds(bounds)
+    $scope.googleMap.map.setZoom(12) if $scope.places.length < 3 && $scope.googleMap.map.getZoom() > 12
 ])

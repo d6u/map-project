@@ -35,8 +35,8 @@
     <div class="mp-places-list js-sidebar-slide-out" ng-class="{'js-sidebar-slide-out': interface.hidePlacesList}">
         <nav class="mp-navbar-top">
             <div class="mp-places-button-group">
-                <a href="" class="mp-navbar-button">
-                    <i class="icon-ban-circle"></i>
+                <a href="" class="mp-navbar-button" ng-click="displayAllMarkers()" bs-tooltip="Zoom map to display all places" bs-tooltip-placement="bottom">
+                    <i class="icon-resize-full"></i>
                 </a>
                 <a href="" class="mp-navbar-button">
                     <i class="icon-ban-circle"></i>
@@ -56,7 +56,7 @@
                 <!-- <a href="" class="btn btn-default">Later</a> -->
             </div>
         </div>
-        <div class="mp-sidebar-places js-places-slide-up" ng-class="{'js-places-slide-up': interface.sideBarPlacesSlideUp}" perfect-scrollbar>
+        <div class="mp-sidebar-places js-places-slide-up" ng-class="{'js-places-slide-up': interface.sideBarPlacesSlideUp}" perfect-scrollbar jquery-ui-sortable>
             <div class="mp-sidebar-place" ng-repeat="place in places" sidebar-place>
                 <div class="mp-place-marker-icon">
                     <a href="" ng-click="centerPlaceInMap(place.marker)">
@@ -84,7 +84,7 @@
         <div class="mp-info-window-address">{{place.address}}</div>
         <div class="mp-info-window-options">
             <a href="" ng-click="addPlaceToList(place)">
-                <i class="icon-check-sign"></i>
+                <i class="icon-ok"></i>
                 Add to list
             </a>
         </div>

@@ -199,9 +199,12 @@ ng-view {
 
 .mp-sidebar-place {
     padding: 10px;
-    border-bottom: 1px solid $gray6;
+    background-color: white;
     address {
         margin: 0;
+    }
+    &.ui-sortable-helper {
+        background-color: $gray1;
     }
 }
 
