@@ -59,6 +59,11 @@ app.directive('googleMap',
         scope.googleMap.infoWindow.open(scope.googleMap.map, marker)
       )
 
+    triggerMapResize = ->
+      $timeout (->
+        google.maps.event.trigger(scope.googleMap.map, 'resize')
+      ), 200
+
     # rootScope deferred object
     scope.userLocation.then (coord) ->
       mapOptions =
@@ -68,6 +73,8 @@ app.directive('googleMap',
         disableDefaultUI: true
 
       scope.googleMap.map = new google.maps.Map(element[0], mapOptions)
+      scope.$watch('interface.hidePlacesList', triggerMapResize)
+      scope.$watch('interface.hideChatbox', triggerMapResize)
       google.maps.event.addListener(scope.googleMap.map, 'bounds_changed',
         -> scope.googleMap.searchBox.setBounds scope.googleMap.map.getBounds())
 

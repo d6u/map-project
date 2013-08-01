@@ -119,4 +119,9 @@ app.controller('ProjectCtrl',
       bounds.extend(place.marker.getPosition())
     $scope.googleMap.map.fitBounds(bounds)
     $scope.googleMap.map.setZoom(12) if $scope.places.length < 3 && $scope.googleMap.map.getZoom() > 12
+
+  $scope.deleteAllSavedPlaces = ->
+    if confirm('Are you sure to delete all saved places? This action is irreversible.')
+      place.marker.setMap(null) for place in $scope.places
+      $scope.places = []
 ])
