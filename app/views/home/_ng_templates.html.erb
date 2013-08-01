@@ -1,0 +1,64 @@
+<script type="text/ng-template" id="all_projects_view">
+    <div class="mp-all-projects-container">
+        <nav class="mp-navbar-top">
+            <a href="" class="mp-navbar-button mp-brand">Map Project</a>
+            <a href="#/all_projects" class="mp-navbar-button">
+                <i class="icon-compass"></i>
+            </a>
+            <label class="mp-navbar-search-box">
+                <i class="icon-search"></i>
+                <input type="text" class="mp-naked-input form-control"placeholder="Search projects">
+            </label>
+        </nav>
+        <div class="mp-all-projects-list"></div>
+    </div>
+</script>
+
+
+<script type="text/ng-template" id="project_view">
+    <div class="mp-map-container">
+        <nav class="mp-navbar-top">
+            <a href="" class="mp-navbar-button mp-brand">Map Project</a>
+            <a href="#/all_projects" class="mp-navbar-button">
+                <i class="icon-compass"></i>
+            </a>
+            <label class="mp-navbar-search-box">
+                <i class="icon-search"></i>
+                <input type="text" class="mp-naked-input form-control" search-box placeholder="Search places here">
+            </label>
+        </nav>
+        <div class="mp-map-canvas" google-map></div>
+    </div>
+    <div class="mp-places-list js-sidebar-slide-out" ng-class="{'js-sidebar-slide-out': interface.hidePlacesList}">
+        <nav class="mp-navbar-top">
+            <div class="mp-places-button-group">
+                <a href="" class="mp-navbar-button">
+                    <i class="icon-ban-circle"></i>
+                </a>
+                <a href="" class="mp-navbar-button">
+                    <i class="icon-ban-circle"></i>
+                </a>
+                <a href="" class="mp-navbar-button">
+                    <i class="icon-ban-circle"></i>
+                </a>
+                <a href="" class="mp-navbar-button">
+                    <i class="icon-ban-circle"></i>
+                </a>
+            </div>
+        </nav>
+    </div>
+</script>
+
+
+<script type="text/ng-template" id="marker_info_window">
+    <div class="mp-info-window-wrapper" marker-info>
+        <div class="mp-info-window-title">{{place.name}}</div>
+        <div class="mp-info-window-address">{{place.address}}</div>
+        <div class="mp-info-window-options">
+            <a href="" ng-click="addPlaceToList(place)">
+                <i class="icon-check-sign"></i>
+                Add to list
+            </a>
+        </div>
+    </div>
+</script>

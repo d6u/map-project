@@ -1,0 +1,192 @@
+//= require bootstrap.min.css
+//= require font-awesome.scss
+//= require_self
+
+
+@import "variables/colors";
+
+// Default & Overall
+// ========================================
+html, body, ng-view,
+.mp-main-container,
+.mp-view-container,
+.mp-map-container,
+.mp-chatbox {
+    height: 100%;
+}
+
+ng-view {
+    display: block;
+}
+
+%transition {
+    -webkit-transition: all 150ms;
+    -moz-transition: all 150ms;
+    -ms-transition: all 150ms;
+    -o-transition: all 150ms;
+    transition: all 150ms;
+}
+
+// Main Container
+// ========================================
+.mp-main-container {
+    display: flex;
+}
+
+.mp-view-container {
+    flex-grow: 1;
+    display: flex;
+}
+
+.mp-chatbox {
+    @extend %transition;
+    flex-basis: 300px;
+}
+
+// Map View
+// ========================================
+.mp-map-container {
+    flex-grow: 1;
+    position: relative;
+}
+
+.mp-places-list {
+    @extend %transition;
+    flex-basis: 300px;
+    overflow: hidden;
+    position: relative;
+}
+
+// Navbar
+// ----------------------------------------
+.mp-navbar-top {
+    background-color: rgba($cyan, 0.8);
+    height: 50px;
+    line-height: 50px;
+    font-size: 21px;
+    color: white;
+    text-align: center;
+    display: flex;
+    position: absolute;
+    width: 100%;
+    z-index: 100;
+}
+
+.mp-navbar-button {
+    display: block;
+    color: white;
+    padding: 0 10px;
+    &:hover {
+        text-decoration: none;
+        color: white;
+        background-color: $cyanDark;
+    }
+    i {
+        display: inline-block;
+        min-width: 30px;
+    }
+}
+
+.mp-naked-input {
+    border: none;
+    outline: none;
+    background-color: inherit;
+    color: inherit;
+    box-shadow: none;
+    border-radius: 0;
+    &:focus {
+        box-shadow: none;
+    }
+}
+
+.mp-navbar-search-box {
+    position: relative;
+    flex-grow: 1;
+
+    input {
+        @extend %transition;
+        background-color: rgba($blue, 0.8);
+        height: 50px;
+        line-height: 1.619047619;
+        font-size: 21px;
+        padding-left: 12px + 21px + 5px;
+        &:focus {
+            background-color: $blueDark;
+        }
+        &::-webkit-input-placeholder {
+           color: $gray2;
+        }
+        &:-moz-placeholder { // Firefox 18-
+           color: $gray2;
+        }
+        &::-moz-placeholder { // Firefox 19+
+           color: $gray2;
+        }
+        &:-ms-input-placeholder {
+           color: $gray2;
+        }
+    }
+
+    i {
+        display: block;
+        position: absolute;
+        left: 10px;
+        line-height: 50px;
+    }
+}
+
+// Google Map Search Box
+.pac-container {
+    background-color: rgba($blueDark, 0.9);
+    border: none;
+    color: white;
+}
+
+.pac-item {
+    font-size: 21px;
+    line-height: 2;
+    padding-left: 38px;
+    b {
+        text-decoration: underline;
+    }
+    &:hover {
+        background-color: white;
+        color: $gray6;
+    }
+}
+
+
+// Map & Project List
+// ----------------------------------------
+.mp-map-canvas {
+    height: 100%;
+    width: 100%;
+}
+
+.mp-places-button-group {
+    width: 100%;
+    display: flex;
+    justify-content: space-around;
+}
+
+
+// Chatbox
+// ========================================
+
+
+// JS Helper
+// ========================================
+.js-fade-out {
+    opacity: 0;
+    visibility: hidden;
+}
+
+.js-sidebar-slide-out {
+    flex-basis: 0;
+}
+
+// Rails Helper
+// ----------------------------------------
+.field_with_errors {
+    border: 1px solid red;
+}
