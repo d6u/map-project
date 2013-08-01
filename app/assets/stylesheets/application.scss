@@ -1,5 +1,6 @@
 //= require bootstrap.min.css
 //= require font-awesome.scss
+//= require perfect-scrollbar-0.4.3.min.css
 //= require_self
 
 
@@ -20,11 +21,11 @@ ng-view {
 }
 
 %transition {
-    -webkit-transition: all 150ms;
-    -moz-transition: all 150ms;
-    -ms-transition: all 150ms;
-    -o-transition: all 150ms;
-    transition: all 150ms;
+    -webkit-transition: all 150ms ease-out;
+       -moz-transition: all 150ms ease-out;
+        -ms-transition: all 150ms ease-out;
+         -o-transition: all 150ms ease-out;
+            transition: all 150ms ease-out;
 }
 
 // Main Container
@@ -110,6 +111,7 @@ ng-view {
         line-height: 1.619047619;
         font-size: 21px;
         padding-left: 12px + 21px + 5px;
+        padding-right: 12px + 21px + 5px;
         &:focus {
             background-color: $blueDark;
         }
@@ -127,11 +129,23 @@ ng-view {
         }
     }
 
-    i {
+    > i {
         display: block;
         position: absolute;
         left: 10px;
         line-height: 50px;
+    }
+}
+
+.mp-search-box-clear-results {
+    position: absolute;
+    z-index: 100px;
+    top: 0;
+    right: 10px;
+    color: $gray3;
+    &:hover {
+        color: white;
+        text-decoration: none;
     }
 }
 
@@ -169,6 +183,68 @@ ng-view {
     justify-content: space-around;
 }
 
+.mp-sidebar-places {
+    -webkit-transition: all 350ms ease-out 50ms;
+       -moz-transition: all 350ms ease-out 50ms;
+        -ms-transition: all 350ms ease-out 50ms;
+         -o-transition: all 350ms ease-out 50ms;
+            transition: all 350ms ease-out 50ms;
+    margin-top: 50px;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 100%;
+    overflow: hidden;
+}
+
+.mp-sidebar-place {
+    padding: 10px;
+    border-bottom: 1px solid $gray6;
+    address {
+        margin: 0;
+    }
+}
+
+.mp-place-marker-icon {
+    float: left;
+    margin-right: 10px;
+}
+
+.mp-place-actions {
+    float: right;
+    font-size: 18px;
+    margin-left: 10px;
+    a {
+        &:hover {
+            text-decoration: none;
+            color: $red;
+        }
+    }
+}
+
+.mp-place-detail-sidebar {
+    overflow: hidden;
+}
+
+.mp-place-name-sidebar {
+    font-weight: bold;
+}
+
+.mp-create-account-promot {
+    @extend %transition;
+    position: absolute;
+    top: -200px;
+    left: 10px;
+    right: 10px;
+    padding: 10px;
+    border: 1px solid $gray3;
+    border-radius: 3px;
+    text-align: center;
+    &.js-create-account-promot-show + .mp-sidebar-places {
+        margin-top: 179px;
+    }
+}
+
 
 // Chatbox
 // ========================================
@@ -183,6 +259,14 @@ ng-view {
 
 .js-sidebar-slide-out {
     flex-basis: 0;
+}
+
+.js-places-slide-up {
+    margin-top: -300px;
+}
+
+.js-create-account-promot-show {
+    top: 60px;
 }
 
 // Rails Helper

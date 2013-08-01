@@ -2,6 +2,8 @@
 #= require libraries/google.map.infobox.js
 #= require libraries/socket.io.min.js
 #= require libraries/jquery.js
+#= require modules/perfect-scrollbar-0.4.3.min.js
+#= require modules/perfect-scrollbar-0.4.3.with-mousewheel.min.js
 #= require libraries/angular.min.js
 #= require modules/angular-socket.io.coffee
 #= require modules/angular-resource.min.js
@@ -67,6 +69,8 @@ app.run([
     $rootScope.interface =
       hideChatbox: true
       hidePlacesList: true
+      sideBarPlacesSlideUp: true
+      showCreateAccountPromot: false
 ])
 
 
@@ -79,10 +83,32 @@ app.controller('AllProjectsCtrl',
 app.controller('ProjectCtrl',
 ['$scope',
 ($scope) ->
+  rearrangeMarkerIcons = ->
+    place.marker.setIcon({url: "/assets/number_#{index}.png"}) for place, index in $scope.places
+
   $scope.places = []
 
   $scope.addPlaceToList = (place) ->
     if $scope.interface.hidePlacesList
       $scope.interface.hidePlacesList = false
+      $scope.interface.sideBarPlacesSlideUp = false
+    place.marker.setMap(null)
+    place.marker = new google.maps.Marker({
+      map: $scope.googleMap.map
+      title: place.name
+      position: place.place.geometry.location
+      icon:
+        url: "/assets/number_#{$scope.places.length}.png"
+    })
     $scope.places.push place
+    if $scope.places.length > 1
+      $scope.interface.showCreateAccountPromot = true
+
+  $scope.centerPlaceInMap = (marker) ->
+    marker.getMap().setCenter marker.getPosition()
+
+  $scope.removePlace = (index, marker) ->
+    marker.setMap(null)
+    $scope.places.splice(index, 1)
+    rearrangeMarkerIcons()
 ])

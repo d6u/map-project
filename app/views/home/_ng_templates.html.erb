@@ -25,6 +25,9 @@
             <label class="mp-navbar-search-box">
                 <i class="icon-search"></i>
                 <input type="text" class="mp-naked-input form-control" search-box placeholder="Search places here">
+                <a href="" class="mp-search-box-clear-results" ng-click="clearSearchResults()">
+                    <i class="icon-remove"></i>
+                </a>
             </label>
         </nav>
         <div class="mp-map-canvas" google-map></div>
@@ -46,6 +49,31 @@
                 </a>
             </div>
         </nav>
+        <div class="mp-create-account-promot" ng-class="{'js-create-account-promot-show': interface.showCreateAccountPromot}">
+            <p class="lead">Save your researches?</p>
+            <div>
+                <a href="" class="btn btn-primary">Sign up with Facebook</a>
+                <!-- <a href="" class="btn btn-default">Later</a> -->
+            </div>
+        </div>
+        <div class="mp-sidebar-places js-places-slide-up" ng-class="{'js-places-slide-up': interface.sideBarPlacesSlideUp}" perfect-scrollbar>
+            <div class="mp-sidebar-place" ng-repeat="place in places" sidebar-place>
+                <div class="mp-place-marker-icon">
+                    <a href="" ng-click="centerPlaceInMap(place.marker)">
+                        <img ng-src="/assets/number_{{$index}}.png">
+                    </a>
+                </div>
+                <div class="mp-place-actions">
+                    <a href="" ng-click="removePlace($index, place.marker)">
+                        <i class="icon-remove"></i>
+                    </a>
+                </div>
+                <div class="mp-place-detail-sidebar">
+                    <div class="mp-place-name-sidebar">{{place.name}}</div>
+                    <address>{{place.address}}</address>
+                </div>
+            </div>
+        </div>
     </div>
 </script>
 
@@ -60,5 +88,19 @@
                 Add to list
             </a>
         </div>
+    </div>
+</script>
+
+
+<script type="text/ng-template" id="saved_marker_info_window">
+    <div class="mp-info-window-wrapper" saved-marker-info>
+        <div class="mp-info-window-title">{{place.name}}</div>
+        <div class="mp-info-window-address">{{place.address}}</div>
+        <!-- <div class="mp-info-window-options">
+            <a href="" ng-click="addPlaceToList(place)">
+                <i class="icon-check-sign"></i>
+                Add to list
+            </a>
+        </div> -->
     </div>
 </script>

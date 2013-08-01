@@ -6,6 +6,12 @@ app.directive('searchBox',
 ($location) ->
   return (scope, element, attrs) ->
     scope.googleMap.searchBox = new google.maps.places.SearchBox(element[0])
+
+    scope.clearSearchResults = ->
+      element.val('')
+      marker.setMap(null) for marker in scope.googleMap.markers
+      scope.googleMap.markers = []
+
 ])
 
 # map canvas
@@ -13,10 +19,6 @@ app.directive('googleMap',
 ['$templateCache', '$timeout', '$compile',
 ($templateCache, $timeout, $compile) ->
   return (scope, element, attrs) ->
-    cleanMarkers = ->
-      marker.setMap(null) for marker in scope.googleMap.markers
-      scope.googleMap.markers = []
-
     searchBoxPlaceChanged = ->
       cleanMarkers()
       bounds = new google.maps.LatLngBounds()
@@ -37,12 +39,17 @@ app.directive('googleMap',
       if scope.googleMap.markers.length == 1
         google.maps.event.trigger(scope.googleMap.markers[0], 'click')
 
+    cleanMarkers = ->
+      marker.setMap(null) for marker in scope.googleMap.markers
+      scope.googleMap.markers = []
+
     bindInfoWindow = (marker, place) ->
       google.maps.event.addListener(marker, 'click', ->
         template = $templateCache.get('marker_info_window')
         newScope = scope.$new()
         newScope.place =
-          placeObj: place
+          marker: marker
+          place: place
           name: place.name
           address: place.formatted_address
         compiled = $compile(template)(newScope)
@@ -68,9 +75,38 @@ app.directive('googleMap',
       google.maps.event.addListener(scope.googleMap.searchBox, 'places_changed', searchBoxPlaceChanged)
 ])
 
+# inforwindow
 app.directive('markerInfo',
 ['$compile', '$timeout',
 ($compile, $timeout) ->
   return (scope, element, attrs) ->
     scope.$apply()
+])
+
+# save marker inforwindow
+app.directive('savedMarkerInfo',
+[ ->
+  return (scope, element, attrs) ->
+    scope.$apply()
+])
+
+# perfect scrollbar
+app.directive('perfectScrollbar',
+[ ->
+  return (scope, element, attrs) ->
+    element.perfectScrollbar()
+    scope.$watch('places', (newValue, oldValue, scope) -> element.perfectScrollbar('update'))
+])
+
+# sidebar place
+app.directive('sidebarPlace',
+['$templateCache', '$compile',
+($templateCache, $compile) ->
+  return (scope, element, attrs) ->
+    google.maps.event.addListener(scope.place.marker, 'click', ->
+      template = $templateCache.get('saved_marker_info_window')
+      compiled = $compile(template)(scope)
+      scope.googleMap.infoWindow.setContent(compiled[0])
+      scope.googleMap.infoWindow.open(scope.place.marker.getMap(), scope.place.marker)
+    )
 ])
