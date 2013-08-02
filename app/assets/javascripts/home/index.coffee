@@ -9,6 +9,10 @@
 #= require libraries/angular-resource.min.js
 #= require modules_for_libraries/angular-facebook.coffee
 #= require modules_for_libraries/angular-socket.io.coffee
+#= require modules_for_libraries/angular-masonry.coffee
+#= require modules_for_libraries/angular-perfect-scrollbar.coffee
+#= require modules_for_libraries/angular-bootstrap.coffee
+#= require modules_for_libraries/angular-jquery-ui.coffee
 #= require mp_modules/angular-mp.api.user.coffee
 #= require mp_modules/angular-mp.home.index.controller.coffee
 #= require mp_modules/angular-mp.home.index.directives.coffee
@@ -16,10 +20,19 @@
 
 
 # declear
-app = angular.module('mapApp',
-  ['angular-facebook', 'angular-socket.io',
-  'angular-mp.home.index.controller', 'angular-mp.home.index.directives',
-  'angular-mp.api.user'])
+app = angular.module 'mapApp', [
+  'angular-facebook',
+  'angular-socket.io',
+  'angular-masonry',
+  'angular-perfect-scrollbar',
+  'angular-bootstrap',
+  'angular-jquery-ui',
+
+  'angular-mp.home.index.controller',
+  'angular-mp.home.index.directives',
+  'angular-mp.api.user'
+]
+
 
 # config
 app.config([

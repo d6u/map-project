@@ -120,14 +120,6 @@ app.directive('savedMarkerInfo',
     scope.$apply()
 ])
 
-# perfect scrollbar
-app.directive('perfectScrollbar',
-[ ->
-  return (scope, element, attrs) ->
-    element.perfectScrollbar()
-    scope.$watch('places', (newValue, oldValue, scope) -> element.perfectScrollbar('update'))
-])
-
 # sidebar place
 app.directive('sidebarPlace',
 ['$templateCache', '$compile',
@@ -139,37 +131,4 @@ app.directive('sidebarPlace',
       scope.googleMap.infoWindow.setContent(compiled[0])
       scope.googleMap.infoWindow.open(scope.place.marker.getMap(), scope.place.marker)
     )
-])
-
-# bootstrap tooltip
-app.directive('bsTooltip',
-[ ->
-  return (scope, element, attrs) ->
-    element.tooltip({
-      title: attrs.bsTooltip
-      placement: attrs.bsTooltipPlacement
-      container: 'body'
-    })
-])
-
-# jquery ui sortable
-app.directive('jqueryUiSortable',
-[ ->
-  return (scope, element, attrs) ->
-    sortableOptions =
-      appendTo: document.body
-      helper: 'clone'
-      cursor: 'move'
-      distance: 5
-      handle: '.mp-place-marker-icon'
-      update: (event, ui) ->
-        scope.$apply ->
-          newPlaces = []
-          element.children('.mp-sidebar-place').each (index) ->
-            childScope = $(this).scope()
-            childScope.place.marker.setIcon({url: "/assets/number_#{index}.png"})
-            newPlaces.push childScope.place
-          scope.places = newPlaces
-
-    element.sortable(sortableOptions)
 ])

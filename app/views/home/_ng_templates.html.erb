@@ -7,10 +7,10 @@
                 <input type="text" class="mp-naked-input form-control"placeholder="Search projects">
             </label>
         </nav>
-        <div class="mp-all-projects-list" perfect-scrollbar>
-            <div class="mp-all-projects-list-inner container">
+        <div class="mp-all-projects-list" perfect-scrollbar='projects'>
+            <div class="mp-all-projects-list-inner">
                 <header class="mp-all-projects-list-header">All Projects</header>
-                <div class="mp-all-projects-list-masonry" masonry>
+                <div class="mp-all-projects-list-masonry" masonry='projects'>
                     <div class="mp-project-item" ng-repeat="project in projects">
                         <div class="mp-project-item-cover" style="background-color: blue;">
 
@@ -68,7 +68,7 @@
                 <!-- <a href="" class="btn btn-default">Later</a> -->
             </div>
         </div>
-        <div class="mp-sidebar-places js-places-slide-up" ng-class="{'js-places-slide-up': interface.sideBarPlacesSlideUp}" perfect-scrollbar jquery-ui-sortable>
+        <div class="mp-sidebar-places js-places-slide-up" ng-class="{'js-places-slide-up': interface.sideBarPlacesSlideUp}" perfect-scrollbar='places' jquery-ui-sortable>
             <div class="mp-sidebar-place" ng-repeat="place in places" sidebar-place>
                 <div class="mp-place-marker-icon">
                     <a href="" ng-click="centerPlaceInMap(place.marker)">

@@ -294,7 +294,8 @@ ng-view {
 }
 
 .mp-all-projects-list-inner {
-    margin-bottom: 100px;
+    margin: 0 auto 100px;
+    width: 940px;
 }
 
 .mp-all-projects-list-header {
@@ -313,6 +314,7 @@ ng-view {
 .mp-project-item {
     width: 300px;
     border: 1px solid $gray2;
+    margin-bottom: 20px;
 }
 
 .mp-project-item-cover {
