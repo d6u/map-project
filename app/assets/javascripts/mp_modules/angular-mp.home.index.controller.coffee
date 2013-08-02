@@ -1,17 +1,6 @@
 app = angular.module('angular-mp.home.index.controller', [])
 
 
-# AllProjectsCtrl
-app.controller('AllProjectsCtrl',
-['$scope', 'Project',
-($scope, Project) ->
-
-  $scope.projects = []
-  Project.query (response) -> $scope.projects = response
-
-])
-
-
 # NewProjectModalCtrl
 app.controller('NewProjectModalCtrl',
 ['$scope', '$element', 'Project', '$rootScope',

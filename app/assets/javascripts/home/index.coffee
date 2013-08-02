@@ -15,6 +15,7 @@
 #= require modules_for_libraries/angular-jquery-ui.coffee
 #= require mp_modules/angular-mp.api.coffee
 #= require mp_modules/angular-mp.home.map-view.coffee
+#= require mp_modules/angular-mp.home.all-projects-view.coffee
 #= require mp_modules/angular-mp.home.navbar.coffee
 #= require mp_modules/angular-mp.home.index.controller.coffee
 #= require mp_modules/angular-mp.home.index.directives.coffee
@@ -34,6 +35,7 @@ app = angular.module 'mapApp', [
   'angular-mp.home.index.directives',
   'angular-mp.api',
   'angular-mp.home.map-view',
+  'angular-mp.home.all-projects-view',
   'angular-mp.home.navbar'
 ]
 
@@ -79,11 +81,26 @@ app.config([
 
 # run
 app.run([
-  '$rootScope', '$location', 'FB', 'User', 'Project', '$q', '$http',
-  ($rootScope, $location, FB, User, Project, $q, $http) ->
+  '$rootScope', '$location', 'FB', 'User', 'Project', '$q', '$http', '$route',
+  ($rootScope, $location, FB, User, Project, $q, $http, $route) ->
 
     # user
     $rootScope.user = {}
+
+    # deferred events
+    $rootScope.localLoggedIn = $q.defer()
+    $rootScope.projectsLoaded = $q.defer()
+    $rootScope.userLocation = $http.jsonp('http://www.geoplugin.net/json.gp?jsoncallback=JSON_CALLBACK')
+    .then (response) ->
+      # get user location according to ip
+      latitude: response.data.geoplugin_latitude
+      longitude: response.data.geoplugin_longitude
+
+    # projects
+    $rootScope.localLoggedIn.promise.then ->
+      Project.query (projects) ->
+        $rootScope.projects = projects
+        $rootScope.projectsLoaded.resolve()
 
     # init application
     $rootScope.$on 'fbLoggedIn', (event, authResponse) ->
@@ -94,6 +111,7 @@ app.run([
       User.login($rootScope.user).then (user) ->
         if user
           $rootScope.user.id = user.id
+          $rootScope.localLoggedIn.resolve()
         else
           loginCheckDB.resolve()
       FB.api '/me', (response) ->
@@ -106,7 +124,10 @@ app.run([
         $rootScope.$apply()
       # register if not in the db
       $q.all([loginCheckDB.promise, loginCheckFB.promise]).then ->
-        User.register($rootScope.user)
+        User.register($rootScope.user).then (user) ->
+          if user
+            $rootScope.user.id = user.id
+            $rootScope.localLoggedIn.resolve()
 
     $rootScope.$on 'fbNotAuthorized', (event) ->
       User.logout()
@@ -123,11 +144,15 @@ app.run([
       else
         switch $location.path()
           when '/'
-            Project.query (projects) ->
-              if projects.length > 0 then $location.path('/all_projects') else $location.path('/new_project')
-          # when '/all_projects'
+            $rootScope.projectsLoaded.promise.then ->
+              if $rootScope.projects.length > 0 then $location.path('/all_projects') else $location.path('/new_project')
+          when '/all_projects'
+            $rootScope.projectsLoaded.promise.then ->
+              $location.path('/new_project') if $rootScope.projects.length == 0
           # when '/new_project'
-          # when '/projects/'
+          # else # /project/:project_id
+            # if /\/project\/\d+/.test $location.path()
+              # $route.current.params.project_id
 
     FB.loginChecked.then ->
       navigate()
@@ -135,6 +160,7 @@ app.run([
 
     # google map object
     $rootScope.googleMap =
+      mapReady: $q.defer()
       markers: []
 
     # interface control
@@ -144,14 +170,7 @@ app.run([
       sideBarPlacesSlideUp: true
       showCreateAccountPromot: false
 
+    # bind global methods
     $rootScope.fbLogout = -> FB.logout()
     $rootScope.fbLogin = -> FB.login()
-
-    # get user location according to ip
-    $rootScope.userLocation = $http.jsonp('http://www.geoplugin.net/json.gp?jsoncallback=JSON_CALLBACK')
-    .then (response) ->
-      return {
-        latitude: response.data.geoplugin_latitude
-        longitude: response.data.geoplugin_longitude
-      }
 ])
