@@ -1,4 +1,4 @@
-<div class="modal fade" id="new_project_modal" ng-controller="NewProjectModalCtrl">
+<div class="modal fade" id="new_project_modal" project-detail-modal>
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
@@ -27,7 +27,7 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary" id="new_project_modal_save">Save changes</button>
+                <button type="button" class="btn btn-primary" ng-click="saveProject()">Save changes</button>
             </div>
         </div><!-- /.modal-content -->
     </div><!-- /.modal-dialog -->

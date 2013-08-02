@@ -11,7 +11,8 @@ class PlacesController < ApplicationController
 
 
   def index
-
+    places = Place.where :project_id => params[:id]
+    render :json => places
   end
 
 

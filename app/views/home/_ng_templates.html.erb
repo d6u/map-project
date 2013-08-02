@@ -44,7 +44,7 @@
         </nav>
         <div class="mp-map-canvas" google-map></div>
     </div>
-    <div class="mp-places-list js-sidebar-slide-out" ng-class="{'js-sidebar-slide-out': interface.hidePlacesList}">
+    <div class="mp-places-list js-sidebar-slide-out" ng-class="{'js-sidebar-slide-out': interface.hidePlacesList}" map-sidebar-places="currentProject.places.length">
         <nav class="mp-navbar-top">
             <div class="mp-places-button-group">
                 <a href="" class="mp-navbar-button" ng-click="displayAllMarkers()" bs-tooltip="Zoom map to display all places" bs-tooltip-placement="bottom">
@@ -69,7 +69,7 @@
             </div>
         </div>
         <div class="mp-sidebar-places js-places-slide-up" ng-class="{'js-places-slide-up': interface.sideBarPlacesSlideUp}" perfect-scrollbar='places' jquery-ui-sortable>
-            <div class="mp-sidebar-place" ng-repeat="place in places" sidebar-place>
+            <div class="mp-sidebar-place" ng-repeat="place in currentProject.places" sidebar-place>
                 <div class="mp-place-marker-icon">
                     <a href="" ng-click="centerPlaceInMap(place.marker)">
                         <img ng-src="/assets/number_{{$index}}.png">
