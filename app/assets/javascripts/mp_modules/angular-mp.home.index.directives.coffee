@@ -1,42 +1,5 @@
 app = angular.module('angular-mp.home.index.directives', [])
 
-# dropdonw menu
-app.directive('navbarDropdownMenu',
-['$rootScope', 'FBModule', '$compile', '$templateCache', '$q',
-($rootScope, FBModule, $compile, $templateCache, $q) ->
-  templateUrl: 'navbar_dropdown_menu'
-  link: (scope, element, attrs) ->
-    notLoggedIn = ->
-      template = $templateCache.get('navbar_dropdown_menu')
-      element.html(template)
-      $compile(element.contents())(scope)
-
-    FBModule.FB.Event.subscribe('auth.authResponseChange', (response) ->
-      if response.status == 'connected'
-        template = $templateCache.get('navbar_dropdown_menu_logged')
-        element.html(template)
-        $compile(element.contents())(scope)
-      else if response.status == 'not_authorized'
-        notLoggedIn()
-      else
-        notLoggedIn()
-    )
-])
-
-# search box
-app.directive('searchBox',
-['$location',
-($location) ->
-  return (scope, element, attrs) ->
-    scope.googleMap.searchBox = new google.maps.places.SearchBox(element[0])
-
-    scope.clearSearchResults = ->
-      element.val('')
-      marker.setMap(null) for marker in scope.googleMap.markers
-      scope.googleMap.markers = []
-
-])
-
 # map canvas
 app.directive('googleMap',
 ['$templateCache', '$timeout', '$compile',

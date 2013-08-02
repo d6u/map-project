@@ -8,6 +8,7 @@ MapProject::Application.routes.draw do
 
   resources :users
   post 'login'  => 'users#login'
+  post 'register' => 'users#register'
   get  'logout' => 'users#logout'
 
   # The priority is based upon order of creation: first created -> highest priority.

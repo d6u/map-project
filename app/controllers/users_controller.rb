@@ -10,21 +10,30 @@ class UsersController < ApplicationController
   #           DELETE /users/:id(.:format)      users#destroy
 
 
-  skip_before_action :check_login_status, :only => [:login]
+  skip_before_action :check_login_status, :only => [:login, :register, :logout]
 
 
   ##
   # Login in with fb user data
   # ----------------------------------------
   def login
-    if params[:user]
-      user = User.find_by_fb_user_id(params[:user][:fb_user_id]) || User.new(params.require(:user).permit(:email, :fb_access_token, :fb_user_id, :name))
-    else
-      redirect_to :root
-    end
+    head 404 unless user = User.find_by_fb_user_id(params[:user][:fb_user_id])
 
     # TODO: fix always update access_token
-    user.attributes = params.require(:user).permit(:email, :fb_access_token, :fb_user_id, :name)
+    user.fb_access_token = params[:user][:fb_access_token]
+    if user.validate_with_facebook
+      user.save if user.changed?
+      session[:user_id] = user.id
+      render :json => user, :status => 200
+    else
+      head 406
+    end
+  end
+
+
+  ##
+  def register
+    user = User.new params.require(:user).permit(:fb_access_token, :fb_user_id, :name, :email)
     if user.validate_with_facebook
       user.save if user.changed?
       session[:user_id] = user.id

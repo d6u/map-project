@@ -13,7 +13,9 @@
 #= require modules_for_libraries/angular-perfect-scrollbar.coffee
 #= require modules_for_libraries/angular-bootstrap.coffee
 #= require modules_for_libraries/angular-jquery-ui.coffee
-#= require mp_modules/angular-mp.api.user.coffee
+#= require mp_modules/angular-mp.api.coffee
+#= require mp_modules/angular-mp.home.map-view.coffee
+#= require mp_modules/angular-mp.home.navbar.coffee
 #= require mp_modules/angular-mp.home.index.controller.coffee
 #= require mp_modules/angular-mp.home.index.directives.coffee
 
@@ -30,20 +32,16 @@ app = angular.module 'mapApp', [
 
   'angular-mp.home.index.controller',
   'angular-mp.home.index.directives',
-  'angular-mp.api.user'
+  'angular-mp.api',
+  'angular-mp.home.map-view',
+  'angular-mp.home.navbar'
 ]
 
 
 # config
 app.config([
-  'FBModuleProvider', 'socketProvider', '$httpProvider', '$routeProvider',
-  (FBModuleProvider, socketProvider, $httpProvider, $routeProvider) ->
-    # CSRF
-    token = angular.element('meta[name="csrf-token"]').attr('content')
-    $httpProvider.defaults.headers.common['X-CSRF-Token'] = token
-
-    # socket
-    socketProvider.setServerUrl('http://local.dev:4000')
+  'FBProvider', 'socketProvider', '$httpProvider', '$routeProvider',
+  (FBProvider, socketProvider, $httpProvider, $routeProvider) ->
 
     # route
     $routeProvider
@@ -62,26 +60,78 @@ app.config([
     })
     .otherwise({redirectTo: '/'})
 
+    # CSRF
+    token = angular.element('meta[name="csrf-token"]').attr('content')
+    $httpProvider.defaults.headers.common['X-CSRF-Token'] = token
+
     # FB
-    FBModuleProvider.init({
-        appId      : '580227458695144'
-        channelUrl : location.origin + '/fb_channel.html'
-        status     : true
-        cookie     : true
-        xfbml      : true
+    FBProvider.init({
+      appId      : '580227458695144'
+      channelUrl : location.origin + '/fb_channel.html'
+      status     : true
+      cookie     : true
+      xfbml      : true
     })
+
+    # socket
+    socketProvider.setServerUrl('http://local.dev:4000')
 ])
 
 # run
 app.run([
-  '$rootScope', '$route', '$location', '$http', '$q', 'FBModule', 'User',
-  ($rootScope, $route, $location, $http, $q, FBModule, User) ->
+  '$rootScope', '$location', 'FB', 'User', 'Project', '$q', '$http',
+  ($rootScope, $location, FB, User, Project, $q, $http) ->
+
     # user
     $rootScope.user = {}
 
-    processUserLogin = (user) ->
-      angular.extend($rootScope.user, user) if user
-      # TODO
+    # init application
+    $rootScope.$on 'fbLoggedIn', (event, authResponse) ->
+      loginCheckDB = $q.defer()
+      loginCheckFB = $q.defer()
+      $rootScope.user.fb_access_token = authResponse.accessToken
+      $rootScope.user.fb_user_id      = authResponse.userID
+      User.login($rootScope.user).then (user) ->
+        if user
+          $rootScope.user.id = user.id
+        else
+          loginCheckDB.resolve()
+      FB.api '/me', (response) ->
+        $rootScope.user.name          = response.name
+        $rootScope.user.email         = response.email
+        $rootScope.$apply()
+        loginCheckFB.resolve()
+      FB.api '/me/picture', (response) ->
+        $rootScope.user.picture       = response.data.url
+        $rootScope.$apply()
+      # register if not in the db
+      $q.all([loginCheckDB.promise, loginCheckFB.promise]).then ->
+        User.register($rootScope.user)
+
+    $rootScope.$on 'fbNotAuthorized', (event) ->
+      User.logout()
+      $rootScope.user = {}
+
+    $rootScope.$on 'fbNotLoggedIn', (event) ->
+      User.logout()
+      $rootScope.user = {}
+
+    # navigation
+    navigate = ->
+      if !$rootScope.user.fb_access_token
+        $location.path('/new_project') if $location.path() != '/new_project'
+      else
+        switch $location.path()
+          when '/'
+            Project.query (projects) ->
+              if projects.length > 0 then $location.path('/all_projects') else $location.path('/new_project')
+          # when '/all_projects'
+          # when '/new_project'
+          # when '/projects/'
+
+    FB.loginChecked.then ->
+      navigate()
+      $rootScope.$on '$routeChangeStart', navigate
 
     # google map object
     $rootScope.googleMap =
@@ -94,47 +144,8 @@ app.run([
       sideBarPlacesSlideUp: true
       showCreateAccountPromot: false
 
-    # login status change
-    FBModule.FB.Event.subscribe('auth.authResponseChange', (response) ->
-      if response.status == 'connected'
-        loggedIn(response.authResponse)
-      else if response.status == 'not_authorized'
-        notLoggedIn()
-      else
-        notLoggedIn()
-    )
-
-    # check status change
-    loggedIn = (authResponse) ->
-      FBModule.FB.api('/me', (response) ->
-        $rootScope.user.name            = response.name
-        $rootScope.user.email           = response.email
-        $rootScope.user.fb_access_token = authResponse.accessToken
-        $rootScope.user.fb_user_id      = authResponse.userID
-        User.login($rootScope.user).then(processUserLogin)
-        $rootScope.interface.showCreateAccountPromot = false
-        $rootScope.$apply()
-      )
-      FBModule.FB.api('/me/picture', (response) -> $rootScope.$apply -> $rootScope.user.picture = response.data.url)
-      switch $location.path()
-        when '/' # TODO: redirect according to user projects
-          if true
-            $location.path('/new_project')
-          else
-            $location.path('/all_projects')
-        when '/new_project'
-          $rootScope.$broadcast('loginWithNewProject')
-
-    notLoggedIn = (reason) ->
-      User.logout() if $rootScope.user.email
-      $rootScope.user = {}
-      if $location.path() == '/'
-        $location.path('/new_project')
-
-    FBModule.loginStatus.then null, notLoggedIn
-
-    $rootScope.fbLogout = -> FBModule.FB.logout()
-    $rootScope.fbLogin = -> FBModule.FB.login()
+    $rootScope.fbLogout = -> FB.logout()
+    $rootScope.fbLogin = -> FB.login()
 
     # get user location according to ip
     $rootScope.userLocation = $http.jsonp('http://www.geoplugin.net/json.gp?jsoncallback=JSON_CALLBACK')

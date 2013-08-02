@@ -1,24 +1,36 @@
-angular.module('angular-facebook', [])
-.provider 'FBModule', class
+app = angular.module 'angular-facebook', []
+
+app.provider 'FB', class
+
   # config
-  init: (options) -> FB.init(options)
+  init: (options) -> FB.init options
 
   # factory
   $get: ['$rootScope', '$timeout', '$q', ($rootScope, $timeout, $q) ->
 
-    # build service object
-    deferred = $q.defer()
-    service =
-      FB: FB
-      loginStatus: deferred.promise
+    loginChecked = $q.defer()
 
-    # check login status
+    loginCheck = (response) ->
+      switch response.status
+        when 'connected'
+          console.log 'fbLoggedIn'
+          $rootScope.$broadcast 'fbLoggedIn', response.authResponse
+        when 'not_authorized'
+          console.log 'fbNotAuthorized'
+          $rootScope.$broadcast 'fbNotAuthorized'
+        else
+          console.log 'fbNotLoggedIn'
+          $rootScope.$broadcast 'fbNotLoggedIn'
+
+    # init
     FB.getLoginStatus (response) ->
-      if response.status == 'connected'
-        $rootScope.$apply -> deferred.resolve(response.authResponse)
-      else
-        $rootScope.$apply -> deferred.reject()
+      loginCheck response
+      FB.Event.subscribe 'auth.authResponseChange', loginCheck
+      $rootScope.$apply -> loginChecked.resolve()
+
+    # attach login checked promise
+    FB.loginChecked = loginChecked.promise
 
     # return
-    return service
+    FB
   ]
