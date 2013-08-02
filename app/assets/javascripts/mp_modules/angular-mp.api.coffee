@@ -20,11 +20,11 @@ app.factory 'User', ['$http', ($http) ->
 
 # Project
 app.factory 'Project', ['$resource', ($resource) ->
-  $resource('/projects')
+  $resource('/projects/:project_id')
 ]
 
 
 # Place
 app.factory 'Place', ['$resource', ($resource) ->
-  $resource('/places')
+  $resource('/places/:place_id')
 ]

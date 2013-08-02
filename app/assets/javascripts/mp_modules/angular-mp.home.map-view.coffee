@@ -23,6 +23,17 @@ app.controller 'ProjectCtrl',
       icon:
         url: "/assets/number_#{$scope.currentProject.places.length}.png"
     })
+    if $scope.currentProject.project.id
+      placeSimple =
+        name: place.name
+        notes: place.notes
+        address: place.address
+        coord: place.coord
+        order: $scope.currentProject.places.length
+        project_id: $scope.currentProject.project.id
+      Place.save placeSimple, (response) ->
+        place.project_id = response.project_id
+        place.id = response.id
     $scope.currentProject.places.push place
 
   $scope.centerPlaceInMap = (marker) ->
@@ -30,7 +41,8 @@ app.controller 'ProjectCtrl',
 
   $scope.removePlace = (index, marker) ->
     marker.setMap(null)
-    $scope.currentProject.places.splice(index, 1)
+    place = $scope.currentProject.places.splice(index, 1)[0]
+    Place.delete {place_id: place.id}
     rearrangeMarkerIcons()
 
   $scope.displayAllMarkers = ->
@@ -59,6 +71,8 @@ app.controller 'ProjectCtrl',
 
   $scope.$on '$routeChangeSuccess', (event, current, previous) ->
     if /\/project\/\d+/.test $location.path()
+      Project.get {project_id: current.params.project_id}, (project) ->
+        $scope.currentProject.project = project
       Place.query {id: current.params.project_id}, (places) ->
         $scope.googleMap.mapReady.promise.then ->
           processPlace place, index for place, index in places
