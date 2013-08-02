@@ -283,6 +283,58 @@ ng-view {
 }
 
 
+// All Project List
+// ========================================
+.mp-all-projects-list {
+    position: absolute;
+    top: 50px;
+    bottom: 0;
+    width: 100%;
+    overflow: hidden;
+}
+
+.mp-all-projects-list-inner {
+    margin-bottom: 100px;
+}
+
+.mp-all-projects-list-header {
+    line-height: 50px;
+    font-size: 32px;
+    font-weight: bold;
+    border-bottom: 1px solid $gray6;
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+.mp-all-projects-list-masonry {
+
+}
+
+.mp-project-item {
+    width: 300px;
+    border: 1px solid $gray2;
+}
+
+.mp-project-item-cover {
+    height: 200px;
+}
+
+.mp-project-item-detail {
+    padding: 10px;
+}
+
+.mp-project-item-header {
+    font-size: 18px;
+    line-height: 24px;
+    border-bottom: 1px solid $gray6;
+    margin-top: 10px;
+}
+
+.mp-project-item-notes {
+    margin-top: 10px;
+}
+
+
 // Chatbox
 // ========================================
 

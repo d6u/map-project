@@ -7,7 +7,25 @@
                 <input type="text" class="mp-naked-input form-control"placeholder="Search projects">
             </label>
         </nav>
-        <div class="mp-all-projects-list"></div>
+        <div class="mp-all-projects-list" perfect-scrollbar>
+            <div class="mp-all-projects-list-inner container">
+                <header class="mp-all-projects-list-header">All Projects</header>
+                <div class="mp-all-projects-list-masonry" masonry>
+                    <div class="mp-project-item" ng-repeat="project in projects">
+                        <div class="mp-project-item-cover" style="background-color: blue;">
+
+                        </div>
+                        <div class="mp-project-item-detail">
+                            <header class="mp-project-item-header">
+                                <a href="">{{project.title}}</a>
+                            </header>
+                            <p class="mp-project-item-notes">{{project.notes || "No notes yet"}}</p>
+                        </div>
+                        <div class="mp-project-item-friends"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </script>
 

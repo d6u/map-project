@@ -11,7 +11,8 @@ class ProjectsController < ApplicationController
 
 
   def index
-
+    projects = @user.projects
+    render :json => projects
   end
 
 
