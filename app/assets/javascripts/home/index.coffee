@@ -108,6 +108,7 @@ app.run([
           $location.path('/all_projects')
 
     notLoggedIn = (reason) ->
+      User.logout()
       $rootScope.user = {}
       if $location.path() == '/'
         $location.path('/new_project')

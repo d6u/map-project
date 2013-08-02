@@ -34,4 +34,13 @@ class UsersController < ApplicationController
     end
   end
 
+
+  ##
+  # Logout
+  # ----------------------------------------
+  def logout
+    session[:user_id] = nil if session[:user_id]
+    head 200
+  end
+
 end

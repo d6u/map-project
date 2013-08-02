@@ -9,4 +9,6 @@ angular.module('angular-mp.api.user', ['ngResource'])
       $http.post('/login', {user: user}).then (response) ->
         return false if response.status != 200
         return response.data
+
+    logout: -> $http.get('/logout')
 ])
