@@ -45,3 +45,10 @@ LOG:  database system is shut down
 LOG:  database system was shut down at 2013-08-01 09:17:07 CDT
 LOG:  database system is ready to accept connections
 LOG:  autovacuum launcher started
+LOG:  autovacuum launcher shutting down
+LOG:  received smart shutdown request
+LOG:  shutting down
+LOG:  database system is shut down
+LOG:  database system was shut down at 2013-08-01 20:32:54 CDT
+LOG:  autovacuum launcher started
+LOG:  database system is ready to accept connections

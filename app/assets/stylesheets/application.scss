@@ -159,6 +159,7 @@ ng-view {
 
 .mp-navbar-dropdown-menu {
     position: relative;
+    display: flex;
     .mp-navbar-dropdown-menu-inner {
         display: none;
     }
@@ -172,7 +173,10 @@ ng-view {
 .mp-navbar-dropdown-menu-inner {
     background-color: white;
     position: absolute;
-    width: 200px;
+    width: 100%;
+    min-width: 200px;
+    top: 50px;
+    left: 0;
     a {
         color: $gray6;
         font-size: 18px;
@@ -229,9 +233,12 @@ ng-view {
 
 .mp-sidebar-place {
     padding: 10px;
-    border-bottom: 1px solid $gray6;
+    background-color: white;
     address {
         margin: 0;
+    }
+    &.ui-sortable-helper {
+        background-color: $gray1;
     }
 }
 

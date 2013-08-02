@@ -82,6 +82,11 @@ app.directive('googleMap',
         scope.googleMap.infoWindow.open(scope.googleMap.map, marker)
       )
 
+    triggerMapResize = ->
+      $timeout (->
+        google.maps.event.trigger(scope.googleMap.map, 'resize')
+      ), 200
+
     # rootScope deferred object
     scope.userLocation.then (coord) ->
       mapOptions =
@@ -91,6 +96,8 @@ app.directive('googleMap',
         disableDefaultUI: true
 
       scope.googleMap.map = new google.maps.Map(element[0], mapOptions)
+      scope.$watch('interface.hidePlacesList', triggerMapResize)
+      scope.$watch('interface.hideChatbox', triggerMapResize)
       google.maps.event.addListener(scope.googleMap.map, 'bounds_changed',
         -> scope.googleMap.searchBox.setBounds scope.googleMap.map.getBounds())
 
@@ -132,4 +139,37 @@ app.directive('sidebarPlace',
       scope.googleMap.infoWindow.setContent(compiled[0])
       scope.googleMap.infoWindow.open(scope.place.marker.getMap(), scope.place.marker)
     )
+])
+
+# bootstrap tooltip
+app.directive('bsTooltip',
+[ ->
+  return (scope, element, attrs) ->
+    element.tooltip({
+      title: attrs.bsTooltip
+      placement: attrs.bsTooltipPlacement
+      container: 'body'
+    })
+])
+
+# jquery ui sortable
+app.directive('jqueryUiSortable',
+[ ->
+  return (scope, element, attrs) ->
+    sortableOptions =
+      appendTo: document.body
+      helper: 'clone'
+      cursor: 'move'
+      distance: 5
+      handle: '.mp-place-marker-icon'
+      update: (event, ui) ->
+        scope.$apply ->
+          newPlaces = []
+          element.children('.mp-sidebar-place').each (index) ->
+            childScope = $(this).scope()
+            childScope.place.marker.setIcon({url: "/assets/number_#{index}.png"})
+            newPlaces.push childScope.place
+          scope.places = newPlaces
+
+    element.sortable(sortableOptions)
 ])

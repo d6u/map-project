@@ -1,5 +1,7 @@
 #= require libraries/socket.io.min.js
 #= require libraries/jquery.js
+#= require modules/jquery-ui-1.10.3.custom.min.js
+#= require libraries/bootstrap.min.js
 #= require modules/perfect-scrollbar-0.4.3.min.js
 #= require modules/perfect-scrollbar-0.4.3.with-mousewheel.min.js
 #= require libraries/angular.min.js
@@ -100,15 +102,17 @@ app.run([
         $rootScope.$apply()
       )
       FBModule.FB.api('/me/picture', (response) -> $rootScope.$apply -> $rootScope.user.picture = response.data.url)
-      # TODO: redirect according to user projects
-      if $location.path() == '/'
-        if true
-          $location.path('/new_project')
-        else
-          $location.path('/all_projects')
+      switch $location.path()
+        when '/' # TODO: redirect according to user projects
+          if true
+            $location.path('/new_project')
+          else
+            $location.path('/all_projects')
+        when '/new_project'
+          $rootScope.$broadcast('loginWithNewProject')
 
     notLoggedIn = (reason) ->
-      User.logout()
+      User.logout() if $rootScope.user.email
       $rootScope.user = {}
       if $location.path() == '/'
         $location.path('/new_project')
