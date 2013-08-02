@@ -9,6 +9,7 @@ app.directive 'perfectScrollbar', [ ->
     element.perfectScrollbar perfectScrollbarOptions
 
     # update perfectScrollbar
-    scope.$watch attrs.perfectScrollbar, (newValue, oldValue, scope) ->
-      element.perfectScrollbar 'update'
+    for value in attrs.perfectScrollbar.split(',')
+      scope.$watch value, (newValue, oldValue, scope) ->
+        element.perfectScrollbar 'update'
 ]

@@ -4,22 +4,22 @@
             <div class="mp-navbar-dropdown-menu" navbar-dropdown-menu></div>
             <label class="mp-navbar-search-box">
                 <i class="icon-search"></i>
-                <input type="text" class="mp-naked-input form-control"placeholder="Search projects">
+                <input type="text" class="mp-naked-input form-control" placeholder="Search projects" ng-model="models.projectTitle">
             </label>
         </nav>
-        <div class="mp-all-projects-list" perfect-scrollbar='projects'>
+        <div class="mp-all-projects-list" perfect-scrollbar='projects,models.projectTitle'>
             <div class="mp-all-projects-list-inner">
                 <header class="mp-all-projects-list-header">All Projects</header>
-                <div class="mp-all-projects-list-masonry" masonry='projects'>
-                    <div class="mp-project-item" ng-repeat="project in projects">
+                <div class="mp-all-projects-list-masonry" masonry='projects,models.projectTitle'>
+                    <div class="mp-project-item" ng-repeat="project in projects | filter:models.projectTitle">
                         <div class="mp-project-item-cover" style="background-color: blue;">
-
+                            <!-- TODO: Placeholder to add project cover -->
                         </div>
                         <div class="mp-project-item-detail">
                             <header class="mp-project-item-header">
-                                <a href="">{{project.title}}</a>
+                                <a ng-href="#/project/{{project.id}}">{{project.title}}</a>
                             </header>
-                            <p class="mp-project-item-notes">{{project.notes || "No notes yet"}}</p>
+                            <p class="mp-project-item-notes">{{project.notes || "No notes yet..."}}</p>
                         </div>
                         <div class="mp-project-item-friends"></div>
                     </div>

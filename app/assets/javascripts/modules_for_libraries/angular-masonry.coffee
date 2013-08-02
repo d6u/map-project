@@ -11,8 +11,9 @@ app.directive 'masonry', [ ->
     element.masonry masonryOptions
 
     # update masonry when DOM changed
-    scope.$watch attrs.masonry, (newValue, oldValue, scope) ->
-      if newValue.length > 0
-        element.masonry 'reloadItems'
-        element.masonry()
+    for value in attrs.masonry.split(',')
+      scope.$watch value, (newValue, oldValue, scope) ->
+        if element.children(masonryOptions.itemSelector).length > 0
+          element.masonry 'reloadItems'
+          element.masonry()
 ]
