@@ -1,100 +1,112 @@
 app = angular.module 'angular-mp.home.map-view', []
 
 
-app.controller 'ProjectCtrl', ['$scope', 'Place', 'Project', '$location',
-($scope, Place, Project, $location) ->
+app.controller 'ProjectCtrl',
+['$scope', 'Place', 'Project', '$location', '$rootScope', '$q',
+($scope, Place, Project, $location, $rootScope, $q) ->
 
   # places
-  $scope.places = []
+  $scope.currentProject =
+    project: {}
+    places: []
 
   # methods
   rearrangeMarkerIcons = ->
-    place.marker.setIcon({url: "/assets/number_#{index}.png"}) for place, index in $scope.places
+    place.marker.setIcon({url: "/assets/number_#{index}.png"}) for place, index in $scope.currentProject.places
 
   $scope.addPlaceToList = (place) ->
-    if $scope.interface.hidePlacesList
-      $scope.interface.hidePlacesList = false
-      $scope.interface.sideBarPlacesSlideUp = false
     place.marker.setMap(null)
     place.marker = new google.maps.Marker({
       map: $scope.googleMap.map
       title: place.name
       position: place.place.geometry.location
       icon:
-        url: "/assets/number_#{$scope.places.length}.png"
+        url: "/assets/number_#{$scope.currentProject.places.length}.png"
     })
-    $scope.places.push place
-    if $scope.places.length > 1 && !$scope.user.email
-      $scope.interface.showCreateAccountPromot = true
+    $scope.currentProject.places.push place
 
   $scope.centerPlaceInMap = (marker) ->
     marker.getMap().setCenter marker.getPosition()
 
   $scope.removePlace = (index, marker) ->
     marker.setMap(null)
-    $scope.places.splice(index, 1)
+    $scope.currentProject.places.splice(index, 1)
     rearrangeMarkerIcons()
 
   $scope.displayAllMarkers = ->
     bounds = new google.maps.LatLngBounds()
-    for place in $scope.places
+    for place in $scope.currentProject.places
       bounds.extend(place.marker.getPosition())
     $scope.googleMap.map.fitBounds(bounds)
-    $scope.googleMap.map.setZoom(12) if $scope.places.length < 3 && $scope.googleMap.map.getZoom() > 12
+    $scope.googleMap.map.setZoom(12) if $scope.currentProject.places.length < 3 && $scope.googleMap.map.getZoom() > 12
 
   $scope.deleteAllSavedPlaces = ->
     if confirm('Are you sure to delete all saved places? This action is irreversible.')
-      place.marker.setMap(null) for place in $scope.places
-      $scope.places = []
+      place.marker.setMap(null) for place in $scope.currentProject.places
+      $scope.currentProject.places = []
 
+  # init
   processPlace = (place, index) ->
     coordMatch = /\((.+), (.+)\)/.exec place.coord
-    latLon = new google.maps.LatLng coordMatch[1], coordMatch[2]
+    latLog = new google.maps.LatLng coordMatch[1], coordMatch[2]
     markerOptions =
       map: $scope.googleMap.map
       title: place.name
-      position: latLon
+      position: latLog
       icon:
         url: "/assets/number_#{index}.png"
     place.marker = new google.maps.Marker markerOptions
 
-  # init
   $scope.$on '$routeChangeSuccess', (event, current, previous) ->
     if /\/project\/\d+/.test $location.path()
       Place.query {id: current.params.project_id}, (places) ->
         $scope.googleMap.mapReady.promise.then ->
           processPlace place, index for place, index in places
-          $scope.places = places
+          $scope.currentProject.places = places
     else
-      $scope.places = []
-
-
-
+      $scope.currentProject.places = []
 
   # events
-  # $scope.$on 'loginWithNewProject', (event) ->
-  #   if $scope.places.length > 0
-  #     $('#new_project_modal').modal()
+  $scope.$on 'fbLoggedIn', ->
+    if $location.path() == '/new_project' && $scope.currentProject.places.length > 0
+      $rootScope.$broadcast 'newProject'
 
-  # $scope.$on 'newProjectCreated', (event, project) ->
-  #   for place, index in $scope.places
-  #     place.object = new Place({
-  #       name: place.name
-  #       order: index
-  #       address: place.address
-  #       coord: place.marker.getPosition().toString()
-  #       project_id: project.id
-  #     })
-  #     place.object.$save (response) -> console.log response
+  $scope.$on 'fbNotLoggedIn', ->
+    $scope.currentProject =
+      project: {}
+      places: []
+
+  $scope.$on 'newProjectCreated', (event, project) ->
+    $scope.currentProject.project = project
+    $scope.projects.unshift project
+    allPlacesSaved = []
+    for place, index in $scope.currentProject.places
+      do (place, index) ->
+        place.order = index
+        place.project_id = project.id
+        placeSimple =
+          name: place.name
+          notes: place.notes
+          address: place.address
+          coord: place.coord
+          order: index
+          project_id: place.project_id
+        placeSaved = $q.defer()
+        allPlacesSaved.push placeSaved.promise
+        Place.save placeSimple, (response) ->
+          place.id = response.id
+          placeSaved.resolve()
+    $scope.interface.showCreateAccountPromot = false
+    $q.all(allPlacesSaved).then ->
+      $location.path '/project/' + project.id
 ]
 
 
-
 # map canvas
-app.directive('googleMap',
-['$templateCache', '$timeout', '$compile',
+app.directive 'googleMap', ['$templateCache', '$timeout', '$compile',
 ($templateCache, $timeout, $compile) ->
   (scope, element, attrs) ->
+
     searchBoxPlaceChanged = ->
       cleanMarkers()
       bounds = new google.maps.LatLngBounds()
@@ -128,6 +140,7 @@ app.directive('googleMap',
           place: place
           name: place.name
           address: place.formatted_address
+          coord: marker.getPosition().toString()
         compiled = $compile(template)(newScope)
         scope.googleMap.infoWindow.setContent(compiled[0])
         google.maps.event.clearListeners(scope.googleMap.infoWindow, 'closeclick')
@@ -157,22 +170,20 @@ app.directive('googleMap',
 
       scope.googleMap.infoWindow = new google.maps.InfoWindow()
       google.maps.event.addListener(scope.googleMap.searchBox, 'places_changed', searchBoxPlaceChanged)
-])
+]
 
 # inforwindow
-app.directive('markerInfo',
-['$compile', '$timeout',
+app.directive 'markerInfo', ['$compile', '$timeout',
 ($compile, $timeout) ->
-  return (scope, element, attrs) ->
+  (scope, element, attrs) ->
     scope.$apply()
-])
+]
 
 # save marker inforwindow
-app.directive('savedMarkerInfo',
-[ ->
-  return (scope, element, attrs) ->
+app.directive 'savedMarkerInfo', [ ->
+  (scope, element, attrs) ->
     scope.$apply()
-])
+]
 
 # sidebar place
 app.directive 'sidebarPlace', ['$templateCache', '$compile',
@@ -192,11 +203,19 @@ app.directive 'sidebarPlace', ['$templateCache', '$compile',
 app.directive 'mapSidebarPlaces', [ ->
   (scope, element, attrs) ->
 
-    scope.$watch 'places', (newValue, oldValue, scope) ->
-      if newValue.length > 0
+    scope.$watch attrs.mapSidebarPlaces, (newValue, oldValue, scope) ->
+      if newValue > 0
         scope.interface.hidePlacesList = false
         scope.interface.sideBarPlacesSlideUp = false
       else
         scope.interface.hidePlacesList = true
         scope.interface.sideBarPlacesSlideUp = true
+
+      if !scope.user.fb_access_token
+        if newValue > 1
+          scope.interface.showCreateAccountPromot = true
+
+    scope.$watch 'user.fb_access_token', (newValue, oldValue, scope) ->
+      if newValue
+        scope.interface.showCreateAccountPromot = false
 ]

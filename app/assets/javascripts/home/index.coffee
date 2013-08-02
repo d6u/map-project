@@ -17,8 +17,7 @@
 #= require mp_modules/angular-mp.home.map-view.coffee
 #= require mp_modules/angular-mp.home.all-projects-view.coffee
 #= require mp_modules/angular-mp.home.navbar.coffee
-#= require mp_modules/angular-mp.home.index.controller.coffee
-#= require mp_modules/angular-mp.home.index.directives.coffee
+#= require mp_modules/angular-mp.home.helpers.coffee
 
 
 
@@ -31,12 +30,11 @@ app = angular.module 'mapApp', [
   'angular-bootstrap',
   'angular-jquery-ui',
 
-  'angular-mp.home.index.controller',
-  'angular-mp.home.index.directives',
   'angular-mp.api',
   'angular-mp.home.map-view',
   'angular-mp.home.all-projects-view',
-  'angular-mp.home.navbar'
+  'angular-mp.home.navbar',
+  'angular-mp.home.helpers'
 ]
 
 
@@ -129,13 +127,13 @@ app.run([
             $rootScope.user.id = user.id
             $rootScope.localLoggedIn.resolve()
 
-    $rootScope.$on 'fbNotAuthorized', (event) ->
-      User.logout()
+    userLogout = ->
+      User.logout().then -> $location.path('/')
       $rootScope.user = {}
 
-    $rootScope.$on 'fbNotLoggedIn', (event) ->
-      User.logout()
-      $rootScope.user = {}
+    $rootScope.$on 'fbNotAuthorized', userLogout
+
+    $rootScope.$on 'fbNotLoggedIn', userLogout
 
     # navigation
     navigate = ->
