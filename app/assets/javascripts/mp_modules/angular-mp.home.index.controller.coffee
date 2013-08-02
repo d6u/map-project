@@ -1,16 +1,21 @@
 app = angular.module('angular-mp.home.index.controller', [])
 
+
 # AllProjectsCtrl
 app.controller('AllProjectsCtrl',
-['$scope',
-($scope) ->
+['$scope', 'Project',
+($scope, Project) ->
+
+  $scope.projects = []
+  Project.query (response) -> $scope.projects = response
 
 ])
+
 
 # ProjectCtrl
 app.controller('ProjectCtrl',
 ['$scope', 'Place',
-($scope, Place) ->
+($scope, Place, Project) ->
   rearrangeMarkerIcons = ->
     place.marker.setIcon({url: "/assets/number_#{index}.png"}) for place, index in $scope.places
 
@@ -68,6 +73,7 @@ app.controller('ProjectCtrl',
       })
       place.object.$save (response) -> console.log response
 ])
+
 
 # NewProjectModalCtrl
 app.controller('NewProjectModalCtrl',

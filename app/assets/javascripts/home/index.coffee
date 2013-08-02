@@ -1,13 +1,18 @@
 #= require libraries/socket.io.min.js
 #= require libraries/jquery.js
-#= require modules/jquery-ui-1.10.3.custom.min.js
+#= require libraries/jquery-ui-1.10.3.custom.min.js
+#= require libraries/masonry.pkgd.min.js
 #= require libraries/bootstrap.min.js
-#= require modules/perfect-scrollbar-0.4.3.min.js
-#= require modules/perfect-scrollbar-0.4.3.with-mousewheel.min.js
+#= require libraries/perfect-scrollbar-0.4.3.min.js
+#= require libraries/perfect-scrollbar-0.4.3.with-mousewheel.min.js
 #= require libraries/angular.min.js
-#= require mp_modules/angular-facebook.coffee
-#= require mp_modules/angular-socket.io.coffee
-#= require modules/angular-resource.min.js
+#= require libraries/angular-resource.min.js
+#= require modules_for_libraries/angular-facebook.coffee
+#= require modules_for_libraries/angular-socket.io.coffee
+#= require modules_for_libraries/angular-masonry.coffee
+#= require modules_for_libraries/angular-perfect-scrollbar.coffee
+#= require modules_for_libraries/angular-bootstrap.coffee
+#= require modules_for_libraries/angular-jquery-ui.coffee
 #= require mp_modules/angular-mp.api.user.coffee
 #= require mp_modules/angular-mp.home.index.controller.coffee
 #= require mp_modules/angular-mp.home.index.directives.coffee
@@ -15,10 +20,19 @@
 
 
 # declear
-app = angular.module('mapApp',
-  ['angular-facebook', 'angular-socket.io',
-  'angular-mp.home.index.controller', 'angular-mp.home.index.directives',
-  'angular-mp.api.user'])
+app = angular.module 'mapApp', [
+  'angular-facebook',
+  'angular-socket.io',
+  'angular-masonry',
+  'angular-perfect-scrollbar',
+  'angular-bootstrap',
+  'angular-jquery-ui',
+
+  'angular-mp.home.index.controller',
+  'angular-mp.home.index.directives',
+  'angular-mp.api.user'
+]
+
 
 # config
 app.config([
