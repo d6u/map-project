@@ -1,5 +1,3 @@
-#= require libraries/modernizr.min.js
-#= require libraries/google.map.infobox.js
 #= require libraries/socket.io.min.js
 #= require libraries/jquery.js
 #= require modules/jquery-ui-1.10.3.custom.min.js
@@ -7,20 +5,25 @@
 #= require modules/perfect-scrollbar-0.4.3.min.js
 #= require modules/perfect-scrollbar-0.4.3.with-mousewheel.min.js
 #= require libraries/angular.min.js
-#= require modules/angular-socket.io.coffee
+#= require mp_modules/angular-facebook.coffee
+#= require mp_modules/angular-socket.io.coffee
 #= require modules/angular-resource.min.js
-#= require modules/angular-mp.home.index.directives.coffee
+#= require mp_modules/angular-mp.api.user.coffee
+#= require mp_modules/angular-mp.home.index.controller.coffee
+#= require mp_modules/angular-mp.home.index.directives.coffee
 
 
 
 # declear
 app = angular.module('mapApp',
-  ['angular-socket.io', 'angular-mp.home.index.directives'])
+  ['angular-facebook', 'angular-socket.io',
+  'angular-mp.home.index.controller', 'angular-mp.home.index.directives',
+  'angular-mp.api.user'])
 
 # config
 app.config([
-  'socketProvider', '$httpProvider', '$routeProvider',
-  (socketProvider, $httpProvider, $routeProvider) ->
+  'FBModuleProvider', 'socketProvider', '$httpProvider', '$routeProvider',
+  (FBModuleProvider, socketProvider, $httpProvider, $routeProvider) ->
     # CSRF
     token = angular.element('meta[name="csrf-token"]').attr('content')
     $httpProvider.defaults.headers.common['X-CSRF-Token'] = token
@@ -45,22 +48,26 @@ app.config([
     })
     .otherwise({redirectTo: '/'})
 
+    # FB
+    FBModuleProvider.init({
+        appId      : '580227458695144'
+        channelUrl : location.origin + '/fb_channel.html'
+        status     : true
+        cookie     : true
+        xfbml      : true
+    })
 ])
 
+# run
 app.run([
-  '$rootScope', '$route', '$location', '$http',
-  ($rootScope, $route, $location, $http) ->
-    # TODO: redirect according to user's projects
-    if $location.path() == '/'
-      $location.path('/new_project')
+  '$rootScope', '$route', '$location', '$http', '$q', 'FBModule', 'User',
+  ($rootScope, $route, $location, $http, $q, FBModule, User) ->
+    # user
+    $rootScope.user = {}
 
-    # get user location according to ip
-    $rootScope.userLocation = $http.jsonp('http://www.geoplugin.net/json.gp?jsoncallback=JSON_CALLBACK')
-    .then (response) ->
-      return {
-        latitude: response.data.geoplugin_latitude
-        longitude: response.data.geoplugin_longitude
-      }
+    processUserLogin = (user) ->
+      angular.extend($rootScope.user, user) if user
+      # TODO
 
     # google map object
     $rootScope.googleMap =
@@ -72,56 +79,52 @@ app.run([
       hidePlacesList: true
       sideBarPlacesSlideUp: true
       showCreateAccountPromot: false
-])
 
+    # login status change
+    FBModule.FB.Event.subscribe('auth.authResponseChange', (response) ->
+      if response.status == 'connected'
+        loggedIn(response.authResponse)
+      else if response.status == 'not_authorized'
+        notLoggedIn()
+      else
+        notLoggedIn()
+    )
 
-app.controller('AllProjectsCtrl',
-['$scope',
-($scope) ->
+    # check status change
+    loggedIn = (authResponse) ->
+      FBModule.FB.api('/me', (response) ->
+        $rootScope.user.name            = response.name
+        $rootScope.user.email           = response.email
+        $rootScope.user.fb_access_token = authResponse.accessToken
+        $rootScope.user.fb_user_id      = authResponse.userID
+        User.login($rootScope.user).then(processUserLogin)
+        $rootScope.interface.showCreateAccountPromot = false
+        $rootScope.$apply()
+      )
+      FBModule.FB.api('/me/picture', (response) -> $rootScope.$apply -> $rootScope.user.picture = response.data.url)
+      # TODO: redirect according to user projects
+      if $location.path() == '/'
+        if true
+          $location.path('/new_project')
+        else
+          $location.path('/all_projects')
 
-])
+    notLoggedIn = (reason) ->
+      User.logout()
+      $rootScope.user = {}
+      if $location.path() == '/'
+        $location.path('/new_project')
 
-app.controller('ProjectCtrl',
-['$scope',
-($scope) ->
-  rearrangeMarkerIcons = ->
-    place.marker.setIcon({url: "/assets/number_#{index}.png"}) for place, index in $scope.places
+    FBModule.loginStatus.then null, notLoggedIn
 
-  $scope.places = []
+    $rootScope.fbLogout = -> FBModule.FB.logout()
+    $rootScope.fbLogin = -> FBModule.FB.login()
 
-  $scope.addPlaceToList = (place) ->
-    if $scope.interface.hidePlacesList
-      $scope.interface.hidePlacesList = false
-      $scope.interface.sideBarPlacesSlideUp = false
-    place.marker.setMap(null)
-    place.marker = new google.maps.Marker({
-      map: $scope.googleMap.map
-      title: place.name
-      position: place.place.geometry.location
-      icon:
-        url: "/assets/number_#{$scope.places.length}.png"
-    })
-    $scope.places.push place
-    if $scope.places.length > 1
-      $scope.interface.showCreateAccountPromot = true
-
-  $scope.centerPlaceInMap = (marker) ->
-    marker.getMap().setCenter marker.getPosition()
-
-  $scope.removePlace = (index, marker) ->
-    marker.setMap(null)
-    $scope.places.splice(index, 1)
-    rearrangeMarkerIcons()
-
-  $scope.displayAllMarkers = ->
-    bounds = new google.maps.LatLngBounds()
-    for place in $scope.places
-      bounds.extend(place.marker.getPosition())
-    $scope.googleMap.map.fitBounds(bounds)
-    $scope.googleMap.map.setZoom(12) if $scope.places.length < 3 && $scope.googleMap.map.getZoom() > 12
-
-  $scope.deleteAllSavedPlaces = ->
-    if confirm('Are you sure to delete all saved places? This action is irreversible.')
-      place.marker.setMap(null) for place in $scope.places
-      $scope.places = []
+    # get user location according to ip
+    $rootScope.userLocation = $http.jsonp('http://www.geoplugin.net/json.gp?jsoncallback=JSON_CALLBACK')
+    .then (response) ->
+      return {
+        latitude: response.data.geoplugin_latitude
+        longitude: response.data.geoplugin_longitude
+      }
 ])
