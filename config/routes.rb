@@ -1,5 +1,9 @@
 MapProject::Application.routes.draw do
 
+  resources :places
+
+  resources :projects
+
   root 'home#index'
 
   resources :users

@@ -102,15 +102,17 @@ app.run([
         $rootScope.$apply()
       )
       FBModule.FB.api('/me/picture', (response) -> $rootScope.$apply -> $rootScope.user.picture = response.data.url)
-      # TODO: redirect according to user projects
-      if $location.path() == '/'
-        if true
-          $location.path('/new_project')
-        else
-          $location.path('/all_projects')
+      switch $location.path()
+        when '/' # TODO: redirect according to user projects
+          if true
+            $location.path('/new_project')
+          else
+            $location.path('/all_projects')
+        when '/new_project'
+          $rootScope.$broadcast('loginWithNewProject')
 
     notLoggedIn = (reason) ->
-      User.logout()
+      User.logout() if $rootScope.user.email
       $rootScope.user = {}
       if $location.path() == '/'
         $location.path('/new_project')

@@ -2,9 +2,6 @@
     <div class="mp-all-projects-container">
         <nav class="mp-navbar-top">
             <div class="mp-navbar-dropdown-menu" navbar-dropdown-menu></div>
-            <a href="#/all_projects" class="mp-navbar-button">
-                <i class="icon-compass"></i>
-            </a>
             <label class="mp-navbar-search-box">
                 <i class="icon-search"></i>
                 <input type="text" class="mp-naked-input form-control"placeholder="Search projects">
@@ -19,9 +16,6 @@
     <div class="mp-map-container">
         <nav class="mp-navbar-top">
             <div class="mp-navbar-dropdown-menu" navbar-dropdown-menu></div>
-            <a href="#/all_projects" class="mp-navbar-button">
-                <i class="icon-compass"></i>
-            </a>
             <label class="mp-navbar-search-box">
                 <i class="icon-search"></i>
                 <input type="text" class="mp-naked-input form-control" search-box placeholder="Search places here">
@@ -97,7 +91,11 @@
             {{user.name}}
         </div>
     </a>
+    <a href="#/all_projects" class="mp-navbar-button" bs-tooltip="Show all map projects" bs-tooltip-placement="bottom">
+        <i class="icon-compass"></i>
+    </a>
     <div class="mp-navbar-dropdown-menu-inner">
+        <a href="" class="mp-navbar-button">Settings</a>
         <a href="" class="mp-navbar-button">Share</a>
         <a href="" class="mp-navbar-button">Feedback</a>
         <a href="" class="mp-navbar-button">About</a>

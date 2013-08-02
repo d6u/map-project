@@ -12,3 +12,13 @@ angular.module('angular-mp.api.user', ['ngResource'])
 
     logout: -> $http.get('/logout')
 ])
+
+.factory('Project', [
+  '$resource',
+  ($resource) -> $resource('/projects')
+])
+
+.factory('Place', [
+  '$resource',
+  ($resource) -> $resource('/places')
+])
