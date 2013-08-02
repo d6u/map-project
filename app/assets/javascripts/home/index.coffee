@@ -3,19 +3,20 @@
 #= require modules/perfect-scrollbar-0.4.3.min.js
 #= require modules/perfect-scrollbar-0.4.3.with-mousewheel.min.js
 #= require libraries/angular.min.js
-#= require modules/angular-facebook.coffee
-#= require modules/angular-socket.io.coffee
+#= require mp_modules/angular-facebook.coffee
+#= require mp_modules/angular-socket.io.coffee
 #= require modules/angular-resource.min.js
-#= require modules/angular-tp.resources.coffee
-#= require modules/angular-mp.home.index.controller.coffee
-#= require modules/angular-mp.home.index.directives.coffee
+#= require mp_modules/angular-mp.api.user.coffee
+#= require mp_modules/angular-mp.home.index.controller.coffee
+#= require mp_modules/angular-mp.home.index.directives.coffee
 
 
 
 # declear
 app = angular.module('mapApp',
-  ['angular-facebook', 'angular-socket.io', 'angular-tp.resources',
-  'angular-mp.home.index.controller', 'angular-mp.home.index.directives'])
+  ['angular-facebook', 'angular-socket.io',
+  'angular-mp.home.index.controller', 'angular-mp.home.index.directives',
+  'angular-mp.api.user'])
 
 # config
 app.config([
@@ -57,10 +58,14 @@ app.config([
 
 # run
 app.run([
-  '$rootScope', '$route', '$location', '$http', '$q', 'FBModule',
-  ($rootScope, $route, $location, $http, $q, FBModule) ->
+  '$rootScope', '$route', '$location', '$http', '$q', 'FBModule', 'User',
+  ($rootScope, $route, $location, $http, $q, FBModule, User) ->
     # user
     $rootScope.user = {}
+
+    processUserLogin = (user) ->
+      angular.extend($rootScope.user, user) if user
+      # TODO
 
     # google map object
     $rootScope.googleMap =
@@ -76,7 +81,7 @@ app.run([
     # login status change
     FBModule.FB.Event.subscribe('auth.authResponseChange', (response) ->
       if response.status == 'connected'
-        loggedIn()
+        loggedIn(response.authResponse)
       else if response.status == 'not_authorized'
         notLoggedIn()
       else
@@ -85,21 +90,16 @@ app.run([
 
     # check status change
     loggedIn = (authResponse) ->
-      deferred1 = $q.defer()
-      deferred2 = $q.defer()
       FBModule.FB.api('/me', (response) ->
-        $rootScope.user.name = response.name
-        $rootScope.user.email = response.email
+        $rootScope.user.name            = response.name
+        $rootScope.user.email           = response.email
+        $rootScope.user.fb_access_token = authResponse.accessToken
+        $rootScope.user.fb_user_id      = authResponse.userID
+        User.login($rootScope.user).then(processUserLogin)
         $rootScope.interface.showCreateAccountPromot = false
-        $rootScope.$apply -> deferred1.resolve()
+        $rootScope.$apply()
       )
-      FBModule.FB.api('/me/picture', (response) ->
-        $rootScope.user.picture = response.data.url
-        $rootScope.$apply -> deferred2.resolve()
-      )
-      # post login
-      $q.all(deferred1.promise, deferred2.promise).then ->
-        console.log 'all infomation got'
+      FBModule.FB.api('/me/picture', (response) -> $rootScope.$apply -> $rootScope.user.picture = response.data.url)
       # TODO: redirect according to user projects
       if $location.path() == '/'
         if true
