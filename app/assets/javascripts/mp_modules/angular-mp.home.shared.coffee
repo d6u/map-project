@@ -28,6 +28,7 @@ app.directive 'searchBox', [->
   (scope, element, attrs) ->
 
     scope.googleMap.searchBox = new google.maps.places.SearchBox(element[0])
+    scope.googleMap.searchBoxReady.resolve()
 
     scope.clearSearchResults = ->
       element.val('')
@@ -43,47 +44,6 @@ app.directive 'googleMap', ['$templateCache', '$timeout', '$compile',
 ($templateCache, $timeout, $compile) ->
   (scope, element, attrs) ->
 
-    searchBoxPlaceChanged = ->
-      cleanMarkers()
-      bounds = new google.maps.LatLngBounds()
-      places = scope.googleMap.searchBox.getPlaces()
-
-      for place in places
-        newMarker = new google.maps.Marker({
-          map: scope.googleMap.map
-          title: place.name
-          position: place.geometry.location
-        })
-        scope.googleMap.markers.push(newMarker)
-        bounds.extend(place.geometry.location)
-        bindInfoWindow newMarker, place
-
-      scope.googleMap.map.fitBounds(bounds)
-      scope.googleMap.map.setZoom(12) if places.length < 3 && scope.googleMap.map.getZoom() > 12
-      if scope.googleMap.markers.length == 1
-        google.maps.event.trigger(scope.googleMap.markers[0], 'click')
-
-    cleanMarkers = ->
-      marker.setMap(null) for marker in scope.googleMap.markers
-      scope.googleMap.markers = []
-
-    bindInfoWindow = (marker, place) ->
-      google.maps.event.addListener(marker, 'click', ->
-        template = $templateCache.get('marker_info_window')
-        newScope = scope.$new()
-        newScope.place =
-          marker: marker
-          place: place
-          name: place.name
-          address: place.formatted_address
-          coord: marker.getPosition().toString()
-        compiled = $compile(template)(newScope)
-        scope.googleMap.infoWindow.setContent(compiled[0])
-        google.maps.event.clearListeners(scope.googleMap.infoWindow, 'closeclick')
-        google.maps.event.addListenerOnce(scope.googleMap.infoWindow, 'closeclick', -> newScope.$destroy())
-        scope.googleMap.infoWindow.open(scope.googleMap.map, marker)
-      )
-
     triggerMapResize = ->
       $timeout (->
         google.maps.event.trigger(scope.googleMap.map, 'resize')
@@ -98,14 +58,13 @@ app.directive 'googleMap', ['$templateCache', '$timeout', '$compile',
         disableDefaultUI: true
 
       scope.googleMap.map = new google.maps.Map(element[0], mapOptions)
-      # scope.googleMap.mapReady.resolve()
+      scope.googleMap.mapReady.resolve()
       scope.$watch('interface.showPlacesList', triggerMapResize)
       scope.$watch('interface.showChatbox', triggerMapResize)
       google.maps.event.addListener(scope.googleMap.map, 'bounds_changed',
         -> scope.googleMap.searchBox.setBounds scope.googleMap.map.getBounds())
 
       scope.googleMap.infoWindow = new google.maps.InfoWindow()
-      google.maps.event.addListener(scope.googleMap.searchBox, 'places_changed', searchBoxPlaceChanged)
 ]
 
 
@@ -152,11 +111,7 @@ app.directive 'mapSidebarPlaces', ['$timeout', '$rootScope',
     scope.$watch 'user.id', (newValue, oldValue, scope) ->
       if newValue
         scope.interface.showCreateAccountPromot = false
-
-    scope.$on '$routeChangeSuccess', (event, current, previous) ->
-      if current.params.project_id
-        scope.interface.showPlacesList = false
-        scope.interface.sideBarPlacesSlideUp = true
+        scope.interface.showPlacesList = true
 
     scope.editProjectDetails = ->
       $rootScope.$broadcast 'editProjectDetails', scope.currentProject.project

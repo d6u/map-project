@@ -11,8 +11,17 @@ class ProjectsController < ApplicationController
 
 
   def index
-    projects = @user.projects.order 'created_at DESC'
-    render :json => projects
+    if params[:title]
+      project = @user.projects.find_by_title params[:title]
+      if project
+        render :json => project
+      else
+        head 404
+      end
+    else
+      projects = @user.projects.order 'created_at DESC'
+      render :json => projects
+    end
   end
 
 
@@ -25,6 +34,14 @@ class ProjectsController < ApplicationController
 
   def show
     project = Project.find_by_id params[:id]
+    render :json => project
+  end
+
+
+  def update
+    project = Project.find_by_id params[:id]
+    project.attributes = params.require(:project).permit(:title, :notes)
+    project.save if project.changed?
     render :json => project
   end
 

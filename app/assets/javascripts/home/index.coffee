@@ -16,8 +16,9 @@
 #= require mp_modules/angular-mp.api.coffee
 #= require mp_modules/angular-mp.home.shared.coffee
 #= require mp_modules/angular-mp.home.outside-view.coffee
-#= require mp_modules/angular-mp.home.map-view.coffee
 #= require mp_modules/angular-mp.home.all-projects-view.coffee
+#= require mp_modules/angular-mp.home.new-project-view.coffee
+#= require mp_modules/angular-mp.home.map-view.coffee
 #= require mp_modules/angular-mp.home.helpers.coffee
 
 
@@ -34,9 +35,10 @@ app = angular.module 'mapApp', [
   'angular-mp.api',
   'angular-mp.home.shared',
   'angular-mp.home.outside-view',
+  'angular-mp.home.all-projects-view',
+  'angular-mp.home.new-project-view',
 
   'angular-mp.home.map-view',
-  'angular-mp.home.all-projects-view',
   'angular-mp.home.helpers'
 ]
 
@@ -97,11 +99,24 @@ app.run([
 
     FB.checkLogin ((authResponse) ->
       $rootScope.user.fb_access_token = authResponse.accessToken
-      $rootScope.user.fb_user_id      = authResponse.fb_user_id
-      debugger
-      User.login($rootScope.user).then (response) ->
-        console.log response
-      $location.path('/all_projects') if $location.path() == '/'
+      $rootScope.user.fb_user_id      = authResponse.userID
+      User.login($rootScope.user).then (user) ->
+        if user
+          $rootScope.user.id = user.id
+          FB.api '/me', (response) ->
+            $rootScope.user.name      = response.name
+            $rootScope.user.email     = response.email
+            User.save($rootScope.user)
+          FB.api '/me/picture', (response) ->
+            $rootScope.user.picture   = response.data.url
+          $location.path('/all_projects') if $location.path() == '/'
+        else
+          FB.api '/me', (response) ->
+            $rootScope.user.name      = response.name
+            $rootScope.user.email     = response.email
+            User.register $rootScope.user, (user) ->
+              $rootScope.user.id = user.id
+              $location.path('/new_project') if $location.path() != '/new_project'
     ), (->
       $location.path('/') if $location.path() != '/'
     )
@@ -150,14 +165,8 @@ app.run([
     #       $rootScope.localLoggedIn.resolve()
     #     else
     #       loginCheckDB.resolve()
-    #   FB.api '/me', (response) ->
-    #     $rootScope.user.name          = response.name
-    #     $rootScope.user.email         = response.email
-    #     $rootScope.$apply()
-    #     loginCheckFB.resolve()
-    #   FB.api '/me/picture', (response) ->
-    #     $rootScope.user.picture       = response.data.url
-    #     $rootScope.$apply()
+
+
     #   # register if not in the db
     #   $q.all([loginCheckDB.promise, loginCheckFB.promise]).then ->
     #     User.register($rootScope.user).then (user) ->

@@ -1,7 +1,7 @@
-app = angular.module 'angular-mp.home.outside-view', []
+app = angular.module 'angular-mp.home.new-project-view', []
 
 
-app.controller 'OutsideViewCtrl',
+app.controller 'NewProjectViewCtrl',
 ['$scope', 'Place', 'Project', '$location', '$rootScope', '$q', '$timeout',
  '$templateCache', '$compile',
 ($scope, Place, Project, $location, $rootScope, $q, $timeout,
@@ -15,6 +15,7 @@ app.controller 'OutsideViewCtrl',
     place.marker.setIcon({url: "/assets/number_#{index}.png"}) for place, index in $scope.currentProject.places
 
   $scope.addPlaceToList = (place) ->
+    console.log place
     place.id = true
     place.marker.setMap(null)
     place.marker = new google.maps.Marker({
@@ -24,6 +25,14 @@ app.controller 'OutsideViewCtrl',
       icon:
         url: "/assets/number_#{$scope.currentProject.places.length}.png"
     })
+    Place.create {
+      name: place.name
+      address: place.address
+      coord: place.coord
+      project_id: $scope.currentProject.project.id
+    }, (serverPlace) ->
+      place.id = serverPlace.id
+
     $scope.currentProject.places.push place
 
   $scope.centerPlaceInMap = (marker) ->
@@ -32,6 +41,7 @@ app.controller 'OutsideViewCtrl',
   $scope.removePlace = (index, marker) ->
     marker.setMap(null)
     place = $scope.currentProject.places.splice(index, 1)[0]
+    Place.delete {project_id: $scope.currentProject.project.id , place_id: place.id}
     rearrangeMarkerIcons()
 
   $scope.displayAllMarkers = ->
@@ -87,6 +97,23 @@ app.controller 'OutsideViewCtrl',
       $scope.googleMap.infoWindow.open($scope.googleMap.map, marker)
     )
 
+  # db
+  processPlaces = (places) ->
+    $scope.currentProject.places = places
+    for place, index in places
+      do (place, index) ->
+        coordMatch = /\((.+), (.+)\)/.exec place.coord
+        latLog = new google.maps.LatLng coordMatch[1], coordMatch[2]
+        markerOptions =
+          map: $scope.googleMap.map
+          title: place.name
+          position: latLog
+          icon:
+            url: "/assets/number_#{index}.png"
+        place.marker = new google.maps.Marker markerOptions
+    $scope.googleMap.mapReady.promise.then ->
+      $scope.displayAllMarkers()
+
   # map components
   $scope.googleMap.mapReady = $q.defer()
   $scope.googleMap.searchBoxReady = $q.defer()
@@ -96,4 +123,18 @@ app.controller 'OutsideViewCtrl',
      $scope.googleMap.searchBoxReady.promise]
   ).then ->
     google.maps.event.addListener($scope.googleMap.searchBox, 'places_changed', searchBoxPlaceChanged)
+
+  # init
+  Project.find_by_title {title: 'last unsaved project'}, ((project) ->
+    $scope.currentProject.project = project
+    Place.query {project_id: project.id}, (places) ->
+      processPlaces(places)
+  ), ((reason) ->
+    Project.create {title: 'last unsaved project'}, (project) ->
+      $scope.currentProject.project = project
+  )
+
+  # events
+  $scope.$on 'projectUpdated', (event, project) ->
+    $scope.currentProject.project = project
 ]
