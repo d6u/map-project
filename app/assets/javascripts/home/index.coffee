@@ -100,6 +100,10 @@ app.run([
         $rootScope.projects = projects
         $rootScope.projectsLoaded.resolve()
 
+    $rootScope.$on 'projectDeleted', (event, project_id) ->
+      Project.query (projects) ->
+        $rootScope.projects = projects
+
     # init application
     $rootScope.$on 'fbLoggedIn', (event, authResponse) ->
       loginCheckDB = $q.defer()

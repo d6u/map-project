@@ -11,7 +11,7 @@ class ProjectsController < ApplicationController
 
 
   def index
-    projects = @user.projects
+    projects = @user.projects.order 'created_at DESC'
     render :json => projects
   end
 
@@ -26,6 +26,12 @@ class ProjectsController < ApplicationController
   def show
     project = Project.find_by_id params[:id]
     render :json => project
+  end
+
+
+  def destroy
+    Project.destroy_all :id => params[:id]
+    head 200
   end
 
 end

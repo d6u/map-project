@@ -12,7 +12,7 @@ class PlacesController < ApplicationController
 
   def index
     # TODO: project_id route
-    places = Place.where :project_id => params[:id]
+    places = Place.where(:project_id => params[:id]).order 'places.order DESC'
     render :json => places
   end
 

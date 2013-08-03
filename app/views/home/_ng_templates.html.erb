@@ -69,7 +69,10 @@
             </div>
         </div>
         <div class="mp-create-account-promot" ng-class="{'js-create-account-promot-show': currentProject.project.id}">
-            {{currentProject.project.title}}
+            <p>{{currentProject.project.title}}</p>
+            <div>
+                <a href="" class="btn btn-primary" ng-click="editProjectDetails()">Edit project details</a>
+            </div>
         </div>
         <div class="mp-sidebar-places js-places-slide-up" ng-class="{'js-places-slide-up': interface.sideBarPlacesSlideUp}" perfect-scrollbar='places' jquery-ui-sortable>
             <div class="mp-sidebar-place" ng-repeat="place in currentProject.places" sidebar-place>

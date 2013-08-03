@@ -215,7 +215,8 @@ app.directive 'sidebarPlace', ['$templateCache', '$compile',
 
 
 # map-sidebar-places
-app.directive 'mapSidebarPlaces', ['$timeout', ($timeout) ->
+app.directive 'mapSidebarPlaces', ['$timeout', '$rootScope',
+($timeout, $rootScope) ->
   (scope, element, attrs) ->
 
     scope.$watch attrs.mapSidebarPlaces, (newValue, oldValue, scope) ->
@@ -243,4 +244,7 @@ app.directive 'mapSidebarPlaces', ['$timeout', ($timeout) ->
           scope.interface.sideBarPlacesSlideUp = false
         # element.removeClass 'js-sidebar-slide-out'
         # element.find('.js-places-slide-up').removeClass 'js-places-slide-up'
+
+    scope.editProjectDetails = ->
+      $rootScope.$broadcast 'editProjectDetails', scope.currentProject.project
 ]
