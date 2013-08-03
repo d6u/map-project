@@ -2,8 +2,8 @@ app = angular.module 'angular-mp.home.map-view', []
 
 
 app.controller 'ProjectCtrl',
-['$scope', 'Place', 'Project', '$location', '$rootScope', '$q',
-($scope, Place, Project, $location, $rootScope, $q) ->
+['$scope', 'Place', 'Project', '$location', '$rootScope', '$q', '$timeout',
+($scope, Place, Project, $location, $rootScope, $q, $timeout) ->
 
   # places
   $scope.currentProject =
@@ -77,6 +77,7 @@ app.controller 'ProjectCtrl',
         $scope.googleMap.mapReady.promise.then ->
           processPlace place, index for place, index in places
           $scope.currentProject.places = places
+          $timeout $scope.displayAllMarkers, 200 if places.length > 0
     else
       $scope.currentProject.places = []
 
@@ -214,22 +215,32 @@ app.directive 'sidebarPlace', ['$templateCache', '$compile',
 
 
 # map-sidebar-places
-app.directive 'mapSidebarPlaces', [ ->
+app.directive 'mapSidebarPlaces', ['$timeout', ($timeout) ->
   (scope, element, attrs) ->
 
     scope.$watch attrs.mapSidebarPlaces, (newValue, oldValue, scope) ->
-      if newValue > 0
-        scope.interface.hidePlacesList = false
-        scope.interface.sideBarPlacesSlideUp = false
-      else
-        scope.interface.hidePlacesList = true
-        scope.interface.sideBarPlacesSlideUp = true
-
       if !scope.user.fb_access_token
+        if newValue > 0
+          scope.interface.hidePlacesList = false
+          scope.interface.sideBarPlacesSlideUp = false
+        else
+          scope.interface.hidePlacesList = true
+          scope.interface.sideBarPlacesSlideUp = true
+
         if newValue > 1
           scope.interface.showCreateAccountPromot = true
 
     scope.$watch 'user.fb_access_token', (newValue, oldValue, scope) ->
       if newValue
         scope.interface.showCreateAccountPromot = false
+
+    scope.$on '$routeChangeSuccess', (event, current, previous) ->
+      if current.params.project_id
+        scope.interface.hidePlacesList = true
+        scope.interface.sideBarPlacesSlideUp = true
+        $timeout -> # fix class won't remove bug
+          scope.interface.hidePlacesList = false
+          scope.interface.sideBarPlacesSlideUp = false
+        # element.removeClass 'js-sidebar-slide-out'
+        # element.find('.js-places-slide-up').removeClass 'js-places-slide-up'
 ]
