@@ -115,8 +115,11 @@
             {{user.name}}
         </div>
     </a>
-    <a href="#/all_projects" class="mp-navbar-button" bs-tooltip="Show all map projects" bs-tooltip-placement="right">
+    <a href="#/all_projects" class="mp-navbar-button" bs-tooltip="Show all map projects" bs-tooltip-placement="right" ng-class="{hide: !inMapView}">
         <i class="icon-compass"></i>
+    </a>
+    <a href="#/new_project" class="mp-navbar-button" bs-tooltip="Create new project" bs-tooltip-placement="right" ng-class="{hide: inMapView}">
+        <i class="icon-plus"></i>
     </a>
     <div class="mp-navbar-dropdown-menu-inner">
         <a href="" class="mp-navbar-button">Settings</a>

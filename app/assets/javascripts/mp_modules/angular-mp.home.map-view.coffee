@@ -5,6 +5,9 @@ app.controller 'ProjectCtrl',
 ['$scope', 'Place', 'Project', '$location', '$rootScope', '$q', '$timeout',
 ($scope, Place, Project, $location, $rootScope, $q, $timeout) ->
 
+  # navbar button
+  $scope.inMapView = true
+
   # places
   $scope.currentProject =
     project: {}
@@ -79,6 +82,7 @@ app.controller 'ProjectCtrl',
           $scope.currentProject.places = places
           $timeout $scope.displayAllMarkers, 200 if places.length > 0
     else
+      $rootScope.$broadcast 'newProject'
       $scope.currentProject.places = []
 
   # events
