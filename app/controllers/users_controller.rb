@@ -17,7 +17,7 @@ class UsersController < ApplicationController
   # Login in with fb user data
   # ----------------------------------------
   def login
-    head 404 unless user = User.find_by_fb_user_id(params[:user][:fb_user_id])
+    head 404 and return unless user = User.find_by_fb_user_id(params[:user][:fb_user_id])
 
     # TODO: fix always update access_token
     user.fb_access_token = params[:user][:fb_access_token]

@@ -111,6 +111,7 @@ app.run([
       $rootScope.user.fb_access_token = authResponse.accessToken
       $rootScope.user.fb_user_id      = authResponse.userID
       User.login($rootScope.user).then (user) ->
+        console.log user
         if user
           $rootScope.user.id = user.id
           $rootScope.localLoggedIn.resolve()

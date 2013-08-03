@@ -82,7 +82,8 @@ app.controller 'ProjectCtrl',
           $scope.currentProject.places = places
           $timeout $scope.displayAllMarkers, 200 if places.length > 0
     else
-      $rootScope.$broadcast 'newProject'
+      if $scope.user.fb_access_token
+        $rootScope.$broadcast 'newProject'
       $scope.currentProject.places = []
 
   # events
