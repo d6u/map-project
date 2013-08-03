@@ -1,11 +1,11 @@
-app = angular.module 'angular-mp.home.new-project-view', []
+app = angular.module 'angular-mp.home.project-view', []
 
 
-app.controller 'NewProjectViewCtrl',
+app.controller 'ProjectViewCtrl',
 ['$scope', 'Place', 'Project', '$location', '$rootScope', '$q', '$timeout',
- '$templateCache', '$compile',
+ '$templateCache', '$compile', '$route',
 ($scope, Place, Project, $location, $rootScope, $q, $timeout,
- $templateCache, $compile) ->
+ $templateCache, $compile, $route) ->
 
   # interface
   $scope.inMapview = true
@@ -125,15 +125,11 @@ app.controller 'NewProjectViewCtrl',
     google.maps.event.addListener($scope.googleMap.searchBox, 'places_changed', searchBoxPlaceChanged)
 
   # init
-  Project.find_by_title {title: 'last unsaved project'}, ((project) ->
+  Project.get {project_id: $route.current.params.project_id}, (project) ->
     $scope.currentProject.project = project
     Place.query {project_id: project.id}, (places) ->
       $scope.googleMap.mapReady.promise.then ->
         processPlaces(places)
-  ), ((reason) ->
-    Project.create {title: 'last unsaved project'}, (project) ->
-      $scope.currentProject.project = project
-  )
 
   # events
   $scope.$on 'projectUpdated', (event, project) ->

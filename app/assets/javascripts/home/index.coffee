@@ -18,7 +18,7 @@
 #= require mp_modules/angular-mp.home.outside-view.coffee
 #= require mp_modules/angular-mp.home.all-projects-view.coffee
 #= require mp_modules/angular-mp.home.new-project-view.coffee
-#= require mp_modules/angular-mp.home.map-view.coffee
+#= require mp_modules/angular-mp.home.project-view.coffee
 #= require mp_modules/angular-mp.home.helpers.coffee
 
 
@@ -37,8 +37,8 @@ app = angular.module 'mapApp', [
   'angular-mp.home.outside-view',
   'angular-mp.home.all-projects-view',
   'angular-mp.home.new-project-view',
+  'angular-mp.home.project-view',
 
-  'angular-mp.home.map-view',
   'angular-mp.home.helpers'
 ]
 
