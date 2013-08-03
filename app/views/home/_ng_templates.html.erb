@@ -127,13 +127,7 @@
 <!-- All projects view -->
 <script type="text/ng-template" id="all_projects_view">
     <div class="mp-all-projects-container">
-        <nav class="mp-navbar-top">
-            <div class="mp-navbar-dropdown-menu" navbar-dropdown-menu></div>
-            <label class="mp-navbar-search-box">
-                <i class="icon-search"></i>
-
-            </label>
-        </nav>
+        <nav class="mp-navbar-top" mp-navbar-top-secion></nav>
         <div class="mp-all-projects-list" perfect-scrollbar='projects,models.projectTitle'>
             <div class="mp-all-projects-list-inner">
                 <header class="mp-all-projects-list-header">All Projects</header>
@@ -144,7 +138,7 @@
                         </div>
                         <div class="mp-project-item-detail">
                             <header class="mp-project-item-header">
-                                <a ng-href="#/project/{{project.id}}">{{project.title}}</a>
+                                <a ng-href="/project/{{project.id}}">{{project.title}}</a>
                             </header>
                             <p class="mp-project-item-notes">{{project.notes || "No notes yet..."}}</p>
                         </div>

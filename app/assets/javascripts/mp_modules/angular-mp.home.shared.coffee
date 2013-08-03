@@ -27,8 +27,9 @@ app.directive 'mpNavbarInputsSection', [->
 app.directive 'searchBox', [->
   (scope, element, attrs) ->
 
-    scope.googleMap.searchBox = new google.maps.places.SearchBox(element[0])
-    scope.googleMap.searchBoxReady.resolve()
+    if scope.inMapview
+      scope.googleMap.searchBox = new google.maps.places.SearchBox(element[0])
+      scope.googleMap.searchBoxReady.resolve()
 
     scope.clearSearchResults = ->
       element.val('')
