@@ -1,10 +1,139 @@
+<!-- OutsideViewCtrl -->
+<script type="text/ng-template" id="outside_view">
+    <div class="mp-map-container">
+        <nav class="mp-navbar-top" mp-navbar-top-secion></nav>
+        <div class="mp-map-canvas" google-map></div>
+    </div>
+    <div class="mp-places-list" ng-class="{'js-sidebar-slide-in': interface.showPlacesList}" map-sidebar-places="currentProject.places.length"></div>
+</script>
+
+
+<!-- mp-navbar-top -->
+<script type="text/ng-template" id="mp_navbar_top_template">
+    <div class="mp-navbar-dropdown-menu" navbar-dropdown-menu></div>
+    <div class="mp-navbar-inputs" mp-navbar-inputs-section></div>
+</script>
+
+
+<script type="text/ng-template" id="navbar_dropdown_menu">
+    <a href="" class="mp-navbar-button mp-brand" ng-class="{hide: user.fb_access_token}">Map Project</a>
+    <a href="" class="mp-navbar-button mp-brand" ng-class="{hide: !user.fb_access_token}">
+        <i class="icon-refresh icon-spin" ng-class="{hide: user.email}"></i>
+        <div class="mp-navbar-user-info" ng-class="{hide: !user.email}">
+            <img class="mp-navbar-user-info-picture" ng-src="{{user.picture}}">
+            {{user.name}}
+        </div>
+    </a>
+    <div class="mp-navbar-dropdown-menu-inner" ng-class="{hide: user.fb_access_token}">
+        <a href="" class="mp-navbar-button" ng-click="fbLogin()">Login with Facebook</a>
+        <a href="" class="mp-navbar-button">Share</a>
+        <a href="" class="mp-navbar-button">Feedback</a>
+        <a href="" class="mp-navbar-button">About</a>
+    </div>
+    <div class="mp-navbar-dropdown-menu-inner" ng-class="{hide: !user.fb_access_token}">
+        <a href="" class="mp-navbar-button">Settings</a>
+        <a href="" class="mp-navbar-button">Share</a>
+        <a href="" class="mp-navbar-button">Feedback</a>
+        <a href="" class="mp-navbar-button">About</a>
+        <a href="" class="mp-navbar-button" ng-click="fbLogout()">Logout</a>
+    </div>
+</script>
+
+
+<script type="text/ng-template" id="mp_navbar_inputs_section_template">
+    <a href="#/all_projects" class="mp-navbar-button" bs-tooltip="Show all map projects" bs-tooltip-placement="right" ng-class="{hide: !user.id && inMapview}">
+        <i class="icon-compass"></i>
+    </a>
+    <a href="#/new_project" class="mp-navbar-button" bs-tooltip="Create new project" bs-tooltip-placement="right" ng-class="{hide: !user.id && inMapview}">
+        <i class="icon-plus"></i>
+    </a>
+    <label class="mp-navbar-search-box">
+        <i class="icon-search"></i>
+        <input type="text" class="mp-naked-input form-control" search-box placeholder="Search places here" ng-class="{hide: !inMapview}">
+        <input type="text" class="mp-naked-input form-control" placeholder="Search projects" ng-model="models.projectTitle" ng-class="{hide: inMapview}">
+        <a href="" class="mp-search-box-clear-results" ng-click="clearSearchResults()">
+            <i class="icon-remove"></i>
+        </a>
+    </label>
+</script>
+
+
+<!-- map-sidebar-places -->
+<script type="text/ng-template" id="mp_sidebar_places_template">
+    <nav class="mp-navbar-top">
+        <div class="mp-places-button-group">
+            <a href="" class="mp-navbar-button" ng-click="displayAllMarkers()" bs-tooltip="Zoom map to display all places" bs-tooltip-placement="bottom">
+                <i class="icon-resize-full"></i>
+            </a>
+            <!-- <a href="" class="mp-navbar-button">
+                <i class="icon-ban-circle"></i>
+            </a> -->
+            <a href="" class="mp-navbar-button" ng-click="interface.showChatbox = !interface.showChatbox">
+                <i class="icon-comments"></i>
+            </a>
+            <a href="" class="mp-navbar-button" ng-click="deleteAllSavedPlaces()" bs-tooltip="Delete all saved places" bs-tooltip-placement="bottom">
+                <i class="icon-remove-circle"></i>
+            </a>
+        </div>
+    </nav>
+    <div class="mp-create-account-promot" ng-class="{'js-create-account-promot-show': interface.showCreateAccountPromot}">
+        <p class="lead">Save your researches?</p>
+        <div>
+            <a href="" class="btn btn-primary" ng-click="fbLogin()">Sign up with Facebook</a>
+            <!-- <a href="" class="btn btn-default">Later</a> -->
+        </div>
+    </div>
+    <div class="mp-create-account-promot" ng-class="{'js-create-account-promot-show': currentProject.project.id}">
+        <p>{{currentProject.project.title}}</p>
+        <div>
+            <a href="" class="btn btn-primary" ng-click="editProjectDetails()">Edit project details</a>
+        </div>
+    </div>
+    <div class="mp-sidebar-places js-places-slide-up" ng-class="{'js-places-slide-up': interface.sideBarPlacesSlideUp}" perfect-scrollbar='places' jquery-ui-sortable>
+        <div class="mp-sidebar-place" ng-repeat="place in currentProject.places" sidebar-place>
+            <div class="mp-place-marker-icon">
+                <a href="" ng-click="centerPlaceInMap(place.marker)">
+                    <img ng-src="/assets/number_{{$index}}.png">
+                </a>
+            </div>
+            <div class="mp-place-actions">
+                <a href="" ng-click="removePlace($index, place.marker)">
+                    <i class="icon-remove"></i>
+                </a>
+            </div>
+            <div class="mp-place-detail-sidebar">
+                <div class="mp-place-name-sidebar">{{place.name}}</div>
+                <address>{{place.address}}</address>
+            </div>
+        </div>
+    </div>
+</script>
+
+
+<script type="text/ng-template" id="marker_info_window">
+    <div class="mp-info-window-wrapper" marker-info>
+        <div class="mp-info-window-title">{{place.name}}</div>
+        <div class="mp-info-window-address">{{place.address}}</div>
+        <div class="mp-info-window-options" ng-class="{hide: place.id}">
+            <a href="" ng-click="addPlaceToList(place)">
+                <i class="icon-ok"></i>
+                Add to list
+            </a>
+        </div>
+    </div>
+</script>
+
+
+
+
+<!-- All projects view -->
 <script type="text/ng-template" id="all_projects_view">
     <div class="mp-all-projects-container">
         <nav class="mp-navbar-top">
             <div class="mp-navbar-dropdown-menu" navbar-dropdown-menu></div>
             <label class="mp-navbar-search-box">
                 <i class="icon-search"></i>
-                <input type="text" class="mp-naked-input form-control" placeholder="Search projects" ng-model="models.projectTitle">
+
             </label>
         </nav>
         <div class="mp-all-projects-list" perfect-scrollbar='projects,models.projectTitle'>
@@ -30,130 +159,13 @@
 </script>
 
 
+<!-- New project view -->
+<script type="text/ng-template" id="new_project_view">
+    <div></div>
+</script>
+
+
+<!-- Project view -->
 <script type="text/ng-template" id="project_view">
-    <div class="mp-map-container">
-        <nav class="mp-navbar-top">
-            <div class="mp-navbar-dropdown-menu" navbar-dropdown-menu></div>
-            <label class="mp-navbar-search-box">
-                <i class="icon-search"></i>
-                <input type="text" class="mp-naked-input form-control" search-box placeholder="Search places here">
-                <a href="" class="mp-search-box-clear-results" ng-click="clearSearchResults()">
-                    <i class="icon-remove"></i>
-                </a>
-            </label>
-        </nav>
-        <div class="mp-map-canvas" google-map></div>
-    </div>
-    <div class="mp-places-list js-sidebar-slide-out" ng-class="{'js-sidebar-slide-out': interface.hidePlacesList}" map-sidebar-places="currentProject.places.length">
-        <nav class="mp-navbar-top">
-            <div class="mp-places-button-group">
-                <a href="" class="mp-navbar-button" ng-click="displayAllMarkers()" bs-tooltip="Zoom map to display all places" bs-tooltip-placement="bottom">
-                    <i class="icon-resize-full"></i>
-                </a>
-                <a href="" class="mp-navbar-button">
-                    <i class="icon-ban-circle"></i>
-                </a>
-                <a href="" class="mp-navbar-button">
-                    <i class="icon-ban-circle"></i>
-                </a>
-                <a href="" class="mp-navbar-button" ng-click="deleteAllSavedPlaces()" bs-tooltip="Delete all saved places" bs-tooltip-placement="bottom">
-                    <i class="icon-remove-circle"></i>
-                </a>
-            </div>
-        </nav>
-        <div class="mp-create-account-promot" ng-class="{'js-create-account-promot-show': interface.showCreateAccountPromot}">
-            <p class="lead">Save your researches?</p>
-            <div>
-                <a href="" class="btn btn-primary" ng-click="fbLogin()">Sign up with Facebook</a>
-                <!-- <a href="" class="btn btn-default">Later</a> -->
-            </div>
-        </div>
-        <div class="mp-create-account-promot" ng-class="{'js-create-account-promot-show': currentProject.project.id}">
-            <p>{{currentProject.project.title}}</p>
-            <div>
-                <a href="" class="btn btn-primary" ng-click="editProjectDetails()">Edit project details</a>
-            </div>
-        </div>
-        <div class="mp-sidebar-places js-places-slide-up" ng-class="{'js-places-slide-up': interface.sideBarPlacesSlideUp}" perfect-scrollbar='places' jquery-ui-sortable>
-            <div class="mp-sidebar-place" ng-repeat="place in currentProject.places" sidebar-place>
-                <div class="mp-place-marker-icon">
-                    <a href="" ng-click="centerPlaceInMap(place.marker)">
-                        <img ng-src="/assets/number_{{$index}}.png">
-                    </a>
-                </div>
-                <div class="mp-place-actions">
-                    <a href="" ng-click="removePlace($index, place.marker)">
-                        <i class="icon-remove"></i>
-                    </a>
-                </div>
-                <div class="mp-place-detail-sidebar">
-                    <div class="mp-place-name-sidebar">{{place.name}}</div>
-                    <address>{{place.address}}</address>
-                </div>
-            </div>
-        </div>
-    </div>
-</script>
-
-
-<script type="text/ng-template" id="navbar_dropdown_menu">
-    <a href="" class="mp-navbar-button mp-brand">Map Project</a>
-    <div class="mp-navbar-dropdown-menu-inner">
-        <a href="" class="mp-navbar-button" ng-click="fbLogin()">Login with Facebook</a>
-        <a href="" class="mp-navbar-button">Share</a>
-        <a href="" class="mp-navbar-button">Feedback</a>
-        <a href="" class="mp-navbar-button">About</a>
-    </div>
-</script>
-
-
-<script type="text/ng-template" id="navbar_dropdown_menu_logged">
-    <a href="" class="mp-navbar-button mp-brand">
-        <i class="icon-refresh icon-spin" ng-class="{hide: user.email}"></i>
-        <div class="mp-navbar-user-info" ng-class="{hide: !user.email}">
-            <img class="mp-navbar-user-info-picture" ng-src="{{user.picture}}">
-            {{user.name}}
-        </div>
-    </a>
-    <a href="#/all_projects" class="mp-navbar-button" bs-tooltip="Show all map projects" bs-tooltip-placement="right" ng-class="{hide: !inMapView}">
-        <i class="icon-compass"></i>
-    </a>
-    <a href="#/new_project" class="mp-navbar-button" bs-tooltip="Create new project" bs-tooltip-placement="right" ng-class="{hide: inMapView}">
-        <i class="icon-plus"></i>
-    </a>
-    <div class="mp-navbar-dropdown-menu-inner">
-        <a href="" class="mp-navbar-button">Settings</a>
-        <a href="" class="mp-navbar-button">Share</a>
-        <a href="" class="mp-navbar-button">Feedback</a>
-        <a href="" class="mp-navbar-button">About</a>
-        <a href="" class="mp-navbar-button" ng-click="fbLogout()">Logout</a>
-    </div>
-</script>
-
-
-<script type="text/ng-template" id="marker_info_window">
-    <div class="mp-info-window-wrapper" marker-info>
-        <div class="mp-info-window-title">{{place.name}}</div>
-        <div class="mp-info-window-address">{{place.address}}</div>
-        <div class="mp-info-window-options">
-            <a href="" ng-click="addPlaceToList(place)">
-                <i class="icon-ok"></i>
-                Add to list
-            </a>
-        </div>
-    </div>
-</script>
-
-
-<script type="text/ng-template" id="saved_marker_info_window">
-    <div class="mp-info-window-wrapper" saved-marker-info>
-        <div class="mp-info-window-title">{{place.name}}</div>
-        <div class="mp-info-window-address">{{place.address}}</div>
-        <!-- <div class="mp-info-window-options">
-            <a href="" ng-click="addPlaceToList(place)">
-                <i class="icon-check-sign"></i>
-                Add to list
-            </a>
-        </div> -->
-    </div>
+    <div class=""></div>
 </script>

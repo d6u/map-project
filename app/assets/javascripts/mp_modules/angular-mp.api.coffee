@@ -6,7 +6,8 @@ app.factory 'User', ['$http', ($http) ->
 
   login: (user) ->
     # fb_access_token, fb_user_id
-    $http.post('/login', {user: user}).then ((response) -> return response.data), ((response) -> return false if response.status != 200)
+    $http.post('/login', {user: user})
+    .then ((response) -> response.data ), (-> false)
 
   register: (user) ->
     # fb_access_token, fb_user_id, email, name

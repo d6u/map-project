@@ -56,6 +56,7 @@ ng-view {
     flex-basis: 300px;
     overflow: hidden;
     position: relative;
+    @extend .js-sidebar-slide-out;
 }
 
 // Navbar
@@ -71,6 +72,11 @@ ng-view {
     position: absolute;
     width: 100%;
     z-index: 100;
+}
+
+.mp-navbar-inputs {
+    flex-grow: 1;
+    display: flex;
 }
 
 .mp-navbar-button {
@@ -339,6 +345,9 @@ ng-view {
 
 // Chatbox
 // ========================================
+.mp-chatbox {
+    @extend .js-sidebar-slide-out;
+}
 
 
 // JS Helper
@@ -350,6 +359,10 @@ ng-view {
 
 .js-sidebar-slide-out {
     flex-basis: 0;
+}
+
+.js-sidebar-slide-in {
+    flex-basis: 300px;
 }
 
 .js-places-slide-up {
