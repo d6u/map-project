@@ -8,28 +8,24 @@ app.provider 'FB', class
   # factory
   $get: ['$rootScope', '$timeout', '$q', ($rootScope, $timeout, $q) ->
 
-    loginChecked = $q.defer()
+    # check if logged in
+    FB.checkLogin = (loggedIn, notLoggedIn) ->
+      FB.getLoginStatus (response) ->
+        switch response.status
+          when 'connected'
+            loggedIn(response.authResponse)
+          else
+            notLoggedIn()
 
-    loginCheck = (response) ->
-      switch response.status
-        when 'connected'
-          console.log 'fbLoggedIn'
-          $rootScope.$broadcast 'fbLoggedIn', response.authResponse
-        when 'not_authorized'
-          console.log 'fbNotAuthorized'
-          $rootScope.$broadcast 'fbNotAuthorized'
+    FB.doLogin = (success, error) ->
+      FB.login (response) ->
+        if response.authResponse
+          success(response.authResponse)
         else
-          console.log 'fbNotLoggedIn'
-          $rootScope.$broadcast 'fbNotLoggedIn'
+          error()
 
-    # init
-    FB.getLoginStatus (response) ->
-      loginCheck response
-      FB.Event.subscribe 'auth.authResponseChange', loginCheck
-      $rootScope.$apply -> loginChecked.resolve()
-
-    # attach login checked promise
-    FB.loginChecked = loginChecked.promise
+    FB.doLogout = (success) ->
+      FB.logout -> success()
 
     # return
     FB

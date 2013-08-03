@@ -11,8 +11,7 @@ class PlacesController < ApplicationController
 
 
   def index
-    # TODO: project_id route
-    places = Place.where(:project_id => params[:id]).order 'places.order DESC'
+    places = Place.where(:project_id => params[:project_id]).order 'places.order DESC'
     render :json => places
   end
 
@@ -22,6 +21,20 @@ class PlacesController < ApplicationController
     if place.save
       render :json => place
     end
+  end
+
+
+  def show
+    place = Place.find_by_id params[:id]
+    render :json => place
+  end
+
+
+  def update
+    place = Place.find_by_id params[:id]
+    place.attributes = params.require(:place).permit(:notse, :name, :address, :coord, :order)
+    place.save if place.changed?
+    render :json => place
   end
 
 

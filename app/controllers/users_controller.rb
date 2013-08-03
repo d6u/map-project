@@ -52,4 +52,15 @@ class UsersController < ApplicationController
     head 200
   end
 
+
+  def update
+    if @user.id == params[:user][:id]
+      @user.attributes = params.require(:user).permit(:fb_access_token, :fb_user_id, :name, :email)
+      @user.save if @user.changed?
+      render :json => @user
+    else
+      head 401
+    end
+  end
+
 end

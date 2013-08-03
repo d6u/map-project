@@ -8,9 +8,6 @@ app.directive 'projectDetailModal', ['$rootScope', 'Project', '$location',
 
     scope.hideDeleteProjectButton = true
 
-    scope.$on 'newProject', ->
-      element.modal()
-
     scope.$on 'editProjectDetails', (event, project) ->
       scope.newProjectModal = project
       scope.hideDeleteProjectButton = false
@@ -19,19 +16,23 @@ app.directive 'projectDetailModal', ['$rootScope', 'Project', '$location',
     scope.saveProject = ->
       if scope.newProjectModalForm.$valid
         scope.errorMessage = null
-        Project.save scope.newProjectModal, (project) ->
-          $rootScope.$broadcast 'newProjectCreated', project
+        Project.update scope.newProjectModal, (project) ->
+          $rootScope.$broadcast 'projectUpdated', project
           element.modal('hide')
           scope.hideDeleteProjectButton = true
       else
         scope.errorMessage = "You must have a title to start with."
+
+    # TODO: refactor
+    scope.$on 'newProject', ->
+      element.modal()
 
     scope.deleteProject = ->
       scope.errorMessage = null
       Project.delete {project_id: scope.newProjectModal.id}, ->
         $rootScope.$broadcast 'projectDeleted', scope.newProjectModal.id
         element.modal('hide')
-        $location.path('/')
+        $location.path('/all_projects')
         scope.newProjectModal = {}
         scope.hideDeleteProjectButton = true
 ]
