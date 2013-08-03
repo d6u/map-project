@@ -68,6 +68,12 @@
                 <!-- <a href="" class="btn btn-default">Later</a> -->
             </div>
         </div>
+        <div class="mp-create-account-promot" ng-class="{'js-create-account-promot-show': currentProject.project.id}">
+            <p>{{currentProject.project.title}}</p>
+            <div>
+                <a href="" class="btn btn-primary" ng-click="editProjectDetails()">Edit project details</a>
+            </div>
+        </div>
         <div class="mp-sidebar-places js-places-slide-up" ng-class="{'js-places-slide-up': interface.sideBarPlacesSlideUp}" perfect-scrollbar='places' jquery-ui-sortable>
             <div class="mp-sidebar-place" ng-repeat="place in currentProject.places" sidebar-place>
                 <div class="mp-place-marker-icon">
@@ -109,8 +115,11 @@
             {{user.name}}
         </div>
     </a>
-    <a href="#/all_projects" class="mp-navbar-button" bs-tooltip="Show all map projects" bs-tooltip-placement="bottom">
+    <a href="#/all_projects" class="mp-navbar-button" bs-tooltip="Show all map projects" bs-tooltip-placement="right" ng-class="{hide: !inMapView}">
         <i class="icon-compass"></i>
+    </a>
+    <a href="#/new_project" class="mp-navbar-button" bs-tooltip="Create new project" bs-tooltip-placement="right" ng-class="{hide: inMapView}">
+        <i class="icon-plus"></i>
     </a>
     <div class="mp-navbar-dropdown-menu-inner">
         <a href="" class="mp-navbar-button">Settings</a>

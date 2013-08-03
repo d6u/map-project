@@ -277,7 +277,7 @@ ng-view {
     border: 1px solid $gray3;
     border-radius: 3px;
     text-align: center;
-    &.js-create-account-promot-show + .mp-sidebar-places {
+    &.js-create-account-promot-show ~ .mp-sidebar-places {
         margin-top: 179px;
     }
 }

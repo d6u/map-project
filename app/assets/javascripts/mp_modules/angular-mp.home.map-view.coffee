@@ -2,8 +2,11 @@ app = angular.module 'angular-mp.home.map-view', []
 
 
 app.controller 'ProjectCtrl',
-['$scope', 'Place', 'Project', '$location', '$rootScope', '$q',
-($scope, Place, Project, $location, $rootScope, $q) ->
+['$scope', 'Place', 'Project', '$location', '$rootScope', '$q', '$timeout',
+($scope, Place, Project, $location, $rootScope, $q, $timeout) ->
+
+  # navbar button
+  $scope.inMapView = true
 
   # places
   $scope.currentProject =
@@ -23,6 +26,17 @@ app.controller 'ProjectCtrl',
       icon:
         url: "/assets/number_#{$scope.currentProject.places.length}.png"
     })
+    if $scope.currentProject.project.id
+      placeSimple =
+        name: place.name
+        notes: place.notes
+        address: place.address
+        coord: place.coord
+        order: $scope.currentProject.places.length
+        project_id: $scope.currentProject.project.id
+      Place.save placeSimple, (response) ->
+        place.project_id = response.project_id
+        place.id = response.id
     $scope.currentProject.places.push place
 
   $scope.centerPlaceInMap = (marker) ->
@@ -30,7 +44,8 @@ app.controller 'ProjectCtrl',
 
   $scope.removePlace = (index, marker) ->
     marker.setMap(null)
-    $scope.currentProject.places.splice(index, 1)
+    place = $scope.currentProject.places.splice(index, 1)[0]
+    Place.delete {place_id: place.id}
     rearrangeMarkerIcons()
 
   $scope.displayAllMarkers = ->
@@ -59,11 +74,15 @@ app.controller 'ProjectCtrl',
 
   $scope.$on '$routeChangeSuccess', (event, current, previous) ->
     if /\/project\/\d+/.test $location.path()
+      Project.get {project_id: current.params.project_id}, (project) ->
+        $scope.currentProject.project = project
       Place.query {id: current.params.project_id}, (places) ->
         $scope.googleMap.mapReady.promise.then ->
           processPlace place, index for place, index in places
           $scope.currentProject.places = places
+          $timeout $scope.displayAllMarkers, 200 if places.length > 0
     else
+      $rootScope.$broadcast 'newProject'
       $scope.currentProject.places = []
 
   # events
@@ -200,22 +219,36 @@ app.directive 'sidebarPlace', ['$templateCache', '$compile',
 
 
 # map-sidebar-places
-app.directive 'mapSidebarPlaces', [ ->
+app.directive 'mapSidebarPlaces', ['$timeout', '$rootScope',
+($timeout, $rootScope) ->
   (scope, element, attrs) ->
 
     scope.$watch attrs.mapSidebarPlaces, (newValue, oldValue, scope) ->
-      if newValue > 0
-        scope.interface.hidePlacesList = false
-        scope.interface.sideBarPlacesSlideUp = false
-      else
-        scope.interface.hidePlacesList = true
-        scope.interface.sideBarPlacesSlideUp = true
-
       if !scope.user.fb_access_token
+        if newValue > 0
+          scope.interface.hidePlacesList = false
+          scope.interface.sideBarPlacesSlideUp = false
+        else
+          scope.interface.hidePlacesList = true
+          scope.interface.sideBarPlacesSlideUp = true
+
         if newValue > 1
           scope.interface.showCreateAccountPromot = true
 
     scope.$watch 'user.fb_access_token', (newValue, oldValue, scope) ->
       if newValue
         scope.interface.showCreateAccountPromot = false
+
+    scope.$on '$routeChangeSuccess', (event, current, previous) ->
+      if current.params.project_id
+        scope.interface.hidePlacesList = true
+        scope.interface.sideBarPlacesSlideUp = true
+        $timeout -> # fix class won't remove bug
+          scope.interface.hidePlacesList = false
+          scope.interface.sideBarPlacesSlideUp = false
+        # element.removeClass 'js-sidebar-slide-out'
+        # element.find('.js-places-slide-up').removeClass 'js-places-slide-up'
+
+    scope.editProjectDetails = ->
+      $rootScope.$broadcast 'editProjectDetails', scope.currentProject.project
 ]

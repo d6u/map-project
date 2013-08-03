@@ -11,7 +11,7 @@ app.directive 'jqueryUiSortable', [ ->
           childScope = $(this).scope()
           childScope.place.marker.setIcon({url: "/assets/number_#{index}.png"})
           newPlaces.push childScope.place
-        scope.places = newPlaces
+        scope.currentProject.places = newPlaces
 
     # init
     sortableOptions =

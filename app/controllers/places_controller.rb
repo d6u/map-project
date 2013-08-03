@@ -11,7 +11,8 @@ class PlacesController < ApplicationController
 
 
   def index
-    places = Place.where :project_id => params[:id]
+    # TODO: project_id route
+    places = Place.where(:project_id => params[:id]).order 'places.order DESC'
     render :json => places
   end
 
@@ -21,6 +22,12 @@ class PlacesController < ApplicationController
     if place.save
       render :json => place
     end
+  end
+
+
+  def destroy
+    Place.destroy_all :id => params[:id]
+    head 200
   end
 
 end
