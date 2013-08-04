@@ -1,10 +1,36 @@
 <!-- OutsideViewCtrl -->
 <script type="text/ng-template" id="outside_view">
-    <div class="mp-map-container">
-        <nav class="mp-navbar-top" mp-navbar-top-secion></nav>
-        <div class="mp-map-canvas" google-map></div>
+    <div class="mp-map-view-wrapper" ng-controller="MapCtrl">
+        <div class="mp-map-container">
+            <nav class="mp-navbar-top" mp-navbar-top-secion></nav>
+            <div class="mp-map-canvas" google-map></div>
+        </div>
+        <div class="mp-places-list" ng-class="{'js-sidebar-slide-in': interface.showPlacesList}" map-sidebar-places="currentProject.places.length"></div>
     </div>
-    <div class="mp-places-list" ng-class="{'js-sidebar-slide-in': interface.showPlacesList}" map-sidebar-places="currentProject.places.length"></div>
+</script>
+
+
+<!-- New project view -->
+<script type="text/ng-template" id="new_project_view">
+    <div class="mp-map-view-wrapper" ng-controller="MapCtrl">
+        <div class="mp-map-container">
+            <nav class="mp-navbar-top" mp-navbar-top-secion></nav>
+            <div class="mp-map-canvas" google-map></div>
+        </div>
+        <div class="mp-places-list" ng-class="{'js-sidebar-slide-in': interface.showPlacesList}" map-sidebar-places="currentProject.places.length"></div>
+    </div>
+</script>
+
+
+<!-- Project view -->
+<script type="text/ng-template" id="project_view">
+    <div class="mp-map-view-wrapper" ng-controller="MapCtrl">
+        <div class="mp-map-container">
+            <nav class="mp-navbar-top" mp-navbar-top-secion></nav>
+            <div class="mp-map-canvas" google-map></div>
+        </div>
+        <div class="mp-places-list" ng-class="{'js-sidebar-slide-in': interface.showPlacesList}" map-sidebar-places="currentProject.places.length"></div>
+    </div>
 </script>
 
 
@@ -47,6 +73,7 @@
     <a href="/new_project" class="mp-navbar-button" bs-tooltip="Create new project" bs-tooltip-placement="right" ng-class="{hide: !user.id || inMapview}">
         <i class="icon-plus"></i>
     </a>
+
     <label class="mp-navbar-search-box">
         <i class="icon-search"></i>
         <input type="text" class="mp-naked-input form-control" search-box placeholder="Search places here" ng-class="{hide: !inMapview}">
@@ -65,7 +92,7 @@
             <a href="" class="mp-navbar-button" ng-click="displayAllMarkers()" bs-tooltip="Zoom map to display all places" bs-tooltip-placement="bottom">
                 <i class="icon-resize-full"></i>
             </a>
-            <!-- <a href="" class="mp-navbar-button">
+            <!-- TODO: <a href="" class="mp-navbar-button">
                 <i class="icon-ban-circle"></i>
             </a> -->
             <a href="" class="mp-navbar-button" ng-click="interface.showChatbox = !interface.showChatbox">
@@ -76,6 +103,7 @@
             </a>
         </div>
     </nav>
+
     <div class="mp-create-account-promot" ng-class="{'js-create-account-promot-show': interface.showCreateAccountPromot}">
         <p class="lead">Save your researches?</p>
         <div>
@@ -89,7 +117,9 @@
             <a href="" class="btn btn-primary" ng-click="editProjectDetails()">Edit project details</a>
         </div>
     </div>
-    <div class="mp-sidebar-places js-places-slide-up" ng-class="{'js-places-slide-up': interface.sideBarPlacesSlideUp}" perfect-scrollbar='places' jquery-ui-sortable>
+
+    <div class="mp-sidebar-places js-places-slide-up" ng-class="{'js-places-slide-up': interface.sideBarPlacesSlideUp}" perfect-scrollbar='places' jquery-ui-sortable="place in currentProject.places">
+
         <div class="mp-sidebar-place" ng-repeat="place in currentProject.places" sidebar-place>
             <div class="mp-place-marker-icon">
                 <a href="" ng-click="centerPlaceInMap(place.marker)">
@@ -97,24 +127,26 @@
                 </a>
             </div>
             <div class="mp-place-actions">
-                <a href="" ng-click="removePlace($index, place.marker)">
+                <a href="" ng-click="removePlace(place, $index)">
                     <i class="icon-remove"></i>
                 </a>
             </div>
             <div class="mp-place-detail-sidebar">
-                <div class="mp-place-name-sidebar">{{place.name}}</div>
-                <address>{{place.address}}</address>
+                <div class="mp-place-name-sidebar">{{place.attrs.name}}</div>
+                <address>{{place.attrs.address}}</address>
+                <p class="">{{place.attrs.notes}}</p>
             </div>
         </div>
+
     </div>
 </script>
 
 
 <script type="text/ng-template" id="marker_info_window">
     <div class="mp-info-window-wrapper" marker-info>
-        <div class="mp-info-window-title">{{place.name}}</div>
-        <div class="mp-info-window-address">{{place.address}}</div>
-        <div class="mp-info-window-options" ng-class="{hide: place.id}">
+        <div class="mp-info-window-title">{{place.attrs.name}}</div>
+        <div class="mp-info-window-address">{{place.attrs.address}}</div>
+        <div class="mp-info-window-options" ng-class="{hide: place.attrs.id}">
             <a href="" ng-click="addPlaceToList(place)">
                 <i class="icon-ok"></i>
                 Add to list
@@ -148,24 +180,4 @@
             </div>
         </div>
     </div>
-</script>
-
-
-<!-- New project view -->
-<script type="text/ng-template" id="new_project_view">
-    <div class="mp-map-container">
-        <nav class="mp-navbar-top" mp-navbar-top-secion></nav>
-        <div class="mp-map-canvas" google-map></div>
-    </div>
-    <div class="mp-places-list" ng-class="{'js-sidebar-slide-in': interface.showPlacesList}" map-sidebar-places="currentProject.places.length"></div>
-</script>
-
-
-<!-- Project view -->
-<script type="text/ng-template" id="project_view">
-    <div class="mp-map-container">
-        <nav class="mp-navbar-top" mp-navbar-top-secion></nav>
-        <div class="mp-map-canvas" google-map></div>
-    </div>
-    <div class="mp-places-list" ng-class="{'js-sidebar-slide-in': interface.showPlacesList}" map-sidebar-places="currentProject.places.length"></div>
 </script>
