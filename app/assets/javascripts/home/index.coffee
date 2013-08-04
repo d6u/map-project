@@ -132,9 +132,6 @@ app.run(['$rootScope', '$location', 'FB',
       else
         $location.path('/all_projects')
 
-    loginCanceled = ->
-
-
     logoutSuccess = ->
       $location.path('/')
 
@@ -147,7 +144,7 @@ app.run(['$rootScope', '$location', 'FB',
         $location.path('/') if $location.path() != '/'
 
       # global methods
-      $rootScope.fbLogin = -> FB.doLogin loginSuccess, loginCanceled
+      $rootScope.fbLogin = -> FB.doLogin loginSuccess, logoutSuccess
       $rootScope.fbLogout = -> FB.doLogout logoutSuccess
 ])
 

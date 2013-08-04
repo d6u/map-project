@@ -14,16 +14,13 @@ app.provider 'FB', class
     FB.doLogin = (success, error) ->
       FB.login (response) ->
         if response.authResponse
-          loggedIn(response.authResponse)
-          success(response.authResponse)
+          loggedIn(response.authResponse, success)
         else
-          notLoggedIn()
-          error()
+          notLoggedIn(error)
 
     FB.doLogout = (success) ->
       FB.logout ->
-        notLoggedIn()
-        success()
+        notLoggedIn(success)
 
     # check fb login status
     FB.getLoginStatus (response) ->
@@ -33,13 +30,14 @@ app.provider 'FB', class
         else
           notLoggedIn()
 
-    loggedIn = (authResponse) ->
+    loggedIn = (authResponse, loginCallback) ->
       $rootScope.user.fb_access_token = authResponse.accessToken
       $rootScope.user.fb_user_id      = authResponse.userID
       $timeout -> loginChecked.resolve(FB)
       User.login($rootScope.user).then (user) ->
         if user
           $rootScope.user.id = user.id
+          loginCallback() if loginCallback
           FB.api '/me', (response) ->
             $rootScope.user.name      = response.name
             $rootScope.user.email     = response.email
@@ -52,10 +50,13 @@ app.provider 'FB', class
             $rootScope.user.email     = response.email
             User.register $rootScope.user, (user) ->
               $rootScope.user.id = user.id
+              loginCallback() if loginCallback
 
-    notLoggedIn = ->
+    notLoggedIn = (logoutCallback) ->
       $rootScope.user = {}
-      User.logout().then -> loginChecked.resolve(FB)
+      User.logout().then ->
+        loginChecked.resolve(FB)
+        logoutCallback() if logoutCallback
 
     return loginChecked.promise
   ]
