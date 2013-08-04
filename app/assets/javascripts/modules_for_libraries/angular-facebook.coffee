@@ -33,22 +33,26 @@ app.provider 'FB', class
     loggedIn = (authResponse, loginCallback) ->
       $rootScope.user.fb_access_token = authResponse.accessToken
       $rootScope.user.fb_user_id      = authResponse.userID
-      $timeout -> loginChecked.resolve(FB)
       User.login($rootScope.user).then (user) ->
         if user
+          $timeout -> loginChecked.resolve(FB)
           $rootScope.user.id = user.id
           loginCallback() if loginCallback
           FB.api '/me', (response) ->
             $rootScope.user.name      = response.name
             $rootScope.user.email     = response.email
+            $rootScope.$apply()
             User.save($rootScope.user)
           FB.api '/me/picture', (response) ->
             $rootScope.user.picture   = response.data.url
+            $rootScope.$apply()
         else
           FB.api '/me', (response) ->
             $rootScope.user.name      = response.name
             $rootScope.user.email     = response.email
+            $rootScope.$apply()
             User.register $rootScope.user, (user) ->
+              $timeout -> loginChecked.resolve(FB)
               $rootScope.user.id = user.id
               loginCallback() if loginCallback
 
