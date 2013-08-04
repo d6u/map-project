@@ -5,19 +5,16 @@
 
 
 @import "variables/colors";
+@import "mixins/flexbox";
 
 // Default & Overall
 // ========================================
-html, body, ng-view,
-.mp-main-container,
+html, body,
 .mp-view-container,
 .mp-map-container,
+.mp-map-view-wrapper,
 .mp-chatbox {
     height: 100%;
-}
-
-ng-view {
-    display: block;
 }
 
 %transition {
@@ -28,34 +25,36 @@ ng-view {
             transition: all 150ms ease-out;
 }
 
-// Main Container
+// Containers
 // ========================================
-.mp-main-container {
-    display: flex;
-}
-
 .mp-view-container {
-    flex-grow: 1;
-    display: flex;
-}
+    @include display_flex;}
 
-.mp-chatbox {
-    @extend %transition;
-    flex-basis: 300px;
-}
+    .mp-map-view-wrapper {
+        @include flex_grow(1);
+        @include display_flex;}
+
+        .mp-map-container {
+            @include flex_grow(1);}
+
+        .mp-places-list {
+            @include flex_basis(300px);}
+
+    .mp-chatbox {
+        @include flex_basis(300px);}
 
 // Map View
 // ========================================
 .mp-map-container {
-    flex-grow: 1;
     position: relative;
 }
 
 .mp-places-list {
     @extend %transition;
-    flex-basis: 300px;
     overflow: hidden;
     position: relative;
+    // hide
+    @include flex_basis(0);
 }
 
 // Navbar
@@ -67,10 +66,15 @@ ng-view {
     font-size: 21px;
     color: white;
     text-align: center;
-    display: flex;
+    @include display_flex;
     position: absolute;
     width: 100%;
     z-index: 100;
+}
+
+.mp-navbar-inputs {
+    @include flex_grow(1);
+    @include display_flex;
 }
 
 .mp-navbar-button {
@@ -102,7 +106,7 @@ ng-view {
 
 .mp-navbar-search-box {
     position: relative;
-    flex-grow: 1;
+    @include flex_grow(1);
 
     input {
         @extend %transition;
@@ -139,13 +143,47 @@ ng-view {
 
 .mp-search-box-clear-results {
     position: absolute;
-    z-index: 100px;
+    z-index: 100;
     top: 0;
     right: 10px;
     color: $gray3;
     &:hover {
         color: white;
         text-decoration: none;
+    }
+}
+
+// Dropdonw Menu
+.mp-navbar-user-info-picture {
+    vertical-align: top;
+    margin-top: 5px;
+    height: 40px;
+    width: 40px;
+}
+
+.mp-navbar-dropdown-menu {
+    position: relative;
+    @include display_flex;
+    .mp-navbar-dropdown-menu-inner {
+        display: none;
+    }
+    &:hover {
+        .mp-navbar-dropdown-menu-inner {
+            display: block;
+        }
+    }
+}
+
+.mp-navbar-dropdown-menu-inner {
+    background-color: white;
+    position: absolute;
+    width: 100%;
+    min-width: 200px;
+    top: 50px;
+    left: 0;
+    a {
+        color: $gray6;
+        font-size: 18px;
     }
 }
 
@@ -173,14 +211,17 @@ ng-view {
 // Map & Project List
 // ----------------------------------------
 .mp-map-canvas {
-    height: 100%;
+    position: absolute;
+    top: 50px;
+    bottom: 0;
     width: 100%;
 }
 
 .mp-places-button-group {
     width: 100%;
-    display: flex;
-    justify-content: space-around;
+    @include display_flex;
+    @include justify-content(space-around);
+    // -webkit-justify-content: space-around;
 }
 
 .mp-sidebar-places {
@@ -199,9 +240,12 @@ ng-view {
 
 .mp-sidebar-place {
     padding: 10px;
-    border-bottom: 1px solid $gray6;
+    background-color: white;
     address {
         margin: 0;
+    }
+    &.ui-sortable-helper {
+        background-color: $gray1;
     }
 }
 
@@ -240,14 +284,77 @@ ng-view {
     border: 1px solid $gray3;
     border-radius: 3px;
     text-align: center;
-    &.js-create-account-promot-show + .mp-sidebar-places {
+    &.js-create-account-promot-show ~ .mp-sidebar-places {
         margin-top: 179px;
     }
+}
+
+.mp-info-window-wrapper {
+    // TODO: fix google map infoWindow overflow on bottom
+    width: 300px;
+}
+
+
+// All Project List
+// ========================================
+.mp-all-projects-list {
+    position: absolute;
+    top: 50px;
+    bottom: 0;
+    width: 100%;
+    overflow: hidden;
+}
+
+.mp-all-projects-list-inner {
+    margin: 0 auto 100px;
+    width: 940px;
+}
+
+.mp-all-projects-list-header {
+    line-height: 50px;
+    font-size: 32px;
+    font-weight: bold;
+    border-bottom: 1px solid $gray6;
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+.mp-all-projects-list-masonry {
+
+}
+
+.mp-project-item {
+    width: 300px;
+    border: 1px solid $gray2;
+    margin-bottom: 20px;
+}
+
+.mp-project-item-cover {
+    height: 200px;
+}
+
+.mp-project-item-detail {
+    padding: 10px;
+}
+
+.mp-project-item-header {
+    font-size: 18px;
+    line-height: 24px;
+    border-bottom: 1px solid $gray6;
+    margin-top: 10px;
+}
+
+.mp-project-item-notes {
+    margin-top: 10px;
 }
 
 
 // Chatbox
 // ========================================
+.mp-chatbox {
+    @extend %transition;
+    @include flex_basis(0);
+}
 
 
 // JS Helper
@@ -258,7 +365,11 @@ ng-view {
 }
 
 .js-sidebar-slide-out {
-    flex-basis: 0;
+    @include flex_basis(0);
+}
+
+.js-sidebar-slide-in {
+    @include flex_basis(300px);
 }
 
 .js-places-slide-up {

@@ -1,12 +1,7 @@
-<div class="mp-main-container">
-
-    <!-- Main -->
-    <ng-view class="mp-view-container"></ng-view>
-
-    <!-- Chatbox -->
-    <section class="mp-chatbox js-sidebar-slide-out" ng-class="{'js-sidebar-slide-out': interface.hideChatbox}"></section>
-
+<div ng-view class="mp-view-container">
+    <!-- TODO: loading animation -->
 </div>
 
 
+<%= render 'bs_modal' %>
 <%= render 'ng_templates' %>

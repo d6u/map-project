@@ -10,10 +10,10 @@
     <meta name="description" content="">
     <meta name="viewport"    content="width=device-width">
     <%= stylesheet_link_tag    "application", media: "all" %>
+    <%= javascript_include_tag 'libraries/modernizr.min.js' %>
     <% if params[:controller] === 'home' && params[:action] === 'index' %>
         <%= javascript_include_tag '//maps.googleapis.com/maps/api/js?key=AIzaSyAGJjfEZSf93ey42aqJDIVuOVaLnpUUzWs&libraries=places&sensor=true'  %>
     <% end %>
-    <%= javascript_include_tag params[:controller]+'/'+params[:action] %>
     <%= csrf_meta_tags %>
 </head>
 <body ng-app="mapApp">
@@ -21,7 +21,12 @@
 <p class="chromeframe">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">activate Google Chrome Frame</a> to improve your experience.</p>
 <![endif]-->
 
+<div id="fb-root"></div>
+
 <%= yield %>
+
+<%= javascript_include_tag '//connect.facebook.net/en_US/all.js' %>
+<%= javascript_include_tag params[:controller]+'/'+params[:action] %>
 
 <script>
     var _gaq=[['_setAccount','UA-XXXXX-X'],['_trackPageview']];
