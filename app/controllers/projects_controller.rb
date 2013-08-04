@@ -20,7 +20,7 @@ class ProjectsController < ApplicationController
       end
     else
       projects = @user.projects.order 'created_at DESC'
-      render :json => projects
+      render :json => projects, :methods => :places_attrs
     end
   end
 
