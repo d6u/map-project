@@ -93,7 +93,7 @@ app.config([
 
     # FB
     FBProvider.init({
-      appId      : '580227458695144'
+      appId      : '530522713663451'
       channelUrl : location.origin + '/fb_channel.html'
       status     : true
       cookie     : true
@@ -104,7 +104,7 @@ app.config([
     google.maps.visualRefresh = true
 
     # socket
-    socketProvider.setServerUrl('http://local.dev:4000')
+    # socketProvider.setServerUrl('http://local.dev:4000')
 ])
 
 
