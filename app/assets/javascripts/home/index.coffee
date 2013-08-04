@@ -1,6 +1,7 @@
 #= require libraries/socket.io.min.js
 #= require libraries/jquery.js
 #= require libraries/jquery-ui-1.10.3.custom.min.js
+#= require libraries/jquery.easyModal.js
 #= require libraries/masonry.pkgd.min.js
 #= require libraries/bootstrap.min.js
 #= require libraries/perfect-scrollbar-0.4.3.min.js
@@ -218,7 +219,6 @@ app.controller 'MapCtrl',
   # actions
   $scope.addPlaceToList = (place) ->
     place.marker.setMap null
-
     markerOptions =
       map: $scope.googleMap.map
       title: place.attrs.name

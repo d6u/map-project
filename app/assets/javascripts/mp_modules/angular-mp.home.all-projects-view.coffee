@@ -7,10 +7,11 @@ app.controller 'AllProjectsViewCtrl',
 ($scope, Project, $location) ->
 
   # init
-  Project.query (projects) ->
-    if projects.length > 0
-      $scope.projects = projects
-    else
-      $scope.projects = []
-      $location.path('/new_project')
+  if $scope.user.fb_access_token
+    Project.query (projects) ->
+      if projects.length > 0
+        $scope.projects = projects
+      else
+        $scope.projects = []
+        $location.path('/new_project')
 ]
