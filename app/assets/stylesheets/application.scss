@@ -5,6 +5,7 @@
 
 
 @import "variables/colors";
+@import "mixins/flexbox";
 
 // Default & Overall
 // ========================================
@@ -27,20 +28,20 @@ html, body,
 // Containers
 // ========================================
 .mp-view-container {
-    display: -webkit-flex;}
+    @include display_flex;}
 
     .mp-map-view-wrapper {
-        -webkit-flex-grow: 1;
-        display: -webkit-flex;}
+        @include flex_grow(1);
+        @include display_flex;}
 
         .mp-map-container {
-            -webkit-flex-grow: 1;}
+            @include flex_grow(1);}
 
         .mp-places-list {
-            -webkit-flex-basis: 300px;}
+            @include flex_basis(300px);}
 
     .mp-chatbox {
-        -webkit-flex-basis: 300px;}
+        @include flex_basis(300px);}
 
 // Map View
 // ========================================
@@ -53,7 +54,7 @@ html, body,
     overflow: hidden;
     position: relative;
     // hide
-    -webkit-flex-basis: 0;
+    @include flex_basis(0);
 }
 
 // Navbar
@@ -65,15 +66,15 @@ html, body,
     font-size: 21px;
     color: white;
     text-align: center;
-    display: -webkit-flex;
+    @include display_flex;
     position: absolute;
     width: 100%;
     z-index: 100;
 }
 
 .mp-navbar-inputs {
-    -webkit-flex-grow: 1;
-    display: -webkit-flex;
+    @include flex_grow(1);
+    @include display_flex;
 }
 
 .mp-navbar-button {
@@ -105,7 +106,7 @@ html, body,
 
 .mp-navbar-search-box {
     position: relative;
-    -webkit-flex-grow: 1;
+    @include flex_grow(1);
 
     input {
         @extend %transition;
@@ -142,7 +143,7 @@ html, body,
 
 .mp-search-box-clear-results {
     position: absolute;
-    z-index: 100px;
+    z-index: 100;
     top: 0;
     right: 10px;
     color: $gray3;
@@ -162,7 +163,7 @@ html, body,
 
 .mp-navbar-dropdown-menu {
     position: relative;
-    display: -webkit-flex;
+    @include display_flex;
     .mp-navbar-dropdown-menu-inner {
         display: none;
     }
@@ -210,14 +211,17 @@ html, body,
 // Map & Project List
 // ----------------------------------------
 .mp-map-canvas {
-    height: 100%;
+    position: absolute;
+    top: 50px;
+    bottom: 0;
     width: 100%;
 }
 
 .mp-places-button-group {
     width: 100%;
-    display: -webkit-flex;
-    -webkit-justify-content: space-around;
+    @include display_flex;
+    @include justify-content(space-around);
+    // -webkit-justify-content: space-around;
 }
 
 .mp-sidebar-places {
@@ -285,6 +289,11 @@ html, body,
     }
 }
 
+.mp-info-window-wrapper {
+    // TODO: fix google map infoWindow overflow on bottom
+    width: 300px;
+}
+
 
 // All Project List
 // ========================================
@@ -344,7 +353,7 @@ html, body,
 // ========================================
 .mp-chatbox {
     @extend %transition;
-    -webkit-flex-basis: 0;
+    @include flex_basis(0);
 }
 
 
@@ -356,11 +365,11 @@ html, body,
 }
 
 .js-sidebar-slide-out {
-    -webkit-flex-basis: 0;
+    @include flex_basis(0);
 }
 
 .js-sidebar-slide-in {
-    -webkit-flex-basis: 300px;
+    @include flex_basis(300px);
 }
 
 .js-places-slide-up {

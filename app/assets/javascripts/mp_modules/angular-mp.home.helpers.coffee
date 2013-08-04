@@ -45,7 +45,11 @@ app.directive 'projectDetailModal', ['$rootScope', 'Project', '$location',
     scope.$on 'editProjectAttrs', (event, data) ->
       scope.hideDeleteProjectButton = false
       if data
-        scope.newProjectModal = data
+        console.log data
+        scope.newProjectModal =
+          id: data.id
+          title: data.title
+          notes: data.notes
       else
         scope.newProjectModal = {}
       element.trigger('openModal')

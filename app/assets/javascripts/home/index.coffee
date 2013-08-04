@@ -100,6 +100,9 @@ app.config([
       xfbml      : true
     })
 
+    # google map
+    google.maps.visualRefresh = true
+
     # socket
     socketProvider.setServerUrl('http://local.dev:4000')
 ])
@@ -169,12 +172,14 @@ app.controller 'MapCtrl',
     cleanMarkers()
     bounds = new google.maps.LatLngBounds()
     places = $scope.googleMap.searchBox.getPlaces()
+    animation = if places.length == 1 then google.maps.Animation.DROP else null
 
     for place in places
       markerOptions =
         map: $scope.googleMap.map
         title: place.name
         position: place.geometry.location
+        animation: animation
       newPlace =
         marker: new google.maps.Marker markerOptions
         attrs:
@@ -189,7 +194,7 @@ app.controller 'MapCtrl',
 
     $scope.googleMap.map.fitBounds bounds
     $scope.googleMap.map.setZoom(12) if places.length < 3 && $scope.googleMap.map.getZoom() > 12
-    google.maps.event.trigger $scope.googleMap.markers[0], 'click' if places.length == 1
+    $timeout (-> google.maps.event.trigger $scope.googleMap.markers[0], 'click'), 800 if places.length == 1
 
   cleanMarkers = ->
     marker.setMap(null) for marker in $scope.googleMap.markers

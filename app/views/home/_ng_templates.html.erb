@@ -112,7 +112,7 @@
         </div>
     </div>
     <div class="mp-create-account-promot" ng-class="{'js-create-account-promot-show': currentProject.project.id}">
-        <p>{{currentProject.project.title}}</p>
+        <p class="lead">{{currentProject.project.title}}</p>
         <div>
             <a href="" class="btn btn-primary" ng-click="editProjectDetails()">Edit project details</a>
         </div>
@@ -165,12 +165,10 @@
                 <header class="mp-all-projects-list-header">All Projects</header>
                 <div class="mp-all-projects-list-masonry" masonry='projects,models.projectTitle'>
                     <div class="mp-project-item" ng-repeat="project in projects | filter:models.projectTitle">
-                        <div class="mp-project-item-cover" style="background-color: blue;">
-                            <!-- TODO: Placeholder to add project cover -->
-                        </div>
+                        <div class="mp-project-item-cover" mini-map-cover></div>
                         <div class="mp-project-item-detail">
                             <header class="mp-project-item-header">
-                                <a ng-href="/project/{{project.id}}">{{project.title}}</a>
+                                <a ng-href="/project/{{project.id}}">{{project.title}} <span class="badge">{{project.places_attrs.places_count}}</span></a>
                             </header>
                             <p class="mp-project-item-notes">{{project.notes || "No notes yet..."}}</p>
                         </div>
