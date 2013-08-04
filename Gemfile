@@ -50,3 +50,4 @@ gem 'puma'
 gem 'redis'
 gem 'awesome_print', group: :development
 gem 'oj'
+gem 'newrelic_rpm'
