@@ -6,6 +6,8 @@ app.directive 'projectDetailModal', ['$rootScope', 'Project', '$location',
 ($rootScope, Project, $location) ->
   (scope, element, attrs) ->
 
+    if $location.path() == '/new_project' then scope.inNewPorject = true else scope.inNewPorject = false
+
     element.easyModal({
       overlayClose: false
       closeOnEscape: false
@@ -20,6 +22,7 @@ app.directive 'projectDetailModal', ['$rootScope', 'Project', '$location',
           $rootScope.$broadcast 'projectUpdated', project
           element.trigger('closeModal')
           scope.hideDeleteProjectButton = true
+          scope.inNewPorject = false
       else
         scope.errorMessage = "You must have a title to start with."
 
@@ -31,6 +34,13 @@ app.directive 'projectDetailModal', ['$rootScope', 'Project', '$location',
         $location.path('/all_projects')
         scope.newProjectModal = {}
         scope.hideDeleteProjectButton = true
+        scope.inNewPorject = false
+
+    scope.cancelEdit = ->
+      element.trigger('closeModal')
+      scope.errorMessage = null
+      scope.hideDeleteProjectButton = true
+      scope.inNewPorject = false
 
     scope.$on 'editProjectAttrs', (event, data) ->
       scope.hideDeleteProjectButton = false

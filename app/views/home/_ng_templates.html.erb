@@ -22,6 +22,18 @@
 </script>
 
 
+<!-- Project view -->
+<script type="text/ng-template" id="project_view">
+    <div class="mp-map-view-wrapper" ng-controller="MapCtrl">
+        <div class="mp-map-container">
+            <nav class="mp-navbar-top" mp-navbar-top-secion></nav>
+            <div class="mp-map-canvas" google-map></div>
+        </div>
+        <div class="mp-places-list" ng-class="{'js-sidebar-slide-in': interface.showPlacesList}" map-sidebar-places="currentProject.places.length"></div>
+    </div>
+</script>
+
+
 <!-- mp-navbar-top -->
 <script type="text/ng-template" id="mp_navbar_top_template">
     <div class="mp-navbar-dropdown-menu" navbar-dropdown-menu></div>
@@ -168,14 +180,4 @@
             </div>
         </div>
     </div>
-</script>
-
-
-<!-- Project view -->
-<script type="text/ng-template" id="project_view">
-    <div class="mp-map-container">
-        <nav class="mp-navbar-top" mp-navbar-top-secion></nav>
-        <div class="mp-map-canvas" google-map></div>
-    </div>
-    <div class="mp-places-list" ng-class="{'js-sidebar-slide-in': interface.showPlacesList}" map-sidebar-places="currentProject.places.length"></div>
 </script>

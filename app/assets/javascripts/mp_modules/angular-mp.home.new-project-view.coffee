@@ -66,4 +66,5 @@ app.controller 'NewProjectViewCtrl',
 
   $scope.$on 'projectUpdated', (event, project) ->
     $scope.currentProject.project = project
+    $location.path('/project/' + project.id)
 ]

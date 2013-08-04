@@ -14,4 +14,7 @@ app.controller 'AllProjectsViewCtrl',
       else
         $scope.projects = []
         $location.path('/new_project')
+
+  $scope.currentProject.projects = {}
+  $scope.currentProject.places = []
 ]

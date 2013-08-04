@@ -99,5 +99,5 @@ app.directive 'mapSidebarPlaces', ['$timeout', '$rootScope',
         scope.interface.showPlacesList = true
 
     scope.editProjectDetails = ->
-      $rootScope.$broadcast 'editProjectDetails', scope.currentProject.project
+      $rootScope.$broadcast 'editProjectAttrs', scope.currentProject.project
 ]
