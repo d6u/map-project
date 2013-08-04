@@ -20,38 +20,31 @@ app.directive 'navbarDropdownMenu',[->
 app.directive 'mpNavbarInputsSection', [->
   templateUrl: 'mp_navbar_inputs_section_template'
   link: (scope, element, attrs) ->
+
+    scope.clearSearchResults = ->
+      element.find('input').val('')
+      if scope.inMapview
+        marker.setMap null for marker in scope.googleMap.markers
+        scope.googleMap.markers = []
 ]
 
 
 # search box
-app.directive 'searchBox', [->
-  (scope, element, attrs) ->
+app.directive 'searchBox', [-> (scope, element, attrs) ->
 
     if scope.inMapview
       scope.googleMap.searchBox = new google.maps.places.SearchBox(element[0])
       scope.googleMap.searchBoxReady.resolve()
-
-    scope.clearSearchResults = ->
-      element.val('')
-      if scope.inMapview
-        marker.setMap(null) for marker in scope.googleMap.markers
-        scope.googleMap.markers = []
 ]
 
 
 # map canvas
 # ========================================
-app.directive 'googleMap', ['$templateCache', '$timeout', '$compile',
-($templateCache, $timeout, $compile) ->
+app.directive 'googleMap', ['userLocation', (userLocation) ->
   (scope, element, attrs) ->
 
-    triggerMapResize = ->
-      $timeout (->
-        google.maps.event.trigger(scope.googleMap.map, 'resize')
-      ), 200
-
     # rootScope deferred object
-    scope.userLocation.then (coord) ->
+    userLocation.then (coord) ->
       mapOptions =
         center: new google.maps.LatLng(coord.latitude, coord.longitude)
         zoom: 8
@@ -60,21 +53,11 @@ app.directive 'googleMap', ['$templateCache', '$timeout', '$compile',
 
       scope.googleMap.map = new google.maps.Map(element[0], mapOptions)
       scope.googleMap.mapReady.resolve()
-      scope.$watch('interface.showPlacesList', triggerMapResize)
-      scope.$watch('interface.showChatbox', triggerMapResize)
-      google.maps.event.addListener(scope.googleMap.map, 'bounds_changed',
-        -> scope.googleMap.searchBox.setBounds scope.googleMap.map.getBounds())
-
-      scope.googleMap.infoWindow = new google.maps.InfoWindow()
 ]
 
 
 # inforwindow
-app.directive 'markerInfo', ['$compile', '$timeout',
-($compile, $timeout) ->
-  (scope, element, attrs) ->
-    scope.$apply()
-]
+app.directive 'markerInfo', [-> (scope, element, attrs) -> scope.$apply()]
 
 
 # sidebar place
@@ -92,6 +75,7 @@ app.directive 'sidebarPlace', ['$templateCache', '$compile',
 
 # map-sidebar-places
 # ========================================
+# TODO
 app.directive 'mapSidebarPlaces', ['$timeout', '$rootScope',
 ($timeout, $rootScope) ->
   templateUrl: 'mp_sidebar_places_template'

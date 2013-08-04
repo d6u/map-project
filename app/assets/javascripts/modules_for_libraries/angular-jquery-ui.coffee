@@ -1,17 +1,25 @@
 app = angular.module 'angular-jquery-ui', []
 
+
 app.directive 'jqueryUiSortable', [ ->
   (scope, element, attrs) ->
 
     # event funcions
     updateFn = (event, ui) ->
+      match = /(.+) in (.+)/.exec attrs.jqueryUiSortable
+      child = match[1]
+      parent = match[2]
+
       scope.$apply ->
-        newPlaces = []
-        element.children('.mp-sidebar-place').each (index) ->
+        array = []
+        element.children('[ng-repeat]').each (index) ->
           childScope = $(this).scope()
-          childScope.place.marker.setIcon({url: "/assets/number_#{index}.png"})
-          newPlaces.push childScope.place
-        scope.currentProject.places = newPlaces
+          childObj = childScope.$eval child
+          array.push childObj
+        scope.$eval parent + '= []'
+        parentArray = scope.$eval parent
+        parentArray.push childObj for childObj in array
+        scope.$emit 'placeListSorted'
 
     # init
     sortableOptions =

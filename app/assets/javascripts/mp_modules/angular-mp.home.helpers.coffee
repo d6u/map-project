@@ -24,7 +24,7 @@ app.directive 'projectDetailModal', ['$rootScope', 'Project', '$location',
         scope.errorMessage = "You must have a title to start with."
 
     # TODO: refactor
-    scope.$on 'newProject', ->
+    $rootScope.$on 'newProject', ->
       element.modal()
 
     scope.deleteProject = ->

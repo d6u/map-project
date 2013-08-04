@@ -8,16 +8,12 @@
 
 // Default & Overall
 // ========================================
-html, body, ng-view,
-.mp-main-container,
+html, body,
 .mp-view-container,
 .mp-map-container,
+.mp-map-view-wrapper,
 .mp-chatbox {
     height: 100%;
-}
-
-ng-view {
-    display: block;
 }
 
 %transition {
@@ -28,35 +24,36 @@ ng-view {
             transition: all 150ms ease-out;
 }
 
-// Main Container
+// Containers
 // ========================================
-.mp-main-container {
-    display: flex;
-}
-
 .mp-view-container {
-    flex-grow: 1;
-    display: flex;
-}
+    display: -webkit-flex;}
 
-.mp-chatbox {
-    @extend %transition;
-    flex-basis: 300px;
-}
+    .mp-map-view-wrapper {
+        -webkit-flex-grow: 1;
+        display: -webkit-flex;}
+
+        .mp-map-container {
+            -webkit-flex-grow: 1;}
+
+        .mp-places-list {
+            -webkit-flex-basis: 300px;}
+
+    .mp-chatbox {
+        -webkit-flex-basis: 300px;}
 
 // Map View
 // ========================================
 .mp-map-container {
-    flex-grow: 1;
     position: relative;
 }
 
 .mp-places-list {
     @extend %transition;
-    flex-basis: 300px;
     overflow: hidden;
     position: relative;
-    @extend .js-sidebar-slide-out;
+    // hide
+    -webkit-flex-basis: 0;
 }
 
 // Navbar
@@ -68,15 +65,15 @@ ng-view {
     font-size: 21px;
     color: white;
     text-align: center;
-    display: flex;
+    display: -webkit-flex;
     position: absolute;
     width: 100%;
     z-index: 100;
 }
 
 .mp-navbar-inputs {
-    flex-grow: 1;
-    display: flex;
+    -webkit-flex-grow: 1;
+    display: -webkit-flex;
 }
 
 .mp-navbar-button {
@@ -108,7 +105,7 @@ ng-view {
 
 .mp-navbar-search-box {
     position: relative;
-    flex-grow: 1;
+    -webkit-flex-grow: 1;
 
     input {
         @extend %transition;
@@ -165,7 +162,7 @@ ng-view {
 
 .mp-navbar-dropdown-menu {
     position: relative;
-    display: flex;
+    display: -webkit-flex;
     .mp-navbar-dropdown-menu-inner {
         display: none;
     }
@@ -219,8 +216,8 @@ ng-view {
 
 .mp-places-button-group {
     width: 100%;
-    display: flex;
-    justify-content: space-around;
+    display: -webkit-flex;
+    -webkit-justify-content: space-around;
 }
 
 .mp-sidebar-places {
@@ -346,7 +343,8 @@ ng-view {
 // Chatbox
 // ========================================
 .mp-chatbox {
-    @extend .js-sidebar-slide-out;
+    @extend %transition;
+    -webkit-flex-basis: 0;
 }
 
 
@@ -358,11 +356,11 @@ ng-view {
 }
 
 .js-sidebar-slide-out {
-    flex-basis: 0;
+    -webkit-flex-basis: 0;
 }
 
 .js-sidebar-slide-in {
-    flex-basis: 300px;
+    -webkit-flex-basis: 300px;
 }
 
 .js-places-slide-up {
