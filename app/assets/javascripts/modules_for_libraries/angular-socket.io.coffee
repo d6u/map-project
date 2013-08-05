@@ -1,5 +1,9 @@
-angular.module('angular-socket.io', [])
-.provider 'socket', class
+app = angular.module 'angular-socket.io', []
+
+
+# socket
+app.provider 'socket', class
+
   # config
   setServerUrl: (@serverUrl) ->
   setHandshakeQuery: (handshakeQuery) ->
@@ -8,8 +12,10 @@ angular.module('angular-socket.io', [])
 
   # factory
   $get: ['$rootScope', '$timeout', ($rootScope, $timeout) ->
+
     # regular
     socket: if @serverUrl then io.connect(@serverUrl, @handshakeQuery) else io.connect(undefined, @handshakeQuery)
+
     on: (eventName, callback) ->
       @socket.on eventName, (args...) ->
         $timeout (-> callback.apply(@socket, args)), 0

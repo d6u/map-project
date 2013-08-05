@@ -50,3 +50,16 @@ app.controller 'ProjectViewCtrl',
   $scope.$on 'projectUpdated', (event, project) ->
     $scope.currentProject.project = project
 ]
+
+
+# ChatBoxCtrl
+app.controller 'ChatBoxCtrl',
+['$scope',
+($scope) ->
+
+  $scope.addFriendsToProject = ->
+    $scope.$broadcast 'showAddFriendsModal'
+
+  $scope.invite = ->
+
+]

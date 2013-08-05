@@ -8,6 +8,7 @@
 #= require libraries/perfect-scrollbar-0.4.3.with-mousewheel.min.js
 #= require libraries/angular.min.js
 #= require libraries/angular-resource.min.js
+#= require modules_for_libraries/angular-easy-modal.coffee
 #= require modules_for_libraries/angular-facebook.coffee
 #= require modules_for_libraries/angular-socket.io.coffee
 #= require modules_for_libraries/angular-masonry.coffee
@@ -27,6 +28,7 @@
 
 # declear
 app = angular.module 'mapApp', [
+  'angular-easy-modal',
   'angular-facebook',
   'angular-socket.io',
   'angular-masonry',
@@ -93,7 +95,7 @@ app.config([
 
     # FB
     FBProvider.init({
-      appId      : '530522713663451'
+      appId      : '580227458695144'
       channelUrl : location.origin + '/fb_channel.html'
       status     : true
       cookie     : true

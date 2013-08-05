@@ -1,0 +1,32 @@
+<!-- Modal -->
+<div class="" id="add_friends_modal" easy-modal="showAddFriendsModal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+
+            <!-- header -->
+            <div class="modal-header">
+                <h4 class="modal-title">Add Friends to Project: {{currentProject.project.title}}</h4>
+            </div>
+
+            <!-- body -->
+            <div class="modal-body">
+
+                <input type="text" class="form-control" placeholder="Search for friend's name" ng-model="friend.name" >
+
+                <ul class="mp-friendships-list">
+                    <!-- ng-repeat="frienship in frienships" -->
+                    <li class="mp-frienships-list-item"></li>
+                </ul>
+
+            </div>
+
+            <!-- footer -->
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" ng-click="close()">Close</button>
+                <button type="button" class="btn btn-primary" ng-click="invite()">Add</button>
+            </div>
+
+        </div>
+    </div>
+</div>
+<!-- END of Modal -->

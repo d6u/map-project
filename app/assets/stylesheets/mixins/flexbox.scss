@@ -24,12 +24,23 @@
 }
 
 @mixin justify-content($justify) {
-           -webkit-box-pack: justify;
-              -moz-box-pack: justify;
-                   box-pack: justify;
-          -webkit-flex-pack: justify;
-              -ms-flex-pack: justify;
-                  flex-pack: justify;
+  $old_justify: start;
+  @if $justify == space-around {
+    $old_justify: justify;
+  } @else if $justify == flex-end {
+    $old_justify: end;
+  } @else if $justify == center {
+    $old_justify: center;
+  } @else {
+    $old_justify: start;
+  }
+
+           -webkit-box-pack: $old_justify;
+              -moz-box-pack: $old_justify;
+                   box-pack: $old_justify;
+          -webkit-flex-pack: $old_justify;
+              -ms-flex-pack: $old_justify;
+                  flex-pack: $old_justify;
     -webkit-justify-content: $justify;
        -moz-justify-content: $justify;
         -ms-justify-content: $justify;
