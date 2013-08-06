@@ -41,9 +41,13 @@ class UsersController < ApplicationController
   def logout
     if session[:user_id]
       session[:user_id] = nil
-      head 202
+      # return empty JSON array to fix restangular .addRestangularMethod no
+      #   method error
+      render :json => [], :status => 202
     else
-      head 200
+      # return empty JSON array to fix restangular .addRestangularMethod no
+      #   method error
+      render :json => [], :status => 200
     end
   end
 

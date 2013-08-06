@@ -22,6 +22,7 @@ MapProject::Application.routes.draw do
 
   post "invitation/generate"
   get  "invitation/join/:code" => 'invitation#join'
+  post "invitation/join/:code" => 'invitation#joined'
 
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".

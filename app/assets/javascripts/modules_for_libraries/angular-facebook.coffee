@@ -1,4 +1,4 @@
-app = angular.module 'angular-facebook', []
+app = angular.module 'angular-facebook', ['angular-mp.api']
 
 
 app.provider 'FB', class

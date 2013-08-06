@@ -15,48 +15,62 @@ app = angular.module 'mapApp', [
 ]
 
 
-app.config ['FBProvider', '$httpProvider',
-  (FBProvider, $httpProvider) ->
+app.config ['FBProvider', '$httpProvider', '$routeProvider',
+'$locationProvider',
+(FBProvider, $httpProvider, $routeProvider,
+$locationProvider) ->
 
-    # CSRF
-    token = angular.element('meta[name="csrf-token"]').attr('content')
-    $httpProvider.defaults.headers.common['X-CSRF-Token'] = token
+  # route
+  $routeProvider
+  .when('/', {
+    controller: 'InvitationCtrl'
+    templateUrl: 'invitation_view'
+    resolve:
+      FB: 'FB'
+  })
+  .otherwise({redirectTo: '/'})
 
-    # FB
-    FBProvider.init({
-      appId      : '580227458695144'
-      channelUrl : location.origin + '/fb_channel.html'
-      status     : true
-      cookie     : true
-      xfbml      : true
-    })
+  # CSRF
+  token = angular.element('meta[name="csrf-token"]').attr('content')
+  $httpProvider.defaults.headers.common['X-CSRF-Token'] = token
+
+  # FB
+  FBProvider.init({
+    appId      : '580227458695144'
+    channelUrl : location.origin + '/fb_channel.html'
+    status     : true
+    cookie     : true
+    xfbml      : true
+  })
 ]
 
 
-app.run ['$rootScope', '$location', 'FB',
-  ($rootScope, $location, FB) ->
+app.run ['$rootScope', ($rootScope) ->
 
-    # callbacks
-    loginSuccess = ->
-      if $rootScope.target_project_id
-        # $rootScope.user.
+  $rootScope.user = {}
+]
+
+
+app.controller 'InvitationCtrl',
+['$rootScope', '$location', 'FB', '$http', '$window',
+($rootScope, $location, FB, $http, $window) ->
+
+  # callbacks
+  loginSuccess = ->
+    $http.post(location.href, {join: true}).then (response) ->
+      if response.data.id
+        $window.location.href = $window.location.origin + '/project/' + response.data.id
       else
+        $window.location.href = $window.location.origin
 
+  logoutSuccess = ->
 
-    logoutSuccess = ->
-      # $location.path('/')
+  # actions
+  $rootScope.fbLogin = ->
+    FB.doLogin loginSuccess, logoutSuccess
 
-    # resolver
-    FB.then (FB) ->
-      # filter
-      # if $rootScope.user.fb_access_token
-      #   $location.path('/all_projects') if $location.path() == '/'
-      # else
-      #   $location.path('/') if $location.path() != '/'
+  $rootScope.fbLogout = -> FB.doLogout logoutSuccess
 
-      # global methods
-      $rootScope.fbLogin = (project_id) ->
-        $rootScope.target_project_id = project_id
-        FB.doLogin loginSuccess, logoutSuccess
-      $rootScope.fbLogout = -> FB.doLogout logoutSuccess
+  $rootScope.joinProject = -> loginSuccess()
+
 ]

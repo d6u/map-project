@@ -15,6 +15,7 @@ class User < ActiveRecord::Base
   has_many :friends,     :through => :friendships
   has_many :followers,   :through => :followships, :source => :user
   has_many :invitations
+  has_and_belongs_to_many :participated_projects, :join_table => "project_user", :foreign_key => "user_id", :class_name => 'Project'
 
 
   def validate_with_facebook

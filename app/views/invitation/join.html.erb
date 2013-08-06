@@ -1,4 +1,8 @@
-<div class="container mp-invitation-container">
+<div class="container mp-invitation-container" ng-view>
+</div>
+
+
+<script type="text/ng-template" id="invitation_view">
     <div class="row">
         <div class="col-8 col-offset-2">
             <% if @target_project %>
@@ -8,16 +12,16 @@
             <% end %>
 
             <!-- Logged in -->
-            <div class="hide" ng-class="{hide: !user.fb_access_token}">
+            <div class="" ng-class="{hide: !user.fb_access_token}">
                 <a href="" class="btn btn-primary" ng-click="joinProject(<%= @target_project.id if @target_project %>)">Take me in!</a>
                 <a href="/" class="btn btn-default">Maybe next time</a>
             </div>
 
             <!-- Not logged in -->
             <div ng-class="{hide: user.fb_access_token}">
-                <a href="" class="btn btn-primary" ng-click="fbLogin(<%= @target_project.id if @target_project %>)">Sinup with Facebook and Take me to the Project</a>
+                <a href="" class="btn btn-primary" ng-click="fbLogin(<%= @target_project.id if @target_project %>)">Sign up with Facebook and Take me to the Project</a>
                 <a href="/" class="btn btn-default">Maybe next time</a>
             </div>
         </div>
     </div>
-</div>
+</script>
