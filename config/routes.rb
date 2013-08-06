@@ -13,9 +13,14 @@ MapProject::Application.routes.draw do
   resources :users
 
 
+  scope '/projects/:project_id' do
+    post 'add_participated_user' => 'projects#add_participated_user'
+    get  'get_participated_user' => 'projects#get_participated_user'
+  end
   resources :projects do
     resources :places
   end
+
 
   resources :friendships
 

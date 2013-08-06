@@ -6,9 +6,9 @@ app.factory 'User', ['Restangular', (Restangular) ->
 
   Restangular.addElementTransformer 'users', false, (user) ->
     # TODO
-    user.addRestangularMethod 'joinProject', 'post', 'add_project'
-    user.addRestangularMethod 'addFriend', 'post', 'add_friend'
+    # user.addRestangularMethod 'addFriend', 'post', 'add_friend'
     user
+
 
   User = Restangular.all 'users'
 
@@ -23,6 +23,12 @@ app.factory 'User', ['Restangular', (Restangular) ->
 
 # Project
 app.factory 'Project', ['Restangular', (Restangular) ->
+
+  Restangular.addElementTransformer 'projects', false, (project) ->
+    project.addRestangularMethod 'addParticipatedUser', 'post', 'add_participated_user'
+    project.addRestangularMethod 'getParticipatedUser', 'get', 'get_participated_user'
+    project
+
 
   Project = Restangular.all 'projects'
 

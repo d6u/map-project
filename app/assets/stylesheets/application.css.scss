@@ -356,6 +356,7 @@ html, body,
     @include flex_basis(0);
     position: relative;
     border-left: 1px solid $gray2;
+    overflow: hidden;
 }
 
 .mp-chatbox-button-group {
@@ -402,9 +403,13 @@ html, body,
     margin: 5px;
     background-color: white;
     border: 1px solid $gray2;
+    height: 42px;
 }
 
-.mp-friendships-list-friend-picture {}
+.mp-friendships-list-friend-picture {
+    width: 40px;
+    height: 40px;
+}
 
 .mp-friendships-list-friend-detail {
     padding: 0 5px;
@@ -413,6 +418,11 @@ html, body,
 .mp-invite-friends-promot {
     text-align: center;
     margin-top: 20px;
+}
+
+.mp-friends-list-selected {
+    background-color: $blue;
+    color: white;
 }
 
 

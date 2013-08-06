@@ -2,7 +2,6 @@
 #= require libraries/jquery.js
 #= require libraries/bootstrap.min.js
 #= require libraries/angular.min.js
-#= require libraries/angular-resource.min.js
 #= require libraries/restangular.js
 #= require modules_for_libraries/angular-facebook.coffee
 #= require mp_modules/angular-mp.api.coffee

@@ -57,8 +57,13 @@ app.controller 'ChatBoxCtrl',
 
   $scope.addFriendsToProject = ->
     $scope.friendships = []
-    Friendship.getList().then (friendships)->
-      $scope.friendships = friendships
+
+    $scope.currentProject.projectParticipatedUsers = []
+    $scope.currentProject.project.getParticipatedUser().then (users) ->
+      $scope.currentProject.projectParticipatedUsers = users
+      Friendship.getList().then (friendships)->
+        $scope.friendships = friendships
+
     $scope.$broadcast 'showAddFriendsModal'
 
   $scope.getInvitationCode = ->
@@ -66,5 +71,22 @@ app.controller 'ChatBoxCtrl',
       $scope.invitationCode = location.origin + '/invitation/join/' + code
 
   $scope.invite = ->
-
+    for friendship in $scope.friendships
+      do (friendship) ->
+        if friendship.$$selected
+          $scope.currentProject.project.addParticipatedUser(friendship.friend)
 ]
+
+
+# invite-friend-list-item
+app.directive 'inviteFriendListItem', [->
+  (scope, element, attrs) ->
+
+    # init
+    scope.friendship.$$selected = if _.find(scope.currentProject.projectParticipatedUsers, {id: scope.friendship.friend.id}) then true else false
+
+    # actions
+    scope.selectFriend = ->
+      scope.friendship.$$selected = !scope.friendship.$$selected
+]
+
