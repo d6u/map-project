@@ -392,9 +392,27 @@ html, body,
 // modal
 // ----------------------------------------
 .mp-friendships-list {
-    > li {
+    list-style: none;
+    margin-bottom: 0;
+    padding-left: 0;
+}
 
-    }
+.mp-frienships-list-item {
+    float: left;
+    margin: 5px;
+    background-color: white;
+    border: 1px solid $gray2;
+}
+
+.mp-friendships-list-friend-picture {}
+
+.mp-friendships-list-friend-detail {
+    padding: 0 5px;
+}
+
+.mp-invite-friends-promot {
+    text-align: center;
+    margin-top: 20px;
 }
 
 

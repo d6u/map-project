@@ -54,10 +54,13 @@ app.controller 'ProjectViewCtrl',
 
 # ChatBoxCtrl
 app.controller 'ChatBoxCtrl',
-['$scope',
-($scope) ->
+['$scope', 'Friendship',
+($scope, Friendship) ->
 
   $scope.addFriendsToProject = ->
+    $scope.friendships = []
+    Friendship.getList().then (friendships)->
+      $scope.friendships = friendships
     $scope.$broadcast 'showAddFriendsModal'
 
   $scope.invite = ->

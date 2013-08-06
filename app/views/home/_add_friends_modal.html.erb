@@ -13,10 +13,17 @@
 
                 <input type="text" class="form-control" placeholder="Search for friend's name" ng-model="friend.name" >
 
-                <ul class="mp-friendships-list">
-                    <!-- ng-repeat="frienship in frienships" -->
-                    <li class="mp-frienships-list-item"></li>
+                <ul class="mp-friendships-list clearfix">
+                    <li class="mp-frienships-list-item" ng-repeat="frienship in frienships">
+                        <img ng-src="{{friendship}}" class="mp-friendships-list-friend-picture">
+                        <span class="mp-friendships-list-friend-detail">Anqi</span>
+                    </li>
                 </ul>
+
+                <div class="mp-invite-friends-promot" ng-class="{hide: friendship.length == 0}">
+                    <p class="lead">It seems like you don't have any friends on this platform.</p>
+                    <a href="" class="btn btn-primary">Invite some!</a>
+                </div>
 
             </div>
 
