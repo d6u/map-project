@@ -18,9 +18,15 @@ app.provider 'FB', class
         else
           notLoggedIn(error)
 
-    FB.doLogout = (success) ->
-      FB.logout ->
-        notLoggedIn(success)
+    FB.doLogout = (logoutCallback) ->
+      fbLoggedOut = $q.defer()
+      mpLoggedOut = $q.defer()
+
+      FB.logout -> $rootScope.$apply -> fbLoggedOut.resolve()
+      notLoggedIn -> mpLoggedOut.resolve()
+
+      $q.all([fbLoggedOut.promise, mpLoggedOut.promise]).then ->
+        logoutCallback()
 
     # check fb login status
     FB.getLoginStatus (response) ->
@@ -30,31 +36,48 @@ app.provider 'FB', class
         else
           notLoggedIn()
 
+    # callbacks
     loggedIn = (authResponse, loginCallback) ->
       $rootScope.user.fb_access_token = authResponse.accessToken
       $rootScope.user.fb_user_id      = authResponse.userID
-      User.login($rootScope.user).then (user) ->
-        if user
-          $timeout -> loginChecked.resolve(FB)
-          $rootScope.user.id = user.id
-          loginCallback() if loginCallback
-          FB.api '/me', (response) ->
-            $rootScope.user.name      = response.name
-            $rootScope.user.email     = response.email
-            $rootScope.$apply()
-            User.save($rootScope.user)
-          FB.api '/me/picture', (response) ->
-            $rootScope.user.picture   = response.data.url
-            $rootScope.$apply()
-        else
-          FB.api '/me', (response) ->
-            $rootScope.user.name      = response.name
-            $rootScope.user.email     = response.email
-            $rootScope.$apply()
-            User.register $rootScope.user, (user) ->
-              $timeout -> loginChecked.resolve(FB)
-              $rootScope.user.id = user.id
-              loginCallback() if loginCallback
+
+      User.login($rootScope.user)
+      .then ((user) ->
+
+        # login success
+        $rootScope.user = user
+        loginChecked.resolve(FB)
+        loginCallback() if loginCallback
+
+        FB.api '/me', (response) ->
+          $rootScope.user.name      = response.name
+          $rootScope.user.email     = response.email
+          $rootScope.$apply()
+          user.put()
+
+        FB.api '/me/picture', (response) ->
+          $rootScope.user.fb_user_picture   = response.data.url
+          $rootScope.$apply()
+          user.put()
+
+      ), ((response) ->
+
+        # login mp failed, go to register
+        FB.api '/me', (response) ->
+          $rootScope.user.name      = response.name
+          $rootScope.user.email     = response.email
+          $rootScope.$apply()
+
+          User.post($rootScope.user).then (user) ->
+            $rootScope.user = user
+            loginChecked.resolve(FB)
+            loginCallback() if loginCallback
+
+            FB.api '/me/picture', (response) ->
+              $rootScope.user.fb_user_picture   = response.data.url
+              $rootScope.$apply()
+              user.put()
+      )
 
     notLoggedIn = (logoutCallback) ->
       $rootScope.user = {}
@@ -62,5 +85,6 @@ app.provider 'FB', class
         loginChecked.resolve(FB)
         logoutCallback() if logoutCallback
 
+    # return
     return loginChecked.promise
   ]

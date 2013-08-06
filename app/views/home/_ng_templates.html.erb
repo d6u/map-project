@@ -64,7 +64,7 @@
     <a href="" class="mp-navbar-button mp-brand" ng-class="{hide: !user.fb_access_token}">
         <i class="icon-refresh icon-spin" ng-class="{hide: user.name}"></i>
         <div class="mp-navbar-user-info" ng-class="{hide: !user.name}">
-            <img class="mp-navbar-user-info-picture" ng-src="{{user.picture}}">
+            <img class="mp-navbar-user-info-picture" ng-src="{{user.fb_user_picture}}">
             {{user.name}}
         </div>
     </a>

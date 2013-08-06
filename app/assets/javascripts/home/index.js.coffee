@@ -1,3 +1,4 @@
+#= require libraries/lodash.js
 #= require libraries/socket.io.min.js
 #= require libraries/jquery.js
 #= require libraries/jquery-ui-1.10.3.custom.min.js
@@ -8,6 +9,7 @@
 #= require libraries/perfect-scrollbar-0.4.3.with-mousewheel.min.js
 #= require libraries/angular.min.js
 #= require libraries/angular-resource.min.js
+#= require libraries/restangular.js
 #= require modules_for_libraries/angular-easy-modal.coffee
 #= require modules_for_libraries/angular-facebook.coffee
 #= require modules_for_libraries/angular-socket.io.coffee
@@ -28,6 +30,8 @@
 
 # declear
 app = angular.module 'mapApp', [
+  'restangular',
+
   'angular-easy-modal',
   'angular-facebook',
   'angular-socket.io',

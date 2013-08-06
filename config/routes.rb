@@ -5,14 +5,19 @@ MapProject::Application.routes.draw do
   get  'new_project'         => 'home#index'
   get  'project/:project_id' => 'home#index'
 
+
+  scope '/users' do
+    post 'login'    => 'users#login'
+    get  'logout'   => 'users#logout'
+  end
   resources :users
-  post 'login'  => 'users#login'
-  post 'register' => 'users#register'
-  get  'logout' => 'users#logout'
+
 
   resources :projects do
     resources :places
   end
+
+  resources :friendships
 
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".

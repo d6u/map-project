@@ -2,26 +2,19 @@ app = angular.module 'angular-mp.api', ['ngResource']
 
 
 # User
-app.factory 'User', ['$http', '$resource', ($http, $resource) ->
+app.factory 'User', ['Restangular', (Restangular) ->
 
-  userResource = $resource('/users/:id', {id: '@id'}, {
-    save: {method: 'PUT'}
-  })
+  # Restangular.addElementTransformer 'users', true, (users) ->
+    # users.addRestangularMethod
 
-  userResource.login = (user) ->
-    # fb_access_token, fb_user_id
-    $http.post('/login', {user: user})
-    .then ((response) -> response.data), (-> false)
-    # .then ((response) -> response.data ), (-> false)
+  User = Restangular.all 'users'
 
-  userResource.register = (user) ->
-    # fb_access_token, fb_user_id, email, name
-    $http.post('/register', {user: user}).then (response) -> response.data
-
-  userResource.logout = -> $http.get('/logout')
+  User.addRestangularMethod 'login', 'post', 'login'
+  User.addRestangularMethod 'register', 'post', 'register'
+  User.addRestangularMethod 'logout', 'get', 'logout'
 
   # return
-  userResource
+  User
 ]
 
 
@@ -49,4 +42,11 @@ app.factory 'Place', ['$resource', ($resource) ->
         method: 'PUT'
     }
   )
+]
+
+
+# friendships
+app.factory 'Friendship', ['Restangular', (Restangular) ->
+
+  Restangular.all('friendships')
 ]
