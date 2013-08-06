@@ -8,7 +8,7 @@ app.controller 'AllProjectsViewCtrl',
 
   # init
   if $scope.user.fb_access_token
-    Project.query (projects) ->
+    Project.getList().then (projects) ->
       if projects.length > 0
         $scope.projects = projects
       else
@@ -17,6 +17,7 @@ app.controller 'AllProjectsViewCtrl',
 
   $scope.userLocation = userLocation
 
+  # TODO
   $scope.currentProject.projects = {}
   $scope.currentProject.places = []
 ]

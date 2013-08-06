@@ -17,8 +17,11 @@ class PlacesController < ApplicationController
 
 
   def create
-    place = Place.new params.require(:place).permit(:notse, :name, :address, :coord, :order, :project_id)
-    if place.save
+    project = Project.find_by_id params[:project_id]
+
+    if project
+      place = Place.new params.require(:place).permit(:notse, :name, :address, :coord, :order)
+      project.places << place
       render :json => place
     end
   end

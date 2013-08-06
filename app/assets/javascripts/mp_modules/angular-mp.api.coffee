@@ -1,11 +1,14 @@
-app = angular.module 'angular-mp.api', ['ngResource']
+app = angular.module 'angular-mp.api', ['restangular']
 
 
 # User
 app.factory 'User', ['Restangular', (Restangular) ->
 
-  # Restangular.addElementTransformer 'users', true, (users) ->
-    # users.addRestangularMethod
+  Restangular.addElementTransformer 'users', false, (user) ->
+    # TODO
+    user.addRestangularMethod 'joinProject', 'post', 'add_project'
+    user.addRestangularMethod 'addFriend', 'post', 'add_friend'
+    user
 
   User = Restangular.all 'users'
 
@@ -19,36 +22,21 @@ app.factory 'User', ['Restangular', (Restangular) ->
 
 
 # Project
-app.factory 'Project', ['$resource', ($resource) ->
-  $resource('/projects/:project_id', {project_id: '@id'}, {
-    create:
-      method: 'POST'
-    update:
-      method: 'PUT'
-    find_by_title:
-      method: 'GET'
-  })
-]
+app.factory 'Project', ['Restangular', (Restangular) ->
 
+  Project = Restangular.all 'projects'
 
-# Place
-app.factory 'Place', ['$resource', ($resource) ->
-  $resource('/projects/:project_id/places/:place_id',
-    {project_id: '@project_id', place_id: '@id'},
-    {
-      create:
-        method: 'POST'
-      update:
-        method: 'PUT'
-    }
-  )
+  Project.addRestangularMethod 'find_by_title', 'get', '', {title: 'last unsaved project'}
+
+  # return
+  Project
 ]
 
 
 # friendships
 app.factory 'Friendship', ['Restangular', (Restangular) ->
 
-  Restangular.all('friendships')
+  Restangular.all 'friendships'
 ]
 
 

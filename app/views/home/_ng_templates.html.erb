@@ -137,11 +137,12 @@
         </div>
     </div>
 
+    <!-- places -->
     <div class="mp-sidebar-places js-places-slide-up" ng-class="{'js-places-slide-up': interface.sideBarPlacesSlideUp}" perfect-scrollbar='places' jquery-ui-sortable="place in currentProject.places">
 
         <div class="mp-sidebar-place" ng-repeat="place in currentProject.places" sidebar-place>
             <div class="mp-place-marker-icon">
-                <a href="" ng-click="centerPlaceInMap(place.marker)">
+                <a href="" ng-click="centerPlaceInMap(place.$$marker)">
                     <img ng-src="/assets/number_{{$index}}.png">
                 </a>
             </div>
@@ -151,9 +152,9 @@
                 </a>
             </div>
             <div class="mp-place-detail-sidebar">
-                <div class="mp-place-name-sidebar">{{place.attrs.name}}</div>
-                <address>{{place.attrs.address}}</address>
-                <p class="">{{place.attrs.notes}}</p>
+                <div class="mp-place-name-sidebar">{{place.name}}</div>
+                <address>{{place.address}}</address>
+                <p class="">{{place.notes}}</p>
             </div>
         </div>
 
@@ -164,9 +165,9 @@
 <!-- templates relate to map -->
 <script type="text/ng-template" id="marker_info_window">
     <div class="mp-info-window-wrapper" marker-info>
-        <div class="mp-info-window-title">{{place.attrs.name}}</div>
-        <div class="mp-info-window-address">{{place.attrs.address}}</div>
-        <div class="mp-info-window-options" ng-class="{hide: place.attrs.id}">
+        <div class="mp-info-window-title">{{place.name}}</div>
+        <div class="mp-info-window-address">{{place.address}}</div>
+        <div class="mp-info-window-options" ng-class="{hide: place.id}">
             <a href="" ng-click="addPlaceToList(place)">
                 <i class="icon-ok"></i>
                 Add to list
