@@ -21,8 +21,10 @@
                 </ul>
 
                 <div class="mp-invite-friends-promot" ng-class="{hide: friendship.length == 0}">
-                    <p class="lead">It seems like you don't have any friends on this platform.</p>
-                    <a href="" class="btn btn-primary">Invite some!</a>
+                    <p class="lead" ng-class="{hide: invitationCode}">It seems like you don't have any friends on this platform.</p>
+                    <p class="lead" ng-class="{hide: !invitationCode}">Please share this url with your friend, you will automatically add them when they login.</p>
+                    <div class="well" ng-class="{hide: !invitationCode}">{{invitationCode}}</div>
+                    <a href="" class="btn btn-primary" ng-click="getInvitationCode()" ng-class="{hide: invitationCode}">Invite some!</a>
                 </div>
 
             </div>

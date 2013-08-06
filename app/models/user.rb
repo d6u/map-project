@@ -14,6 +14,7 @@ class User < ActiveRecord::Base
                          :foreign_key => "friend_id"
   has_many :friends,     :through => :friendships
   has_many :followers,   :through => :followships, :source => :user
+  has_many :invitations
 
 
   def validate_with_facebook

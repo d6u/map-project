@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20130805165106) do
+ActiveRecord::Schema.define(version: 20130806022724) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -28,6 +28,18 @@ ActiveRecord::Schema.define(version: 20130805165106) do
   add_index "friendships", ["friend_id"], name: "index_friendships_on_friend_id", using: :btree
   add_index "friendships", ["status"], name: "index_friendships_on_status", using: :btree
   add_index "friendships", ["user_id"], name: "index_friendships_on_user_id", using: :btree
+
+  create_table "invitations", force: true do |t|
+    t.string   "code"
+    t.integer  "user_id"
+    t.integer  "project_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "invitations", ["code"], name: "index_invitations_on_code", using: :btree
+  add_index "invitations", ["project_id"], name: "index_invitations_on_project_id", using: :btree
+  add_index "invitations", ["user_id"], name: "index_invitations_on_user_id", using: :btree
 
   create_table "places", force: true do |t|
     t.text     "notes"
