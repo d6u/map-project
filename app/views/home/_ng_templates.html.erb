@@ -31,6 +31,27 @@
         </div>
         <div class="mp-places-list" ng-class="{'js-sidebar-slide-in': interface.showPlacesList}" map-sidebar-places="currentProject.places.length"></div>
     </div>
+
+    <!-- chatbox -->
+    <div class="mp-chatbox" ng-class="{'js-sidebar-slide-in': interface.showChatbox}" ng-controller="ChatBoxCtrl">
+        <nav class="mp-navbar-top mp-chatbox-button-group">
+            <a href="" class="mp-navbar-button" ng-click="addFriendsToProject()" bs-tooltip="Add a friend to this project" bs-tooltip-placement="bottom">
+                <i class="icon-plus"></i>
+            </a>
+        </nav>
+
+        <!-- chat-history -->
+        <div class="mp-chat-history" perfect-scrollbar="chatHistory.length" mp-chat-history>
+            <div class="mp-chat-history-item" ng-repeat="chatItem in chatHistory" mp-chat-history-item></div>
+        </div>
+
+        <div class="mp-chat-inputs">
+            <textarea name="" class="form-control mp-naked-input" placeholder="Say something" mp-chatbox-input></textarea>
+            <button class="btn btn-default">Send</button>
+        </div>
+
+        <%= render 'add_friends_modal' %>
+    </div>
 </script>
 
 
@@ -46,7 +67,7 @@
     <a href="" class="mp-navbar-button mp-brand" ng-class="{hide: !user.fb_access_token}">
         <i class="icon-refresh icon-spin" ng-class="{hide: user.name}"></i>
         <div class="mp-navbar-user-info" ng-class="{hide: !user.name}">
-            <img class="mp-navbar-user-info-picture" ng-src="{{user.picture}}">
+            <img class="mp-navbar-user-info-picture" ng-src="{{user.fb_user_picture}}">
             {{user.name}}
         </div>
     </a>
@@ -92,10 +113,11 @@
             <a href="" class="mp-navbar-button" ng-click="displayAllMarkers()" bs-tooltip="Zoom map to display all places" bs-tooltip-placement="bottom">
                 <i class="icon-resize-full"></i>
             </a>
-            <!-- TODO: <a href="" class="mp-navbar-button">
+            <!-- TODO: Center User Location
+            <a href="" class="mp-navbar-button">
                 <i class="icon-ban-circle"></i>
             </a> -->
-            <a href="" class="mp-navbar-button" ng-click="interface.showChatbox = !interface.showChatbox">
+            <a href="" class="mp-navbar-button" ng-click="interface.showChatbox = !interface.showChatbox" bs-tooltip="Share places your find with your friends, in real time" bs-tooltip-placement="bottom"  ng-init="interface.showChatbox = true">
                 <i class="icon-comments"></i>
             </a>
             <a href="" class="mp-navbar-button" ng-click="deleteAllSavedPlaces()" bs-tooltip="Delete all saved places" bs-tooltip-placement="bottom">
@@ -118,11 +140,12 @@
         </div>
     </div>
 
+    <!-- places -->
     <div class="mp-sidebar-places js-places-slide-up" ng-class="{'js-places-slide-up': interface.sideBarPlacesSlideUp}" perfect-scrollbar='places' jquery-ui-sortable="place in currentProject.places">
 
         <div class="mp-sidebar-place" ng-repeat="place in currentProject.places" sidebar-place>
             <div class="mp-place-marker-icon">
-                <a href="" ng-click="centerPlaceInMap(place.marker)">
+                <a href="" ng-click="centerPlaceInMap(place.$$marker)">
                     <img ng-src="/assets/number_{{$index}}.png">
                 </a>
             </div>
@@ -132,9 +155,9 @@
                 </a>
             </div>
             <div class="mp-place-detail-sidebar">
-                <div class="mp-place-name-sidebar">{{place.attrs.name}}</div>
-                <address>{{place.attrs.address}}</address>
-                <p class="">{{place.attrs.notes}}</p>
+                <div class="mp-place-name-sidebar">{{place.name}}</div>
+                <address>{{place.address}}</address>
+                <p class="">{{place.notes}}</p>
             </div>
         </div>
 
@@ -142,11 +165,12 @@
 </script>
 
 
+<!-- templates relate to map -->
 <script type="text/ng-template" id="marker_info_window">
     <div class="mp-info-window-wrapper" marker-info>
-        <div class="mp-info-window-title">{{place.attrs.name}}</div>
-        <div class="mp-info-window-address">{{place.attrs.address}}</div>
-        <div class="mp-info-window-options" ng-class="{hide: place.attrs.id}">
+        <div class="mp-info-window-title">{{place.name}}</div>
+        <div class="mp-info-window-address">{{place.address}}</div>
+        <div class="mp-info-window-options" ng-class="{hide: place.id}">
             <a href="" ng-click="addPlaceToList(place)">
                 <i class="icon-ok"></i>
                 Add to list

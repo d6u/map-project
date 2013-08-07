@@ -1,0 +1,43 @@
+<!-- Modal -->
+<div class="" id="add_friends_modal" easy-modal="showAddFriendsModal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+
+            <!-- header -->
+            <div class="modal-header">
+                <h4 class="modal-title">Add Friends to Project: {{currentProject.project.title}}</h4>
+            </div>
+
+            <!-- body -->
+            <div class="modal-body">
+
+                <input type="text" class="form-control" placeholder="Search for friend's name" ng-model="friend.name" >
+
+                <div class="mp-invite-friends-promot" ng-class="{hide: invitationCode}">
+                    <a href="" class="btn btn-primary" ng-click="getInvitationCode()" ng-class="">Generate invitation link to invite friends here!</a>
+                </div>
+
+                <div class="mp-invite-friends-promot" ng-class="{hide: !invitationCode}">
+                    <p class="lead">Please share this url with your friend, you will automatically add them when they login.</p>
+                    <div class="well" ng-class="">{{invitationCode}}</div>
+                </div>
+
+                <ul class="mp-friendships-list clearfix">
+                    <li class="mp-frienships-list-item" ng-repeat="friendship in friendships" invite-friend-list-item ng-class="{'mp-friends-list-selected': friendship.$$selected}" ng-click="selectFriend()">
+                        <img ng-src="{{friendship.friend.fb_user_picture}}" class="mp-friendships-list-friend-picture">
+                        <span class="mp-friendships-list-friend-detail">{{friendship.friend.name}}</span>
+                    </li>
+                </ul>
+
+            </div>
+
+            <!-- footer -->
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" ng-click="close()">Close</button>
+                <button type="button" class="btn btn-primary" ng-click="invite()">Add</button>
+            </div>
+
+        </div>
+    </div>
+</div>
+<!-- END of Modal -->

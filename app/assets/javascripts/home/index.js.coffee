@@ -1,3 +1,4 @@
+#= require libraries/lodash.js
 #= require libraries/socket.io.min.js
 #= require libraries/jquery.js
 #= require libraries/jquery-ui-1.10.3.custom.min.js
@@ -7,7 +8,8 @@
 #= require libraries/perfect-scrollbar-0.4.3.min.js
 #= require libraries/perfect-scrollbar-0.4.3.with-mousewheel.min.js
 #= require libraries/angular.min.js
-#= require libraries/angular-resource.min.js
+#= require libraries/restangular.js
+#= require modules_for_libraries/angular-easy-modal.coffee
 #= require modules_for_libraries/angular-facebook.coffee
 #= require modules_for_libraries/angular-socket.io.coffee
 #= require modules_for_libraries/angular-masonry.coffee
@@ -27,6 +29,9 @@
 
 # declear
 app = angular.module 'mapApp', [
+  'restangular',
+
+  'angular-easy-modal',
   'angular-facebook',
   'angular-socket.io',
   'angular-masonry',
@@ -82,6 +87,8 @@ app.config([
       resolve:
         FB: 'FB'
         userLocation: 'userLocation'
+        socket: 'socket'
+        Chatbox: 'Chatbox'
     })
     .otherwise({redirectTo: '/'})
 
@@ -93,7 +100,7 @@ app.config([
 
     # FB
     FBProvider.init({
-      appId      : '530522713663451'
+      appId      : '580227458695144'
       channelUrl : location.origin + '/fb_channel.html'
       status     : true
       cookie     : true
@@ -104,7 +111,7 @@ app.config([
     google.maps.visualRefresh = true
 
     # socket
-    # socketProvider.setServerUrl('http://local.dev:4000')
+    socketProvider.setServerUrl location.protocol + '//' + location.hostname + ':4000'
 ])
 
 
@@ -181,15 +188,14 @@ app.controller 'MapCtrl',
         position: place.geometry.location
         animation: animation
       newPlace =
-        marker: new google.maps.Marker markerOptions
-        attrs:
-          notes: null
-          name: place.name
-          address: place.formatted_address
-          coord: place.geometry.location.toString()
+        $$marker: new google.maps.Marker markerOptions
+        notes: null
+        name: place.name
+        address: place.formatted_address
+        coord: place.geometry.location.toString()
 
-      $scope.googleMap.markers.push newPlace.marker
-      bounds.extend place.geometry.location
+      $scope.googleMap.markers.push newPlace.$$marker
+      bounds.extend newPlace.$$marker.getPosition()
       bindInfoWindow newPlace
 
     $scope.googleMap.map.fitBounds bounds
@@ -201,7 +207,7 @@ app.controller 'MapCtrl',
     $scope.googleMap.markers = []
 
   bindInfoWindow = (place) ->
-    google.maps.event.addListener place.marker, 'click', ->
+    google.maps.event.addListener place.$$marker, 'click', ->
       infoWindow = $scope.googleMap.infoWindow
       template = $templateCache.get 'marker_info_window'
       newScope = $scope.$new()
@@ -211,28 +217,28 @@ app.controller 'MapCtrl',
       google.maps.event.clearListeners infoWindow, 'closeclick'
       google.maps.event.addListenerOnce infoWindow, 'closeclick', ->
         newScope.$destroy()
-      infoWindow.open $scope.googleMap.map, place.marker
+      infoWindow.open $scope.googleMap.map, place.$$marker
 
   rearrangePlacesList = ->
     for place, index in $scope.currentProject.places
       # update marker icon
-      place.marker.setIcon {url: "/assets/number_#{index}.png"}
+      place.$$marker.setIcon {url: "/assets/number_#{index}.png"}
       # update order
-      place.attrs.order = index
+      place.order = index
     $rootScope.$broadcast 'undatedPlacesOrders'
 
   # actions
   $scope.addPlaceToList = (place) ->
-    place.marker.setMap null
+    place.$$marker.setMap null
     markerOptions =
       map: $scope.googleMap.map
-      title: place.attrs.name
-      position: place.marker.getPosition()
+      title: place.name
+      position: place.$$marker.getPosition()
       icon:
         url: "/assets/number_#{$scope.currentProject.places.length}.png"
-    place.marker = new google.maps.Marker markerOptions
-    place.attrs.id = true
-    place.attrs.order = $scope.currentProject.places.length
+    place.$$marker = new google.maps.Marker markerOptions
+    place.id = true
+    place.order = $scope.currentProject.places.length
 
     $scope.currentProject.places.push place
     $rootScope.$broadcast 'placeAddedToList', place
@@ -242,20 +248,20 @@ app.controller 'MapCtrl',
 
   $scope.removePlace = (place, index) ->
     $scope.currentProject.places.splice(index, 1)[0]
-    place.marker.setMap null
+    place.$$marker.setMap null
     rearrangePlacesList()
     $rootScope.$broadcast 'placeRemovedFromList', place
 
   $scope.displayAllMarkers = ->
     bounds = new google.maps.LatLngBounds()
     for place in $scope.currentProject.places
-      bounds.extend place.marker.getPosition()
+      bounds.extend place.$$marker.getPosition()
     $scope.googleMap.map.fitBounds bounds
     $scope.googleMap.map.setZoom 12 if $scope.currentProject.places.length < 3 && $scope.googleMap.map.getZoom() > 12
 
   $scope.deleteAllSavedPlaces = ->
     if confirm('Are you sure to delete all saved places? This action is irreversible.')
-      place.marker.setMap null for place in $scope.currentProject.places
+      place.$$marker.setMap null for place in $scope.currentProject.places
       $scope.currentProject.places = []
       $rootScope.$broadcast 'allPlacesRemovedFromList'
 

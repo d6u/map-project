@@ -1,0 +1,16 @@
+{
+  "name": "map-project",
+  "version": "0.0.0",
+  "description": "a collaborate location marking web app",
+  "dependencies" : {
+    "redis": "0.8.x",
+    "socket.io": "0.9.x",
+    "q": "*"
+  },
+  "devDependencies": {
+
+  },
+  "engines": {
+    "node": ">=0.10"
+  }
+}

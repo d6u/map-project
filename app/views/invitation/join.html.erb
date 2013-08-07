@@ -1,0 +1,27 @@
+<div class="container mp-invitation-container" ng-view>
+</div>
+
+
+<script type="text/ng-template" id="invitation_view">
+    <div class="row">
+        <div class="col-8 col-offset-2">
+            <% if @target_project %>
+                <p class="lead">You have been invited by <span class="text-primary"><%= @target_user.name %></span> to join <span class="text-primary"><%= @target_project.title %></span> project.</p>
+            <% else %>
+                <p class="lead">You have been invited by <span class="text-primary"><%= @target_user.name %></span> to join Map-Project.</p>
+            <% end %>
+
+            <!-- Logged in -->
+            <div class="" ng-class="{hide: !user.fb_access_token}">
+                <a href="" class="btn btn-primary" ng-click="joinProject(<%= @target_project.id if @target_project %>)">Take me in!</a>
+                <a href="/" class="btn btn-default">Maybe next time</a>
+            </div>
+
+            <!-- Not logged in -->
+            <div ng-class="{hide: user.fb_access_token}">
+                <a href="" class="btn btn-primary" ng-click="fbLogin(<%= @target_project.id if @target_project %>)">Sign up with Facebook and Take me to the Project</a>
+                <a href="/" class="btn btn-default">Maybe next time</a>
+            </div>
+        </div>
+    </div>
+</script>

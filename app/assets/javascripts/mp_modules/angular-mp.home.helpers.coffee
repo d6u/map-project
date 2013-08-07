@@ -2,8 +2,8 @@ app = angular.module 'angular-mp.home.helpers', []
 
 
 # project-detail-modal
-app.directive 'projectDetailModal', ['$rootScope', 'Project', '$location',
-($rootScope, Project, $location) ->
+app.directive 'projectDetailModal', ['$rootScope', '$location',
+($rootScope, $location) ->
   (scope, element, attrs) ->
 
     if $location.path() == '/new_project' then scope.inNewPorject = true else scope.inNewPorject = false
@@ -18,7 +18,8 @@ app.directive 'projectDetailModal', ['$rootScope', 'Project', '$location',
     scope.saveProject = ->
       if scope.newProjectModalForm.$valid
         scope.errorMessage = null
-        Project.update scope.newProjectModal, (project) ->
+        angular.extend $rootScope.currentProject.project, scope.newProjectModal
+        $rootScope.currentProject.project.put().then (project) ->
           $rootScope.$broadcast 'projectUpdated', project
           element.trigger('closeModal')
           scope.hideDeleteProjectButton = true
@@ -28,7 +29,7 @@ app.directive 'projectDetailModal', ['$rootScope', 'Project', '$location',
 
     scope.deleteProject = ->
       scope.errorMessage = null
-      Project.delete {project_id: scope.newProjectModal.id}, ->
+      $rootScope.currentProject.project.remove().then ->
         $rootScope.$broadcast 'projectDeleted', scope.newProjectModal.id
         element.trigger('closeModal')
         $location.path('/all_projects')
@@ -45,7 +46,6 @@ app.directive 'projectDetailModal', ['$rootScope', 'Project', '$location',
     scope.$on 'editProjectAttrs', (event, data) ->
       scope.hideDeleteProjectButton = false
       if data
-        console.log data
         scope.newProjectModal =
           id: data.id
           title: data.title

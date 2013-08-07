@@ -1,52 +1,56 @@
-app = angular.module 'angular-mp.api', ['ngResource']
+app = angular.module 'angular-mp.api', ['restangular']
 
 
 # User
-app.factory 'User', ['$http', '$resource', ($http, $resource) ->
+app.factory 'User', ['Restangular', (Restangular) ->
 
-  userResource = $resource('/users/:id', {id: '@id'}, {
-    save: {method: 'PUT'}
-  })
+  Restangular.addElementTransformer 'users', false, (user) ->
+    # TODO
+    # user.addRestangularMethod 'addFriend', 'post', 'add_friend'
+    user
 
-  userResource.login = (user) ->
-    # fb_access_token, fb_user_id
-    $http.post('/login', {user: user})
-    .then ((response) -> response.data), (-> false)
-    # .then ((response) -> response.data ), (-> false)
 
-  userResource.register = (user) ->
-    # fb_access_token, fb_user_id, email, name
-    $http.post('/register', {user: user}).then (response) -> response.data
+  User = Restangular.all 'users'
 
-  userResource.logout = -> $http.get('/logout')
+  User.addRestangularMethod 'login', 'post', 'login'
+  User.addRestangularMethod 'register', 'post', 'register'
+  User.addRestangularMethod 'logout', 'get', 'logout'
 
   # return
-  userResource
+  User
 ]
 
 
 # Project
-app.factory 'Project', ['$resource', ($resource) ->
-  $resource('/projects/:project_id', {project_id: '@id'}, {
-    create:
-      method: 'POST'
-    update:
-      method: 'PUT'
-    find_by_title:
-      method: 'GET'
-  })
+app.factory 'Project', ['Restangular', (Restangular) ->
+
+  Restangular.addElementTransformer 'projects', false, (project) ->
+    project.addRestangularMethod 'addParticipatedUser', 'post', 'add_participated_user'
+    project.addRestangularMethod 'getParticipatedUser', 'get', 'get_participated_user'
+    project
+
+
+  Project = Restangular.all 'projects'
+
+  Project.addRestangularMethod 'find_by_title', 'get', '', {title: 'last unsaved project'}
+
+  # return
+  Project
 ]
 
 
-# Place
-app.factory 'Place', ['$resource', ($resource) ->
-  $resource('/projects/:project_id/places/:place_id',
-    {project_id: '@project_id', place_id: '@id'},
-    {
-      create:
-        method: 'POST'
-      update:
-        method: 'PUT'
-    }
-  )
+# friendships
+app.factory 'Friendship', ['Restangular', (Restangular) ->
+
+  Restangular.all 'friendships'
+]
+
+
+# invitations
+app.factory 'Invitation', ['$http', ($http) ->
+
+  generate: (project_id)->
+    postBody =
+      invitation: {project_id: project_id}
+    $http.post('/invitation/generate', postBody).then (response) -> response.data.code
 ]

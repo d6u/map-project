@@ -10,6 +10,24 @@ class ProjectsController < ApplicationController
   #              DELETE /projects/:id(.:format)      projects#destroy
 
 
+  # POST
+  def add_participated_user
+    project = Project.find_by_id params[:project_id]
+    target_user = User.find_by_id params[:id]
+
+    project.participated_users << target_user
+    render :json => []
+  end
+
+
+  # GET
+  def get_participated_user
+    project = Project.find_by_id params[:project_id]
+
+    render :json => project.participated_users
+  end
+
+
   def index
     if params[:title]
       project = @user.projects.find_by_title params[:title]
