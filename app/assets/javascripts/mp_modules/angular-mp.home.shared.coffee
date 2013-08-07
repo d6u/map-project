@@ -100,3 +100,21 @@ app.directive 'mapSidebarPlaces', ['$timeout', '$rootScope',
     scope.editProjectDetails = ->
       $rootScope.$broadcast 'editProjectAttrs', scope.currentProject.project
 ]
+
+
+# mp-inputbox
+# ========================================
+app.directive 'mpInputbox', [->
+  (scope, element, attrs) ->
+
+    scope.clearInput = (control) ->
+      control.input = ''
+]
+
+
+# mp-user-section
+app.directive 'mpUserSection', [->
+  (scope, element, attrs) ->
+
+
+]

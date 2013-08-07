@@ -115,6 +115,7 @@ app.run(['$rootScope', '$location', 'FB',
       places: []
 
     $rootScope.interface =
+      showUserSection: false
       showChatbox: false
       showPlacesList: false
       sideBarPlacesSlideUp: true

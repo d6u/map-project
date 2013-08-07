@@ -1,12 +1,6 @@
 <!-- OutsideViewCtrl -->
 <script type="text/ng-template" id="outside_view">
-    <div class="mp-map-view-wrapper" ng-controller="MapCtrl">
-        <div class="mp-map-container">
-            <nav class="mp-navbar-top" mp-navbar-top-secion></nav>
-            <div class="mp-map-canvas" google-map></div>
-        </div>
-        <div class="mp-places-list" ng-class="{'js-sidebar-slide-in': interface.showPlacesList}" map-sidebar-places="currentProject.places.length"></div>
-    </div>
+    <div class="mp-map-canvas" ng-controller="MapCtrl" google-map></div>
 </script>
 
 

@@ -1,0 +1,44 @@
+.mp-control-toolbar {
+    position: fixed;
+    z-index: 1000;
+    right: 40px;
+    top: 20px;
+    background-color: white;
+    width: 302px;
+    height: 72px;
+    border: 1px solid #999;
+    box-shadow: 1px 1px 3px rgba(0,0,0,.3);
+    border-radius: 1px;
+    overflow: hidden;
+}
+
+.mp-toolbar-actions {
+    border-bottom: 1px solid $gray3;
+    height: 35px;
+}
+
+.mp-toolbar-action-button {
+    display: block;
+    float: left;
+    width: 25%;
+    height: 100%;
+    border-right: 1px solid $gray2;
+    color: $gray5;
+    font-size: 18px;
+    text-align: center;
+    line-height: 34px;
+
+    &:last-child {
+        border-right: none;
+    }
+
+    &:hover {
+        background-color: $blue;
+        color: white;
+        text-decoration: none;
+    }
+}
+
+.mp-toolbar-inputbox {
+    height: 35px;
+}
