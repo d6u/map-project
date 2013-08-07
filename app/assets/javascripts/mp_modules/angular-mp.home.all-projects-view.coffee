@@ -3,8 +3,8 @@ app = angular.module 'angular-mp.home.all-projects-view', []
 
 # AllProjectsCtrl
 app.controller 'AllProjectsViewCtrl',
-['$scope', 'Project', '$location', 'userLocation',
-($scope, Project, $location, userLocation) ->
+['$scope', 'Project', '$location',
+($scope, Project, $location) ->
 
   # init
   if $scope.user.fb_access_token

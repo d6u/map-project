@@ -1,0 +1,61 @@
+<script type="text/ng-template" id="mp_places_search_results_template">
+
+  <div class="mp-marked-places" ng-class="{hide: currentProject.places.length == 0}" jquery-ui-sortable="place in currentProject.places">
+    <div class="mp-marked-places-header"></div>
+    <div class="mp-marked-places-contents">
+      <div class="mp-marked-place" ng-repeat="place in currentProject.places" sidebar-place>
+        <div class="mp-place-marker-icon">
+          <a href="" ng-click="centerPlaceInMap(place.$$marker.getPosition())">
+            <img ng-src="/assets/number_{{$index}}.png">
+          </a>
+        </div>
+        <div class="mp-place-actions">
+          <a href="" ng-click="removePlace(place, $index)">
+            <i class="icon-remove"></i>
+          </a>
+        </div>
+        <div class="mp-place-detail-sidebar">
+          <div class="mp-place-name-sidebar">{{place.name}}</div>
+          <address>{{place.address}}</address>
+          <p class="">{{place.notes}}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <div class="mp-places-search-results" ng-class="{hide: googleMap.searchResults.length == 0}">
+    <div class="mp-places-search-results-header">
+      Search Results:
+      <a href="">Clear results</a>
+    </div>
+    <div class="mp-places-search-results-contents">
+      <div class="mp-place-search-result" ng-repeat="result in googleMap.searchResults">
+        <div class="mp-place-marker-icon">
+          <a href="" ng-click="centerPlaceInMap(result.geometry.location)">
+            <img ng-src="{{result.icon}}">
+          </a>
+        </div>
+        <div class="mp-place-detail-sidebar">
+          <div class="mp-place-name-sidebar">{{result.name}}</div>
+          <address>{{result.formatted_address}}</address>
+        </div>
+      </div>
+    </div>
+  </div>
+</script>
+
+
+<!-- templates relate to map -->
+<script type="text/ng-template" id="marker_info_window">
+  <div class="mp-info-window-wrapper" marker-info>
+    <div class="mp-info-window-title">{{place.name}}</div>
+    <div class="mp-info-window-address">{{place.address}}</div>
+    <div class="mp-info-window-options" ng-class="{hide: place.id}">
+      <a href="" ng-click="addPlaceToList(place)">
+        <i class="icon-ok"></i>
+        Add to list
+      </a>
+    </div>
+  </div>
+</script>

@@ -1,0 +1,51 @@
+.mp-inputbox {
+    font-size: 18px;
+    position: relative;
+
+    label {
+        width: 100%;
+        margin-bottom: 0;
+    }
+
+    .mp-naked-input {
+        height: 35px;
+        padding: 5px;
+        padding-left: 35px;
+        padding-right: 35px;
+        width: 100%;
+        line-height: 20px;
+    }
+}
+
+.mp-inputbox-icon {
+    position: absolute;
+    width: 35px;
+    line-height: 35px;
+    text-align: center;
+    color: inherit;
+    cursor: pointer;
+
+    &:hover {
+        color: inherit;
+        text-decoration: none;
+    }
+}
+
+.mp-inputbox-action-button {
+    position: absolute;
+    right: 0;
+    top: 0;
+    width: 35px;
+
+    display: block;
+    height: 100%;
+    color: $gray5;
+    font-size: 18px;
+    text-align: center;
+    line-height: 34px;
+
+    &:hover {
+        color: $blue;
+        text-decoration: none;
+    }
+}
