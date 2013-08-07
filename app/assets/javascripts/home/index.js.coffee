@@ -1,6 +1,5 @@
 #= require libraries/lodash.js
 #= require libraries/socket.io.min.js
-#= require libraries/jquery.js
 #= require libraries/jquery-ui-1.10.3.custom.min.js
 #= require libraries/jquery.easyModal.js
 #= require libraries/masonry.pkgd.min.js
@@ -65,28 +64,24 @@ app.config([
       templateUrl: 'outside_view'
       resolve:
         FB: 'FB'
-        userLocation: 'userLocation'
     })
     .when('/all_projects', {
       controller: 'AllProjectsViewCtrl'
       templateUrl: 'all_projects_view'
       resolve:
         FB: 'FB'
-        userLocation: 'userLocation'
     })
     .when('/new_project', {
       controller: 'NewProjectViewCtrl'
       templateUrl: 'new_project_view'
       resolve:
         FB: 'FB'
-        userLocation: 'userLocation'
     })
     .when('/project/:project_id', {
       controller: 'ProjectViewCtrl'
       templateUrl: 'project_view'
       resolve:
         FB: 'FB'
-        userLocation: 'userLocation'
         socket: 'socket'
         Chatbox: 'Chatbox'
     })
@@ -97,15 +92,6 @@ app.config([
     # CSRF
     token = angular.element('meta[name="csrf-token"]').attr('content')
     $httpProvider.defaults.headers.common['X-CSRF-Token'] = token
-
-    # FB
-    FBProvider.init({
-      appId      : '580227458695144'
-      channelUrl : location.origin + '/fb_channel.html'
-      status     : true
-      cookie     : true
-      xfbml      : true
-    })
 
     # google map
     google.maps.visualRefresh = true
@@ -118,8 +104,6 @@ app.config([
 # run
 app.run(['$rootScope', '$location', 'FB',
   ($rootScope, $location, FB) ->
-
-    $rootScope.user = {}
 
     $rootScope.googleMap =
       markers: []

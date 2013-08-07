@@ -66,17 +66,9 @@
     });
 
     $script([
-      '/assets/libraries/angular.js',
-      '/assets/home/index.js'
-    ], 'Angular');
-
-    $script([
-      '//maps.googleapis.com/maps/api/js?key=AIzaSyAGJjfEZSf93ey42aqJDIVuOVaLnpUUzWs&libraries=places&sensor=true'
-    ], 'googleMaps', function() {
-      appendLoadingProgress('Google Map module loaded...');
-    });
-
-    $script.ready(['Angular', 'googleMaps'], function() {
+      <%= javascript_path_with_manifest('home/index.js') %>,
+      '//maps.googleapis.com/maps/api/js?key=AIzaSyAGJjfEZSf93ey42aqJDIVuOVaLnpUUzWs&libraries=places&sensor=true&callback=initGoogleMaps'
+    ], function() {
       appendLoadingProgress('Application layer ready...');
       $.when(getLoginStatus, getUserLocation).then(function() {
         angular.bootstrap(document, ['mapApp']);
@@ -86,21 +78,32 @@
     function appendLoadingProgress(message) {
       $('#load_progress').append($('<li>').html(message));
     }
+
+    function initGoogleMaps() {
+      appendLoadingProgress('Google Map module loaded...');
+    }
   </script>
   <%= csrf_meta_tags %>
 </head>
 <body>
 
-<div class="mp-loading-screen container">
-  <div class="row">
-    <div class="col-12">
-      <h1>Welcome to Map Project</h1>
-      <ul class="lead" id="load_progress">
-        <li class="">Loading assets...</li>
-      </ul>
+<div ng-view class="mp-view-container">
+  <div class="mp-loading-screen container">
+    <div class="row">
+      <div class="col-12">
+        <h1>Welcome to Map Project</h1>
+        <ul class="lead" id="load_progress">
+          <li class="">Loading assets...</li>
+        </ul>
+      </div>
     </div>
   </div>
 </div>
+
+
+<%= render 'bs_modal' %>
+<%= render 'ng_templates' %>
+<%= render 'chat_history_templates' %>
 
 <script>
 (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){

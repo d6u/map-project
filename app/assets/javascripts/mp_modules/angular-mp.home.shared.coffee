@@ -40,19 +40,18 @@ app.directive 'searchBox', [-> (scope, element, attrs) ->
 
 # map canvas
 # ========================================
-app.directive 'googleMap', ['userLocation', (userLocation) ->
+app.directive 'googleMap', ['$window', ($window) ->
   (scope, element, attrs) ->
 
     # rootScope deferred object
-    userLocation.then (coord) ->
-      mapOptions =
-        center: new google.maps.LatLng(coord.latitude, coord.longitude)
-        zoom: 8
-        mapTypeId: google.maps.MapTypeId.ROADMAP
-        disableDefaultUI: true
+    mapOptions =
+      center: new google.maps.LatLng($window.userLocation.latitude, $window.userLocation.longitude)
+      zoom: 8
+      mapTypeId: google.maps.MapTypeId.ROADMAP
+      disableDefaultUI: true
 
-      scope.googleMap.map = new google.maps.Map(element[0], mapOptions)
-      scope.googleMap.mapReady.resolve()
+    scope.googleMap.map = new google.maps.Map(element[0], mapOptions)
+    scope.googleMap.mapReady.resolve()
 ]
 
 
