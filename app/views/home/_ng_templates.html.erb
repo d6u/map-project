@@ -32,6 +32,7 @@
         <div class="mp-places-list" ng-class="{'js-sidebar-slide-in': interface.showPlacesList}" map-sidebar-places="currentProject.places.length"></div>
     </div>
 
+    <!-- chatbox -->
     <div class="mp-chatbox" ng-class="{'js-sidebar-slide-in': interface.showChatbox}" ng-controller="ChatBoxCtrl">
         <nav class="mp-navbar-top mp-chatbox-button-group">
             <a href="" class="mp-navbar-button" ng-click="addFriendsToProject()" bs-tooltip="Add a friend to this project" bs-tooltip-placement="bottom">
@@ -39,11 +40,13 @@
             </a>
         </nav>
 
-        <div class="mp-chat-history">
+        <!-- chat-history -->
+        <div class="mp-chat-history" perfect-scrollbar="chatHistory.length" mp-chat-history>
+            <div class="mp-chat-history-item" ng-repeat="chatItem in chatHistory" mp-chat-history-item></div>
         </div>
 
         <div class="mp-chat-inputs">
-            <textarea name="" class="form-control mp-naked-input" placeholder="Say something"></textarea>
+            <textarea name="" class="form-control mp-naked-input" placeholder="Say something" mp-chatbox-input></textarea>
             <button class="btn btn-default">Send</button>
         </div>
 

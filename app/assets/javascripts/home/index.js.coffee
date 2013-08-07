@@ -87,6 +87,8 @@ app.config([
       resolve:
         FB: 'FB'
         userLocation: 'userLocation'
+        socket: 'socket'
+        Chatbox: 'Chatbox'
     })
     .otherwise({redirectTo: '/'})
 
@@ -109,7 +111,7 @@ app.config([
     google.maps.visualRefresh = true
 
     # socket
-    # socketProvider.setServerUrl('http://local.dev:4000')
+    socketProvider.setServerUrl location.protocol + '//' + location.hostname + ':4000'
 ])
 
 
