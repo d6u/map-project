@@ -31,11 +31,20 @@ app.directive 'searchBox', [->
 
 
 # mp-user-section
-app.directive 'mpUserSection', [->
-  templateUrl: 'mp_user_section_tempalte_logout'
+app.directive 'mpUserSection', ['$rootScope', '$compile', '$templateCache',
+($rootScope, $compile, $templateCache) ->
+
+  getTemplate = ->
+    if $rootScope.user.fb_access_token
+      return $templateCache.get 'mp_user_section_tempalte_login'
+    else
+      return $templateCache.get 'mp_user_section_tempalte_logout'
+
+  # return
   link: (scope, element, attrs) ->
-
-
+    template = getTemplate()
+    html = $compile(template)(scope)
+    element.html html
 ]
 
 

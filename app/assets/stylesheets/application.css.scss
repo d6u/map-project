@@ -273,11 +273,10 @@ html, body,
 // All Project List
 // ========================================
 .mp-all-projects-list {
-    position: absolute;
-    top: 50px;
-    bottom: 0;
-    width: 100%;
+    margin-right: 442px;
     overflow: hidden;
+    padding: 0 40px 0 40px;
+    position: relative;
 }
 
 .mp-all-projects-list-inner {
@@ -292,6 +291,10 @@ html, body,
     border-bottom: 1px solid $gray6;
     margin-top: 20px;
     margin-bottom: 20px;
+
+    a {
+        font-size: 16px;
+    }
 }
 
 .mp-all-projects-list-masonry {
