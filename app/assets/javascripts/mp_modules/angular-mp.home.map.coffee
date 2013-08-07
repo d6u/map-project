@@ -122,3 +122,37 @@ app.controller 'MapCtrl',
   $scope.$on 'placeListSorted', rearrangePlacesList
 ]
 
+
+# map canvas
+# ========================================
+app.directive 'googleMap', ['$window', ($window) ->
+  (scope, element, attrs) ->
+
+    # rootScope deferred object
+    mapOptions =
+      center: new google.maps.LatLng($window.userLocation.latitude, $window.userLocation.longitude)
+      zoom: 8
+      mapTypeId: google.maps.MapTypeId.ROADMAP
+      disableDefaultUI: true
+
+    scope.googleMap.map = new google.maps.Map(element[0], mapOptions)
+    scope.googleMap.mapReady.resolve()
+]
+
+
+# inforwindow
+app.directive 'markerInfo', [-> (scope, element, attrs) -> scope.$apply()]
+
+
+# sidebar place
+app.directive 'sidebarPlace', ['$templateCache', '$compile',
+($templateCache, $compile) ->
+  (scope, element, attrs) ->
+
+    google.maps.event.addListener scope.place.$$marker, 'click', ->
+      template = $templateCache.get('marker_info_window')
+      compiled = $compile(template)(scope)
+      scope.googleMap.infoWindow.setContent(compiled[0])
+      scope.googleMap.infoWindow.open(scope.place.$$marker.getMap(), scope.place.$$marker)
+]
+

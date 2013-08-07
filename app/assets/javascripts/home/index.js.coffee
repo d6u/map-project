@@ -6,8 +6,11 @@
 #= require libraries/bootstrap.min.js
 #= require libraries/perfect-scrollbar-0.4.3.min.js
 #= require libraries/perfect-scrollbar-0.4.3.with-mousewheel.min.js
+
 #= require libraries/angular.min.js
+
 #= require libraries/restangular.js
+
 #= require modules_for_libraries/angular-easy-modal.coffee
 #= require modules_for_libraries/angular-facebook.coffee
 #= require modules_for_libraries/angular-socket.io.coffee
@@ -15,15 +18,16 @@
 #= require modules_for_libraries/angular-perfect-scrollbar.coffee
 #= require modules_for_libraries/angular-bootstrap.coffee
 #= require modules_for_libraries/angular-jquery-ui.coffee
+
 #= require mp_modules/angular-mp.home.initializer.coffee
 #= require mp_modules/angular-mp.api.coffee
 #= require mp_modules/angular-mp.home.map.coffee
 #= require mp_modules/angular-mp.home.toolbar.coffee
-#= require mp_modules/angular-mp.home.shared.coffee
 #= require mp_modules/angular-mp.home.outside-view.coffee
 #= require mp_modules/angular-mp.home.all-projects-view.coffee
 #= require mp_modules/angular-mp.home.new-project-view.coffee
 #= require mp_modules/angular-mp.home.project-view.coffee
+
 #= require mp_modules/angular-mp.home.helpers.coffee
 
 
@@ -44,13 +48,12 @@ app = angular.module 'mapApp', [
   'angular-mp.api',
   'angular-mp.home.map',
   'angular-mp.home.toolbar',
-  'angular-mp.home.shared',
   'angular-mp.home.outside-view',
   'angular-mp.home.all-projects-view',
   'angular-mp.home.new-project-view',
   'angular-mp.home.project-view',
 
-  'angular-mp.home.helpers'
+  'angular-mp.home.helpers' # TODO: remove
 ]
 
 
