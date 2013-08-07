@@ -1,0 +1,27 @@
+<script type="text/ng-template" id="mp_control_toolbar_template">
+  <div class="mp-toolbar-actions">
+    <a href="" class="mp-toolbar-action-button" ng-click="interface.showUserSection = true">
+      <i class="icon-user"></i>
+    </a>
+    <a href="" class="mp-toolbar-action-button"><i class="icon-plus"></i></a>
+    <a href="" class="mp-toolbar-action-button"><i class="icon-plus"></i></a>
+    <a href="" class="mp-toolbar-action-button"><i class="icon-plus"></i></a>
+  </div>
+
+  <div class="mp-inputbox mp-toolbar-inputbox" ng-init="controlToolbar.input = ''" mp-inputbox>
+    <label class="">
+      <i class="icon-remove mp-inputbox-icon" ng-class="{hide: controlToolbar.input.length == 0}" ng-click="clearInput(controlToolbar)"></i>
+      <i class="icon-search mp-inputbox-icon" ng-class="{hide: controlToolbar.input.length > 0}"></i>
+      <input type="text" class="mp-naked-input" search-box placeholder="search here" ng-model="controlToolbar.input">
+    </label>
+    <a href="" class="mp-inputbox-action-button">
+        <i class="icon-arrow-right"></i>
+    </a>
+  </div>
+</script>
+
+
+<script type="text/ng-template" id="mp_user_section_tempalte_logout">
+  <a href="" class="btn btn-primary">Login with Facebook</a>
+  <a href="" class="btn btn-default" ng-click="interface.showUserSection = false">Close</a>
+</script>

@@ -29,15 +29,6 @@ app.directive 'mpNavbarInputsSection', [->
 ]
 
 
-# search box
-app.directive 'searchBox', [-> (scope, element, attrs) ->
-
-    if scope.inMapview
-      scope.googleMap.searchBox = new google.maps.places.SearchBox(element[0])
-      scope.googleMap.searchBoxReady.resolve()
-]
-
-
 # map canvas
 # ========================================
 app.directive 'googleMap', ['$window', ($window) ->
@@ -99,22 +90,4 @@ app.directive 'mapSidebarPlaces', ['$timeout', '$rootScope',
 
     scope.editProjectDetails = ->
       $rootScope.$broadcast 'editProjectAttrs', scope.currentProject.project
-]
-
-
-# mp-inputbox
-# ========================================
-app.directive 'mpInputbox', [->
-  (scope, element, attrs) ->
-
-    scope.clearInput = (control) ->
-      control.input = ''
-]
-
-
-# mp-user-section
-app.directive 'mpUserSection', [->
-  (scope, element, attrs) ->
-
-
 ]

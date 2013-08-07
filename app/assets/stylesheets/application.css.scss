@@ -49,32 +49,9 @@ html, body,
 
 // Containers
 // ========================================
-.mp-view-container {}
 
-    .mp-map-view-wrapper {
-        @include display_flex;}
+@import 'modules/mp_map';
 
-        .mp-map-container {
-            @include flex_grow(1);}
-
-        .mp-places-list {
-            @include flex_basis(300px);}
-
-    .mp-chatbox {}
-
-// Map View
-// ========================================
-.mp-map-container {
-    position: relative;
-}
-
-.mp-places-list {
-    @extend %transition;
-    overflow: hidden;
-    position: relative;
-    // hide
-    @include flex_basis(0);
-}
 
 // Navbar
 // ----------------------------------------
@@ -203,26 +180,6 @@ html, body,
     a {
         color: $gray6;
         font-size: 18px;
-    }
-}
-
-// Google Map Search Box
-.pac-container {
-    background-color: rgba($blueDark, 0.9);
-    border: none;
-    color: white;
-}
-
-.pac-item {
-    font-size: 21px;
-    line-height: 2;
-    padding-left: 38px;
-    b {
-        text-decoration: underline;
-    }
-    &:hover {
-        background-color: white;
-        color: $gray6;
     }
 }
 

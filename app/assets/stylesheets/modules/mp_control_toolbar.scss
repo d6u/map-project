@@ -4,7 +4,7 @@
     right: 40px;
     top: 20px;
     background-color: white;
-    width: 302px;
+    width: 402px;
     height: 72px;
     border: 1px solid #999;
     box-shadow: 1px 1px 3px rgba(0,0,0,.3);
@@ -41,4 +41,29 @@
 
 .mp-toolbar-inputbox {
     height: 35px;
+}
+
+
+// Google Map Search Box
+.pac-container {
+    background-color: white;
+    border: none;
+}
+
+.pac-item {
+    font-size: 14px;
+    line-height: 21px;
+    min-height: 35px;
+    padding: 7px 35px;
+    white-space: normal;
+    border-bottom: 1px solid $gray2;
+    color: $gray5;
+
+    b {
+        text-decoration: underline;
+    }
+
+    &:hover {
+        background-color: $gray2;
+    }
 }
