@@ -1,6 +1,7 @@
 MapProject::Application.routes.draw do
 
   root 'home#index'
+  get  'index_async'         => 'home#index_async'
   get  'all_projects'        => 'home#index'
   get  'new_project'         => 'home#index'
   get  'project/:project_id' => 'home#index'
