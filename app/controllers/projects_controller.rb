@@ -37,7 +37,7 @@ class ProjectsController < ApplicationController
         head 404
       end
     else
-      projects = @user.projects.order 'created_at DESC'
+      projects = @user.projects.order 'updated_at DESC'
       render :json => projects, :methods => :places_attrs
     end
   end

@@ -257,14 +257,14 @@ app.directive 'mpEditProjectModal', ['$templateCache', '$compile',
   templateUrl: 'mp_edit_project_modal_template'
   scope: true
   link: (scope, element, attrs) ->
+    scope.errorMessage = null
+
     scope.modalbox =
       title: scope.project.title
       notes: scope.project.notes
 
-    console.log scope
-
     scope.saveProject = ->
-      if scope.modalboxForm.$valid
+      if scope.modalbox.title.length > 0
         scope.errorMessage = null
         angular.extend scope.project, scope.modalbox
         scope.project.put().then ->
