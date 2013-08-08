@@ -180,6 +180,16 @@ app.directive 'mpUserSection', ['$rootScope', '$compile', '$templateCache',
     scope.logout = ->
       $rootScope.User.logout logoutSuccess
 
+    scope.showEmailLogin = ->
+      template = $templateCache.get 'mp_user_section_tempalte_loginform'
+      html = $compile(template)(scope)
+      element.html html
+
+    scope.showEmailRegister = ->
+      template = $templateCache.get 'mp_user_section_tempalte_logout'
+      html = $compile(template)(scope)
+      element.html html
+
     scope.$on '$routeChangeSuccess', (event, current) ->
       template = getTemplate()
       html = $compile(template)(scope)
