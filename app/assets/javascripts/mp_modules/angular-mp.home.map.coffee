@@ -1,27 +1,46 @@
 app = angular.module 'angular-mp.home.map', []
 
 
+
+app.factory 'TheMap', [->
+
+  return {
+    map: null
+    infoWindow: new google.maps.InfoWindow()
+    searchBox: null
+    markers: []
+    searchResults: []
+  }
+]
+
+
 # MapCtrl
 # ========================================
 app.controller 'MapCtrl',
-['$scope', '$timeout', '$q', '$templateCache', '$compile', '$rootScope',
-($scope, $timeout, $q, $templateCache, $compile, $rootScope)->
+['$scope', 'TheMap', '$timeout', '$q', '$templateCache', '$compile',
+'$rootScope', 'ActiveProject',
+($scope, TheMap, $timeout, $q, $templateCache, $compile, $rootScope,
+ ActiveProject) ->
+
+  # TODO: rename
+  $scope.googleMap = TheMap
+  $scope.currentProject = ActiveProject
 
   # callbacks
   triggerMapResize = ->
     $timeout (->
-      google.maps.event.trigger($scope.googleMap.map, 'resize')
+      google.maps.event.trigger(TheMap.map, 'resize')
     ), 200
 
   searchBoxPlaceChanged = ->
     cleanMarkers()
     bounds = new google.maps.LatLngBounds()
-    places = $scope.googleMap.searchBox.getPlaces()
+    places = TheMap.searchBox.getPlaces()
     animation = if places.length == 1 then google.maps.Animation.DROP else null
 
     for place in places
       markerOptions =
-        map: $scope.googleMap.map
+        map: TheMap.map
         title: place.name
         position: place.geometry.location
         animation: animation
@@ -32,36 +51,36 @@ app.controller 'MapCtrl',
         address: place.formatted_address
         coord: place.geometry.location.toString()
 
-      $scope.googleMap.markers.push newPlace.$$marker
-      $scope.googleMap.searchResults.push place
+      TheMap.markers.push newPlace.$$marker
+      TheMap.searchResults.push place
       bounds.extend newPlace.$$marker.getPosition()
       bindInfoWindow newPlace
 
     $scope.$apply()
-    $scope.googleMap.map.fitBounds bounds
-    $scope.googleMap.map.setZoom(12) if places.length < 3 && $scope.googleMap.map.getZoom() > 12
-    $timeout (-> google.maps.event.trigger $scope.googleMap.markers[0], 'click'), 800 if places.length == 1
+    TheMap.map.fitBounds bounds
+    TheMap.map.setZoom(12) if places.length < 3 && TheMap.map.getZoom() > 12
+    $timeout (-> google.maps.event.trigger TheMap.markers[0], 'click'), 800 if places.length == 1
 
   cleanMarkers = ->
-    marker.setMap(null) for marker in $scope.googleMap.markers
-    $scope.googleMap.markers = []
-    $scope.googleMap.searchResults = []
+    marker.setMap(null) for marker in TheMap.markers
+    TheMap.markers = []
+    TheMap.searchResults = []
 
   bindInfoWindow = (place) ->
     google.maps.event.addListener place.$$marker, 'click', ->
-      infoWindow = $scope.googleMap.infoWindow
+      infoWindow = TheMap.infoWindow
       template = $templateCache.get 'marker_info_window'
       newScope = $scope.$new()
       newScope.place = place
       compiled = $compile(template)(newScope)
-      $scope.googleMap.infoWindow.setContent compiled[0]
+      TheMap.infoWindow.setContent compiled[0]
       google.maps.event.clearListeners infoWindow, 'closeclick'
       google.maps.event.addListenerOnce infoWindow, 'closeclick', ->
         newScope.$destroy()
-      infoWindow.open $scope.googleMap.map, place.$$marker
+      infoWindow.open TheMap.map, place.$$marker
 
   rearrangePlacesList = ->
-    for place, index in $scope.currentProject.places
+    for place, index in ActiveProject.places
       # update marker icon
       place.$$marker.setIcon {url: "/assets/number_#{index}.png"}
       # update order
@@ -72,52 +91,51 @@ app.controller 'MapCtrl',
   $scope.addPlaceToList = (place) ->
     place.$$marker.setMap null
     markerOptions =
-      map: $scope.googleMap.map
+      map: TheMap.map
       title: place.name
       position: place.$$marker.getPosition()
       icon:
-        url: "/assets/number_#{$scope.currentProject.places.length}.png"
+        url: "/assets/number_#{ActiveProject.places.length}.png"
     place.$$marker = new google.maps.Marker markerOptions
     place.id = true
-    place.order = $scope.currentProject.places.length
+    place.order = ActiveProject.places.length
 
-    $scope.currentProject.places.push place
+    ActiveProject.places.push place
     $rootScope.$broadcast 'placeAddedToList', place
 
   $scope.centerPlaceInMap = (location) ->
-    $scope.googleMap.map.setCenter location
+    TheMap.map.setCenter location
     # marker.getMap().setCenter marker.getPosition()
 
   $scope.removePlace = (place, index) ->
-    $scope.currentProject.places.splice(index, 1)[0]
+    ActiveProject.places.splice(index, 1)[0]
     place.$$marker.setMap null
     rearrangePlacesList()
     $rootScope.$broadcast 'placeRemovedFromList', place
 
   $scope.displayAllMarkers = ->
     bounds = new google.maps.LatLngBounds()
-    for place in $scope.currentProject.places
+    for place in ActiveProject.places
       bounds.extend place.$$marker.getPosition()
-    $scope.googleMap.map.fitBounds bounds
-    $scope.googleMap.map.setZoom 12 if $scope.currentProject.places.length < 3 && $scope.googleMap.map.getZoom() > 12
+    TheMap.map.fitBounds bounds
+    TheMap.map.setZoom 12 if ActiveProject.places.length < 3 && TheMap.map.getZoom() > 12
 
   $scope.deleteAllSavedPlaces = ->
     if confirm('Are you sure to delete all saved places? This action is irreversible.')
-      place.$$marker.setMap null for place in $scope.currentProject.places
-      $scope.currentProject.places = []
+      place.$$marker.setMap null for place in ActiveProject.places
+      ActiveProject.places = []
       $rootScope.$broadcast 'allPlacesRemovedFromList'
 
   # events
-  $scope.googleMap.mapReady = $q.defer()
-  $scope.googleMap.searchBoxReady = $q.defer()
-  $q.all([$scope.googleMap.mapReady.promise, $scope.googleMap.searchBoxReady.promise])
-  .then ->
-    $scope.$watch('interface.showPlacesList', triggerMapResize)
-    $scope.$watch('interface.showChatbox', triggerMapResize)
-    google.maps.event.addListener($scope.googleMap.map, 'bounds_changed',
-      -> $scope.googleMap.searchBox.setBounds $scope.googleMap.map.getBounds())
+  TheMap.mapReady = $q.defer()
+  TheMap.searchBoxReady = $q.defer()
 
-    google.maps.event.addListener($scope.googleMap.searchBox, 'places_changed', searchBoxPlaceChanged)
+  $q.all([TheMap.mapReady.promise, TheMap.searchBoxReady.promise]).then ->
+
+    google.maps.event.addListener(TheMap.map, 'bounds_changed',
+      -> TheMap.searchBox.setBounds TheMap.map.getBounds())
+
+    google.maps.event.addListener(TheMap.searchBox, 'places_changed', searchBoxPlaceChanged)
 
   $scope.$on 'placeListSorted', rearrangePlacesList
 ]
@@ -125,7 +143,7 @@ app.controller 'MapCtrl',
 
 # map canvas
 # ========================================
-app.directive 'googleMap', ['$window', ($window) ->
+app.directive 'googleMap', ['$window', 'TheMap', ($window, TheMap) ->
   (scope, element, attrs) ->
 
     # rootScope deferred object
@@ -135,8 +153,8 @@ app.directive 'googleMap', ['$window', ($window) ->
       mapTypeId: google.maps.MapTypeId.ROADMAP
       disableDefaultUI: true
 
-    scope.googleMap.map = new google.maps.Map(element[0], mapOptions)
-    scope.googleMap.mapReady.resolve()
+    TheMap.map = new google.maps.Map(element[0], mapOptions)
+    TheMap.mapReady.resolve()
 ]
 
 

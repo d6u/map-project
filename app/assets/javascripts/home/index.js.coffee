@@ -8,11 +8,9 @@
 #= require libraries/perfect-scrollbar-0.4.3.with-mousewheel.min.js
 
 #= require libraries/angular.min.js
-
 #= require libraries/restangular.js
 
 #= require modules_for_libraries/angular-easy-modal.coffee
-#= require modules_for_libraries/angular-facebook.coffee
 #= require modules_for_libraries/angular-socket.io.coffee
 #= require modules_for_libraries/angular-masonry.coffee
 #= require modules_for_libraries/angular-perfect-scrollbar.coffee
@@ -27,6 +25,7 @@
 #= require mp_modules/angular-mp.home.all-projects-view.coffee
 #= require mp_modules/angular-mp.home.new-project-view.coffee
 #= require mp_modules/angular-mp.home.project-view.coffee
+#= require mp_modules/angular-mp.home.chatbox.coffee
 
 #= require mp_modules/angular-mp.home.helpers.coffee
 
@@ -37,7 +36,6 @@ app = angular.module 'mapApp', [
   'restangular',
 
   'angular-easy-modal',
-  'angular-facebook',
   'angular-socket.io',
   'angular-masonry',
   'angular-perfect-scrollbar',
@@ -52,6 +50,7 @@ app = angular.module 'mapApp', [
   'angular-mp.home.all-projects-view',
   'angular-mp.home.new-project-view',
   'angular-mp.home.project-view',
+  'angular-mp.home.chatbox',
 
   'angular-mp.home.helpers' # TODO: remove
 ]
@@ -59,9 +58,9 @@ app = angular.module 'mapApp', [
 
 # config
 app.config([
-  'FBProvider', 'socketProvider', '$httpProvider', '$routeProvider',
+  'socketProvider', '$httpProvider', '$routeProvider',
   '$locationProvider',
-  (FBProvider, socketProvider, $httpProvider, $routeProvider,
+  (socketProvider, $httpProvider, $routeProvider,
    $locationProvider) ->
 
     # route
@@ -70,27 +69,28 @@ app.config([
       controller: 'OutsideViewCtrl'
       templateUrl: 'outside_view'
       resolve:
-        FB: 'FB'
+        User: 'User'
     })
     .when('/all_projects', {
       controller: 'AllProjectsViewCtrl'
       templateUrl: 'all_projects_view'
       resolve:
-        FB: 'FB'
+        User: 'User'
+        socket: 'socket'
     })
     .when('/new_project', {
       controller: 'NewProjectViewCtrl'
       templateUrl: 'new_project_view'
       resolve:
-        FB: 'FB'
+        User: 'User'
+        socket: 'socket'
     })
     .when('/project/:project_id', {
       controller: 'ProjectViewCtrl'
       templateUrl: 'project_view'
       resolve:
-        FB: 'FB'
+        User: 'User'
         socket: 'socket'
-        Chatbox: 'Chatbox'
     })
     .otherwise({redirectTo: '/'})
 
@@ -109,58 +109,78 @@ app.config([
 
 
 # run
-app.run(['$rootScope', '$location', 'FB',
-  ($rootScope, $location, FB) ->
+app.run(['$rootScope', '$location', 'User',
+($rootScope, $location, User) ->
 
-    $rootScope.googleMap =
-      markers: []
-      searchResults: []
-      infoWindow: new google.maps.InfoWindow()
-      # map, searchBox
+  User.then (User) ->
+    $rootScope.User = User
+    # filter
+    if $rootScope.User.fb_access_token()
+      $location.path('/all_projects') if $location.path() == '/'
+    else
+      $location.path('/') if $location.path() != '/'
 
-    $rootScope.currentProject =
-      project: {}
-      places: []
-
-    $rootScope.interface =
-      showUserSection: false
-      showChatbox: false
-      showPlacesList: false
-      sideBarPlacesSlideUp: true
-      showCreateAccountPromot: false
-
-    # callbacks
-    loginSuccess = ->
-      if $rootScope.currentProject.places.length > 0
-        $location.path('/new_project')
-      else
-        $location.path('/all_projects')
-
-    logoutSuccess = ->
-      $location.path('/')
-
-    # resolver
-    FB.then (FB) ->
-      # filter
-      if $rootScope.user.fb_access_token
-        $location.path('/all_projects') if $location.path() == '/'
-      else
-        $location.path('/') if $location.path() != '/'
-
-      # global methods
-      $rootScope.fbLogin = -> FB.doLogin loginSuccess, logoutSuccess
-      $rootScope.fbLogout = -> FB.doLogout logoutSuccess
-
-
-    # events
-    $rootScope.$on '$routeChangeSuccess', (event, current) ->
-      switch current.$$route.controller
+    $rootScope.$on '$routeChangeStart', (event, future, current) ->
+      switch future.$$route.controller
         when 'OutsideViewCtrl'
-          $rootScope.inMapview = true
+          $location.path('/all_projects') if User.fb_access_token()
         when 'AllProjectsViewCtrl'
-          $rootScope.inMapview = false
+          $location.path('/') if !User.fb_access_token()
         when 'NewProjectViewCtrl'
-          $rootScope.inMapview = true
+          $location.path('/') if !User.fb_access_token()
         when 'ProjectViewCtrl'
-          $rootScope.inMapview = true
+          $location.path('/') if !User.fb_access_token()
+
+  $rootScope.interface = {}
+
+  # events
+  $rootScope.$on '$routeChangeSuccess', (event, current) ->
+    switch current.$$route.controller
+      when 'OutsideViewCtrl'
+        $rootScope.inMapview = true
+      when 'AllProjectsViewCtrl'
+        $rootScope.inMapview = false
+      when 'NewProjectViewCtrl'
+        $rootScope.inMapview = true
+      when 'ProjectViewCtrl'
+        $rootScope.inMapview = true
 ])
+
+
+# mp-user-section
+app.directive 'mpUserSection', ['$rootScope', '$compile', '$templateCache',
+'ActiveProject', '$location',
+($rootScope, $compile, $templateCache, ActiveProject, $location) ->
+
+  getTemplate = ->
+    if $rootScope.User.fb_access_token()
+      return $templateCache.get 'mp_user_section_tempalte_login'
+    else
+      return $templateCache.get 'mp_user_section_tempalte_logout'
+
+  # callbacks
+  loginSuccess = ->
+    if ActiveProject.places.length > 0
+      $location.path('/new_project')
+    else
+      $location.path('/all_projects')
+
+  logoutSuccess = ->
+    $location.path('/')
+
+  # return
+  link: (scope, element, attrs) ->
+
+    scope.interface.showUserSection = false
+
+    scope.fbLogin = ->
+      $rootScope.User.login(loginSuccess, logoutSuccess)
+
+    scope.logout = ->
+      $rootScope.User.logout logoutSuccess
+
+    scope.$on '$routeChangeSuccess', (event, current) ->
+      template = getTemplate()
+      html = $compile(template)(scope)
+      element.html html
+]

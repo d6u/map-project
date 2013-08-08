@@ -1,15 +1,12 @@
 <!-- OutsideViewCtrl -->
 <script type="text/ng-template" id="outside_view">
-    <div class="mp-map-view-wrapper" ng-controller="MapCtrl">
-        <div class="mp-map-canvas" google-map></div>
-        <div class="mp-places-list" mp-places-list></div>
-    </div>
+  <div class="mp-map-view-wrapper" ng-controller="MapCtrl">
+    <div class="mp-map-canvas" google-map></div>
+    <div class="mp-places-list" mp-places-list></div>
+  </div>
 
-    <div class="mp-control-toolbar" mp-control-toolbar></div>
-
-    <section class="mp-user-section" ng-class="{hide: !interface.showUserSection}" mp-user-section></section>
+  <div class="mp-control-toolbar" mp-control-toolbar></div>
 </script>
-
 
 <!-- New project view -->
 <script type="text/ng-template" id="new_project_view">
@@ -19,8 +16,6 @@
   </div>
 
   <div class="mp-control-toolbar" mp-control-toolbar></div>
-
-  <section class="mp-user-section" ng-class="{hide: !interface.showUserSection}" mp-user-section></section>
 </script>
 
 
@@ -33,28 +28,33 @@
 
   <div class="mp-control-toolbar" mp-control-toolbar></div>
 
-  <section class="mp-user-section" ng-class="{hide: !interface.showUserSection}" mp-user-section></section>
-
   <!-- chatbox -->
-  <div class="mp-chatbox" ng-class="{'js-sidebar-slide-in': interface.showChatbox}" ng-controller="ChatBoxCtrl">
-    <nav class="mp-navbar-top mp-chatbox-button-group">
-      <a href="" class="mp-navbar-button" ng-click="addFriendsToProject()" bs-tooltip="Add a friend to this project" bs-tooltip-placement="bottom">
-        <i class="icon-plus"></i>
-      </a>
-    </nav>
-
-    <!-- chat-history -->
-    <div class="mp-chat-history" perfect-scrollbar="chatHistory.length" mp-chat-history>
-      <div class="mp-chat-history-item" ng-repeat="chatItem in chatHistory" mp-chat-history-item></div>
-    </div>
-
-    <div class="mp-chat-inputs">
-      <textarea name="" class="form-control mp-naked-input" placeholder="Say something" mp-chatbox-input></textarea>
-      <button class="btn btn-default">Send</button>
-    </div>
-
-    <%= render 'add_friends_modal' %>
+  <div class="mp-chatbox" ng-class="{'js-sidebar-slide-in': interface.showChatbox}" ng-controller="ChatBoxCtrl" ng-chatbox>
   </div>
+</script>
+
+
+<!-- All projects view -->
+<script type="text/ng-template" id="all_projects_view">
+  <div class="mp-all-projects-list">
+    <header class="mp-all-projects-list-header">All Projects <a href="/new_project">new project</a></header>
+    <div class="mp-all-projects-list-masonry" masonry='projects,models.projectTitle'>
+      <div class="mp-project-item" ng-repeat="project in projects | filter:models.projectTitle">
+        <div class="mp-project-item-cover" mini-map-cover></div>
+        <div class="mp-project-item-detail">
+          <header class="mp-project-item-header">
+            <a ng-href="/project/{{project.id}}">{{project.title}} <span class="badge">{{project.places_attrs.places_count}}</span></a>
+          </header>
+          <p class="mp-project-item-notes">{{project.notes || "No notes yet..."}}</p>
+        </div>
+        <div class="mp-project-item-friends"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="mp-control-toolbar" mp-control-toolbar></div>
+
+  <section class="mp-user-section" ng-class="{hide: !interface.showUserSection}" mp-user-section></section>
 </script>
 
 
@@ -106,28 +106,4 @@
             <i class="icon-remove"></i>
         </a>
     </label>
-</script>
-
-
-<!-- All projects view -->
-<script type="text/ng-template" id="all_projects_view">
-  <div class="mp-all-projects-list">
-    <header class="mp-all-projects-list-header">All Projects <a href="/new_project">new project</a></header>
-    <div class="mp-all-projects-list-masonry" masonry='projects,models.projectTitle'>
-      <div class="mp-project-item" ng-repeat="project in projects | filter:models.projectTitle">
-        <div class="mp-project-item-cover" mini-map-cover></div>
-        <div class="mp-project-item-detail">
-          <header class="mp-project-item-header">
-            <a ng-href="/project/{{project.id}}">{{project.title}} <span class="badge">{{project.places_attrs.places_count}}</span></a>
-          </header>
-          <p class="mp-project-item-notes">{{project.notes || "No notes yet..."}}</p>
-        </div>
-        <div class="mp-project-item-friends"></div>
-      </div>
-    </div>
-  </div>
-
-  <div class="mp-control-toolbar" mp-control-toolbar></div>
-
-  <section class="mp-user-section" ng-class="{hide: !interface.showUserSection}" mp-user-section></section>
 </script>

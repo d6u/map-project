@@ -1,26 +1,6 @@
 app = angular.module 'angular-mp.api', ['restangular']
 
 
-# User
-app.factory 'User', ['Restangular', (Restangular) ->
-
-  Restangular.addElementTransformer 'users', false, (user) ->
-    # TODO
-    # user.addRestangularMethod 'addFriend', 'post', 'add_friend'
-    user
-
-
-  User = Restangular.all 'users'
-
-  User.addRestangularMethod 'login', 'post', 'login'
-  User.addRestangularMethod 'register', 'post', 'register'
-  User.addRestangularMethod 'logout', 'get', 'logout'
-
-  # return
-  User
-]
-
-
 # Project
 app.factory 'Project', ['Restangular', (Restangular) ->
 
@@ -36,6 +16,21 @@ app.factory 'Project', ['Restangular', (Restangular) ->
 
   # return
   Project
+]
+
+
+# ActiveProject
+app.factory 'ActiveProject', ['Project', (Project) ->
+
+  ProjectService =
+    $$Project: Project
+    project: {}
+    places: []
+    reset: ->
+      @project = {}
+      @places = []
+
+  return ProjectService
 ]
 
 

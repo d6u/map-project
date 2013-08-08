@@ -32,9 +32,12 @@ io.configure ->
       if /user_identifier/.test(pair)
         user_identifier = pair.replace('user_identifier=', '')
     redisClient.get user_identifier, (err, data) ->
-      user_data = data.split(':')
-      handshakeData.user = {profile_id: user_data[0], name: user_data[1]}
-    callback(null, true)
+      if data
+        user_data = data.split(':')
+        handshakeData.user = {profile_id: user_data[0], name: user_data[1]}
+        callback(null, true)
+      else
+        callback(null, false)
 
 
 # Run

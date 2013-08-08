@@ -3,16 +3,16 @@ app = angular.module 'angular-mp.home.new-project-view', []
 
 app.controller 'NewProjectViewCtrl',
 ['$scope', 'Project', '$location', '$rootScope', '$q', '$timeout',
- '$templateCache', '$compile',
+ '$templateCache', '$compile', 'User', 'ActiveProject', 'TheMap',
 ($scope, Project, $location, $rootScope, $q, $timeout,
- $templateCache, $compile) ->
+ $templateCache, $compile, User, ActiveProject, TheMap) ->
 
   # callbacks
   loadPlaceOntoMap = (place) ->
     coordMatch = /\((.+), (.+)\)/.exec place.coord
     latLog = new google.maps.LatLng coordMatch[1], coordMatch[2]
     markerOptions =
-      map: $scope.googleMap.map
+      map: TheMap.map
       title: place.name
       position: latLog
       icon:
@@ -22,18 +22,18 @@ app.controller 'NewProjectViewCtrl',
 
   savePlace = (place) ->
     place.id = null
-    places = $scope.currentProject.project.all('places')
+    places = ActiveProject.project.all('places')
     places.post(place).then (newPlace) ->
       angular.extend place, newPlace
 
   # init
-  if $scope.user.fb_access_token
+  if User.fb_access_token()
     # login with unsaved places
-    if $scope.currentProject.places.length > 0
+    if ActiveProject.places.length > 0
       Project.post({title: 'last unsaved project'}).then (project) ->
-        $scope.currentProject.project = project
+        ActiveProject.project = project
         $rootScope.$broadcast 'editProjectAttrs', project
-        savePlace place for place in $scope.currentProject.places
+        savePlace place for place in ActiveProject.places
 
     # no unsaved places
     else
@@ -41,16 +41,16 @@ app.controller 'NewProjectViewCtrl',
 
       Project.find_by_title().then ((project) ->
 
-        $scope.currentProject.project = project
+        ActiveProject.project = project
         project.all('places').getList().then (places) ->
-          $scope.currentProject.places = places
-          $scope.googleMap.mapReady.promise.then ->
-            loadPlaceOntoMap place for place in $scope.currentProject.places
+          ActiveProject.places = places
+          TheMap.mapReady.promise.then ->
+            loadPlaceOntoMap place for place in ActiveProject.places
       ),
       ((reason) ->
 
         Project.post({title: 'last unsaved project'}).then (project) ->
-          $scope.currentProject.project = project
+          ActiveProject.project = project
       )
 
   # events
@@ -62,6 +62,6 @@ app.controller 'NewProjectViewCtrl',
     place.remove()
 
   $scope.$on 'projectUpdated', (event, project) ->
-    $scope.currentProject.project = project
+    ActiveProject.project = project
     $location.path('/project/' + project.id)
 ]

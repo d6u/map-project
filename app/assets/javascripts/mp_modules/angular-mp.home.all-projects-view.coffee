@@ -3,23 +3,20 @@ app = angular.module 'angular-mp.home.all-projects-view', []
 
 # AllProjectsCtrl
 app.controller 'AllProjectsViewCtrl',
-['$scope', 'Project', '$location',
-($scope, Project, $location) ->
+['$scope', 'Project', '$location', 'User', '$window', 'ActiveProject',
+($scope, Project, $location, User, $window, ActiveProject) ->
 
   # init
-  if $scope.user.fb_access_token
-    Project.getList().then (projects) ->
-      if projects.length > 0
-        $scope.projects = projects
-      else
-        $scope.projects = []
-        $location.path('/new_project')
+  Project.getList().then (projects) ->
+    if projects.length > 0
+      $scope.projects = projects
+    else
+      $scope.projects = []
+      $location.path('/new_project')
 
-  $scope.userLocation = userLocation
+  $scope.userLocation = $window.userLocation
 
-  # TODO
-  $scope.currentProject.projects = {}
-  $scope.currentProject.places = []
+  ActiveProject.reset()
 ]
 
 

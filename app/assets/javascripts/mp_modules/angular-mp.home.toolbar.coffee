@@ -21,30 +21,13 @@ app.directive 'mpInputbox', ['$location', ($location) ->
 
 
 # search box
-app.directive 'searchBox', [->
+app.directive 'searchBox', ['TheMap', (TheMap) ->
   (scope, element, attrs) ->
 
     if scope.inMapview
-      scope.googleMap.searchBox = new google.maps.places.SearchBox(element[0])
-      scope.googleMap.searchBoxReady.resolve()
-]
-
-
-# mp-user-section
-app.directive 'mpUserSection', ['$rootScope', '$compile', '$templateCache',
-($rootScope, $compile, $templateCache) ->
-
-  getTemplate = ->
-    if $rootScope.user.fb_access_token
-      return $templateCache.get 'mp_user_section_tempalte_login'
-    else
-      return $templateCache.get 'mp_user_section_tempalte_logout'
-
-  # return
-  link: (scope, element, attrs) ->
-    template = getTemplate()
-    html = $compile(template)(scope)
-    element.html html
+      TheMap.searchBox = new google.maps.places.SearchBox(element[0])
+      TheMap.searchBoxReady.resolve()
+    # TODO: else
 ]
 
 
