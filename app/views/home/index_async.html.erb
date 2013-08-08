@@ -68,18 +68,21 @@
 </head>
 <body>
 
+<div class="mp-application">
+  <section class="mp-user-section" ng-class="{hide: !interface.showUserSection}" mp-user-section></section>
 
-<div ng-view class="mp-view-container">
-
-  <!-- Loader, this will be removed when angular runs -->
-  <div class="mp-loading-screen">
-    <div class="container">
-      <div class="row">
-        <div class="col-12">
-          <h1>Welcome to Map Project</h1>
-          <ul class="lead" id="load_progress">
-            <li class="">Loading assets...</li>
-          </ul>
+  <!-- ng-view -->
+  <div ng-view class="mp-view-container">
+    <!-- Loader, this will be removed when angular runs -->
+    <div class="mp-loading-screen">
+      <div class="container">
+        <div class="row">
+          <div class="col-12">
+            <h1>Welcome to Map Project</h1>
+            <ul class="lead" id="load_progress">
+              <li class="">Loading assets...</li>
+            </ul>
+          </div>
         </div>
       </div>
     </div>

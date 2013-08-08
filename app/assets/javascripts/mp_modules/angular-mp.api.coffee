@@ -19,6 +19,18 @@ app.factory 'Project', ['Restangular', (Restangular) ->
 ]
 
 
+# ActiveProject
+app.factory 'ActiveProject', ['Project', (Project) ->
+
+  ProjectService =
+    $$Project: Project
+    project: {}
+    places: []
+
+  return ProjectService
+]
+
+
 # friendships
 app.factory 'Friendship', ['Restangular', (Restangular) ->
 

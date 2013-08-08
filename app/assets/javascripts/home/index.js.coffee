@@ -112,16 +112,11 @@ app.run(['$rootScope', '$location', 'User',
 
   User.then (User) ->
     $rootScope.User = User
-
-  $rootScope.googleMap =
-    markers: []
-    searchResults: []
-    infoWindow: new google.maps.InfoWindow()
-    # map, searchBox
-
-  $rootScope.currentProject =
-    project: {}
-    places: []
+    # filter
+    if $rootScope.User.fb_access_token()
+      $location.path('/all_projects') if $location.path() == '/'
+    else
+      $location.path('/') if $location.path() != '/'
 
   $rootScope.interface =
     showUserSection: false
@@ -140,19 +135,6 @@ app.run(['$rootScope', '$location', 'User',
   logoutSuccess = ->
     $location.path('/')
 
-  # # resolver
-  # FB.then (FB) ->
-  #   # filter
-  #   if $rootScope.user.fb_access_token
-  #     $location.path('/all_projects') if $location.path() == '/'
-  #   else
-  #     $location.path('/') if $location.path() != '/'
-
-  #   # global methods
-  #   $rootScope.fbLogin = -> FB.doLogin loginSuccess, logoutSuccess
-  #   $rootScope.fbLogout = -> FB.doLogout logoutSuccess
-
-
   # events
   $rootScope.$on '$routeChangeSuccess', (event, current) ->
     switch current.$$route.controller
@@ -165,3 +147,25 @@ app.run(['$rootScope', '$location', 'User',
       when 'ProjectViewCtrl'
         $rootScope.inMapview = true
 ])
+
+
+# mp-user-section
+app.directive 'mpUserSection', ['$rootScope', '$compile', '$templateCache',
+'User',
+($rootScope, $compile, $templateCache, User) ->
+
+  getTemplate = ->
+    if $rootScope.User.fb_access_token()
+      return $templateCache.get 'mp_user_section_tempalte_login'
+    else
+      return $templateCache.get 'mp_user_section_tempalte_logout'
+
+  # return
+  link: (scope, element, attrs) ->
+
+    scope.interface.showUserSection = false
+    scope.$on '$routeChangeSuccess', (event, current) ->
+      template = getTemplate()
+      html = $compile(template)(scope)
+      element.html html
+]
