@@ -7,10 +7,10 @@
     <a href="" class="mp-toolbar-action-button" bs-tooltip="Show current location" bs-tooltip-placement="top" mp-center-user-location>
       <i class="icon-map-marker"></i>
     </a>
-    <a href="" class="mp-toolbar-action-button" bs-tooltip="Save marked locations" bs-tooltip-placement="top">
+    <a href="" class="mp-toolbar-action-button" bs-tooltip="Save marked locations" bs-tooltip-placement="top" ng-click="interface.showUserSection = true">
       <i class="icon-save"></i>
     </a>
-    <a href="" class="mp-toolbar-action-button" bs-tooltip="Share with friends" bs-tooltip-placement="top">
+    <a href="" class="mp-toolbar-action-button" bs-tooltip="Share with friends" bs-tooltip-placement="top" ng-click="interface.showUserSection = true">
       <i class="icon-share-alt"></i>
     </a>
   </div>
@@ -34,6 +34,13 @@
 
   <h1>Map Project</h1>
 
+  <p>
+    <a href="" class="btn btn-primary" ng-click="fbLogin()">Login with Facebook</a>
+    <a href="" class="btn btn-default" ng-click="interface.showUserSection = false">Maybe later</a>
+  </p>
+
+  <p class="lead">OR</p>
+
   <form name="">
     <fieldset>
       <legend>Register</legend>
@@ -49,16 +56,10 @@
         <label for="mp_user_section_input_confirm_password">Confirm password</label>
         <input type="password" class="form-control" id="mp_user_section_input_confirm_password" placeholder="Confirm password">
       </div>
+      <p class="help-block">Already has an account? <a href="">Login here</a></p>
       <button class="btn btn-success">Submit</button>
     </fieldset>
   </form>
-
-  <p class="help-block">Already has an account? <a href="">Login here</a></p>
-
-  <p class="lead">OR</p>
-
-  <a href="" class="btn btn-primary" ng-click="fbLogin()">Login with Facebook</a>
-  <a href="" class="btn btn-default" ng-click="interface.showUserSection = false">Maybe later</a>
 </script>
 
 
