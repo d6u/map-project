@@ -66,7 +66,7 @@ class ProjectsController < ApplicationController
 
   def destroy
     Project.destroy_all :id => params[:id]
-    head 200
+    render :json => []
   end
 
 end

@@ -3,8 +3,11 @@ app = angular.module 'angular-mp.home.all-projects-view', []
 
 # AllProjectsCtrl
 app.controller 'AllProjectsViewCtrl',
-['$scope', 'Project', '$location', 'User', '$window', 'ActiveProject',
-($scope, Project, $location, User, $window, ActiveProject) ->
+['$rootScope', '$scope', 'Project', '$location', 'User', '$window', 'ActiveProject',
+($rootScope, $scope, Project, $location, User, $window, ActiveProject) ->
+
+  $scope.showEditProjectModal = (project) ->
+    $rootScope.$broadcast 'showBottomModalbox', {type: 'editProject', project: project}
 
   # init
   Project.getList().then (projects) ->
@@ -17,6 +20,12 @@ app.controller 'AllProjectsViewCtrl',
   $scope.userLocation = $window.userLocation
 
   ActiveProject.reset()
+
+  # events
+  $scope.$on 'projectRemoved', (event, project_id) ->
+    index = _.findIndex $scope.projects, {id: project_id}
+    project = $scope.projects.splice(index, 1)[0]
+    project.remove()
 ]
 
 
