@@ -1,7 +1,8 @@
 app = angular.module 'angular-mp.home.map', []
 
 
-
+# map service
+# ========================================
 app.factory 'TheMap', [->
 
   return {
@@ -23,8 +24,12 @@ app.controller 'MapCtrl',
  ActiveProject) ->
 
   # TODO: rename
-  $scope.googleMap = TheMap
-  $scope.currentProject = ActiveProject
+  $rootScope.googleMap = TheMap
+  $rootScope.currentProject = ActiveProject
+
+  # New API
+  $rootScope.TheMap = TheMap
+  $rootScope.ActiveProject = ActiveProject
 
   # callbacks
   triggerMapResize = ->
@@ -52,6 +57,7 @@ app.controller 'MapCtrl',
         coord: place.geometry.location.toString()
 
       TheMap.markers.push newPlace.$$marker
+      place.mpObject = newPlace
       TheMap.searchResults.push place
       bounds.extend newPlace.$$marker.getPosition()
       bindInfoWindow newPlace
@@ -59,7 +65,7 @@ app.controller 'MapCtrl',
     $scope.$apply()
     TheMap.map.fitBounds bounds
     TheMap.map.setZoom(12) if places.length < 3 && TheMap.map.getZoom() > 12
-    $timeout (-> google.maps.event.trigger TheMap.markers[0], 'click'), 800 if places.length == 1
+    $timeout (-> google.maps.event.trigger TheMap.markers[0], 'click'), 800
 
   cleanMarkers = ->
     marker.setMap(null) for marker in TheMap.markers
@@ -126,6 +132,9 @@ app.controller 'MapCtrl',
       ActiveProject.places = []
       $rootScope.$broadcast 'allPlacesRemovedFromList'
 
+  $scope.clearSearchResults = ->
+    cleanMarkers()
+
   # events
   TheMap.mapReady = $q.defer()
   TheMap.searchBoxReady = $q.defer()
@@ -138,15 +147,16 @@ app.controller 'MapCtrl',
     google.maps.event.addListener(TheMap.searchBox, 'places_changed', searchBoxPlaceChanged)
 
   $scope.$on 'placeListSorted', rearrangePlacesList
+  $scope.$on 'mpInputboxClearInput', cleanMarkers
 ]
 
 
-# map canvas
-# ========================================
+# Map Components
+# ----------------------------------------
+# google-map
 app.directive 'googleMap', ['$window', 'TheMap', ($window, TheMap) ->
   (scope, element, attrs) ->
 
-    # rootScope deferred object
     mapOptions =
       center: new google.maps.LatLng($window.userLocation.latitude, $window.userLocation.longitude)
       zoom: 8
@@ -162,6 +172,55 @@ app.directive 'googleMap', ['$window', 'TheMap', ($window, TheMap) ->
 app.directive 'markerInfo', [-> (scope, element, attrs) -> scope.$apply()]
 
 
+# List Components
+# ----------------------------------------
+# mp-places-list
+app.directive 'mpPlacesList', ['$window', ($window) ->
+
+  templateUrl: 'mp_places_list_template'
+  link: (scope, element, attrs) ->
+
+    hideListAccordingly = ->
+      listEmpty = scope.ActiveProject.places.length == 0 && scope.TheMap.searchResults.length == 0
+      if listEmpty
+        element.addClass 'hide'
+      else
+        element.removeClass 'hide'
+
+    scope.$watch 'ActiveProject.places.length', (newVal, oldVal, scope) ->
+      hideListAccordingly()
+
+    scope.$watch 'TheMap.searchResults.length', (newVal, oldVal, scope) ->
+      hideListAccordingly()
+
+
+
+
+
+
+
+    $($window).on 'resize', ->
+      element.css {maxHeight: $($window).height() - 112 - 20}
+    $($window).trigger 'resize'
+
+    element.perfectScrollbar({
+      wheelSpeed: 20
+      wheelPropagation: true
+      })
+
+    scope.$watch 'currentProject.places.length', (newVal, oldVal) ->
+      # TODO: scroll to places list last (newest) item
+      element.scrollTop 0
+      element.perfectScrollbar 'update'
+
+    scope.$watch 'googleMap.searchResults.length', (newVal, oldVal) ->
+      # TODO: scroll to search result position
+      element.scrollTop 0
+      element.perfectScrollbar 'update'
+]
+
+
+
 # sidebar place
 app.directive 'sidebarPlace', ['$templateCache', '$compile',
 ($templateCache, $compile) ->
@@ -173,4 +232,3 @@ app.directive 'sidebarPlace', ['$templateCache', '$compile',
       scope.googleMap.infoWindow.setContent(compiled[0])
       scope.googleMap.infoWindow.open(scope.place.$$marker.getMap(), scope.place.$$marker)
 ]
-

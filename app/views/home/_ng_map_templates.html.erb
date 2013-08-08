@@ -1,9 +1,19 @@
-<script type="text/ng-template" id="mp_places_search_results_template">
+<!-- mp-places-list -->
+<script type="text/ng-template" id="mp_places_list_template">
 
-  <div class="mp-marked-places" ng-class="{hide: currentProject.places.length == 0}" jquery-ui-sortable="place in currentProject.places">
-    <div class="mp-marked-places-header"></div>
+  <!-- Marked Places -->
+  <div class="mp-marked-places" jquery-ui-sortable="place in currentProject.places">
+
+    <div class="mp-marked-places-header mp-list-actions">
+      <a href="" class="mp-list-action-button" bs-tooltip="Display all marked items on map" bs-tooltip-placement="top" ng-click="displayAllMarkers()">
+        <i class="icon-resize-full"></i>
+      </a>
+    </div>
+
     <div class="mp-marked-places-contents">
-      <div class="mp-marked-place" ng-repeat="place in currentProject.places" sidebar-place>
+      <div class="mp-list-contents-header lead">{{ActiveProject.places.length}} marked places</div>
+
+      <div class="mp-marked-place" ng-repeat="place in ActiveProject.places" sidebar-place>
         <div class="mp-place-marker-icon">
           <a href="" ng-click="centerPlaceInMap(place.$$marker.getPosition())">
             <img ng-src="/assets/number_{{$index}}.png">
@@ -20,20 +30,37 @@
           <p class="">{{place.notes}}</p>
         </div>
       </div>
+
     </div>
   </div>
 
+  <!-- Search Results -->
+  <div class="mp-places-search-results">
 
-  <div class="mp-places-search-results" ng-class="{hide: googleMap.searchResults.length == 0}">
-    <div class="mp-places-search-results-header">
-      Search Results:
-      <a href="">Clear results</a>
+    <div class="mp-places-search-results-header mp-list-actions">
+      <a href="" class="mp-list-action-button" bs-tooltip="Fold all details" bs-tooltip-placement="top" ng-click="">
+        <i class="icon-check-minus"></i>
+      </a>
+      <a href="" class="mp-list-action-button" bs-tooltip="Show more details" bs-tooltip-placement="top">
+        <i class="icon-collapse"></i>
+      </a>
+      <a href="" class="mp-list-action-button" bs-tooltip="Clear all results" bs-tooltip-placement="top" ng-click="clearSearchResults()">
+        <i class="icon-remove"></i>
+      </a>
     </div>
+
     <div class="mp-places-search-results-contents">
-      <div class="mp-place-search-result" ng-repeat="result in googleMap.searchResults">
+      <div class="mp-list-contents-header lead">Showing {{TheMap.searchResults.length}} search results</div>
+
+      <div class="mp-place-search-result-item" ng-repeat="result in TheMap.searchResults">
         <div class="mp-place-marker-icon">
           <a href="" ng-click="centerPlaceInMap(result.geometry.location)">
             <img ng-src="{{result.icon}}">
+          </a>
+        </div>
+        <div class="mp-place-actions">
+          <a href="" ng-click="addPlaceToList(result.mpObject)">
+            <i class="icon-ok"></i>
           </a>
         </div>
         <div class="mp-place-detail-sidebar">
@@ -41,6 +68,7 @@
           <address>{{result.formatted_address}}</address>
         </div>
       </div>
+
     </div>
   </div>
 </script>

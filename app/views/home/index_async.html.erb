@@ -69,7 +69,14 @@
 <body>
 
 <div class="mp-application">
-  <section class="mp-user-section" ng-class="{hide: !interface.showUserSection}" mp-user-section></section>
+  <section class="mp-user-section" ng-class="{'mp-user-section-show': interface.showUserSection}" mp-user-section></section>
+
+  <header class="mp-headsup-messager" mp-headsup-messager>
+    <div class="alert" ng-class="message.type">
+      <button type="button" class="close" id="mp_headsup_messager_close_button">&times;</button>
+      <strong>{{message.title}}</strong> {{message.content}}
+    </div>
+  </header>
 
   <!-- ng-view -->
   <div ng-view class="mp-view-container">
@@ -91,6 +98,7 @@
 </div>
 
 
+<%= render 'mp_user_section_templates' %>
 <%= render 'ng_toolbar_templates' %>
 <%= render 'ng_map_templates' %>
 <%= render 'ng_views_templates' %>

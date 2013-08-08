@@ -1,16 +1,19 @@
 app = angular.module 'angular-bootstrap', []
 
-# tooltip
+
+# bs-tooltip, bs-tooltip-placement
 app.directive 'bsTooltip', [ ->
   (scope, element, attrs) ->
 
     # init
     element.tooltip({
+      animation: false
       title: attrs.bsTooltip
       placement: attrs.bsTooltipPlacement
       container: 'body'
     })
 
     # events
+    # destory tooltip when route change, otherwise tooltip may stay forever
     scope.$on '$routeChangeStart', -> element.tooltip 'destroy'
 ]
