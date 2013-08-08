@@ -95,10 +95,18 @@
     </div>
   </div>
 
+  <!-- Modal -->
+  <section class="mp-bottom-modalbox" mp-bottom-modalbox>
+    <div class="mp-bottom-modalbox-bg" ng-click="closeModal()"></div>
+    <div class="mp-bottom-modalbox-container"></div>
+  </section>
+
+  <section class="mp-bottom-messager" mp-bottom-messager></section>
 </div>
 
 
 <%= render 'mp_user_section_templates' %>
+<%= render 'mp_bottom_modalbox_templates' %>
 <%= render 'ng_toolbar_templates' %>
 <%= render 'ng_map_templates' %>
 <%= render 'ng_views_templates' %>

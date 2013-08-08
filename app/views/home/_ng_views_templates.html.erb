@@ -39,16 +39,21 @@
   <div class="mp-all-projects-list">
     <header class="mp-all-projects-list-header">All Projects <a href="/new_project">new project</a></header>
     <div class="mp-all-projects-list-masonry" masonry='projects,models.projectTitle'>
-      <div class="mp-project-item" ng-repeat="project in projects | filter:models.projectTitle">
+
+
+      <div class="mp-project-item" ng-repeat="project in projects | filter:controlToolbar.input">
         <div class="mp-project-item-cover" mini-map-cover></div>
         <div class="mp-project-item-detail">
           <header class="mp-project-item-header">
             <a ng-href="/project/{{project.id}}">{{project.title}} <span class="badge">{{project.places_attrs.places_count}}</span></a>
           </header>
+          <a href="" ng-click="showEditProjectModal(project)">Edit project details</a>
           <p class="mp-project-item-notes">{{project.notes || "No notes yet..."}}</p>
         </div>
         <div class="mp-project-item-friends"></div>
       </div>
+
+
     </div>
   </div>
 

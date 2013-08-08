@@ -3,11 +3,24 @@ app = angular.module 'angular-mp.home.toolbar', []
 
 # mp-control-toolbar
 # ========================================
-app.directive 'mpControlToolbar', [->
-  templateUrl: 'mp_control_toolbar_template'
+app.directive 'mpControlToolbar', ['$templateCache', '$compile',
+($templateCache, $compile) ->
+
   link: (scope, element, attrs) ->
 
+    scope.$on '$routeChangeSuccess', (event, current) ->
+      switch current.$$route.controller
+        when 'OutsideViewCtrl'
+          template = $templateCache.get 'mp_control_toolbar_mapview_template'
+        when 'AllProjectsViewCtrl'
+          template = $templateCache.get 'mp_control_toolbar_all_project_view_template'
+        when 'NewProjectViewCtrl'
+          template = $templateCache.get 'mp_control_toolbar_mapview_template'
+        when 'ProjectViewCtrl'
+          template = $templateCache.get 'mp_control_toolbar_mapview_template'
 
+      html = $compile(template)(scope)
+      element.html html
 ]
 
 
@@ -51,6 +64,9 @@ app.directive 'mpCenterUserLocation', [->
 ]
 
 
+
+
+
 # Toolbar Inputs
 # ----------------------------------------
 # mp-inputbox
@@ -65,12 +81,10 @@ app.directive 'mpInputbox', ['$location', '$rootScope',
 ]
 
 
-# search box
-app.directive 'searchBox', ['TheMap', (TheMap) ->
+# mp-map-searchbox
+app.directive 'mpMapSearchbox', ['TheMap', (TheMap) ->
   (scope, element, attrs) ->
 
-    if scope.inMapview
-      TheMap.searchBox = new google.maps.places.SearchBox(element[0])
-      TheMap.searchBoxReady.resolve()
-    # TODO: else
+    TheMap.searchBox = new google.maps.places.SearchBox(element[0])
+    TheMap.searchBoxReady.resolve()
 ]

@@ -27,8 +27,6 @@
 #= require mp_modules/angular-mp.home.project-view.coffee
 #= require mp_modules/angular-mp.home.chatbox.coffee
 
-#= require mp_modules/angular-mp.home.helpers.coffee
-
 
 
 # declear
@@ -50,9 +48,7 @@ app = angular.module 'mapApp', [
   'angular-mp.home.all-projects-view',
   'angular-mp.home.new-project-view',
   'angular-mp.home.project-view',
-  'angular-mp.home.chatbox',
-
-  'angular-mp.home.helpers' # TODO: remove
+  'angular-mp.home.chatbox'
 ]
 
 
@@ -198,7 +194,7 @@ app.directive 'mpUserSection', ['$rootScope', '$compile', '$templateCache',
 
 
 # mp-headsup-messager
-# --------------------------------------------
+# ----------------------------------------
 # type: (default: null), danger, success, info
 app.directive 'mpHeadsupMessager', ['$rootScope', '$timeout',
 ($rootScope, $timeout) ->
@@ -220,4 +216,64 @@ app.directive 'mpHeadsupMessager', ['$rootScope', '$timeout',
     element.find('#mp_headsup_messager_close_button').on 'click', ->
       element.removeClass 'mp-headsup-messager-show'
       $timeout.cancel timeoutHandle if timeoutHandle
+]
+
+
+# mp-bottom-modalbox
+# ----------------------------------------
+# type: editProject: mp-edit-project-modal
+#
+app.directive 'mpBottomModalbox', ['$templateCache', '$compile', '$timeout',
+($templateCache, $compile, $timeout) ->
+
+  scope: true
+  link: (scope, element, attrs) ->
+
+    scope.closeModal = ->
+      element.removeClass 'mp-bottom-modalbox-show'
+      $timeout (->
+        element.find('.mp-bottom-modalbox-container').removeAttr(scope.removingAttr).html('').scope().$destroy()
+      ), 200
+
+    scope.$on 'showBottomModalbox', (event, data) ->
+      switch data.type
+        when 'editProject'
+          scope.project = data.project
+          scope.removingAttr = 'mp-edit-project-modal'
+          element.find('.mp-bottom-modalbox-container').attr(scope.removingAttr, '')
+          html = $compile(element.html())(scope)
+          element.html html
+      # fix no animation problem, becasue content are dynamically generated
+      # make sure angular not add class until current scope life cycle complete
+      $timeout (-> element.addClass 'mp-bottom-modalbox-show')
+]
+
+
+# mp-edit-project-modal
+app.directive 'mpEditProjectModal', ['$templateCache', '$compile',
+'$rootScope',
+($templateCache, $compile, $rootScope) ->
+
+  templateUrl: 'mp_edit_project_modal_template'
+  scope: true
+  link: (scope, element, attrs) ->
+    scope.errorMessage = null
+
+    scope.modalbox =
+      title: scope.project.title
+      notes: scope.project.notes
+
+    scope.saveProject = ->
+      if scope.modalbox.title.length > 0
+        scope.errorMessage = null
+        angular.extend scope.project, scope.modalbox
+        scope.project.put().then ->
+          scope.closeModal()
+      else
+        scope.errorMessage = "You must have a title to start with."
+
+    scope.deleteProject = ->
+      scope.errorMessage = null
+      $rootScope.$broadcast 'projectRemoved', scope.project.id
+      scope.closeModal()
 ]
