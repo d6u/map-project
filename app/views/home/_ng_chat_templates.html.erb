@@ -1,0 +1,43 @@
+<script type="text/ng-template" id="ng_chatbox_template">
+  <nav class="mp-navbar-top mp-chatbox-button-group">
+    <a href="" class="mp-navbar-button" ng-click="addFriendsToProject()" bs-tooltip="Add a friend to this project" bs-tooltip-placement="bottom">
+      <i class="icon-plus"></i>
+    </a>
+  </nav>
+
+  <!-- chat-history -->
+  <div class="mp-chat-history" perfect-scrollbar="chatHistory.length" mp-chat-history>
+    <div class="mp-chat-history-item" ng-repeat="chatItem in chatHistory" mp-chat-history-item></div>
+  </div>
+
+  <div class="mp-chat-inputs">
+    <textarea name="" class="form-control mp-naked-input" placeholder="Say something" mp-chatbox-input></textarea>
+    <button class="btn btn-default">Send</button>
+  </div>
+
+  <%= render 'add_friends_modal' %>
+</script>
+
+
+<!-- .mp-chat-history-item -->
+<script type="text/ng-template" id="chat_history_user_behavior_template">
+
+</script>
+
+
+<!-- .mp-chat-history-item -->
+<script type="text/ng-template" id="chat_history_message_template">
+    <div class="mp-chat-user-picture">
+        <img ng-src="{{chatItem.fb_user_picture}}" alt="" class="">
+    </div>
+    <div class="mp-chat-message">
+        <p class="mp-chat-message-content">{{chatItem.content}}</p>
+        <time class="mp-chat-message-datatime"></time>
+    </div>
+</script>
+
+
+<!-- .mp-chat-history-item -->
+<script type="text/ng-template" id="chat_history_place_template">
+
+</script>

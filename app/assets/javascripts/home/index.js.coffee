@@ -25,6 +25,7 @@
 #= require mp_modules/angular-mp.home.all-projects-view.coffee
 #= require mp_modules/angular-mp.home.new-project-view.coffee
 #= require mp_modules/angular-mp.home.project-view.coffee
+#= require mp_modules/angular-mp.home.chatbox.coffee
 
 #= require mp_modules/angular-mp.home.helpers.coffee
 
@@ -49,6 +50,7 @@ app = angular.module 'mapApp', [
   'angular-mp.home.all-projects-view',
   'angular-mp.home.new-project-view',
   'angular-mp.home.project-view',
+  'angular-mp.home.chatbox',
 
   'angular-mp.home.helpers' # TODO: remove
 ]
