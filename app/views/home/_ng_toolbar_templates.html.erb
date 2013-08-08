@@ -1,3 +1,4 @@
+<!-- mp-control-toolbar -->
 <script type="text/ng-template" id="mp_control_toolbar_template">
   <div class="mp-toolbar-actions">
     <a href="" class="mp-toolbar-action-button" ng-click="interface.showUserSection = true">
@@ -58,6 +59,6 @@
   <img ng-src="{{user.fb_user_picture}}" alt="">
   <div class="">{{user.name}}</div>
 
-  <a href="" class="btn btn-warning" ng-click="fbLogout()">Logout</a>
+  <a href="" class="btn btn-warning" ng-click="logout()">Logout</a>
   <a href="" class="btn btn-default" ng-click="interface.showUserSection = false">Close</a>
 </script>

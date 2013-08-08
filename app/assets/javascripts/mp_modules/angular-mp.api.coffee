@@ -26,6 +26,9 @@ app.factory 'ActiveProject', ['Project', (Project) ->
     $$Project: Project
     project: {}
     places: []
+    reset: ->
+      @project = {}
+      @places = []
 
   return ProjectService
 ]

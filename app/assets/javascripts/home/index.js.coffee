@@ -118,22 +118,18 @@ app.run(['$rootScope', '$location', 'User',
     else
       $location.path('/') if $location.path() != '/'
 
-  $rootScope.interface =
-    showUserSection: false
-    showChatbox: false
-    showPlacesList: false
-    sideBarPlacesSlideUp: true
-    showCreateAccountPromot: false
+    $rootScope.$on '$routeChangeStart', (event, future, current) ->
+      switch future.$$route.controller
+        when 'OutsideViewCtrl'
+          $location.path('/all_projects') if User.fb_access_token()
+        when 'AllProjectsViewCtrl'
+          $location.path('/') if !User.fb_access_token()
+        when 'NewProjectViewCtrl'
+          $location.path('/') if !User.fb_access_token()
+        when 'ProjectViewCtrl'
+          $location.path('/') if !User.fb_access_token()
 
-  # callbacks
-  loginSuccess = ->
-    if $rootScope.currentProject.places.length > 0
-      $location.path('/new_project')
-    else
-      $location.path('/all_projects')
-
-  logoutSuccess = ->
-    $location.path('/')
+  $rootScope.interface = {}
 
   # events
   $rootScope.$on '$routeChangeSuccess', (event, current) ->
@@ -151,8 +147,8 @@ app.run(['$rootScope', '$location', 'User',
 
 # mp-user-section
 app.directive 'mpUserSection', ['$rootScope', '$compile', '$templateCache',
-'User',
-($rootScope, $compile, $templateCache, User) ->
+'ActiveProject', '$location',
+($rootScope, $compile, $templateCache, ActiveProject, $location) ->
 
   getTemplate = ->
     if $rootScope.User.fb_access_token()
@@ -160,10 +156,27 @@ app.directive 'mpUserSection', ['$rootScope', '$compile', '$templateCache',
     else
       return $templateCache.get 'mp_user_section_tempalte_logout'
 
+  # callbacks
+  loginSuccess = ->
+    if ActiveProject.places.length > 0
+      $location.path('/new_project')
+    else
+      $location.path('/all_projects')
+
+  logoutSuccess = ->
+    $location.path('/')
+
   # return
   link: (scope, element, attrs) ->
 
     scope.interface.showUserSection = false
+
+    scope.fbLogin = ->
+      $rootScope.User.login(loginSuccess, logoutSuccess)
+
+    scope.logout = ->
+      $rootScope.User.logout logoutSuccess
+
     scope.$on '$routeChangeSuccess', (event, current) ->
       template = getTemplate()
       html = $compile(template)(scope)
