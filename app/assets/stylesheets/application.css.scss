@@ -5,12 +5,15 @@
 
 
 @import "variables/colors";
+
 @import "mixins/flexbox";
+@import "mixins/animation";
 
 @import 'components/mp_inputbox';
 
 @import 'modules/mp_control_toolbar';
 @import 'modules/mp_user_section';
+@import 'modules/mp_headsup_messager';
 
 
 // Default & Overall
@@ -31,6 +34,8 @@ html, body,
          -o-transition: all 150ms ease-out;
             transition: all 150ms ease-out;
 }
+
+.mp-application {}
 
 // Loader
 // ========================================

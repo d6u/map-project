@@ -23,8 +23,11 @@ app.controller 'MapCtrl',
  ActiveProject) ->
 
   # TODO: rename
-  $scope.googleMap = TheMap
-  $scope.currentProject = ActiveProject
+  $rootScope.googleMap = TheMap
+  $rootScope.currentProject = ActiveProject
+
+  # New API
+  $rootScope.TheMap = TheMap
 
   # callbacks
   triggerMapResize = ->

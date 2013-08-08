@@ -1,22 +1,28 @@
 <!-- mp-control-toolbar -->
 <script type="text/ng-template" id="mp_control_toolbar_template">
   <div class="mp-toolbar-actions">
-    <a href="" class="mp-toolbar-action-button" ng-click="interface.showUserSection = true">
+    <a href="" class="mp-toolbar-action-button" bs-tooltip="Login" bs-tooltip-placement="top" ng-click="interface.showUserSection = true">
       <i class="icon-user"></i>
     </a>
-    <a href="" class="mp-toolbar-action-button"><i class="icon-plus"></i></a>
-    <a href="" class="mp-toolbar-action-button"><i class="icon-plus"></i></a>
-    <a href="" class="mp-toolbar-action-button"><i class="icon-plus"></i></a>
+    <a href="" class="mp-toolbar-action-button" bs-tooltip="Show current location" bs-tooltip-placement="top" mp-center-user-location>
+      <i class="icon-map-marker"></i>
+    </a>
+    <a href="" class="mp-toolbar-action-button" bs-tooltip="Save marked locations" bs-tooltip-placement="top">
+      <i class="icon-save"></i>
+    </a>
+    <a href="" class="mp-toolbar-action-button" bs-tooltip="Share with friends" bs-tooltip-placement="top">
+      <i class="icon-share-alt"></i>
+    </a>
   </div>
 
   <div class="mp-inputbox mp-toolbar-inputbox" ng-init="controlToolbar.input = ''" mp-inputbox>
     <label class="">
-      <i class="icon-remove mp-inputbox-icon" ng-class="{hide: controlToolbar.input.length == 0}" ng-click="clearInput(controlToolbar)"></i>
-      <i class="icon-search mp-inputbox-icon" ng-class="{hide: controlToolbar.input.length > 0}"></i>
-      <input type="text" class="mp-naked-input" search-box placeholder="search here" ng-model="controlToolbar.input">
+      <i class="icon-remove mp-inputbox-icon" ng-class="{hide: controlToolbar.input.length == 0}" bs-tooltip="Clear input" bs-tooltip-placement="left" ng-click="clearInput(controlToolbar)"></i>
+      <i class="icon-search mp-inputbox-icon" ng-class="{hide: controlToolbar.input.length > 0}" bs-tooltip="Search the map" bs-tooltip-placement="left"></i>
+      <input type="text" class="mp-naked-input" bs-tooltip="Enter place your want to search" bs-tooltip-placement="top" search-box placeholder="search here" ng-model="controlToolbar.input">
     </label>
     <a href="" class="mp-inputbox-action-button">
-        <i class="icon-arrow-right"></i>
+        <i class="icon-arrow-right" bs-tooltip="Go!" bs-tooltip-placement="bottom"></i>
     </a>
   </div>
 </script>
@@ -24,24 +30,26 @@
 
 <!-- mp-user-section -->
 <script type="text/ng-template" id="mp_user_section_tempalte_logout">
+  <a href="" class="mp-user-section-close-button" ng-click="interface.showUserSection = false"><i class="icon-remove"></i></a>
+
   <h1>Map Project</h1>
 
   <form name="">
     <fieldset>
       <legend>Register</legend>
       <div class="form-group">
-        <label for="exampleInputEmail">Email address</label>
-        <input type="text" class="form-control" id="exampleInputEmail" placeholder="Enter email">
+        <label for="mp_user_section_input_email">Email address</label>
+        <input type="text" class="form-control" id="mp_user_section_input_email" placeholder="Enter email">
       </div>
       <div class="form-group">
-        <label for="exampleInputPassword">Password</label>
-        <input type="password" class="form-control" id="exampleInputPassword" placeholder="Password">
+        <label for="mp_user_section_input_password">Password</label>
+        <input type="password" class="form-control" id="mp_user_section_input_password" placeholder="Password">
       </div>
       <div class="form-group">
-        <label for="exampleInputPassword">Confirm password</label>
-        <input type="password" class="form-control" id="exampleInputPassword" placeholder="Confirm password">
+        <label for="mp_user_section_input_confirm_password">Confirm password</label>
+        <input type="password" class="form-control" id="mp_user_section_input_confirm_password" placeholder="Confirm password">
       </div>
-      <button type="submit" class="btn btn-primary">Submit</button>
+      <button class="btn btn-success">Submit</button>
     </fieldset>
   </form>
 
