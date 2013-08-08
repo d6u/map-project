@@ -43,6 +43,7 @@ app.controller 'ProjectViewCtrl',
     place.$$marker = null
     place.remove()
 
-  $scope.$on 'projectUpdated', (event, project) ->
-    ActiveProject.project = project
+  $scope.$on 'projectRemoved', (event, project_id) ->
+    ActiveProject.project.remove()
+    $location.path('/all_projects')
 ]

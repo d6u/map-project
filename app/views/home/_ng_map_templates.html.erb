@@ -8,10 +8,14 @@
       <a href="" class="mp-list-action-button" bs-tooltip="Display all marked items on map" bs-tooltip-placement="top" ng-click="displayAllMarkers()">
         <i class="icon-resize-full"></i>
       </a>
+      <a href="" class="mp-list-action-button" ng-class="{hide: !User.fb_access_token()}" bs-tooltip="Edit project details" bs-tooltip-placement="top" ng-click="showEditProjectModal(ActiveProject.project)">
+        <i class="icon-edit"></i>
+      </a>
     </div>
 
     <div class="mp-marked-places-contents">
-      <div class="mp-list-contents-header lead">{{ActiveProject.places.length}} marked places</div>
+      <div class="mp-list-contents-header lead" ng-class="{hide: !ActiveProject.project.title}">{{ActiveProject.project.title}}</div>
+      <div class="mp-list-contents-header lead" ng-class="{hide: ActiveProject.project.title}">{{ActiveProject.places.length}} marked places</div>
 
       <div class="mp-marked-place" ng-repeat="place in ActiveProject.places" sidebar-place>
         <div class="mp-place-marker-icon">
