@@ -2,10 +2,11 @@ app = angular.module 'angular-mp.home.project-view', []
 
 
 app.controller 'ProjectViewCtrl',
-['$scope', 'Project', '$location', '$rootScope', '$q', '$timeout',
- '$templateCache', '$compile', '$route', 'ActiveProject', 'TheMap',
-($scope, Project, $location, $rootScope, $q, $timeout,
- $templateCache, $compile, $route, ActiveProject, TheMap) ->
+['$scope', 'Project', 'ActiveProject', 'TheMap', '$location', '$route',
+'socket'
+($scope, Project, ActiveProject, TheMap, $location, $route, socket) ->
+
+  $scope.socket = socket
 
   # callbacks
   loadPlaceOntoMap = (place) ->

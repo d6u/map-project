@@ -1,0 +1,169 @@
+// Chatbox
+// ========================================
+.mp-chatbox {
+
+}
+
+.mp-chatbox-show-button {
+    display: block;
+    position: fixed;
+    bottom: 0;
+    width: 200px;
+    height: 35px;
+    right: 40px;
+    background-color: $blue;
+    color: white;
+    line-height: 35px;
+    text-align: center;
+    font-size: 18px;
+    font-weight: bold;
+    border-radius: 2px;
+    z-index: 900;
+    &:hover {
+        text-decoration: none;
+        color: white;
+        background-color: $blueDark;
+    }
+}
+
+.mp-chatbox-show {
+    + .mp-map-view-wrapper {
+        .mp-places-list {
+            right: 332px;
+        }
+    }
+
+
+    ~ .mp-control-toolbar {
+        right: 332px;
+    }
+}
+
+// mp-chatbox-expanded
+// ========================================
+.mp-chatbox-expanded {
+    position: fixed;
+    z-index: 900;
+    top: 10px;
+    bottom: 0;
+    right: 10px;
+    width: 302px;
+    background-color: white;
+
+    border: 1px solid #999;
+    box-shadow: 1px 1px 3px rgba(0,0,0,.3);
+    border-radius: 1px;
+}
+
+// mp-chatbox-header
+// ----------------------------------------
+.mp-chatbox-header {
+    height: 35px;
+    border-bottom: 1px solid $blueDark;
+    background-color: $blue;
+    color: white;
+    position: relative;
+}
+
+.mp-chatbox-header-action-button {
+    display: block;
+    height: 35px;
+    width: 35px;
+    font-size: 18px;
+    line-height: 35px;
+    text-align: center;
+    color: inherit;
+    &:hover {
+        color: inherit;
+        text-decoration: none;
+        background-color: $blueDark;
+    }
+}
+
+.mp-chatbox-header-close-button {
+    position: absolute;
+    top: 0;
+    right: 0;
+}
+
+// mp-chatbox-header-friends-list
+.mp-chatbox-header-friends-list {
+
+}
+
+// mp-chat-history
+// ----------------------------------------
+.mp-chat-history {
+    overflow: hidden;
+    position: absolute;
+    top: 35px;
+    bottom: 60px;
+    width: 100%;
+}
+
+// mp-chat-history-item
+.mp-chat-history-item {
+    @include display_flex;
+    -webkit-align-items: flex-start;
+            align-items: flex-start;
+    margin: 5px;
+
+    &.mp-chat-history-self {
+        @include justify-content(flex-end);
+
+        .mp-chat-user-picture {
+            -webkit-order: 2;
+            order: 2;
+        }
+
+        .mp-chat-message {
+            margin-left: 0;
+            margin-right: 5px;
+            -webkit-order: 1;
+            order: 1;
+        }
+    }
+}
+
+.mp-chat-user-picture {
+    width: 40px;
+    height: 40px;
+    img {
+        width: 100%;
+        height: 100%;
+        border-radius: 2px;
+    }
+}
+
+.mp-chat-message {
+    margin-left: 5px;
+    background-color: $blue;
+    color: white;
+    padding: 3px;
+    min-width: 60px;
+    max-width: 244px;
+    border-radius: 2px;
+
+    p {
+        margin-bottom: 0;
+    }
+}
+
+
+// mp-chat-inputs
+// ----------------------------------------
+.mp-chat-inputs {
+    position: absolute;
+    bottom: 0;
+    border-top: 1px solid $gray2;
+    width: 100%;
+    height: 60px;
+    textarea {
+        resize: none;
+        width: 239px;
+        float: left;
+    }
+    button {
+        float: right;
+    }
+}

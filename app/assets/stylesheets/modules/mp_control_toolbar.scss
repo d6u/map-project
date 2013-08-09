@@ -1,4 +1,5 @@
 .mp-control-toolbar {
+    @include transition();
     position: fixed;
     z-index: 1000;
     right: 40px;
