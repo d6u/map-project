@@ -79,15 +79,22 @@ app.factory 'MpProjects', ['Restangular', '$rootScope',
 
 
   # watch for changes in projects
-  # $rootScope.$watch ((currentScope) ->
-  #   if !MpProjects.currentProject
-  #     return MpProjects.currentProject
-  #   else
-  #     MpProjects
-  # ), ((newVal, oldVal, currentScope) ->
-  #   if newVal != null
-  #     console.log newVal
-  # )
+  $rootScope.$watch ((currentScope) ->
+    lengthDiff = MpProjects.projects.length - MpProjects.__projects.length
+    # remove
+    if lengthDiff < 0
+      for project, index in MpProjects.__projects
+        if project != MpProjects.projects[index]
+          project.$$needRemove = true
+          return project
+    return
+  ), ((newVal, oldVal, currentScope) ->
+    if newVal
+      MpProjects.__projects = _.clone(MpProjects.projects)
+      project = newVal
+      if project.$$needRemove
+        project.remove()
+  )
 
   #
   return MpProjects

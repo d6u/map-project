@@ -18,12 +18,6 @@ app.controller 'AllProjectsViewCtrl',
     else
       MpProjects.clean()
       TheMap.reset()
-
-  # events
-  $scope.$on 'projectRemoved', (event, project_id) ->
-    index = _.findIndex $scope.projects, {id: project_id}
-    project = $scope.projects.splice(index, 1)[0]
-    project.remove()
 ]
 
 

@@ -276,6 +276,10 @@ app.directive 'mpEditProjectModal', ['$templateCache', '$compile',
 
     scope.deleteProject = ->
       scope.errorMessage = null
-      $rootScope.$broadcast 'projectRemoved', scope.project.id
+      for project, index in scope.MpProjects.projects
+        if project == scope.project
+          scope.MpProjects.projects.splice index, 1
+          break
+      $rootScope.$broadcast 'projectRemoved'
       scope.closeModal()
 ]
