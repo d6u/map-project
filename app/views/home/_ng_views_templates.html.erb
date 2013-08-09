@@ -46,7 +46,7 @@
         <div class="mp-project-item-detail">
           <header class="mp-project-item-header">
             <p class="lead">{{projectMessage}}</p>
-            <a ng-href="/project/{{project.id}}">{{project.title}} <span class="badge">{{project.places_attrs.places_count}}</span></a>
+            <a ng-click="openProjectView(project)" href="">{{project.title}} <span class="badge">{{project.places_attrs.places_count}}</span></a>
           </header>
           <a href="" ng-click="showEditProjectModal(project)">Edit project details</a>
           <p class="mp-project-item-notes">{{project.notes || "No notes yet..."}}</p>

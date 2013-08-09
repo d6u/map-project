@@ -105,8 +105,11 @@ app.config([
 
 
 # run
-app.run(['$rootScope', '$location', 'User', 'MpProjects',
-($rootScope, $location, User, MpProjects) ->
+app.run(['$rootScope', '$location', 'User', 'MpProjects', 'socket',
+($rootScope, $location, User, MpProjects, socket) ->
+
+  socket.then (socket) ->
+    $rootScope.socket = socket
 
   User.then (User) ->
     $rootScope.User = User
@@ -268,9 +271,12 @@ app.directive 'mpEditProjectModal', ['$templateCache', '$compile',
       if scope.modalbox.title.length > 0
         scope.errorMessage = null
         angular.extend scope.project, scope.modalbox
+        _places = scope.project.places
+        delete scope.project.places
         scope.project.put().then ->
-          scope.closeModal()
           $rootScope.$broadcast 'projectUpdated'
+          scope.closeModal()
+        scope.project.places = _places
       else
         scope.errorMessage = "You must have a title to start with."
 

@@ -11,7 +11,7 @@ class PlacesController < ApplicationController
 
 
   def index
-    places = Place.where(:project_id => params[:project_id]).order 'places.order DESC'
+    places = Place.where(:project_id => params[:project_id]).order 'places.order ASC'
     render :json => places
   end
 

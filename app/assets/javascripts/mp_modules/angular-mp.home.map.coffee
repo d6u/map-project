@@ -182,7 +182,7 @@ app.directive 'mpPlacesList', ['$window', '$rootScope',
       listEmpty = scope.MpProjects.currentProject.places.length == 0 && scope.TheMap.searchResults.length == 0
       if listEmpty then element.addClass 'hide' else element.removeClass 'hide'
 
-    scope.$watch 'MpProjects.places.length', (newVal, oldVal, scope) ->
+    scope.$watch 'MpProjects.currentProject.places.length', (newVal, oldVal, scope) ->
       hideListAccordingly()
 
     scope.$watch 'TheMap.searchResults.length', (newVal, oldVal, scope) ->
@@ -200,13 +200,14 @@ app.directive 'mpPlacesList', ['$window', '$rootScope',
       wheelPropagation: true
       })
 
-    scope.$watch 'currentProject.places.length', (newVal, oldVal) ->
+    scope.$watch 'MpProjects.currentProject.places.length', (newVal, oldVal) ->
       # TODO: scroll to places list last (newest) item
       element.scrollTop 0
       element.perfectScrollbar 'update'
 
-    scope.$watch 'googleMap.searchResults.length', (newVal, oldVal) ->
+    scope.$watch 'TheMap.searchResults.length', (newVal, oldVal) ->
       # TODO: scroll to search result position
+      # TODO: not only update according to length
       element.scrollTop 0
       element.perfectScrollbar 'update'
 ]

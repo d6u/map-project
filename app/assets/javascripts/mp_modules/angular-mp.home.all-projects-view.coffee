@@ -11,6 +11,10 @@ app.controller 'AllProjectsViewCtrl',
 
   $scope.userLocation = $window.userLocation
 
+  $scope.openProjectView = (project) ->
+    MpProjects.setCurrentProject project
+    $location.path '/project/' + project.id
+
   # init
   MpProjects.getProjects({include_participated: true}).then ->
     if MpProjects.projects.length == 0

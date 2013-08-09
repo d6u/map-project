@@ -8,14 +8,14 @@
       <a href="" class="mp-list-action-button" bs-tooltip="Display all marked items on map" bs-tooltip-placement="top" ng-click="displayAllMarkers()">
         <i class="icon-resize-full"></i>
       </a>
-      <a href="" class="mp-list-action-button" ng-class="{hide: !User.fb_access_token()}" bs-tooltip="Edit project details" bs-tooltip-placement="top" ng-click="showEditProjectModal(MpProjects.project)">
+      <a href="" class="mp-list-action-button" ng-class="{hide: !User.fb_access_token()}" bs-tooltip="Edit project details" bs-tooltip-placement="top" ng-click="showEditProjectModal(MpProjects.currentProject)">
         <i class="icon-edit"></i>
       </a>
     </div>
 
     <div class="mp-marked-places-contents">
-      <div class="mp-list-contents-header lead" ng-class="{hide: !MpProjects.project.title}">{{MpProjects.project.title}}</div>
-      <div class="mp-list-contents-header lead" ng-class="{hide: MpProjects.project.title}">{{MpProjects.currentProject.places.length}} marked places</div>
+      <div class="mp-list-contents-header lead" ng-class="{hide: !MpProjects.currentProject.title}">{{MpProjects.currentProject.title}}</div>
+      <div class="mp-list-contents-header lead" ng-class="{hide: MpProjects.currentProject.title}">{{MpProjects.currentProject.places.length}} marked places</div>
 
       <div jquery-ui-sortable="place in MpProjects.currentProject.places">
         <div class="mp-marked-place" ng-repeat="place in MpProjects.currentProject.places" sidebar-place>

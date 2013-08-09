@@ -3,8 +3,8 @@ app = angular.module 'angular-mp.api', ['restangular']
 
 # MpProjects
 # ========================================
-app.factory 'MpProjects', ['Restangular', '$rootScope',
-(Restangular, $rootScope) ->
+app.factory 'MpProjects', ['Restangular', '$rootScope', 'TheMap',
+(Restangular, $rootScope, TheMap) ->
 
   # REST /projects/:id
   Restangular.addElementTransformer 'projects', true, (projects) ->
@@ -34,6 +34,27 @@ app.factory 'MpProjects', ['Restangular', '$rootScope',
       $projects.getList(queryParams).then (projects) =>
         @projects = projects
         @__projects = _.clone(MpProjects.projects)
+    setCurrentProject: (project) ->
+      @currentProject = project
+      @currentProject.places = []
+      @__currentProjectPlaces = []
+      @currentProject.all('users').getList().then (users) =>
+        @currentProject.partcipatedUsers = users
+      @currentProject.all('places').getList().then (places) =>
+        @currentProject.places = places
+        @__currentProjectPlaces = _.clone(@currentProject.places)
+        TheMap.mapReady.promise.then ->
+          for place in places
+            coordMatch = /\((.+), (.+)\)/.exec place.coord
+            latLog = new google.maps.LatLng coordMatch[1], coordMatch[2]
+            markerOptions =
+              map: TheMap.map
+              title: place.name
+              position: latLog
+              icon:
+                url: "/assets/number_#{place.order}.png"
+            place.$$marker = new google.maps.Marker markerOptions
+
 
   # watch for changes in currentProject.places
   $rootScope.$watch ((currentScope) ->
@@ -42,19 +63,19 @@ app.factory 'MpProjects', ['Restangular', '$rootScope',
     if lengthDiff == 0
       changedPlaces = []
       for place, index in MpProjects.currentProject.places
-        place.$$marker.setIcon {url: "/assets/number_#{index}.png"}
+        place.$$marker.setIcon {url: "/assets/number_#{index}.png"} if place.$$marker
         if place.order != index
           place.order = index
           changedPlaces.push place
       return if changedPlaces.length > 0 then changedPlaces else undefined
     # add
-    else if lengthDiff > 0
+    else if lengthDiff = 1
       for place, index in MpProjects.currentProject.places
         if place != MpProjects.__currentProjectPlaces[index]
           place.$$index == index
           return place
     # remove
-    else if lengthDiff < 0
+    else if lengthDiff = -1
       for place, index in MpProjects.__currentProjectPlaces
         if place != MpProjects.currentProject.places[index]
           place.$$needRemove = true
@@ -62,12 +83,17 @@ app.factory 'MpProjects', ['Restangular', '$rootScope',
       # $rootScope.$broadcast 'placeRemovedFromList', place
     return
   ), ((newVal, oldVal, currentScope) ->
+    console.log newVal
     if newVal
       MpProjects.__currentProjectPlaces = _.clone(MpProjects.currentProject.places)
       if $rootScope.User && $rootScope.User.checkLogin()
         if angular.isArray newVal
           places = newVal
-          place.put() for place in places
+          for place in places
+            _marker = place.$$marker
+            delete place.$$marker
+            place.put()
+            place.$$marker = _marker
         else
           place = newVal
           if place.$$needRemove
@@ -93,6 +119,7 @@ app.factory 'MpProjects', ['Restangular', '$rootScope',
       MpProjects.__projects = _.clone(MpProjects.projects)
       project = newVal
       if project.$$needRemove
+        project.places = []
         project.remove()
   )
 
