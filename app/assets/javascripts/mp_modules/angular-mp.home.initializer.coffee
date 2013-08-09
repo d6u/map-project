@@ -43,6 +43,9 @@ app.factory 'User', ['$q', '$window', '$rootScope', 'Restangular',
     fb_access_token: -> UserService.$$user.fb_access_token
     fb_user_id: -> UserService.$$user.fb_user_id
 
+    checkLogin: ->
+      if @fb_access_token() && @$$user.id then true else false
+
 
   # callbacks
   loggedIn = (authResponse, loginCallback) ->

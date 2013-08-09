@@ -11,9 +11,11 @@ app.factory 'TheMap', [->
     searchBox: null
     markers: []
     searchResults: []
+    __searchResults: []
     reset: ->
       @markers = []
       @searchResults = []
+      @__searchResults = []
   }
 ]
 
@@ -22,105 +24,41 @@ app.factory 'TheMap', [->
 # ========================================
 app.controller 'MapCtrl',
 ['$scope', 'TheMap', '$timeout', '$q', '$templateCache', '$compile',
-'$rootScope', 'ActiveProject',
+'$rootScope', 'MpProjects',
 ($scope, TheMap, $timeout, $q, $templateCache, $compile, $rootScope,
- ActiveProject) ->
+ MpProjects) ->
 
   # TODO: rename
   $rootScope.googleMap = TheMap
-  $rootScope.currentProject = ActiveProject
+  $rootScope.currentProject = MpProjects
 
   # New API
   $rootScope.TheMap = TheMap
-  $rootScope.ActiveProject = ActiveProject
+  $rootScope.MpProjects = MpProjects
 
   # callbacks
-  triggerMapResize = ->
-    $timeout (->
-      google.maps.event.trigger(TheMap.map, 'resize')
-    ), 200
-
-  searchBoxPlaceChanged = ->
-    cleanMarkers()
-    bounds = new google.maps.LatLngBounds()
-    places = TheMap.searchBox.getPlaces()
-    animation = if places.length == 1 then google.maps.Animation.DROP else null
-
-    for place in places
-      markerOptions =
-        map: TheMap.map
-        title: place.name
-        position: place.geometry.location
-        animation: animation
-      newPlace =
-        $$marker: new google.maps.Marker markerOptions
-        notes: null
-        name: place.name
-        address: place.formatted_address
-        coord: place.geometry.location.toString()
-
-      TheMap.markers.push newPlace.$$marker
-      place.mpObject = newPlace
-      TheMap.searchResults.push place
-      bounds.extend newPlace.$$marker.getPosition()
-      bindInfoWindow newPlace
-
-    $scope.$apply()
-    TheMap.map.fitBounds bounds
-    TheMap.map.setZoom(12) if places.length < 3 && TheMap.map.getZoom() > 12
-    $timeout (-> google.maps.event.trigger TheMap.markers[0], 'click'), 800
-
-  cleanMarkers = ->
-    marker.setMap(null) for marker in TheMap.markers
-    TheMap.markers = []
-    TheMap.searchResults = []
-
-  bindInfoWindow = (place) ->
-    google.maps.event.addListener place.$$marker, 'click', ->
-      infoWindow = TheMap.infoWindow
-      template = $templateCache.get 'marker_info_window'
-      newScope = $scope.$new()
-      newScope.place = place
-      compiled = $compile(template)(newScope)
-      TheMap.infoWindow.setContent compiled[0]
-      google.maps.event.clearListeners infoWindow, 'closeclick'
-      google.maps.event.addListenerOnce infoWindow, 'closeclick', ->
-        newScope.$destroy()
-      infoWindow.open TheMap.map, place.$$marker
-
-  rearrangePlacesList = ->
-    for place, index in ActiveProject.places
-      # update marker icon
-      place.$$marker.setIcon {url: "/assets/number_#{index}.png"}
-      # update order
-      place.order = index
-    $rootScope.$broadcast 'undatedPlacesOrders'
+  # triggerMapResize = ->
+  #   $timeout (->
+  #     google.maps.event.trigger(TheMap.map, 'resize')
+  #   ), 200
 
   # actions
   $scope.addPlaceToList = (place) ->
-    place.$$marker.setMap null
-    markerOptions =
-      map: TheMap.map
-      title: place.name
-      position: place.$$marker.getPosition()
-      icon:
-        url: "/assets/number_#{ActiveProject.places.length}.png"
-    place.$$marker = new google.maps.Marker markerOptions
+    TheMap.markers = _.filter TheMap.markers, (marker) ->
+      return true if marker.__gm_id != place.$$marker.__gm_id
+    place.$$marker.setIcon {
+      url: "/assets/number_#{MpProjects.currentProject.places.length}.png"
+    }
     place.id = true
-    place.order = ActiveProject.places.length
-
-    ActiveProject.places.push place
-    $rootScope.$broadcast 'placeAddedToList', place
+    place.order = MpProjects.currentProject.places.length
+    MpProjects.currentProject.places.push place
 
   $scope.centerPlaceInMap = (location) ->
     TheMap.map.setCenter location
-    # marker.getMap().setCenter marker.getPosition()
 
   $scope.removePlace = (place, index) ->
-    ActiveProject.places.splice(index, 1)[0]
+    MpProjects.currentProject.places.splice(index, 1)[0]
     place.$$marker.setMap null
-    rearrangePlacesList()
-    $rootScope.$broadcast 'placeRemovedFromList', place
 
   $scope.displayAllMarkers = ->
     bounds = new google.maps.LatLngBounds()
@@ -135,9 +73,6 @@ app.controller 'MapCtrl',
       ActiveProject.places = []
       $rootScope.$broadcast 'allPlacesRemovedFromList'
 
-  $scope.clearSearchResults = ->
-    cleanMarkers()
-
   # events
   TheMap.mapReady = $q.defer()
   TheMap.searchBoxReady = $q.defer()
@@ -147,17 +82,19 @@ app.controller 'MapCtrl',
     google.maps.event.addListener(TheMap.map, 'bounds_changed',
       -> TheMap.searchBox.setBounds TheMap.map.getBounds())
 
-    google.maps.event.addListener(TheMap.searchBox, 'places_changed', searchBoxPlaceChanged)
+    google.maps.event.addListener(TheMap.searchBox, 'places_changed', ->
+      $scope.$apply -> TheMap.searchResults = TheMap.searchBox.getPlaces())
 
-  $scope.$on 'placeListSorted', rearrangePlacesList
-  $scope.$on 'mpInputboxClearInput', cleanMarkers
+  $scope.$on 'mpInputboxClearInput', -> TheMap.searchResults = []
 ]
 
 
 # Map Components
 # ----------------------------------------
 # google-map
-app.directive 'googleMap', ['$window', 'TheMap', ($window, TheMap) ->
+app.directive 'googleMap', ['$window', 'TheMap', '$templateCache', '$compile',
+'$timeout', 'MpProjects',
+($window, TheMap, $templateCache, $compile, $timeout, MpProjects) ->
   (scope, element, attrs) ->
 
     mapOptions =
@@ -167,6 +104,63 @@ app.directive 'googleMap', ['$window', 'TheMap', ($window, TheMap) ->
       disableDefaultUI: true
 
     TheMap.map = new google.maps.Map(element[0], mapOptions)
+
+    bindInfoWindow = (place) ->
+      google.maps.event.addListener place.$$marker, 'click', ->
+        infoWindow = TheMap.infoWindow
+        template = $templateCache.get 'marker_info_window'
+        newScope = scope.$new()
+        newScope.place = place
+        compiled = $compile(template)(newScope)
+        TheMap.infoWindow.setContent compiled[0]
+        google.maps.event.clearListeners infoWindow, 'closeclick'
+        google.maps.event.addListenerOnce infoWindow, 'closeclick', ->
+          newScope.$destroy()
+        infoWindow.open TheMap.map, place.$$marker
+
+    # watch TheMap.searchResults
+    scope.$watch ((currentScope) ->
+      if TheMap.searchResults.length == TheMap.__searchResults.length && TheMap.searchResults[0] == TheMap.__searchResults[0]
+        return false
+      else if TheMap.searchResults.length == 0
+        return null
+      else
+        TheMap.__searchResults = _.clone(TheMap.searchResults)
+        return TheMap.searchResults
+    ), ((newVal, oldVal, currentScope) ->
+      if newVal == false then return
+
+      marker.setMap(null) for marker in TheMap.markers
+      TheMap.markers = []
+      if newVal == null then return
+
+      # entered new searchResults
+      places = newVal
+      bounds = new google.maps.LatLngBounds()
+      animation = if places.length == 1 then google.maps.Animation.DROP else null
+      for place in places
+        markerOptions =
+          map: TheMap.map
+          title: place.name
+          position: place.geometry.location
+          animation: animation
+        newPlace =
+          $$marker: new google.maps.Marker markerOptions
+          notes: null
+          name: place.name
+          address: place.formatted_address
+          coord: place.geometry.location.toString()
+        TheMap.markers.push newPlace.$$marker
+        place.mpObject = newPlace
+        bounds.extend newPlace.$$marker.getPosition()
+        bindInfoWindow newPlace
+
+      TheMap.map.fitBounds bounds
+      TheMap.map.setZoom(12) if places.length < 3 && TheMap.map.getZoom() > 12
+      $timeout (-> google.maps.event.trigger TheMap.markers[0], 'click'), 800
+    )
+
+    # mapReady
     TheMap.mapReady.resolve()
 ]
 
@@ -185,13 +179,10 @@ app.directive 'mpPlacesList', ['$window', '$rootScope',
   link: (scope, element, attrs) ->
 
     hideListAccordingly = ->
-      listEmpty = scope.ActiveProject.places.length == 0 && scope.TheMap.searchResults.length == 0
-      if listEmpty
-        element.addClass 'hide'
-      else
-        element.removeClass 'hide'
+      listEmpty = scope.MpProjects.currentProject.places.length == 0 && scope.TheMap.searchResults.length == 0
+      if listEmpty then element.addClass 'hide' else element.removeClass 'hide'
 
-    scope.$watch 'ActiveProject.places.length', (newVal, oldVal, scope) ->
+    scope.$watch 'MpProjects.places.length', (newVal, oldVal, scope) ->
       hideListAccordingly()
 
     scope.$watch 'TheMap.searchResults.length', (newVal, oldVal, scope) ->
@@ -199,12 +190,6 @@ app.directive 'mpPlacesList', ['$window', '$rootScope',
 
     scope.showEditProjectModal = (project) ->
       $rootScope.$broadcast 'showBottomModalbox', {type: 'editProject', project: project}
-
-
-
-
-
-
 
     $($window).on 'resize', ->
       element.css {maxHeight: $($window).height() - 112 - 20}

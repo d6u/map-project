@@ -105,11 +105,12 @@ app.config([
 
 
 # run
-app.run(['$rootScope', '$location', 'User',
-($rootScope, $location, User) ->
+app.run(['$rootScope', '$location', 'User', 'MpProjects',
+($rootScope, $location, User, MpProjects) ->
 
   User.then (User) ->
     $rootScope.User = User
+    $rootScope.MpProjects = MpProjects
     # filter
     if $rootScope.User.fb_access_token()
       $location.path('/all_projects') if $location.path() == '/'
@@ -146,18 +147,18 @@ app.run(['$rootScope', '$location', 'User',
 # mp-user-section
 # --------------------------------------------
 app.directive 'mpUserSection', ['$rootScope', '$compile', '$templateCache',
-'ActiveProject', '$location',
-($rootScope, $compile, $templateCache, ActiveProject, $location) ->
+'MpProjects', '$location',
+($rootScope, $compile, $templateCache, MpProjects, $location) ->
 
   getTemplate = ->
-    if $rootScope.User.fb_access_token()
+    if $rootScope.User.checkLogin()
       return $templateCache.get 'mp_user_section_tempalte_login'
     else
       return $templateCache.get 'mp_user_section_tempalte_logout'
 
   # callbacks
   loginSuccess = ->
-    if ActiveProject.places.length > 0
+    if MpProjects.currentProject.places.length > 0
       $location.path('/new_project')
     else
       $location.path('/all_projects')

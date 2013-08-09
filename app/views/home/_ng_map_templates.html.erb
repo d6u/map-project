@@ -2,39 +2,40 @@
 <script type="text/ng-template" id="mp_places_list_template">
 
   <!-- Marked Places -->
-  <div class="mp-marked-places" jquery-ui-sortable="place in currentProject.places">
+  <div class="mp-marked-places">
 
     <div class="mp-marked-places-header mp-list-actions">
       <a href="" class="mp-list-action-button" bs-tooltip="Display all marked items on map" bs-tooltip-placement="top" ng-click="displayAllMarkers()">
         <i class="icon-resize-full"></i>
       </a>
-      <a href="" class="mp-list-action-button" ng-class="{hide: !User.fb_access_token()}" bs-tooltip="Edit project details" bs-tooltip-placement="top" ng-click="showEditProjectModal(ActiveProject.project)">
+      <a href="" class="mp-list-action-button" ng-class="{hide: !User.fb_access_token()}" bs-tooltip="Edit project details" bs-tooltip-placement="top" ng-click="showEditProjectModal(MpProjects.project)">
         <i class="icon-edit"></i>
       </a>
     </div>
 
     <div class="mp-marked-places-contents">
-      <div class="mp-list-contents-header lead" ng-class="{hide: !ActiveProject.project.title}">{{ActiveProject.project.title}}</div>
-      <div class="mp-list-contents-header lead" ng-class="{hide: ActiveProject.project.title}">{{ActiveProject.places.length}} marked places</div>
+      <div class="mp-list-contents-header lead" ng-class="{hide: !MpProjects.project.title}">{{MpProjects.project.title}}</div>
+      <div class="mp-list-contents-header lead" ng-class="{hide: MpProjects.project.title}">{{MpProjects.currentProject.places.length}} marked places</div>
 
-      <div class="mp-marked-place" ng-repeat="place in ActiveProject.places" sidebar-place>
-        <div class="mp-place-marker-icon">
-          <a href="" ng-click="centerPlaceInMap(place.$$marker.getPosition())">
-            <img ng-src="/assets/number_{{$index}}.png">
-          </a>
-        </div>
-        <div class="mp-place-actions">
-          <a href="" ng-click="removePlace(place, $index)">
-            <i class="icon-remove"></i>
-          </a>
-        </div>
-        <div class="mp-place-detail-sidebar">
-          <div class="mp-place-name-sidebar">{{place.name}}</div>
-          <address>{{place.address}}</address>
-          <p class="">{{place.notes}}</p>
+      <div jquery-ui-sortable="place in MpProjects.currentProject.places">
+        <div class="mp-marked-place" ng-repeat="place in MpProjects.currentProject.places" sidebar-place>
+          <div class="mp-place-marker-icon">
+            <a href="" ng-click="centerPlaceInMap(place.$$marker.getPosition())">
+              <img ng-src="/assets/number_{{$index}}.png">
+            </a>
+          </div>
+          <div class="mp-place-actions">
+            <a href="" ng-click="removePlace(place, $index)">
+              <i class="icon-remove"></i>
+            </a>
+          </div>
+          <div class="mp-place-detail-sidebar">
+            <div class="mp-place-name-sidebar">{{place.name}}</div>
+            <address>{{place.address}}</address>
+            <p class="">{{place.notes}}</p>
+          </div>
         </div>
       </div>
-
     </div>
   </div>
 
@@ -56,20 +57,20 @@
     <div class="mp-places-search-results-contents">
       <div class="mp-list-contents-header lead">Showing {{TheMap.searchResults.length}} search results</div>
 
-      <div class="mp-place-search-result-item" ng-repeat="result in TheMap.searchResults">
+      <div class="mp-place-search-result-item" ng-repeat="place in TheMap.searchResults">
         <div class="mp-place-marker-icon">
-          <a href="" ng-click="centerPlaceInMap(result.geometry.location)">
-            <img ng-src="{{result.icon}}">
+          <a href="" ng-click="centerPlaceInMap(place.geometry.location)">
+            <img ng-src="{{place.icon}}">
           </a>
         </div>
         <div class="mp-place-actions">
-          <a href="" ng-click="addPlaceToList(result.mpObject)">
+          <a href="" ng-click="addPlaceToList(place.mpObject)">
             <i class="icon-ok"></i>
           </a>
         </div>
         <div class="mp-place-detail-sidebar">
-          <div class="mp-place-name-sidebar">{{result.name}}</div>
-          <address>{{result.formatted_address}}</address>
+          <div class="mp-place-name-sidebar">{{place.name}}</div>
+          <address>{{place.formatted_address}}</address>
         </div>
       </div>
 

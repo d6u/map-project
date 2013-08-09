@@ -1,9 +1,9 @@
 app = angular.module 'angular-mp.home.outside-view', []
 
 
-app.controller 'OutsideViewCtrl',['ActiveProject', 'TheMap',
-(ActiveProject, TheMap) ->
+app.controller 'OutsideViewCtrl',['MpProjects', 'TheMap',
+(MpProjects, TheMap) ->
 
-  ActiveProject.reset()
+  MpProjects.reset()
   TheMap.reset()
 ]
