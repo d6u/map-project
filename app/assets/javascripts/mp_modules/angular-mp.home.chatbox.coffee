@@ -36,12 +36,14 @@ app.factory 'Chatbox', ['$rootScope', '$q',
       @chatHistory.push messageData
       $rootScope.$apply()
 
-    receiveMessage: (messageCallback) ->
+    receiveMessage: (messageCallback, userBehaviorCallback) ->
       @socket.on 'chatContent', (data) =>
         @chatHistory.push data
         switch data.type
           when 'message'
             messageCallback(data.content)
+          when 'userBehavior'
+            userBehaviorCallback(data)
 
     reset: ->
       socket = null
@@ -65,15 +67,26 @@ app.directive 'mpChatbox', ['$templateCache', '$compile',
   link: (scope, element, attrs) ->
 
     # callbacks
+    messageCallback = (content) ->
+      # TODO
+
+    userBehaviorCallback = (data) ->
+      if data.event == 'joinRoom'
+        data.description = 'just joined.'
+        scope.ActiveProject.roomClientIds[data.userId] = true
+      else if data.event == 'leaveRoom'
+        data.description = 'just left.'
+        scope.ActiveProject.roomClientIds[data.userId] = false
+      onlineCheck()
+
+
     joinRoomCallback = (userIds) ->
       scope.$on 'enterNewMessage', (event, message) ->
         Chatbox.sendMessage message
-      Chatbox.receiveMessage messageCallback
+      Chatbox.receiveMessage messageCallback, userBehaviorCallback
       for id in userIds
         scope.ActiveProject.roomClientIds[id] = true
 
-    messageCallback = (content) ->
-      # TODO
 
     onlineCheck = ->
       for user in scope.ActiveProject.partcipatedUsers
@@ -101,38 +114,6 @@ app.directive 'mpChatbox', ['$templateCache', '$compile',
     scope.$watch 'ActiveProject.partcipatedUsers.length', (newVal, oldVal) ->
       onlineCheck()
 
-    scope.$watch 'ActiveProject.roomClientIds.length', (newVal, oldVal) ->
-      onlineCheck()
-
-
-
-
-
-
-
-
-    # $scope.addFriendsToProject = ->
-    #   $scope.friendships = []
-
-    #   $scope.currentProject.projectParticipatedUsers = []
-    #   $scope.currentProject.project.getParticipatedUser().then (users) ->
-    #     $scope.currentProject.projectParticipatedUsers = users
-    #     Friendship.getList().then (friendships)->
-    #       $scope.friendships = friendships
-
-    #   $scope.$broadcast 'showAddFriendsModal'
-
-    # $scope.getInvitationCode = ->
-    #   Invitation.generate($scope.currentProject.project.id).then (code) ->
-    #     $scope.invitationCode = location.origin + '/invitation/join/' + code
-
-    # $scope.invite = ->
-    #   for friendship in $scope.friendships
-    #     do (friendship) ->
-    #       if friendship.$$selected
-    #         $scope.currentProject.project.addParticipatedUser(friendship.friend)
-
-    # events
     scope.$on '$routeChangeStart', (event, future, current) ->
       Chatbox.reset()
 ]
@@ -162,19 +143,6 @@ app.directive 'mpChatHistory', [->
 ]
 
 
-# # invite-friend-list-item
-# app.directive 'inviteFriendListItem', [->
-#   (scope, element, attrs) ->
-
-#     # init
-#     scope.friendship.$$selected = if _.find(scope.currentProject.projectParticipatedUsers, {id: scope.friendship.friend.id}) then true else false
-
-#     # actions
-#     scope.selectFriend = ->
-#       scope.friendship.$$selected = !scope.friendship.$$selected
-# ]
-
-
 # mp-chatbox-input
 app.directive 'mpChatboxInput', [->
   (scope, element, attrs) ->
@@ -197,6 +165,8 @@ app.directive 'mpChatHistoryItem', ['$compile', '$templateCache',
     switch type
       when 'message'
         return $templateCache.get 'chat_history_message_template'
+      when 'userBehavior'
+        return $templateCache.get 'chat_history_user_behavior_template'
 
   # return
   link: (scope, element, attrs) ->

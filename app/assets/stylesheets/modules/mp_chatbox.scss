@@ -153,6 +153,7 @@
     }
 }
 
+// mp-chat-message
 .mp-chat-message {
     margin-left: 5px;
     background-color: $blue;
@@ -162,6 +163,14 @@
     max-width: 244px;
     border-radius: 2px;
 
+    p {
+        margin-bottom: 0;
+    }
+}
+
+// mp-chat-user-behavior
+.mp-chat-user-behavior {
+    color: $gray3;
     p {
         margin-bottom: 0;
     }

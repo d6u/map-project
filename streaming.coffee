@@ -52,9 +52,19 @@ io.sockets.on 'connection', (socket) ->
 
   socketList[socket.id] = socket
 
+  userJoinLeftBehavior = (event, room) ->
+    socket.broadcast.to(room).emit 'chatContent', {
+      type: 'userBehavior'
+      event: event
+      userId: socket.handshake.user.id
+      userName: socket.handshake.user.name
+    }
+
+
   socket.on 'joinRoom', (roomId, fn) ->
     targetRoom = 'project_room:' + roomId
     socket.join targetRoom
+    userJoinLeftBehavior('joinRoom', targetRoom)
     console.log io.sockets.manager.roomClients[socket.id]
     roomClients = io.sockets.clients targetRoom
     roomClientIds = []
@@ -65,14 +75,19 @@ io.sockets.on 'connection', (socket) ->
   socket.on 'leaveRoom', (roomId, fn) ->
     # roomId will be null if no roomId
     if roomId
+      userJoinLeftBehavior('leaveRoom', 'project_room:' + roomId)
       socket.leave 'project_room:' + roomId
       console.log io.sockets.manager.roomClients[socket.id]
     else
+      userJoinLeftBehavior('leaveRoom', targetRoom)
       socket.leave targetRoom
+      targetRoom = null
       console.log io.sockets.manager.roomClients[socket.id]
 
   socket.on 'chatContent', (data) ->
     socket.broadcast.to(targetRoom).emit 'chatContent', data
 
   socket.on 'disconnect', ->
+    userJoinLeftBehavior('leaveRoom', targetRoom)
+    console.log 'disconnect'
     delete socketList[socket.id]
