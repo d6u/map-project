@@ -9,7 +9,11 @@
 
   <div class="mp-chatbox-expanded">
     <header class="mp-chatbox-header">
-      <div class="mp-chatbox-header-friends-list"></div>
+      <div class="mp-chatbox-header-friends-list">
+        <a href="" class="mp-chatbox-header-friends-item" ng-repeat="friend in ActiveProject.partcipatedUsers" bs-tooltip="{{friend.name}}" bs-tooltip-placement="bottom">
+          <img ng-src="{{friend.fb_user_picture}}">
+        </a>
+      </div>
       <a href="" class="mp-chatbox-header-action-button mp-chatbox-header-close-button" ng-click="collapseChatbox()">
         <i class="icon-remove"></i>
       </a>

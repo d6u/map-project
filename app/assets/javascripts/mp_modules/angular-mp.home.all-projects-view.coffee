@@ -11,7 +11,7 @@ app.controller 'AllProjectsViewCtrl',
     $rootScope.$broadcast 'showBottomModalbox', {type: 'editProject', project: project}
 
   # init
-  Project.getList().then (projects) ->
+  Project.getList({include_participated: true}).then (projects) ->
     if projects.length > 0
       $scope.projects = projects
     else
@@ -28,6 +28,15 @@ app.controller 'AllProjectsViewCtrl',
     index = _.findIndex $scope.projects, {id: project_id}
     project = $scope.projects.splice(index, 1)[0]
     project.remove()
+]
+
+
+# mp-all-projects-item
+app.directive 'mpAllProjectsItem', [->
+  (scope, element, attrs) ->
+
+    if scope.project.owner_id != scope.User.$$user.id
+      scope.projectMessage = 'This is a group project'
 ]
 
 

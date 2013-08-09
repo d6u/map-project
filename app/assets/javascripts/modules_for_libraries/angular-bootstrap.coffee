@@ -2,11 +2,12 @@ app = angular.module 'angular-bootstrap', []
 
 
 # bs-tooltip, bs-tooltip-placement
-app.directive 'bsTooltip', [ ->
+app.directive 'bsTooltip', ['$timeout', ($timeout) ->
   (scope, element, attrs) ->
 
     # init
-    element.tooltip({
+
+    $timeout -> element.tooltip({
       animation: false
       title: attrs.bsTooltip
       placement: attrs.bsTooltipPlacement

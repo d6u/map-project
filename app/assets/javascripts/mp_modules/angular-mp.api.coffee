@@ -5,8 +5,8 @@ app = angular.module 'angular-mp.api', ['restangular']
 app.factory 'Project', ['Restangular', (Restangular) ->
 
   Restangular.addElementTransformer 'projects', false, (project) ->
-    project.addRestangularMethod 'addParticipatedUser', 'post', 'add_participated_user'
-    project.addRestangularMethod 'getParticipatedUser', 'get', 'get_participated_user'
+    # TODO
+    # project.addRestangularMethod 'addParticipatedUser', 'post', 'add_participated_user'
     project
 
 
@@ -26,9 +26,11 @@ app.factory 'ActiveProject', ['Project', (Project) ->
     $$Project: Project
     project: {}
     places: []
+    partcipatedUsers: []
     reset: ->
       @project = {}
       @places = []
+      @partcipatedUsers = []
 
   return ProjectService
 ]

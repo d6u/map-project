@@ -68,6 +68,22 @@ class UsersController < ApplicationController
   end
 
 
+  def index
+    # get participated users for project
+    if params[:project_id]
+      project = Project.find_by_id(params[:project_id])
+      if project
+        users = project.participated_users
+        users = users.unshift project.owner
+        render :json => users, :only => [:id, :name, :fb_user_picture] and return
+      else
+        head 404 and return
+      end
+    end
+    head 401
+  end
+
+
   def update
     if @user.id == params[:user][:id]
       @user.attributes = params.require(:user).permit(:fb_access_token, :fb_user_id, :name, :email, :fb_user_picture)

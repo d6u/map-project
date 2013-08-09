@@ -31,6 +31,8 @@ app.controller 'ProjectViewCtrl',
   # init
   Project.customGET($route.current.params.project_id).then (project) ->
     ActiveProject.project = project
+    project.all('users').getList().then (users) ->
+      ActiveProject.partcipatedUsers = users
     project.all('places').getList().then (places) ->
       ActiveProject.places = places
       TheMap.mapReady.promise.then ->

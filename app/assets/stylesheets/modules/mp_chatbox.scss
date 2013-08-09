@@ -88,8 +88,23 @@
 
 // mp-chatbox-header-friends-list
 .mp-chatbox-header-friends-list {
-
+    height: 100%;
 }
+
+.mp-chatbox-header-friends-item {
+    display: block;
+    height: 34px;
+    width: 34px;
+    float: left;
+    padding: 2px;
+    opacity: 0.5;
+
+    img {
+        height: 30px;
+        width: 30px;
+    }
+}
+
 
 // mp-chat-history
 // ----------------------------------------

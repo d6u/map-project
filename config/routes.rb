@@ -20,6 +20,7 @@ MapProject::Application.routes.draw do
   end
   resources :projects do
     resources :places
+    resources :users
   end
 
 

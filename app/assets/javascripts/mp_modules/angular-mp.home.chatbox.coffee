@@ -14,7 +14,6 @@ app.factory 'Chatbox', ['$rootScope', '$q',
 
     setSocket: (socket) ->
       @socket = socket
-      console.log socket
 
     joinRoom: (roomId, callback) ->
       @rooms.push roomId
@@ -45,9 +44,10 @@ app.factory 'Chatbox', ['$rootScope', '$q',
             messageCallback(data.content)
 
     reset: ->
-      socket: null
+      socket = null
       @chatHistory = []
       @leaveRoom roomId for roomId in @rooms
+      @rooms = []
 
 
   return ChatboxService
