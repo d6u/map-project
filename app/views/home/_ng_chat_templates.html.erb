@@ -1,24 +1,39 @@
-<script type="text/ng-template" id="ng_chatbox_template">
-  <nav class="mp-navbar-top mp-chatbox-button-group">
-    <a href="" class="mp-navbar-button" ng-click="addFriendsToProject()" bs-tooltip="Add a friend to this project" bs-tooltip-placement="bottom">
-      <i class="icon-plus"></i>
-    </a>
-  </nav>
-
-  <!-- chat-history -->
-  <div class="mp-chat-history" perfect-scrollbar="chatHistory.length" mp-chat-history>
-    <div class="mp-chat-history-item" ng-repeat="chatItem in chatHistory" mp-chat-history-item></div>
-  </div>
-
-  <div class="mp-chat-inputs">
-    <textarea name="" class="form-control mp-naked-input" placeholder="Say something" mp-chatbox-input></textarea>
-    <button class="btn btn-default">Send</button>
-  </div>
-
-  <%= render 'add_friends_modal' %>
+<!-- mp-chatbox -->
+<!-- ======================================== -->
+<script type="text/ng-template" id="mp_chatbox_template">
+  <a href="" ng-click="expandChatbox()" class="mp-chatbox-show-button">Show Chat box</a>
 </script>
 
 
+<script type="text/ng-template" id="mp_chatbox_template_expanded">
+
+  <div class="mp-chatbox-expanded">
+    <header class="mp-chatbox-header">
+      <div class="mp-chatbox-header-friends-list"></div>
+      <a href="" class="mp-chatbox-header-action-button mp-chatbox-header-close-button" ng-click="collapseChatbox()">
+        <i class="icon-remove"></i>
+      </a>
+    </header>
+
+    <!-- chat-history -->
+    <div class="mp-chat-history" perfect-scrollbar="chatHistory.length" mp-chat-history>
+
+      <!-- chat-item -->
+      <div class="mp-chat-history-item" ng-repeat="chatItem in chatHistory" mp-chat-history-item></div>
+
+    </div>
+
+    <!-- chat-inputs -->
+    <div class="mp-chat-inputs">
+      <textarea name="" class="form-control mp-naked-input" placeholder="Say something" mp-chatbox-input></textarea>
+      <button class="btn btn-default">Send</button>
+    </div>
+  </div>
+</script>
+
+
+<!-- chatbox components -->
+<!-- //////////////////////////////////////// -->
 <!-- .mp-chat-history-item -->
 <script type="text/ng-template" id="chat_history_user_behavior_template">
 

@@ -2,10 +2,11 @@ app = angular.module 'angular-mp.home.project-view', []
 
 
 app.controller 'ProjectViewCtrl',
-['$scope', 'Project', '$location', '$rootScope', '$q', '$timeout',
- '$templateCache', '$compile', '$route', 'ActiveProject', 'TheMap',
-($scope, Project, $location, $rootScope, $q, $timeout,
- $templateCache, $compile, $route, ActiveProject, TheMap) ->
+['$scope', 'Project', 'ActiveProject', 'TheMap', '$location', '$route',
+'socket'
+($scope, Project, ActiveProject, TheMap, $location, $route, socket) ->
+
+  $scope.socket = socket
 
   # callbacks
   loadPlaceOntoMap = (place) ->
@@ -43,6 +44,7 @@ app.controller 'ProjectViewCtrl',
     place.$$marker = null
     place.remove()
 
-  $scope.$on 'projectUpdated', (event, project) ->
-    ActiveProject.project = project
+  $scope.$on 'projectRemoved', (event, project_id) ->
+    ActiveProject.project.remove()
+    $location.path('/all_projects')
 ]

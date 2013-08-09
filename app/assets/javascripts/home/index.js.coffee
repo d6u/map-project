@@ -269,6 +269,7 @@ app.directive 'mpEditProjectModal', ['$templateCache', '$compile',
         angular.extend scope.project, scope.modalbox
         scope.project.put().then ->
           scope.closeModal()
+          $rootScope.$broadcast 'projectUpdated'
       else
         scope.errorMessage = "You must have a title to start with."
 

@@ -11,6 +11,9 @@ app.factory 'TheMap', [->
     searchBox: null
     markers: []
     searchResults: []
+    reset: ->
+      @markers = []
+      @searchResults = []
   }
 ]
 
@@ -175,7 +178,8 @@ app.directive 'markerInfo', [-> (scope, element, attrs) -> scope.$apply()]
 # List Components
 # ----------------------------------------
 # mp-places-list
-app.directive 'mpPlacesList', ['$window', ($window) ->
+app.directive 'mpPlacesList', ['$window', '$rootScope',
+($window, $rootScope) ->
 
   templateUrl: 'mp_places_list_template'
   link: (scope, element, attrs) ->
@@ -192,6 +196,9 @@ app.directive 'mpPlacesList', ['$window', ($window) ->
 
     scope.$watch 'TheMap.searchResults.length', (newVal, oldVal, scope) ->
       hideListAccordingly()
+
+    scope.showEditProjectModal = (project) ->
+      $rootScope.$broadcast 'showBottomModalbox', {type: 'editProject', project: project}
 
 
 

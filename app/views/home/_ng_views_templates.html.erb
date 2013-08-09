@@ -21,16 +21,16 @@
 
 <!-- Project view -->
 <script type="text/ng-template" id="project_view">
+  <!-- chatbox -->
+  <div class="mp-chatbox" ng-class="" mp-chatbox></div>
+
+  <!-- map -->
   <div class="mp-map-view-wrapper" ng-controller="MapCtrl">
     <div class="mp-map-canvas" google-map></div>
     <div class="mp-places-list" mp-places-list></div>
   </div>
 
   <div class="mp-control-toolbar" mp-control-toolbar></div>
-
-  <!-- chatbox -->
-  <div class="mp-chatbox" ng-class="{'js-sidebar-slide-in': interface.showChatbox}" ng-controller="ChatBoxCtrl" ng-chatbox>
-  </div>
 </script>
 
 

@@ -3,8 +3,9 @@ app = angular.module 'angular-mp.home.all-projects-view', []
 
 # AllProjectsCtrl
 app.controller 'AllProjectsViewCtrl',
-['$rootScope', '$scope', 'Project', '$location', 'User', '$window', 'ActiveProject',
-($rootScope, $scope, Project, $location, User, $window, ActiveProject) ->
+['$rootScope', '$scope', 'Project', '$location', 'User', '$window', 'ActiveProject', 'TheMap',
+($rootScope, $scope, Project, $location, User, $window,
+ ActiveProject, TheMap) ->
 
   $scope.showEditProjectModal = (project) ->
     $rootScope.$broadcast 'showBottomModalbox', {type: 'editProject', project: project}
@@ -20,6 +21,7 @@ app.controller 'AllProjectsViewCtrl',
   $scope.userLocation = $window.userLocation
 
   ActiveProject.reset()
+  TheMap.reset()
 
   # events
   $scope.$on 'projectRemoved', (event, project_id) ->
