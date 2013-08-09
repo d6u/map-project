@@ -27,10 +27,12 @@ app.factory 'ActiveProject', ['Project', (Project) ->
     project: {}
     places: []
     partcipatedUsers: []
+    roomClientIds: []
     reset: ->
       @project = {}
       @places = []
       @partcipatedUsers = []
+      @roomClientIds = []
 
   return ProjectService
 ]

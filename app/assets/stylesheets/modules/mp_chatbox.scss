@@ -97,7 +97,10 @@
     width: 34px;
     float: left;
     padding: 2px;
-    opacity: 0.5;
+    opacity: 0.2;
+    &.mp-chatbox-header-friends-item-online {
+        opacity: 1;
+    }
 
     img {
         height: 30px;

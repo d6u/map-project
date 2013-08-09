@@ -34,7 +34,7 @@ io.configure ->
     redisClient.get user_identifier, (err, data) ->
       if data
         user_data = data.split(':')
-        handshakeData.user = {profile_id: user_data[0], name: user_data[1]}
+        handshakeData.user = {id: user_data[0], name: user_data[1]}
         callback(null, true)
       else
         callback(null, false)
@@ -42,16 +42,25 @@ io.configure ->
 
 # Run
 # ========================================
+
+socketList = []
+
 # socket.io connection
 io.sockets.on 'connection', (socket) ->
 
   targetRoom = null
 
+  socketList[socket.id] = socket
+
   socket.on 'joinRoom', (roomId, fn) ->
     targetRoom = 'project_room:' + roomId
     socket.join targetRoom
     console.log io.sockets.manager.roomClients[socket.id]
-    fn()
+    roomClients = io.sockets.clients targetRoom
+    roomClientIds = []
+    for roomClient in roomClients
+      roomClientIds.push socketList[roomClient.id].handshake.user.id
+    fn(roomClientIds)
 
   socket.on 'leaveRoom', (roomId, fn) ->
     # roomId will be null if no roomId
@@ -64,3 +73,6 @@ io.sockets.on 'connection', (socket) ->
 
   socket.on 'chatContent', (data) ->
     socket.broadcast.to(targetRoom).emit 'chatContent', data
+
+  socket.on 'disconnect', ->
+    delete socketList[socket.id]

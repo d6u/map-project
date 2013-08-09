@@ -65,14 +65,22 @@ app.directive 'mpChatbox', ['$templateCache', '$compile',
   link: (scope, element, attrs) ->
 
     # callbacks
-    joinRoomCallback = ->
+    joinRoomCallback = (userIds) ->
       scope.$on 'enterNewMessage', (event, message) ->
         Chatbox.sendMessage message
       Chatbox.receiveMessage messageCallback
+      for id in userIds
+        scope.ActiveProject.roomClientIds[id] = true
 
     messageCallback = (content) ->
       # TODO
 
+    onlineCheck = ->
+      for user in scope.ActiveProject.partcipatedUsers
+        if scope.ActiveProject.roomClientIds[user.id]
+          user.online = true
+        else
+          user.online = false
 
     # init
     Chatbox.setSocket scope.socket
@@ -88,6 +96,13 @@ app.directive 'mpChatbox', ['$templateCache', '$compile',
       element.removeClass 'mp-chatbox-show'
       template = $templateCache.get 'mp_chatbox_template'
       element.html $compile(template)(scope)
+
+
+    scope.$watch 'ActiveProject.partcipatedUsers.length', (newVal, oldVal) ->
+      onlineCheck()
+
+    scope.$watch 'ActiveProject.roomClientIds.length', (newVal, oldVal) ->
+      onlineCheck()
 
 
 
