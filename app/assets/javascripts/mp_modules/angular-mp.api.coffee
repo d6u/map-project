@@ -101,48 +101,6 @@ app.factory 'MpProjects', ['Restangular', '$rootScope',
 ]
 
 
-# Project
-app.factory 'Project', ['Restangular', (Restangular) ->
-
-  Restangular.addElementTransformer 'projects', false, (project) ->
-    # TODO
-    # project.addRestangularMethod 'addParticipatedUser', 'post', 'add_participated_user'
-    project
-
-  Restangular.addElementTransformer 'projects', true, (projects) ->
-    # TODO
-    # project.addRestangularMethod 'addParticipatedUser', 'post', 'add_participated_user'
-    projects
-
-
-  Project = Restangular.all 'projects'
-
-  Project.addRestangularMethod 'find_by_title', 'get', '', {title: 'last unsaved project'}
-
-  # return
-  Project
-]
-
-
-# ActiveProject
-app.factory 'ActiveProject', ['Project', '$rootScope', (Project, $rootScope) ->
-
-  ProjectService =
-    $$Project: Project
-    project: {}
-    places: []
-    partcipatedUsers: []
-    roomClientIds: []
-    reset: ->
-      @project = {}
-      @places = []
-      @partcipatedUsers = []
-      @roomClientIds = []
-
-  return ProjectService
-]
-
-
 # friendships
 app.factory 'Friendship', ['Restangular', (Restangular) ->
 
