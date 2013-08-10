@@ -12,8 +12,8 @@ app.provider 'MpChatbox', class
 
   # factory
   # ----------------------------------------
-  $get: ['$rootScope', '$timeout', '$q', 'Restangular',
-  ($rootScope, $timeout, $q, Restangular) ->
+  $get: ['$rootScope', '$timeout', '$q', 'Restangular', '$route',
+  ($rootScope, $timeout, $q, Restangular, $route) ->
 
     chatboxReady = $q.defer()
     $friends = Restangular.all 'friends'
@@ -33,18 +33,37 @@ app.provider 'MpChatbox', class
       chatHistory: []
       friends: []
       onlineFriendsIds: []
+      partcipatedUsers: []
 
       initialize: ->
         $friends.getList().then (friends) =>
           @friends = friends
           friendsIds = _.pluck(friends, 'id')
+          if $route.current.$$route.controller == 'ProjectViewCtrl'
+            Chatbox.loadParticipatedUser($route.current.params.project_id)
+          $rootScope.$on '$routeChangeSuccess', (event, current) =>
+            if $route.current.$$route.controller == 'ProjectViewCtrl'
+              Chatbox.loadParticipatedUser($route.current.params.project_id)
+            else
+              @partcipatedUsers = []
           socket.emit 'getOnlineFriendsList', friendsIds, (onlineFriendsIds) =>
             console.log 'getOnlineFriendsList', onlineFriendsIds
             @onlineFriendsIds = onlineFriendsIds
-        socket.on 'userConnected', (userId) ->
+        socket.on 'userConnected', (userId) =>
           console.log 'userConnected', userId
-        socket.on 'userDisconnected', (userId) ->
+          if _.indexOf(@onlineFriendsIds, userId) == -1
+            @onlineFriendsIds.push userId
+        socket.on 'userDisconnected', (userId) =>
           console.log 'userDisconnected', userId
+          @onlineFriendsIds = _.without(@onlineFriendsIds, userId)
+
+      loadParticipatedUser: (projectId) ->
+        $project = Restangular.one('projects', projectId).getList('users')
+        .then (users) =>
+          usersIds = _.pluck users, 'id'
+          for friend in @friends
+            if _.indexOf(usersIds, friend.id) != -1
+              @partcipatedUsers.push friend
 
 
     # init
@@ -78,7 +97,7 @@ app.provider 'MpChatbox', class
 
     markOnlineFriends = ->
       for friend in Chatbox.friends
-        if _.find(Chatbox.onlineFriendsIds, friend.id)
+        if _.indexOf(Chatbox.onlineFriendsIds, friend.id) != -1
           friend.$$online = true
         else
           friend.$$online = false
@@ -90,104 +109,11 @@ app.provider 'MpChatbox', class
   ]
 
 
-
-# # live chat service
-# # ========================================
-# app.factory 'Chatbox', ['$rootScope', '$q', 'socket', 'Restangular', 'User',
-# ($rootScope, $q, socket, Restangular, User) ->
-
-#   chatboxReady = $q.defer()
-
-
-#   socket.then (socket) ->
-
-#     # regular
-#     ChatboxService =
-#       socket: socket
-
-#       reset: ->
-#         # TODO
-
-#       loadFriendsList: ->
-
-
-#       checkOnlineFriends: (friendsIds) ->
-
-
-
-      # joinRoom: (roomId, callback) ->
-      #   @rooms.push roomId
-      #   @socket.emit 'joinRoom', roomId, callback
-
-      # leaveRoom: (roomId, callback) ->
-      #   if roomId
-      #     @socket.emit 'leaveRoom', roomId, callback
-      #   else
-      #     @socket.emit 'leaveRoom', undefined, callback
-      #   @socket.socket.removeAllListeners 'chatContent'
-
-      # sendMessage: (message) ->
-      #   messageData =
-      #     type: 'message'
-      #     content: message
-      #     fb_user_picture: $rootScope.User.$$user.fb_user_picture
-      #   @socket.emit 'chatContent', messageData
-      #   messageData.self = true
-      #   @chatHistory.push messageData
-      #   $rootScope.$apply()
-
-      # sendPlace: (place) ->
-      #   placeData =
-      #     type: 'addPlaceToList'
-      #     placeId: place.id
-      #   @socket.emit 'chatContent', placeData
-      #   chatHistoryPlaceObject =
-      #     type: 'addPlaceToList'
-      #     placeId: place.id
-      #     placeName: place.name
-      #     placeAddress: place.address
-      #   @chatHistory.push chatHistoryPlaceObject
-
-      # receiveMessage: (messageCallback, userBehaviorCallback, placeCallback) ->
-      #   @socket.on 'chatContent', (data) =>
-      #     @chatHistory.push data
-      #     switch data.type
-      #       when 'message'
-      #         messageCallback(data.content)
-      #       when 'userBehavior'
-      #         userBehaviorCallback(data)
-      #       when 'addPlaceToList'
-      #         placeCallback(data)
-
-
-
-
-
-
-
-
-
-    # if socket.socket
-    #   chatboxReady.resolve ChatboxService
-
-    #   ChatboxService.loadFriendsList().then ->
-    #     friendsIds = _.pluck(ChatboxService.friends, 'id')
-    #     ChatboxService.checkOnlineFriends(friendsIds)
-    # else
-    #   chatboxReady.resolve ChatboxService
-
-
-
-
-#   return chatboxReady.promise
-# ]
-
-
 # mp-chatbox
 # ========================================
 app.directive 'mpChatbox', ['$templateCache', '$compile', 'Invitation',
-'socket', 'Chatbox', '$route',
-($templateCache, $compile, Invitation, socket, Chatbox, $route)->
+'$route',
+($templateCache, $compile, Invitation, $route)->
 
   templateUrl: 'mp_chatbox_template'
   link: (scope, element, attrs) ->

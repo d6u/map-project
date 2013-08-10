@@ -18,6 +18,7 @@ app.factory 'MpProjects', ['Restangular', '$rootScope', 'TheMap',
 
   # Object structure
   MpProjects =
+    $$projects: $projects
     projects: []
     __projects: []
     currentProject: {places: []}
@@ -38,9 +39,7 @@ app.factory 'MpProjects', ['Restangular', '$rootScope', 'TheMap',
       @currentProject = project
       @currentProject.places = []
       @__currentProjectPlaces = []
-      @currentProject.all('users').getList().then (users) =>
-        @currentProject.partcipatedUsers = users
-      @currentProject.all('places').getList().then (places) =>
+      @currentProject.getList('places').then (places) =>
         @currentProject.places = places
         @__currentProjectPlaces = _.clone(@currentProject.places)
         TheMap.mapReady.promise.then ->
@@ -99,8 +98,7 @@ app.factory 'MpProjects', ['Restangular', '$rootScope', 'TheMap',
           if place.$$needRemove
             place.remove()
           else
-            MpProjects.currentProject.places.post(place).then (place) ->
-              console.log 'new place posted', MpProjects.currentProject.places, place
+            MpProjects.currentProject.places.post(place)
   )
 
 
@@ -123,7 +121,8 @@ app.factory 'MpProjects', ['Restangular', '$rootScope', 'TheMap',
         project.remove()
   )
 
-  #
+  # return
+  # ----------------------------------------
   return MpProjects
 ]
 

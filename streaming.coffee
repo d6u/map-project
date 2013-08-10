@@ -66,11 +66,11 @@ io.sockets.on 'connection', (socket) ->
   else
     clientsList[socket.handshake.user.id] = [socket.id]
 
-  console.log clientsList
   # get online list
   # ----------------------------------------
   socket.on 'getOnlineFriendsList', (friendsIds, callback) ->
     # save friends list on client's sockets list
+    console.log 'getOnlineFriendsList', friendsIds
     clientsList[socket.handshake.user.id].friendsList = friendsIds
 
     onlineFriendsIds = []
@@ -82,22 +82,24 @@ io.sockets.on 'connection', (socket) ->
         for socketId in clientsList[id]
           io.sockets.socket(socketId).emit 'userConnected', socket.handshake.user.id
     callback(onlineFriendsIds)
+    console.log clientsList
 
   # remove on disconnection
   # ----------------------------------------
   socket.on 'disconnect', ->
     console.log 'User disconnect', socket.handshake.user
-    clientSockets = clientsList[socket.handshake.user.id]
+    friendsList = clientsList[socket.handshake.user.id].friendsList
     clientsList[socket.handshake.user.id] = _.without(clientsList[socket.handshake.user.id], socket.id)
-    if clientsList[socket.handshake.user.id].length == 0
+    clientsList[socket.handshake.user.id].friendsList = friendsList
+    if clientsList[socket.handshake.user.id] && clientsList[socket.handshake.user.id].length == 0
       # notice friends if no socket remains online
-      for id in clientSockets.friendsList
-        if clientsList[id] && !_.isEmpty(clientsList[id])
-          console.log clientsList
+      for id in friendsList
+        if clientsList[id] && clientsList[id].length > 0
           for socketId in clientsList[id]
             io.sockets.socket(socketId).emit 'userDisconnected', socket.handshake.user.id
       # remove the socket
       delete clientsList[socket.handshake.user.id]
+    console.log clientsList
 
 
 

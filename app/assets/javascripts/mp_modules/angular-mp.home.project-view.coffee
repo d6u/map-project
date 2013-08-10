@@ -14,6 +14,7 @@ app.controller 'ProjectViewCtrl',
         project = _.find(MpProjects.projects, {id: Number($routeParams.project_id)})
         MpProjects.setCurrentProject project
 
+
   # events
   $scope.$on 'projectRemoved', (event) ->
     $location.path('/all_projects')
