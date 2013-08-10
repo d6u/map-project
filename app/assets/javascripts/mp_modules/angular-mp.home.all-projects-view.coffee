@@ -3,31 +3,31 @@ app = angular.module 'angular-mp.home.all-projects-view', []
 
 # AllProjectsCtrl
 app.controller 'AllProjectsViewCtrl',
-['$rootScope', '$scope', 'Project', '$location', 'User', '$window', 'ActiveProject', 'TheMap',
-($rootScope, $scope, Project, $location, User, $window,
- ActiveProject, TheMap) ->
+['$rootScope', '$scope', 'MpProjects', '$location', 'User', '$window','TheMap',
+'$route',
+($rootScope, $scope, MpProjects, $location, User, $window, TheMap, $route) ->
+
+  if !User.checkLogin() then return
+
+  $scope.userLocation = $window.userLocation
 
   $scope.showEditProjectModal = (project) ->
     $rootScope.$broadcast 'showBottomModalbox', {type: 'editProject', project: project}
 
+  $scope.openProjectView = (project) ->
+    $location.path '/project/' + project.id
+
   # init
-  Project.getList().then (projects) ->
-    if projects.length > 0
-      $scope.projects = projects
-    else
-      $scope.projects = []
-      $location.path('/new_project')
+  console.log 'AllProjectsCtrl'
+]
 
-  $scope.userLocation = $window.userLocation
 
-  ActiveProject.reset()
-  TheMap.reset()
+# mp-all-projects-item
+app.directive 'mpAllProjectsItem', [->
+  (scope, element, attrs) ->
 
-  # events
-  $scope.$on 'projectRemoved', (event, project_id) ->
-    index = _.findIndex $scope.projects, {id: project_id}
-    project = $scope.projects.splice(index, 1)[0]
-    project.remove()
+    if scope.project.owner_id != scope.User.$$user.id
+      scope.projectMessage = 'This is a group project'
 ]
 
 

@@ -7,11 +7,10 @@
 #= require libraries/perfect-scrollbar-0.4.3.min.js
 #= require libraries/perfect-scrollbar-0.4.3.with-mousewheel.min.js
 
-#= require libraries/angular.min.js
+#= require libraries/angular.js
 #= require libraries/restangular.js
 
 #= require modules_for_libraries/angular-easy-modal.coffee
-#= require modules_for_libraries/angular-socket.io.coffee
 #= require modules_for_libraries/angular-masonry.coffee
 #= require modules_for_libraries/angular-perfect-scrollbar.coffee
 #= require modules_for_libraries/angular-bootstrap.coffee
@@ -34,7 +33,6 @@ app = angular.module 'mapApp', [
   'restangular',
 
   'angular-easy-modal',
-  'angular-socket.io',
   'angular-masonry',
   'angular-perfect-scrollbar',
   'angular-bootstrap',
@@ -54,9 +52,9 @@ app = angular.module 'mapApp', [
 
 # config
 app.config([
-  'socketProvider', '$httpProvider', '$routeProvider',
+  'MpChatboxProvider', '$httpProvider', '$routeProvider',
   '$locationProvider',
-  (socketProvider, $httpProvider, $routeProvider,
+  (MpChatboxProvider, $httpProvider, $routeProvider,
    $locationProvider) ->
 
     # route
@@ -72,21 +70,18 @@ app.config([
       templateUrl: 'all_projects_view'
       resolve:
         User: 'User'
-        socket: 'socket'
     })
     .when('/new_project', {
       controller: 'NewProjectViewCtrl'
       templateUrl: 'new_project_view'
       resolve:
         User: 'User'
-        socket: 'socket'
     })
     .when('/project/:project_id', {
       controller: 'ProjectViewCtrl'
       templateUrl: 'project_view'
       resolve:
         User: 'User'
-        socket: 'socket'
     })
     .otherwise({redirectTo: '/'})
 
@@ -100,32 +95,17 @@ app.config([
     google.maps.visualRefresh = true
 
     # socket
-    socketProvider.setServerUrl location.protocol + '//' + location.hostname + ':4000'
+    MpChatboxProvider.setSocketServer location.protocol + '//' + location.hostname + ':4000'
 ])
 
 
 # run
-app.run(['$rootScope', '$location', 'User',
-($rootScope, $location, User) ->
+app.run(['$rootScope', '$location', 'User', 'MpProjects', 'MpChatbox',
+($rootScope, $location, User, MpProjects, MpChatbox) ->
 
   User.then (User) ->
     $rootScope.User = User
-    # filter
-    if $rootScope.User.fb_access_token()
-      $location.path('/all_projects') if $location.path() == '/'
-    else
-      $location.path('/') if $location.path() != '/'
-
-    $rootScope.$on '$routeChangeStart', (event, future, current) ->
-      switch future.$$route.controller
-        when 'OutsideViewCtrl'
-          $location.path('/all_projects') if User.fb_access_token()
-        when 'AllProjectsViewCtrl'
-          $location.path('/') if !User.fb_access_token()
-        when 'NewProjectViewCtrl'
-          $location.path('/') if !User.fb_access_token()
-        when 'ProjectViewCtrl'
-          $location.path('/') if !User.fb_access_token()
+    $rootScope.MpProjects = MpProjects
 
   $rootScope.interface = {}
 
@@ -146,35 +126,24 @@ app.run(['$rootScope', '$location', 'User',
 # mp-user-section
 # --------------------------------------------
 app.directive 'mpUserSection', ['$rootScope', '$compile', '$templateCache',
-'ActiveProject', '$location',
-($rootScope, $compile, $templateCache, ActiveProject, $location) ->
+'MpProjects', '$location', '$timeout',
+($rootScope, $compile, $templateCache, MpProjects, $location, $timeout) ->
 
   getTemplate = ->
-    if $rootScope.User.fb_access_token()
+    if $rootScope.User.checkLogin()
       return $templateCache.get 'mp_user_section_tempalte_login'
     else
       return $templateCache.get 'mp_user_section_tempalte_logout'
 
-  # callbacks
-  loginSuccess = ->
-    if ActiveProject.places.length > 0
-      $location.path('/new_project')
-    else
-      $location.path('/all_projects')
-
-  logoutSuccess = ->
-    $location.path('/')
-
   # return
   link: (scope, element, attrs) ->
 
-    scope.interface.showUserSection = false
-
     scope.fbLogin = ->
-      $rootScope.User.login(loginSuccess, logoutSuccess)
+      $rootScope.User.login ->
+        return if MpProjects.currentProject.places.length > 0 then '/new_project' else '/all_projects'
 
     scope.logout = ->
-      $rootScope.User.logout logoutSuccess
+      $rootScope.User.logout()
 
     scope.showEmailLogin = ->
       template = $templateCache.get 'mp_user_section_tempalte_loginform'
@@ -187,9 +156,11 @@ app.directive 'mpUserSection', ['$rootScope', '$compile', '$templateCache',
       element.html html
 
     scope.$on '$routeChangeSuccess', (event, current) ->
-      template = getTemplate()
-      html = $compile(template)(scope)
-      element.html html
+      if current.$$route.controller != 'OutsideViewCtrl'
+        scope.interface.showUserSection = false
+      else
+        scope.interface.showUserSection = true
+      element.html $compile(getTemplate())(scope)
 ]
 
 
@@ -267,14 +238,21 @@ app.directive 'mpEditProjectModal', ['$templateCache', '$compile',
       if scope.modalbox.title.length > 0
         scope.errorMessage = null
         angular.extend scope.project, scope.modalbox
+        _places = scope.project.places
+        _partcipatedUsers = scope.project.partcipatedUsers
+        delete scope.project.places
+        delete scope.project.partcipatedUsers
         scope.project.put().then ->
-          scope.closeModal()
           $rootScope.$broadcast 'projectUpdated'
+          scope.closeModal()
+        scope.project.places = _places
+        scope.project.partcipatedUsers = _partcipatedUsers
       else
         scope.errorMessage = "You must have a title to start with."
 
     scope.deleteProject = ->
       scope.errorMessage = null
-      $rootScope.$broadcast 'projectRemoved', scope.project.id
+      scope.MpProjects.projects = _.without scope.MpProjects.projects, scope.project
+      $rootScope.$broadcast 'projectRemoved'
       scope.closeModal()
 ]

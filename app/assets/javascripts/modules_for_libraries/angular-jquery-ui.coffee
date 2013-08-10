@@ -10,16 +10,16 @@ app.directive 'jqueryUiSortable', [ ->
       child = match[1]
       parent = match[2]
 
+      parentArray = scope.$eval parent
+
       scope.$apply ->
         array = []
         element.children('[ng-repeat]').each (index) ->
           childScope = $(this).scope()
-          childObj = childScope.$eval child
+          childObj = childScope[child]
           array.push childObj
-        scope.$eval parent + '= []'
-        parentArray = scope.$eval parent
+        parentArray.splice(0, parentArray.length)
         parentArray.push childObj for childObj in array
-        scope.$emit 'placeListSorted'
 
     # init
     sortableOptions =

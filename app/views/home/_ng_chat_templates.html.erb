@@ -9,7 +9,11 @@
 
   <div class="mp-chatbox-expanded">
     <header class="mp-chatbox-header">
-      <div class="mp-chatbox-header-friends-list"></div>
+      <div class="mp-chatbox-header-friends-list">
+        <a href="" class="mp-chatbox-header-friends-item" ng-repeat="friend in MpChatbox.partcipatedUsers" bs-tooltip="{{friend.name}}" bs-tooltip-placement="bottom" ng-class="{'mp-chatbox-header-friends-item-online': friend.$$online}">
+          <img ng-src="{{friend.fb_user_picture}}">
+        </a>
+      </div>
       <a href="" class="mp-chatbox-header-action-button mp-chatbox-header-close-button" ng-click="collapseChatbox()">
         <i class="icon-remove"></i>
       </a>
@@ -36,7 +40,10 @@
 <!-- //////////////////////////////////////// -->
 <!-- .mp-chat-history-item -->
 <script type="text/ng-template" id="chat_history_user_behavior_template">
-
+  <div class="mp-chat-user-behavior">
+      <p class="mp-chat-message-content">{{chatItem.userName}} {{chatItem.description}}</p>
+      <time class="mp-chat-message-datatime"></time>
+  </div>
 </script>
 
 

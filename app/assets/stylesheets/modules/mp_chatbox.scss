@@ -88,8 +88,26 @@
 
 // mp-chatbox-header-friends-list
 .mp-chatbox-header-friends-list {
-
+    height: 100%;
 }
+
+.mp-chatbox-header-friends-item {
+    display: block;
+    height: 34px;
+    width: 34px;
+    float: left;
+    padding: 2px;
+    opacity: 0.2;
+    &.mp-chatbox-header-friends-item-online {
+        opacity: 1;
+    }
+
+    img {
+        height: 30px;
+        width: 30px;
+    }
+}
+
 
 // mp-chat-history
 // ----------------------------------------
@@ -135,6 +153,7 @@
     }
 }
 
+// mp-chat-message
 .mp-chat-message {
     margin-left: 5px;
     background-color: $blue;
@@ -144,6 +163,14 @@
     max-width: 244px;
     border-radius: 2px;
 
+    p {
+        margin-bottom: 0;
+    }
+}
+
+// mp-chat-user-behavior
+.mp-chat-user-behavior {
+    color: $gray3;
     p {
         margin-bottom: 0;
     }
