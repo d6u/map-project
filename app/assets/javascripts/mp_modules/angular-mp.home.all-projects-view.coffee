@@ -4,7 +4,10 @@ app = angular.module 'angular-mp.home.all-projects-view', []
 # AllProjectsCtrl
 app.controller 'AllProjectsViewCtrl',
 ['$rootScope', '$scope', 'MpProjects', '$location', 'User', '$window','TheMap',
-($rootScope, $scope, MpProjects, $location, User, $window, TheMap) ->
+'$route',
+($rootScope, $scope, MpProjects, $location, User, $window, TheMap, $route) ->
+
+  if !User.checkLogin() then return
 
   $scope.showEditProjectModal = (project) ->
     $rootScope.$broadcast 'showBottomModalbox', {type: 'editProject', project: project}

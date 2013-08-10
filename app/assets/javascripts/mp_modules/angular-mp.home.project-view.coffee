@@ -6,6 +6,8 @@ app.controller 'ProjectViewCtrl',
 '$routeParams',
 ($scope, MpProjects, TheMap, $location, $route, $rootScope, $routeParams) ->
 
+  if !User.checkLogin() then return
+
   if MpProjects.projects.length == 0
     MpProjects.getProjects({include_participated: true}).then ->
       if MpProjects.projects.length == 0

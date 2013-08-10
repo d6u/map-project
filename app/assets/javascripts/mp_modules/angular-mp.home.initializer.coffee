@@ -2,110 +2,102 @@ app = angular.module 'angular-mp.home.initializer', ['restangular']
 
 
 # User
-app.factory 'User', ['$q', '$window', '$rootScope', 'Restangular',
-($q, $window, $rootScope, Restangular) ->
+app.factory 'User', ['$q', '$window', '$rootScope', 'Restangular', '$location',
+'$route',
+($q, $window, $rootScope, Restangular, $location, $route) ->
 
   userReady = $q.defer()
 
-  # RESTful User
-  Restangular.addElementTransformer 'users', false, (user) ->
-    # TODO: add addFriend methods
-    user
+  # # RESTful User
+  # Restangular.addElementTransformer 'users', false, (user) ->
+  #   # TODO: add addFriend methods
+  #   user
 
-  User = Restangular.all 'users'
+  $users = Restangular.all 'users'
 
-  User.addRestangularMethod 'login', 'post', 'login'
-  User.addRestangularMethod 'register', 'post', 'register'
-  User.addRestangularMethod 'logout', 'get', 'logout'
+  $users.addRestangularMethod 'login', 'post', 'login'
+  $users.addRestangularMethod 'register', 'post', 'register'
+  $users.addRestangularMethod 'logout', 'get', 'logout'
 
   # service body
-  UserService =
-    $$User: User
-    $$user: {}
+  User =
+    $$user: null
+    checkLogin: -> return @$$user && @$$user.fb_access_token && @$$user.id
 
-    login: (success, error) ->
-      FB.login (response) ->
-        if response.authResponse
-          loggedIn(response.authResponse, success)
-        else
-          notLoggedIn(error)
+    # if path is a function, it should return a path to redirect
+    login: (path, error) ->
+      FB.login (response) -> if response.authResponse then fbLoginCallback(response.authResponse, path) else notLoggedIn(error)
 
-    logout: (logoutCallback) ->
-      fbLoggedOut = $q.defer()
-      mpLoggedOut = $q.defer()
-
-      FB.logout -> $rootScope.$apply -> fbLoggedOut.resolve()
+    logout: (callback) ->
+      [fbLoggedOut, mpLoggedOut] = [$q.defer(), $q.defer()]
       notLoggedIn -> mpLoggedOut.resolve()
-
-      $q.all([fbLoggedOut.promise, mpLoggedOut.promise]).then ->
-        logoutCallback()
-
-    fb_access_token: -> UserService.$$user.fb_access_token
-    fb_user_id: -> UserService.$$user.fb_user_id
-
-    checkLogin: ->
-      if @fb_access_token() && @$$user.id then true else false
+      FB.logout(-> $rootScope.$apply -> fbLoggedOut.resolve())
+      $q.all([fbLoggedOut.promise, mpLoggedOut.promise]).then callback
 
 
   # callbacks
-  loggedIn = (authResponse, loginCallback) ->
+  fbLoginCallback = (authResponse, path) ->
+    User.$$user =
+      fb_access_token: authResponse.accessToken
+      fb_user_id:      authResponse.userID
 
-    if authResponse
-      user.fb_access_token = authResponse.accessToken
-      user.fb_user_id      = authResponse.userID
-
-    User.login(user).then ((user) ->
-
+    $users.login(User.$$user).then(
       # login success
-      UserService.$$user = user
-      userReady.resolve(UserService)
-      $rootScope.$broadcast 'userLoggedIn'
-      loginCallback() if loginCallback
+      ((user) ->
+        User.$$user = user
+        if path
+          if angular.isFunction(path) then $location.path(path()) else $location.path(path)
+        userReady.resolve(User)
 
-      FB.api '/me', (response) ->
-        UserService.$$user.name      = response.name
-        UserService.$$user.email     = response.email
-        $rootScope.$apply()
-        UserService.$$user.put()
-
-      FB.api '/me/picture', (response) ->
-        UserService.$$user.fb_user_picture   = response.data.url
-        $rootScope.$apply()
-        UserService.$$user.put()
-
-    ), ((response) ->
-
+        # update user in server
+        FB.api '/me', (response) ->
+          $rootScope.$apply ->
+            User.$$user.name  = response.name
+            User.$$user.email = response.email
+          User.$$user.put()
+        FB.api '/me/picture', (response) ->
+          $rootScope.$apply ->
+            User.$$user.fb_user_picture = response.data.url
+          User.$$user.put()
+      ),
       # login mp failed, go to register
-      FB.api '/me', (response) ->
-        user.name      = response.name
-        user.email     = response.email
-        $rootScope.$apply()
+      ((response) ->
+        FB.api '/me', (response) ->
+          user =
+            name:  response.name
+            email: response.email
+          $users.register(user).then (user) ->
+            User.$$user = user
+            if angular.isFunction(path) then $location.path(path()) else $location.path(path)
+            userReady.resolve(UserService)
 
-        User.post(user).then (user) ->
-          UserService.$$user = user
-          userReady.resolve(UserService)
-          $rootScope.$broadcast 'userLoggedIn'
-          loginCallback() if loginCallback
-
-          FB.api '/me/picture', (response) ->
-            UserService.$$user.fb_user_picture   = response.data.url
-            $rootScope.$apply()
-            UserService.$$user.put()
+            # update user in server
+            FB.api '/me/picture', (response) ->
+              $rootScope.$apply ->
+                User.$$user.fb_user_picture = response.data.url
+              User.$$user.put()
+      )
     )
 
   notLoggedIn = (logoutCallback) ->
-    UserService.$$user = {}
-    User.logout().then ->
-      userReady.resolve(UserService)
-      $rootScope.$broadcast 'userLoggedOut'
+    User.$$user = null
+    $users.logout().then ->
+      $location.path '/'
+      userReady.resolve(User)
       logoutCallback() if logoutCallback
 
-  # check fb login status
+
+  # init
+  # ----------------------------------------
   if $window.user.accessToken
-    loggedIn($window.user)
-  else
-    notLoggedIn()
+    fbLoginCallback $window.user, ->
+      if $route.current.$$route.controller == 'OutsideViewCtrl'
+        return '/all_projects'
+      else return
+  else notLoggedIn()
+
 
   # Return
+  # ----------------------------------------
   return userReady.promise
 ]

@@ -7,6 +7,8 @@ app.controller 'NewProjectViewCtrl',
 ($scope, Project, $location, $rootScope, $q, $timeout,
  $templateCache, $compile, User, ActiveProject, TheMap) ->
 
+  if !User.checkLogin() then return
+
   # callbacks
   loadPlaceOntoMap = (place) ->
     coordMatch = /\((.+), (.+)\)/.exec place.coord

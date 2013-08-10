@@ -70,21 +70,18 @@ app.config([
       templateUrl: 'all_projects_view'
       resolve:
         User: 'User'
-        MpChatbox: 'MpChatbox'
     })
     .when('/new_project', {
       controller: 'NewProjectViewCtrl'
       templateUrl: 'new_project_view'
       resolve:
         User: 'User'
-        MpChatbox: 'MpChatbox'
     })
     .when('/project/:project_id', {
       controller: 'ProjectViewCtrl'
       templateUrl: 'project_view'
       resolve:
         User: 'User'
-        MpChatbox: 'MpChatbox'
     })
     .otherwise({redirectTo: '/'})
 
@@ -106,28 +103,9 @@ app.config([
 app.run(['$rootScope', '$location', 'User', 'MpProjects', 'MpChatbox',
 ($rootScope, $location, User, MpProjects, MpChatbox) ->
 
-  MpChatbox.then (MpChatbox) ->
-    $rootScope.MpChatbox = MpChatbox
-
   User.then (User) ->
     $rootScope.User = User
     $rootScope.MpProjects = MpProjects
-    # filter
-    if $rootScope.User.fb_access_token()
-      $location.path('/all_projects') if $location.path() == '/'
-    else
-      $location.path('/') if $location.path() != '/'
-
-    $rootScope.$on '$routeChangeStart', (event, future, current) ->
-      switch future.$$route.controller
-        when 'OutsideViewCtrl'
-          $location.path('/all_projects') if User.fb_access_token()
-        when 'AllProjectsViewCtrl'
-          $location.path('/') if !User.fb_access_token()
-        when 'NewProjectViewCtrl'
-          $location.path('/') if !User.fb_access_token()
-        when 'ProjectViewCtrl'
-          $location.path('/') if !User.fb_access_token()
 
   $rootScope.interface = {}
 
@@ -148,8 +126,8 @@ app.run(['$rootScope', '$location', 'User', 'MpProjects', 'MpChatbox',
 # mp-user-section
 # --------------------------------------------
 app.directive 'mpUserSection', ['$rootScope', '$compile', '$templateCache',
-'MpProjects', '$location',
-($rootScope, $compile, $templateCache, MpProjects, $location) ->
+'MpProjects', '$location', '$timeout',
+($rootScope, $compile, $templateCache, MpProjects, $location, $timeout) ->
 
   getTemplate = ->
     if $rootScope.User.checkLogin()
@@ -157,26 +135,18 @@ app.directive 'mpUserSection', ['$rootScope', '$compile', '$templateCache',
     else
       return $templateCache.get 'mp_user_section_tempalte_logout'
 
-  # callbacks
-  loginSuccess = ->
-    if MpProjects.currentProject.places.length > 0
-      $location.path('/new_project')
-    else
-      $location.path('/all_projects')
-
-  logoutSuccess = ->
-    $location.path('/')
-
   # return
   link: (scope, element, attrs) ->
 
-    scope.interface.showUserSection = false
+    scope.interface.showUserSection = true
 
     scope.fbLogin = ->
-      $rootScope.User.login(loginSuccess, logoutSuccess)
+      $rootScope.User.login ->
+        $timeout -> scope.interface.showUserSection = false
+        return if MpProjects.currentProject.places.length > 0 then '/new_project' else '/all_projects'
 
     scope.logout = ->
-      $rootScope.User.logout logoutSuccess
+      $rootScope.User.logout()
 
     scope.showEmailLogin = ->
       template = $templateCache.get 'mp_user_section_tempalte_loginform'
@@ -189,9 +159,7 @@ app.directive 'mpUserSection', ['$rootScope', '$compile', '$templateCache',
       element.html html
 
     scope.$on '$routeChangeSuccess', (event, current) ->
-      template = getTemplate()
-      html = $compile(template)(scope)
-      element.html html
+      element.html $compile(getTemplate())(scope)
 ]
 
 
