@@ -128,13 +128,6 @@ app.factory 'MpProjects', ['Restangular', '$rootScope', 'TheMap',
 ]
 
 
-# friendships
-app.factory 'Friendship', ['Restangular', (Restangular) ->
-
-  Restangular.all 'friendships'
-]
-
-
 # invitations
 app.factory 'Invitation', ['$http', ($http) ->
 

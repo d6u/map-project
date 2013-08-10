@@ -7,11 +7,10 @@
 #= require libraries/perfect-scrollbar-0.4.3.min.js
 #= require libraries/perfect-scrollbar-0.4.3.with-mousewheel.min.js
 
-#= require libraries/angular.min.js
+#= require libraries/angular.js
 #= require libraries/restangular.js
 
 #= require modules_for_libraries/angular-easy-modal.coffee
-#= require modules_for_libraries/angular-socket.io.coffee
 #= require modules_for_libraries/angular-masonry.coffee
 #= require modules_for_libraries/angular-perfect-scrollbar.coffee
 #= require modules_for_libraries/angular-bootstrap.coffee
@@ -34,7 +33,6 @@ app = angular.module 'mapApp', [
   'restangular',
 
   'angular-easy-modal',
-  'angular-socket.io',
   'angular-masonry',
   'angular-perfect-scrollbar',
   'angular-bootstrap',
@@ -54,9 +52,9 @@ app = angular.module 'mapApp', [
 
 # config
 app.config([
-  'socketProvider', '$httpProvider', '$routeProvider',
+  'MpChatboxProvider', '$httpProvider', '$routeProvider',
   '$locationProvider',
-  (socketProvider, $httpProvider, $routeProvider,
+  (MpChatboxProvider, $httpProvider, $routeProvider,
    $locationProvider) ->
 
     # route
@@ -72,21 +70,21 @@ app.config([
       templateUrl: 'all_projects_view'
       resolve:
         User: 'User'
-        socket: 'socket'
+        MpChatbox: 'MpChatbox'
     })
     .when('/new_project', {
       controller: 'NewProjectViewCtrl'
       templateUrl: 'new_project_view'
       resolve:
         User: 'User'
-        socket: 'socket'
+        MpChatbox: 'MpChatbox'
     })
     .when('/project/:project_id', {
       controller: 'ProjectViewCtrl'
       templateUrl: 'project_view'
       resolve:
         User: 'User'
-        socket: 'socket'
+        MpChatbox: 'MpChatbox'
     })
     .otherwise({redirectTo: '/'})
 
@@ -100,16 +98,16 @@ app.config([
     google.maps.visualRefresh = true
 
     # socket
-    socketProvider.setServerUrl location.protocol + '//' + location.hostname + ':4000'
+    MpChatboxProvider.setSocketServer location.protocol + '//' + location.hostname + ':4000'
 ])
 
 
 # run
-app.run(['$rootScope', '$location', 'User', 'MpProjects', 'socket',
-($rootScope, $location, User, MpProjects, socket) ->
+app.run(['$rootScope', '$location', 'User', 'MpProjects', 'MpChatbox',
+($rootScope, $location, User, MpProjects, MpChatbox) ->
 
-  socket.then (socket) ->
-    $rootScope.socket = socket
+  MpChatbox.then (MpChatbox) ->
+    $rootScope.MpChatbox = MpChatbox
 
   User.then (User) ->
     $rootScope.User = User
@@ -272,11 +270,14 @@ app.directive 'mpEditProjectModal', ['$templateCache', '$compile',
         scope.errorMessage = null
         angular.extend scope.project, scope.modalbox
         _places = scope.project.places
+        _partcipatedUsers = scope.project.partcipatedUsers
         delete scope.project.places
+        delete scope.project.partcipatedUsers
         scope.project.put().then ->
           $rootScope.$broadcast 'projectUpdated'
           scope.closeModal()
         scope.project.places = _places
+        scope.project.partcipatedUsers = _partcipatedUsers
       else
         scope.errorMessage = "You must have a title to start with."
 

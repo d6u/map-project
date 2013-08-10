@@ -24,6 +24,7 @@ MapProject::Application.routes.draw do
   end
 
 
+  resources :friends
   resources :friendships
 
 

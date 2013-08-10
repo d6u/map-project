@@ -59,6 +59,7 @@ app.factory 'User', ['$q', '$window', '$rootScope', 'Restangular',
       # login success
       UserService.$$user = user
       userReady.resolve(UserService)
+      $rootScope.$broadcast 'userLoggedIn'
       loginCallback() if loginCallback
 
       FB.api '/me', (response) ->
@@ -83,6 +84,7 @@ app.factory 'User', ['$q', '$window', '$rootScope', 'Restangular',
         User.post(user).then (user) ->
           UserService.$$user = user
           userReady.resolve(UserService)
+          $rootScope.$broadcast 'userLoggedIn'
           loginCallback() if loginCallback
 
           FB.api '/me/picture', (response) ->
@@ -95,6 +97,7 @@ app.factory 'User', ['$q', '$window', '$rootScope', 'Restangular',
     UserService.$$user = {}
     User.logout().then ->
       userReady.resolve(UserService)
+      $rootScope.$broadcast 'userLoggedOut'
       logoutCallback() if logoutCallback
 
   # check fb login status
