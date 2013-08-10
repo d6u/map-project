@@ -197,10 +197,11 @@ app.factory 'MpProjects', ['Restangular', '$rootScope', 'TheMap', '$location',
         delete val.$$marker
         val.remove()
     _.forEach changedPlaces, (val, idx) ->
-      _marker = val.$$marker
-      delete val.$$marker
-      val.put()
-      val.$$marker = _marker
+      if val.put
+        _marker = val.$$marker
+        delete val.$$marker
+        val.put()
+        val.$$marker = _marker
     # clone
     MpProjects.__currentProjectPlaces = _.clone MpProjects.currentProject.places
   ), true

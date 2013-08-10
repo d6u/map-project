@@ -46,9 +46,8 @@ app.controller 'MapCtrl',
   $scope.addPlaceToList = (place) ->
     TheMap.markers = _.filter TheMap.markers, (marker) ->
       return true if marker.__gm_id != place.$$marker.__gm_id
-    place.$$marker.setIcon {
-      url: "/assets/number_#{MpProjects.currentProject.places.length}.png"
-    }
+    place.$$marker.setMap null
+    delete place.$$marker
     place.id = true
     place.order = MpProjects.currentProject.places.length
     MpProjects.currentProject.places.push place
@@ -62,16 +61,16 @@ app.controller 'MapCtrl',
 
   $scope.displayAllMarkers = ->
     bounds = new google.maps.LatLngBounds()
-    for place in ActiveProject.places
+    for place in MpProjects.currentProject.places
       bounds.extend place.$$marker.getPosition()
     TheMap.map.fitBounds bounds
-    TheMap.map.setZoom 12 if ActiveProject.places.length < 3 && TheMap.map.getZoom() > 12
+    TheMap.map.setZoom 12 if MpProjects.currentProject.places.length < 3 && TheMap.map.getZoom() > 12
 
-  $scope.deleteAllSavedPlaces = ->
-    if confirm('Are you sure to delete all saved places? This action is irreversible.')
-      place.$$marker.setMap null for place in ActiveProject.places
-      ActiveProject.places = []
-      $rootScope.$broadcast 'allPlacesRemovedFromList'
+  # $scope.deleteAllSavedPlaces = ->
+  #   if confirm('Are you sure to delete all saved places? This action is irreversible.')
+  #     place.$$marker.setMap null for place in ActiveProject.places
+  #     ActiveProject.places = []
+  #     $rootScope.$broadcast 'allPlacesRemovedFromList'
 
   # events
   TheMap.mapReady = $q.defer()
@@ -93,9 +92,9 @@ app.controller 'MapCtrl',
 # ----------------------------------------
 # google-map
 app.directive 'googleMap', ['$window', 'TheMap', '$templateCache', '$compile',
-'$timeout', 'MpProjects',
+'$timeout', 'MpProjects', '$rootScope',
 ($window, TheMap, $templateCache, $compile, $timeout, MpProjects) ->
-  (scope, element, attrs) ->
+  (scope, element, attrs, $rootScope) ->
 
     mapOptions =
       center: new google.maps.LatLng($window.userLocation.latitude, $window.userLocation.longitude)
@@ -160,6 +159,29 @@ app.directive 'googleMap', ['$window', 'TheMap', '$templateCache', '$compile',
       $timeout (-> google.maps.event.trigger TheMap.markers[0], 'click'), 800
     )
 
+    # watch for marked places and make marker for them
+    scope.$watch(
+      (->
+        return if scope.User.checkLogin() then {attr: 'id', content: _.pluck(MpProjects.currentProject.places, 'id')} else {attr: 'order', content: _.pluck(MpProjects.currentProject.places, 'order')}
+      ),
+      ((newVal, oldVal) ->
+        console.debug 'marker', newVal, oldVal
+        _.forEach  MpProjects.currentProject.places, (place, idx) ->
+          if place.$$marker
+            place.$$marker.setMap null
+            delete place.$$marker
+          coordMatch = /\((.+), (.+)\)/.exec place.coord
+          latLog = new google.maps.LatLng coordMatch[1], coordMatch[2]
+          markerOptions =
+            map: TheMap.map
+            title: place.name
+            position: latLog
+            icon:
+              url: "/assets/number_#{idx}.png"
+          place.$$marker = new google.maps.Marker markerOptions
+      ), true
+    )
+
     # mapReady
     TheMap.mapReady.resolve()
 ]
@@ -179,7 +201,7 @@ app.directive 'mpPlacesList', ['$window', '$rootScope',
   link: (scope, element, attrs) ->
 
     hideListAccordingly = ->
-      listEmpty = scope.MpProjects.currentProject.places.length == 0 && scope.TheMap.searchResults.length == 0
+      listEmpty = scope.MpProjects.currentProject && scope.MpProjects.currentProject.places && scope.MpProjects.currentProject.places.length == 0 && scope.TheMap.searchResults.length == 0
       if listEmpty then element.addClass 'hide' else element.removeClass 'hide'
 
     scope.$watch 'MpProjects.currentProject.places.length', (newVal, oldVal, scope) ->

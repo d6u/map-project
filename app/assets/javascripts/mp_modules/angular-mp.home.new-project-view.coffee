@@ -9,20 +9,6 @@ app.controller 'NewProjectViewCtrl',
 
   if !User.checkLogin() then return
 
-  # callbacks
-  loadPlaceOntoMap = (place) ->
-    coordMatch = /\((.+), (.+)\)/.exec place.coord
-    latLog = new google.maps.LatLng coordMatch[1], coordMatch[2]
-    markerOptions =
-      map: TheMap.map
-      title: place.name
-      position: latLog
-      icon:
-        url: "/assets/number_#{place.order}.png"
-
-    place.$$marker = new google.maps.Marker markerOptions
-
-
   # events
   $scope.$on 'placeAddedToList', (event, place) ->
     savePlace(place)
