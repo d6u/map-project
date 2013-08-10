@@ -11,7 +11,8 @@ app.controller 'ProjectViewCtrl',
       if MpProjects.projects.length == 0
         $location.path('/new_project')
       else
-        project = _.find(MpProjects.projects, {id: Number($routeParams.project_id)})
+        project = _.find MpProjects.projects, (prj) ->
+          prj.id == Number($routeParams.project_id)
         MpProjects.setCurrentProject project
 
 

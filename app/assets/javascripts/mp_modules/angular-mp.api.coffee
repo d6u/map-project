@@ -56,70 +56,43 @@ app.factory 'MpProjects', ['Restangular', '$rootScope', 'TheMap',
 
 
   # watch for changes in currentProject.places
-  $rootScope.$watch ((currentScope) ->
-    lengthDiff = MpProjects.currentProject.places.length - MpProjects.__currentProjectPlaces.length
-    # list sorting
-    if lengthDiff == 0
-      changedPlaces = []
-      for place, index in MpProjects.currentProject.places
-        place.$$marker.setIcon {url: "/assets/number_#{index}.png"} if place.$$marker
-        if place.order != index
-          place.order = index
-          changedPlaces.push place
-      return if changedPlaces.length > 0 then changedPlaces else undefined
-    # add
-    else if lengthDiff = 1
-      for place, index in MpProjects.currentProject.places
-        if place != MpProjects.__currentProjectPlaces[index]
-          place.$$index == index
-          return place
-    # remove
-    else if lengthDiff = -1
-      for place, index in MpProjects.__currentProjectPlaces
-        if place != MpProjects.currentProject.places[index]
-          place.$$needRemove = true
-          return place
-      # $rootScope.$broadcast 'placeRemovedFromList', place
-    return
-  ), ((newVal, oldVal, currentScope) ->
-    console.log newVal
-    if newVal
-      MpProjects.__currentProjectPlaces = _.clone(MpProjects.currentProject.places)
-      if $rootScope.User && $rootScope.User.checkLogin()
-        if angular.isArray newVal
-          places = newVal
-          for place in places
-            _marker = place.$$marker
-            delete place.$$marker
-            place.put()
-            place.$$marker = _marker
-        else
-          place = newVal
-          if place.$$needRemove
-            place.remove()
-          else
-            MpProjects.currentProject.places.post(place)
-  )
+  $rootScope.$watch (->
+    return _.pluck MpProjects.currentProject.places, 'id'
+  ), ((newVal, oldVal) ->
+    newPlaces     = _.difference MpProjects.currentProject.places, MpProjects.__currentProjectPlaces
+    oldPlaces     = _.difference MpProjects.__currentProjectPlaces, MpProjects.currentProject.places
+    changedPlaces = _.filter MpProjects.currentProject.places, (val, idx) ->
+      if val.order != idx then val.order = idx; return true else return false
+    # actions
+    if $rootScope.User && $rootScope.User.checkLogin()
+      _.forEach newPlaces, (val, idx) ->
+        _marker = val.$$marker
+        delete val.$$marker
+        MpProjects.currentProject.all('places').post(val).then (place) ->
+          angular.extend val, place
+        val.$$marker = _marker
+      _.forEach oldPlaces, (val, idx) ->
+        delete val.$$marker
+        val.remove()
+      _.forEach changedPlaces, (val, idx) ->
+        _marker = val.$$marker
+        delete val.$$marker
+        val.put().then (rest) -> console.log rest, val
+        val.$$marker = _marker
+    # clone
+    MpProjects.__currentProjectPlaces = _.clone MpProjects.currentProject.places
+  ), true
 
-
-  # watch for changes in projects
+  # watch for changes in projects, remove the missing one from server
   $rootScope.$watch ((currentScope) ->
-    lengthDiff = MpProjects.projects.length - MpProjects.__projects.length
-    # remove
-    if lengthDiff < 0
-      for project, index in MpProjects.__projects
-        if project != MpProjects.projects[index]
-          project.$$needRemove = true
-          return project
-    return
+    return _.pluck(MpProjects.projects, 'id').sort()
   ), ((newVal, oldVal, currentScope) ->
-    if newVal
-      MpProjects.__projects = _.clone(MpProjects.projects)
-      project = newVal
-      if project.$$needRemove
-        project.places = []
-        project.remove()
-  )
+    missingProject = _.difference oldVal, newVal
+    console.debug 'missing projects', missingProject
+    for id in missingProject
+      Restangular.one('projects', id).remove()
+  ), true
+
 
   # return
   # ----------------------------------------
