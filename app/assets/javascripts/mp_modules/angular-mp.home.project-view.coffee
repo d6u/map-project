@@ -3,20 +3,11 @@ app = angular.module 'angular-mp.home.project-view', []
 
 app.controller 'ProjectViewCtrl',
 ['$scope', 'MpProjects', 'TheMap', '$location', '$route', '$rootScope',
-'$routeParams',
-($scope, MpProjects, TheMap, $location, $route, $rootScope, $routeParams) ->
+'$routeParams', 'User',
+($scope, MpProjects, TheMap, $location, $route, $rootScope, $routeParams,
+ User) ->
 
   if !User.checkLogin() then return
-
-  if MpProjects.projects.length == 0
-    MpProjects.getProjects({include_participated: true}).then ->
-      if MpProjects.projects.length == 0
-        $location.path('/new_project')
-      else
-        project = _.find MpProjects.projects, (prj) ->
-          prj.id == Number($routeParams.project_id)
-        MpProjects.setCurrentProject project
-
 
   # events
   $scope.$on 'projectRemoved', (event) ->

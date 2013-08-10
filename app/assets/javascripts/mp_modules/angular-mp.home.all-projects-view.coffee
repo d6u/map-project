@@ -9,22 +9,16 @@ app.controller 'AllProjectsViewCtrl',
 
   if !User.checkLogin() then return
 
+  $scope.userLocation = $window.userLocation
+
   $scope.showEditProjectModal = (project) ->
     $rootScope.$broadcast 'showBottomModalbox', {type: 'editProject', project: project}
 
-  $scope.userLocation = $window.userLocation
-
   $scope.openProjectView = (project) ->
-    MpProjects.setCurrentProject project
     $location.path '/project/' + project.id
 
   # init
-  MpProjects.getProjects({include_participated: true}).then ->
-    if MpProjects.projects.length == 0
-      $location.path('/new_project')
-    else
-      MpProjects.clean()
-      TheMap.reset()
+  console.log 'AllProjectsCtrl'
 ]
 
 

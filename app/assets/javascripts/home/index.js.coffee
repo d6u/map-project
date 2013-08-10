@@ -138,11 +138,8 @@ app.directive 'mpUserSection', ['$rootScope', '$compile', '$templateCache',
   # return
   link: (scope, element, attrs) ->
 
-    scope.interface.showUserSection = true
-
     scope.fbLogin = ->
       $rootScope.User.login ->
-        $timeout -> scope.interface.showUserSection = false
         return if MpProjects.currentProject.places.length > 0 then '/new_project' else '/all_projects'
 
     scope.logout = ->
@@ -159,6 +156,10 @@ app.directive 'mpUserSection', ['$rootScope', '$compile', '$templateCache',
       element.html html
 
     scope.$on '$routeChangeSuccess', (event, current) ->
+      if current.$$route.controller != 'OutsideViewCtrl'
+        scope.interface.showUserSection = false
+      else
+        scope.interface.showUserSection = true
       element.html $compile(getTemplate())(scope)
 ]
 
