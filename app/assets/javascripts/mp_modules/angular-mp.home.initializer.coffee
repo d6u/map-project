@@ -24,6 +24,8 @@ app.factory 'User', ['$q', '$window', '$rootScope', 'Restangular', '$location',
     $$user: null
     checkLogin: -> return @$$user && @$$user.fb_access_token && @$$user.id
     getId: -> return if @$$user then @$$user.id else undefined
+    name: -> return if @$$user then @$$user.name else undefined
+    fb_user_picture: -> return if @$$user then @$$user.fb_user_picture else undefined
 
     # if path is a function, it should return a path to redirect
     login: (path, error) ->

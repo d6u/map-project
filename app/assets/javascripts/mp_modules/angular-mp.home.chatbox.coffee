@@ -16,7 +16,6 @@ app.provider 'MpChatbox', class
   ($rootScope, $timeout, $q, Restangular, $route) ->
 
     [socketServer, handshakeQuery] = [@socketServer, @handshakeQuery]
-    chatboxReady = $q.defer()
     $friends = Restangular.all 'friends'
 
     # socket.io
@@ -52,7 +51,7 @@ app.provider 'MpChatbox', class
     # Chatbox
     # ----------------------------------------
     Chatbox =
-      rooms: []
+      rooms: {}
       friends: []
       eventDeregisters: []
 
@@ -78,10 +77,19 @@ app.provider 'MpChatbox', class
         socket.on 'serverMessage', (data) ->
           processServerMessage(data)
         @eventDeregisters.push($rootScope.$on 'enterNewMessage', (event, data) =>
+          console.debug @rooms
           data.sender_id = $rootScope.User.getId()
             # project_id, receivers_ids: []
           data.type = 'message'
+          data.sender_name = $rootScope.User.name()
+          data.sender_fb_user_picture = $rootScope.User.fb_user_picture()
           @sendClientMessage(data)
+          data.self = true
+          $rootScope.$apply =>
+            if @rooms[data.project_id]
+              @rooms[data.project_id].push data
+            else
+              @rooms[data.project_id] = [data]
         )
 
       destroy: ->
@@ -110,15 +118,16 @@ app.provider 'MpChatbox', class
 
     # return
     # ----------------------------------------
-    return chatboxReady.promise
+    Chatbox
   ]
 
 
 # mp-chatbox
 # ========================================
 app.directive 'mpChatbox', ['$templateCache', '$compile', 'Invitation',
-'$route', 'MpProjects',
-($templateCache, $compile, Invitation, $route, MpProjects)->
+'$route', 'Restangular', 'MpProjects', '$timeout',
+($templateCache, $compile, Invitation, $route, Restangular, MpProjects,
+ $timeout)->
 
   templateUrl: 'mp_chatbox_template'
   link: (scope, element, attrs) ->
@@ -128,6 +137,19 @@ app.directive 'mpChatbox', ['$templateCache', '$compile', 'Invitation',
       template = $templateCache.get 'mp_chatbox_template_expanded'
       element.html $compile(template)(scope)
 
+      # TODO: improve
+      # this is used to scroll to bottom of chat historys
+      $timeout (->
+        chatHistoryBox = element.find('.mp-chat-history')
+        lastChild = chatHistoryBox.children('.mp-chat-history-item').last()
+        console.debug lastChild
+        if lastChild.length > 0
+          scrollTop = lastChild.position().top + 10 + lastChild.height() - chatHistoryBox.height()
+          chatHistoryBox.animate({scrollTop: scrollTop}, 150, ->
+            chatHistoryBox.perfectScrollbar 'update'
+          )
+      ), 300
+
     scope.collapseChatbox = ->
       element.removeClass 'mp-chatbox-show'
       template = $templateCache.get 'mp_chatbox_template'
@@ -136,12 +158,27 @@ app.directive 'mpChatbox', ['$templateCache', '$compile', 'Invitation',
     # init
     # TODO: load participated users
     # console.debug MpProjects.currentProject
+    scope.$watch(
+      (() ->
+        return MpProjects.currentProject.id
+      ),
+      ((newVal, oldVal) ->
+        $project = Restangular.one('projects', newVal).getList('users').then (users) -> scope.participatedUsers = users
+      )
+    )
 ]
 
 
 # mp-chat-history
-app.directive 'mpChatHistory', [->
+app.directive 'mpChatHistory', ['MpChatbox', '$route', (MpChatbox, $route) ->
   (scope, element, attrs) ->
+
+    project_id = Number($route.current.params.project_id)
+
+    if !MpChatbox.rooms[project_id]
+      MpChatbox.rooms[project_id] = []
+    scope.chatHistory = MpChatbox.rooms[project_id]
+    console.debug 'MpChatbox.rooms', MpChatbox.rooms
 
     # watch for changed in chat history and determine whether to scroll down to
     #   newest item
@@ -170,9 +207,10 @@ app.directive 'mpChatboxInput', ['$route', ($route) ->
     element.on 'keydown', (event) ->
       if event.keyCode == 13
         if element.val() != ''
-          console.log $route
+          console.debug scope.participatedUsersIds, scope.chatHistory
           data =
             project_id: Number($route.current.params.project_id)
+            receivers_ids: _.pluck(scope.participatedUsers, 'id')
             body:
               message: element.val()
           scope.$emit 'enterNewMessage', data

@@ -10,7 +10,7 @@
   <div class="mp-chatbox-expanded">
     <header class="mp-chatbox-header">
       <div class="mp-chatbox-header-friends-list">
-        <a href="" class="mp-chatbox-header-friends-item" ng-repeat="friend in MpChatbox.partcipatedUsers" bs-tooltip="{{friend.name}}" bs-tooltip-placement="bottom" ng-class="{'mp-chatbox-header-friends-item-online': friend.$$online}">
+        <a href="" class="mp-chatbox-header-friends-item" ng-repeat="friend in participatedUsers" bs-tooltip="{{friend.name}}" bs-tooltip-placement="bottom" ng-class="{'mp-chatbox-header-friends-item-online': friend.$$online}">
           <img ng-src="{{friend.fb_user_picture}}">
         </a>
       </div>
@@ -50,10 +50,10 @@
 <!-- .mp-chat-history-item -->
 <script type="text/ng-template" id="chat_history_message_template">
     <div class="mp-chat-user-picture">
-        <img ng-src="{{chatItem.fb_user_picture}}" alt="" class="">
+        <img ng-src="{{chatItem.sender_fb_user_picture}}" alt="" class="">
     </div>
     <div class="mp-chat-message">
-        <p class="mp-chat-message-content">{{chatItem.content}}</p>
+        <p class="mp-chat-message-content">{{chatItem.body.message}}</p>
         <time class="mp-chat-message-datatime"></time>
     </div>
 </script>
@@ -61,5 +61,10 @@
 
 <!-- .mp-chat-history-item -->
 <script type="text/ng-template" id="chat_history_place_template">
-
+  <div class="mp-chat-added-place">
+    <div class="mp-place-name-sidebar">{{chatItem.placeName}}</div>
+    <address>{{chatItem.placeAddress}}</address>
+    <p class=""></p>
+    <time class="mp-chat-message-datatime"></time>
+  </div>
 </script>
