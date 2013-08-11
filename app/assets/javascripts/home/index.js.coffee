@@ -25,6 +25,7 @@
 #= require mp_modules/angular-mp.home.new-project-view.coffee
 #= require mp_modules/angular-mp.home.project-view.coffee
 #= require mp_modules/angular-mp.home.chatbox.coffee
+#= require mp_modules/angular.mp.home.modals.coffee
 
 
 
@@ -46,7 +47,8 @@ app = angular.module 'mapApp', [
   'angular-mp.home.all-projects-view',
   'angular-mp.home.new-project-view',
   'angular-mp.home.project-view',
-  'angular-mp.home.chatbox'
+  'angular-mp.home.chatbox',
+  'angular-mp.home.modals'
 ]
 
 
@@ -105,7 +107,9 @@ app.run(['$rootScope', '$location', 'User', 'MpProjects', 'MpChatbox',
 
   User.then (User) ->
     $rootScope.User = User
-    $rootScope.MpProjects = MpProjects
+
+  $rootScope.MpProjects = MpProjects
+  $rootScope.MpChatbox = MpChatbox
 
   $rootScope.interface = {}
 
@@ -126,8 +130,9 @@ app.run(['$rootScope', '$location', 'User', 'MpProjects', 'MpChatbox',
 # mp-user-section
 # --------------------------------------------
 app.directive 'mpUserSection', ['$rootScope', '$compile', '$templateCache',
-'MpProjects', '$location', '$timeout',
-($rootScope, $compile, $templateCache, MpProjects, $location, $timeout) ->
+'MpProjects', '$location', '$timeout', 'Restangular', 'MpChatbox',
+($rootScope, $compile, $templateCache, MpProjects, $location, $timeout,
+ Restangular, MpChatbox) ->
 
   getTemplate = ->
     if $rootScope.User.checkLogin()
@@ -136,6 +141,7 @@ app.directive 'mpUserSection', ['$rootScope', '$compile', '$templateCache',
       return $templateCache.get 'mp_user_section_tempalte_logout'
 
   # return
+  scope: true
   link: (scope, element, attrs) ->
 
     scope.fbLogin = ->
@@ -147,13 +153,15 @@ app.directive 'mpUserSection', ['$rootScope', '$compile', '$templateCache',
 
     scope.showEmailLogin = ->
       template = $templateCache.get 'mp_user_section_tempalte_loginform'
-      html = $compile(template)(scope)
-      element.html html
+      element.html $compile(template)(scope)
 
     scope.showEmailRegister = ->
       template = $templateCache.get 'mp_user_section_tempalte_logout'
-      html = $compile(template)(scope)
-      element.html html
+      element.html $compile(template)(scope)
+
+    scope.showFriendsPanel = ->
+      $rootScope.$broadcast 'pop_jqEasyModal', {type: 'friends_panel'}
+
 
     scope.$on '$routeChangeSuccess', (event, current) ->
       if current.$$route.controller != 'OutsideViewCtrl'

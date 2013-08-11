@@ -104,6 +104,8 @@ io.sockets.on 'connection', (socket) ->
   # client message
   # ----------------------------------------
   socket.on 'clientMessage', (data) ->
-    # TODO: 'serverMessage'
-    console.info 'receive client message', data
-    # socket.broadcast.to(targetRoom).emit 'chatContent', data
+    console.log 'receive clientMessage', data
+    _.forEach data.receivers_ids, (id) ->
+      if clientsList[id] && clientsList[id].length > 0
+        _.forEach clientsList[id], (socketId) ->
+          io.sockets.socket(socketId).emit 'serverMessage', data

@@ -168,6 +168,10 @@
     }
 }
 
+.mp-chat-message-content {
+    word-wrap: break-word;
+}
+
 // mp-chat-user-behavior
 .mp-chat-user-behavior {
     color: $gray3;

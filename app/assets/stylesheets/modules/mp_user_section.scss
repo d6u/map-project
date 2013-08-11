@@ -16,6 +16,7 @@
     left: 0px;
 }
 
+// controls
 .mp-user-section-close-button {
     position: absolute;
     right: 20px;
@@ -31,4 +32,13 @@
         text-decoration: none;
         color: $gray6;
     }
+}
+
+// mp-user-section-bottom
+.mp-user-section-bottom {
+    position: absolute;
+    width: 100%;
+    bottom: 0;
+    left: 0;
+    padding: 0 20px 20px;
 }

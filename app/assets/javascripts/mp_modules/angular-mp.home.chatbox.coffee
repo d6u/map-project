@@ -74,15 +74,18 @@ app.provider 'MpChatbox', class
           console.debug 'userDisconnected', userId
           friend = _.find @friends, {id: userId}
           delete friend.$$online
-        socket.on 'serverMessage', (data) ->
-          processServerMessage(data)
-        @eventDeregisters.push($rootScope.$on 'enterNewMessage', (event, data) =>
+        socket.on 'serverMessage', (data) =>
+          @processServerMessage(data)
+
+        # register scope listeners
+        enterNewMessage = $rootScope.$on 'enterNewMessage', (event, data) =>
           console.debug @rooms
-          data.sender_id = $rootScope.User.getId()
-            # project_id, receivers_ids: []
+          # project_id, receivers_ids: []
           data.type = 'message'
-          data.sender_name = $rootScope.User.name()
-          data.sender_fb_user_picture = $rootScope.User.fb_user_picture()
+          data.user =
+            id: $rootScope.User.getId()
+            name: $rootScope.User.name()
+            fb_user_picture: $rootScope.User.fb_user_picture()
           @sendClientMessage(data)
           data.self = true
           $rootScope.$apply =>
@@ -90,7 +93,21 @@ app.provider 'MpChatbox', class
               @rooms[data.project_id].push data
             else
               @rooms[data.project_id] = [data]
-        )
+
+        addFriendRequest = $rootScope.$on 'addFriendRequest', (event, friend_id) =>
+          console.debug 'addFriendRequest', friend_id
+          data =
+            type: 'addFriendRequest'
+            sender:
+              id: $rootScope.User.getId()
+              name: $rootScope.User.name()
+              fb_user_picture: $rootScope.User.fb_user_picture()
+            receivers_ids: [friend_id]
+          @sendClientMessage(data)
+
+        # save for future deregistration
+        @eventDeregisters.push enterNewMessage
+        @eventDeregisters.push addFriendRequest
 
       destroy: ->
         [@rooms, @friends] = [[], []]
@@ -99,6 +116,15 @@ app.provider 'MpChatbox', class
           eventDeregister()
 
       processServerMessage: (data) ->
+        console.debug 'receive serverMessage', data
+        switch data.type
+          when 'message'
+            if @rooms[data.project_id]
+              @rooms[data.project_id].push data
+            else
+              @rooms[data.project_id] = [data]
+          when 'addFriendRequest'
+            console.debug 'receive addFriendRequest', data
 
       sendClientMessage: (data) ->
         socket.emit 'clientMessage', data
