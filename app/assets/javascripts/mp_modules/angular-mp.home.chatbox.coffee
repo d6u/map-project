@@ -8,19 +8,33 @@ app.provider 'MpChatbox', class
   setSocketServer: (@socketServer) ->
   setHandshakeQuery: (handshakeQuery) ->
     queryArray = ("#{key}=#{value}" for key, value of handshakeQuery)
-    @handshakeQuery = {query: queryArray.join('&')}
+    @handshakeQuery = queryArray.join('&')
 
   # factory
   # ----------------------------------------
   $get: ['$rootScope', '$timeout', '$q', 'Restangular', '$route',
   ($rootScope, $timeout, $q, Restangular, $route) ->
 
+    [socketServer, handshakeQuery] = [@socketServer, @handshakeQuery]
     chatboxReady = $q.defer()
     $friends = Restangular.all 'friends'
 
     # socket.io
+    # ----------------------------------------
     socket =
       socket: null
+      online: false
+      connect: ->
+        defer = $q.defer()
+        @socket.socket.connect()
+        @on 'connect', =>
+          defer.resolve()
+          @online = true
+        return defer.promise
+      disconnect: ->
+        @socket.removeAllListeners()
+        @socket.disconnect()
+        @online = false
       on: (eventName, callback) ->
         @socket.on eventName, (args...) ->
           $timeout -> callback.apply(@socket, args)
@@ -28,79 +42,70 @@ app.provider 'MpChatbox', class
         @socket.emit eventName, data, (args...) =>
           $rootScope.$apply => callback.apply(@socket, args) if callback
 
+    # socket init
+    socketOptions =
+      'auto connect': false
+      query: handshakeQuery
+    socket.socket = io.connect(socketServer, socketOptions)
+
+
     # Chatbox
+    # ----------------------------------------
     Chatbox =
-      chatHistory: []
+      rooms: []
       friends: []
-      onlineFriendsIds: []
-      partcipatedUsers: []
+      eventDeregisters: []
 
       initialize: ->
         $friends.getList().then (friends) =>
           @friends = friends
           friendsIds = _.pluck(friends, 'id')
-          if $route.current.$$route.controller == 'ProjectViewCtrl'
-            Chatbox.loadParticipatedUser($route.current.params.project_id)
-          $rootScope.$on '$routeChangeSuccess', (event, current) =>
-            if $route.current.$$route.controller == 'ProjectViewCtrl'
-              Chatbox.loadParticipatedUser($route.current.params.project_id)
-            else
-              @partcipatedUsers = []
           socket.emit 'getOnlineFriendsList', friendsIds, (onlineFriendsIds) =>
-            console.log 'getOnlineFriendsList', onlineFriendsIds
-            @onlineFriendsIds = onlineFriendsIds
+            console.debug 'Got online friends ids list', onlineFriendsIds
+            onlineFriends = _.filter @friends, (friend) ->
+              return _.contains(onlineFriendsIds, friend.id)
+            _.forEach onlineFriends, (friend) ->
+              friend.$$online = true
+        # setup listeners
         socket.on 'userConnected', (userId) =>
-          console.log 'userConnected', userId
-          if _.indexOf(@onlineFriendsIds, userId) == -1
-            @onlineFriendsIds.push userId
+          console.debug 'userConnected', userId
+          friend = _.find @friends, {id: userId}
+          friend.$$online = true
         socket.on 'userDisconnected', (userId) =>
-          console.log 'userDisconnected', userId
-          @onlineFriendsIds = _.without(@onlineFriendsIds, userId)
+          console.debug 'userDisconnected', userId
+          friend = _.find @friends, {id: userId}
+          delete friend.$$online
+        socket.on 'serverMessage', (data) ->
+          processServerMessage(data)
+        @eventDeregisters.push($rootScope.$on 'enterNewMessage', (event, data) =>
+          data.sender_id = $rootScope.User.getId()
+            # project_id, receivers_ids: []
+          data.type = 'message'
+          @sendClientMessage(data)
+        )
 
-      loadParticipatedUser: (projectId) ->
-        $project = Restangular.one('projects', projectId).getList('users')
-        .then (users) =>
-          usersIds = _.pluck users, 'id'
-          for friend in @friends
-            if _.indexOf(usersIds, friend.id) != -1
-              @partcipatedUsers.push friend
+      destroy: ->
+        [@rooms, @friends] = [[], []]
+        # remove all listeners
+        for eventDeregister in @eventDeregisters
+          eventDeregister()
+
+      processServerMessage: (data) ->
+
+      sendClientMessage: (data) ->
+        socket.emit 'clientMessage', data
 
 
     # init
     # ----------------------------------------
-    $rootScope.$on 'userLoggedIn', =>
-      socket.socket = if @socketServer then io.connect(@socketServer, @handshakeQuery) else io.connect(undefined, @handshakeQuery)
-      chatboxReady.resolve(Chatbox)
-      socket.on 'connect', ->
-        Chatbox.initialize()
-    $rootScope.$on 'userLoggedOut', ->
-      socket.socket = null
-      chatboxReady.resolve(Chatbox)
-
-
-    # watcher
-    # ----------------------------------------
-    # $watch for Chatbox.onlineFriendsIds
-    $rootScope.$watch ((currentScope) ->
-      Chatbox.onlineFriendsIds.sort()
-    ), ((newVal, oldVal, currentScope) ->
-      markOnlineFriends()
-    ), true
-
-    # $watch for Chatbox.friends
-    $rootScope.$watch ((currentScope) ->
-      friendsIds = _.pluck(Chatbox.friends, 'id')
-      friendsIds.sort()
-    ), ((newVal, oldVal, currentScope) ->
-      markOnlineFriends()
-    ), true
-
-    markOnlineFriends = ->
-      for friend in Chatbox.friends
-        if _.indexOf(Chatbox.onlineFriendsIds, friend.id) != -1
-          friend.$$online = true
-        else
-          friend.$$online = false
+    # events
+    $rootScope.$on '$routeChangeSuccess', (event, current, previous) ->
+      if $rootScope.User.checkLogin()
+        if !socket.online then socket.connect().then -> Chatbox.initialize()
+      else
+        if socket.online
+          socket.disconnect()
+          Chatbox.destroy()
 
 
     # return
@@ -112,8 +117,8 @@ app.provider 'MpChatbox', class
 # mp-chatbox
 # ========================================
 app.directive 'mpChatbox', ['$templateCache', '$compile', 'Invitation',
-'$route',
-($templateCache, $compile, Invitation, $route)->
+'$route', 'MpProjects',
+($templateCache, $compile, Invitation, $route, MpProjects)->
 
   templateUrl: 'mp_chatbox_template'
   link: (scope, element, attrs) ->
@@ -127,6 +132,10 @@ app.directive 'mpChatbox', ['$templateCache', '$compile', 'Invitation',
       element.removeClass 'mp-chatbox-show'
       template = $templateCache.get 'mp_chatbox_template'
       element.html $compile(template)(scope)
+
+    # init
+    # TODO: load participated users
+    # console.debug MpProjects.currentProject
 ]
 
 
@@ -155,13 +164,18 @@ app.directive 'mpChatHistory', [->
 
 
 # mp-chatbox-input
-app.directive 'mpChatboxInput', [->
+app.directive 'mpChatboxInput', ['$route', ($route) ->
   (scope, element, attrs) ->
 
     element.on 'keydown', (event) ->
       if event.keyCode == 13
         if element.val() != ''
-          scope.$emit 'enterNewMessage', element.val()
+          console.log $route
+          data =
+            project_id: Number($route.current.params.project_id)
+            body:
+              message: element.val()
+          scope.$emit 'enterNewMessage', data
           element.val ''
         return false
       return undefined
