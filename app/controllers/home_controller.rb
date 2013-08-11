@@ -9,13 +9,7 @@ class HomeController < ApplicationController
     if @user
       # socket.io
       unless cookies[:user_identifier] && $redis.get(cookies[:user_identifier]) &&  $redis.ttl(cookies[:user_identifier]) >= 600
-        user_identifier = SecureRandom.hex.to_s
-        cookies[:user_identifier] = {
-          :value  => user_identifier,
-          :domain => '.' + request.domain
-        }
-        $redis.set    user_identifier, "#{@user.id}:#{@user.name}"
-        $redis.expire user_identifier, 172800
+        authenticate_socket_io_handshake(@user)
       end
     end
   end
@@ -25,13 +19,7 @@ class HomeController < ApplicationController
     if @user
       # socket.io
       unless cookies[:user_identifier] && $redis.get(cookies[:user_identifier]) &&  $redis.ttl(cookies[:user_identifier]) >= 600
-        user_identifier = SecureRandom.hex.to_s
-        cookies[:user_identifier] = {
-          :value  => user_identifier,
-          :domain => '.' + request.domain
-        }
-        $redis.set    user_identifier, "#{@user.id}:#{@user.name}"
-        $redis.expire user_identifier, 172800
+        authenticate_socket_io_handshake(@user)
       end
     end
     render :layout => false

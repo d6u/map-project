@@ -24,6 +24,7 @@ class User < ActiveRecord::Base
     fb_user_id      = self.fb_user_id
 
     user_data = MultiJson.load(Net::HTTP.get(URI("https://graph.facebook.com/debug_token?input_token=#{fb_access_token}&access_token=#{fb_access_token}")))
+    return false if !user_data || !user_data['data']
     return user_data['data']['is_valid'] && user_data['data']['user_id'].to_s === fb_user_id
   end
 
