@@ -68,7 +68,6 @@ $script([
   'javascripts/keepers/mp-edit-project-modal.js',
   'javascripts/keepers/mp-friends-panel.js',
   'javascripts/keepers/mp-headsup-messager.js',
-  'javascripts/keepers/mp-inputbox.js',
   'javascripts/keepers/mp-map-searchbox.js',
   'javascripts/keepers/mp-user-section.js',
   'javascripts/views/all_projects_view/all-projects-view-ctrl.js',

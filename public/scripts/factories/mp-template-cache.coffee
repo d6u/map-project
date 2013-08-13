@@ -1,5 +1,5 @@
-app.factory 'mpTemplateCache', ['$templateCache', '$http', '$q',
-($templateCache, $http, $q) ->
+app.factory 'mpTemplateCache', ['$templateCache', '$http', '$q', '$timeout',
+($templateCache, $http, $q, $timeout) ->
 
   return {
     get: (templatesUrl) ->
@@ -13,7 +13,7 @@ app.factory 'mpTemplateCache', ['$templateCache', '$http', '$q',
         $templateCache.put(templatesUrl, template[1])
         deferred.resolve(template[1])
       else
-        deferred.resolve(template)
+        $timeout -> deferred.resolve(template)
       return deferred.promise
   }
 ]
