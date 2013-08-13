@@ -25,7 +25,7 @@
 
     <div class="mp-place-search-result-item" ng-repeat="place in TheMap.searchResults">
       <div class="mp-place-marker-icon">
-        <a href="" ng-click="centerPlaceInMap(place.geometry.location)">
+        <a href="" ng-click="TheMap.centerPlaceInMap(place.geometry.location)">
           <img ng-src="{{place.icon}}">
         </a>
       </div>
@@ -45,5 +45,28 @@
 
 
 <div class="mp-halfscreen-right">
+  <div class="mp-marked-places-contents">
+    <div class="mp-list-contents-header lead" ng-class="{hide: !MpProjects.currentProject.title}">{{MpProjects.currentProject.title}}</div>
+    <div class="mp-list-contents-header lead" ng-class="{hide: MpProjects.currentProject.title}">{{MpProjects.currentProject.places.length}} marked places</div>
 
+    <div jquery-ui-sortable="place in MpProjects.currentProject.places">
+      <div class="mp-marked-place" ng-repeat="place in MpProjects.currentProject.places" sidebar-place>
+        <div class="mp-place-marker-icon">
+          <a href="" ng-click="TheMap.centerPlaceInMap(place.$$marker.getPosition())">
+            <img ng-src="/assets/number_{{$index}}.png">
+          </a>
+        </div>
+        <div class="mp-place-actions">
+          <a href="" ng-click="MpProjects.removePlace(place, $index)">
+            <i class="icon-remove"></i>
+          </a>
+        </div>
+        <div class="mp-place-detail-sidebar">
+          <div class="mp-place-name-sidebar">{{place.name}}</div>
+          <address>{{place.address}}</address>
+          <p class="">{{place.notes}}</p>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>

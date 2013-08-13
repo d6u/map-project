@@ -83,7 +83,6 @@ $script([
   'javascripts/views/shared/marker-info.js',
   'javascripts/views/shared/mp-map-canvas.js',
   'javascripts/views/shared/mp-map-drawer.js',
-  'javascripts/views/shared/mp-places-list.js',
   'javascripts/views/shared/sidebar-place.js',
   '//maps.googleapis.com/maps/api/js?key=AIzaSyAGJjfEZSf93ey42aqJDIVuOVaLnpUUzWs&libraries=places&sensor=true&callback=initGoogleMaps'
 ], 'Application', function() {
