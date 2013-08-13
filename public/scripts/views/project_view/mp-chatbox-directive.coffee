@@ -5,7 +5,7 @@ app.directive 'mpChatbox', ['$templateCache', '$compile', 'Invitation',
 ($templateCache, $compile, Invitation, $route, Restangular, MpProjects,
  $timeout)->
 
-  templateUrl: 'mp_chatbox_template'
+  templateUrl: '/scripts/views/project_view/mp-chatbox.html'
   link: (scope, element, attrs) ->
 
     scope.expandChatbox = ->

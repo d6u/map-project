@@ -19,25 +19,25 @@ app.config(['MpChatboxProvider', '$httpProvider', '$routeProvider', '$locationPr
     $routeProvider
     .when('/', {
       controller: 'OutsideViewCtrl'
-      templateUrl: 'scripts/views/outside_view/outside-view.html'
+      templateUrl: '/scripts/views/outside_view/outside-view.html'
       resolve:
         User: 'User'
     })
     .when('/all_projects', {
       controller: 'AllProjectsViewCtrl'
-      templateUrl: 'scripts/views/all_projects_view/all-projects-view.html'
+      templateUrl: '/scripts/views/all_projects_view/all-projects-view.html'
       resolve:
         User: 'User'
     })
     .when('/new_project', {
       controller: 'NewProjectViewCtrl'
-      templateUrl: 'scripts/views/new_project_view/new-project-view.html'
+      templateUrl: '/scripts/views/new_project_view/new-project-view.html'
       resolve:
         User: 'User'
     })
     .when('/project/:project_id', {
       controller: 'ProjectViewCtrl'
-      templateUrl: 'scripts/views/project_view/project-view.html'
+      templateUrl: '/scripts/views/project_view/project-view.html'
       resolve:
         User: 'User'
     })

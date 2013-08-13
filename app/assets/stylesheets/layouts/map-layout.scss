@@ -14,55 +14,6 @@
 
 // Map & Project List
 // ----------------------------------------
-.mp-places-button-group {
-    width: 100%;
-    @include display_flex;
-    @include justify-content(space-around);
-    // -webkit-justify-content: space-around;
-}
-
-.mp-sidebar-places {
-    -webkit-transition: all 350ms ease-out 50ms;
-       -moz-transition: all 350ms ease-out 50ms;
-        -ms-transition: all 350ms ease-out 50ms;
-         -o-transition: all 350ms ease-out 50ms;
-            transition: all 350ms ease-out 50ms;
-    margin-top: 50px;
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    width: 100%;
-    overflow: hidden;
-}
-
-.mp-sidebar-place {
-    padding: 10px;
-    background-color: white;
-    address {
-        margin: 0;
-    }
-    &.ui-sortable-helper {
-        background-color: $gray1;
-    }
-}
-
-.mp-place-marker-icon {
-    float: left;
-    margin-right: 10px;
-}
-
-.mp-place-actions {
-    float: right;
-    font-size: 18px;
-    margin-left: 10px;
-    a {
-        &:hover {
-            text-decoration: none;
-            color: $red;
-        }
-    }
-}
-
 .mp-place-detail-sidebar {
     overflow: hidden;
 }

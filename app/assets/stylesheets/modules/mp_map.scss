@@ -77,18 +77,3 @@
 .mp-places-search-results {}
 
 .mp-places-search-results-header {}
-
-.mp-place-search-result-item {
-    padding: 10px;
-    border-top: 1px solid $gray3;
-    .mp-place-marker-icon img {
-        width: 20px;
-        height: 20px;
-    }
-    address {
-        margin-bottom: 0;
-    }
-    &:hover {
-        background-color: $gray1;
-    }
-}

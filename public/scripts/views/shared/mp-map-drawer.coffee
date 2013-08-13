@@ -1,7 +1,7 @@
 app.directive 'mpMapDrawer', ['TheMap', '$rootScope',
 (TheMap, $rootScope) ->
 
-  templateUrl: 'scripts/views/shared/mp-map-drawer.html'
+  templateUrl: '/scripts/views/shared/mp-map-drawer.html'
   scope: true
   link: (scope, element, attrs) ->
 

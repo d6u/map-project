@@ -6,7 +6,7 @@ app.directive 'mpUserSection', ['$rootScope', '$compile', 'MpProjects',
  Restangular, MpChatbox, mpTemplateCache) ->
 
   currentTemplate = ->
-    return if $rootScope.User.checkLogin() then 'scripts/keepers/mp-user-section-after-login.html' else 'scripts/keepers/mp-user-section-before-login.html'
+    return if $rootScope.User.checkLogin() then '/scripts/keepers/mp-user-section-after-login.html' else '/scripts/keepers/mp-user-section-before-login.html'
 
   # return
   scope: true
@@ -20,11 +20,11 @@ app.directive 'mpUserSection', ['$rootScope', '$compile', 'MpProjects',
       $rootScope.User.logout()
 
     scope.showEmailLogin = ->
-      mpTemplateCache.get('scripts/keepers/mp-user-section-login-form.html').then (template) ->
+      mpTemplateCache.get('/scripts/keepers/mp-user-section-login-form.html').then (template) ->
         element.html $compile(template)(scope)
 
     scope.showEmailRegister = ->
-      mpTemplateCache.get('scripts/keepers/mp-user-section-before-login.html').then (template) ->
+      mpTemplateCache.get('/scripts/keepers/mp-user-section-before-login.html').then (template) ->
         element.html $compile(template)(scope)
 
     scope.showFriendsPanel = ->

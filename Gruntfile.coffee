@@ -33,18 +33,18 @@ module.exports = (grunt) ->
 
   manifest.forEach (path) ->
     if /.+(\.js)$/.test path
-      scriptLoadingPaths.push 'javascripts/'+path
+      scriptLoadingPaths.push '/javascripts/'+path
     else
       if fs.statSync('public/scripts/'+path).isFile()
         match = /^(.+)\.coffee/.exec path
         coffeeFiles['public/javascripts/'+match[1]+'.js'] = 'public/scripts/'+path
-        scriptLoadingPaths.push 'javascripts/'+match[1]+'.js'
+        scriptLoadingPaths.push '/javascripts/'+match[1]+'.js'
       else
         files = getFileTree('public/scripts/'+path)
         files.forEach (file) ->
           match = /^(.+)\.coffee/.exec file
           coffeeFiles['public/javascripts/'+path+'/'+match[1]+'.js'] = 'public/scripts/'+path+'/'+file
-          scriptLoadingPaths.push 'javascripts/'+path+'/'+match[1]+'.js'
+          scriptLoadingPaths.push '/javascripts/'+path+'/'+match[1]+'.js'
 
 
   # Project configuration.
