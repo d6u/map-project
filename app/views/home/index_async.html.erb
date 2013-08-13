@@ -6,64 +6,10 @@
   <meta name="description" content="">
   <meta name="viewport"    content="width=device-width, initial-scale=1.0">
   <title>Map Project</title>
-  <%= stylesheet_link_tag    'application', media: 'all' %>
-  <%= javascript_include_tag 'libraries/modernizr.min.js' %>
-  <%= javascript_include_tag 'libraries/jquery.js' %>
-  <script>
-    // Angular loader
-    (function(i){'use strict';function d(c,b,e){return c[b]||(c[b]=e())}return d(d(i,"angular",Object),"module",function(){var c={};return function(b,e,f){e&&c.hasOwnProperty(b)&&(c[b]=null);return d(c,b,function(){function a(a,b,d){return function(){c[d||"push"]([a,b,arguments]);return g}}if(!e)throw Error("No module: "+b);var c=[],d=[],h=a("$injector","invoke"),g={_invokeQueue:c,_runBlocks:d,requires:e,name:b,provider:a("$provide","provider"),factory:a("$provide","factory"),service:a("$provide","service"),
-    value:a("$provide","value"),constant:a("$provide","constant","unshift"),filter:a("$filterProvider","register"),controller:a("$controllerProvider","register"),directive:a("$compileProvider","directive"),config:h,run:function(a){d.push(a);return this}};f&&h(f);return g})}})})(window);
-
-    // $script.js
-    (function(e,t,n){typeof module!="undefined"&&module.exports?module.exports=n():typeof define=="function"&&define.amd?define(n):t[e]=n()})("$script",this,function(){function v(e,t){for(var n=0,r=e.length;n<r;++n)if(!t(e[n]))return f;return 1}function m(e,t){v(e,function(e){return!t(e)})}function g(e,t,a){function d(e){return e.call?e():r[e]}function b(){if(!--p){r[h]=1,c&&c();for(var e in s)v(e.split("|"),d)&&!m(s[e],d)&&(s[e]=[])}}e=e[l]?e:[e];var f=t&&t.call,c=f?t:a,h=f?e.join(""):t,p=e.length;return setTimeout(function(){m(e,function(e){if(e===null)return b();if(u[e])return h&&(i[h]=1),u[e]==2&&b();u[e]=1,h&&(i[h]=1),y(!n.test(e)&&o?o+e+".js":e,b)})},0),g}function y(n,r){var i=e.createElement("script"),s=f;i.onload=i.onerror=i[d]=function(){if(i[h]&&!/^c|loade/.test(i[h])||s)return;i.onload=i[d]=null,s=1,u[n]=2,r()},i.async=1,i.src=n,t.insertBefore(i,t.firstChild)}var e=document,t=e.getElementsByTagName("head")[0],n=/^https?:\/\//,r={},i={},s={},o,u={},a="string",f=!1,l="push",c="DOMContentLoaded",h="readyState",p="addEventListener",d="onreadystatechange";return!e[h]&&e[p]&&(e[p](c,function b(){e.removeEventListener(c,b,f),e[h]="complete"},f),e[h]="loading"),g.get=y,g.order=function(e,t,n){(function r(i){i=e.shift(),e.length?g(i,r):g(i,t,n)})()},g.path=function(e){o=e},g.ready=function(e,t,n){e=e[l]?e:[e];var i=[];return!m(e,function(e){r[e]||i[l](e)})&&v(e,function(e){return r[e]})?t():!function(e){s[e]=s[e]||[],s[e][l](t),n&&n(i)}(e.join("|")),g},g.done=function(e){g([null],e)},g})
-
-    // load all of the dependencies asynchronously.
-    $.ajax('http://www.geoplugin.net/json.gp', {
-      dataType: 'jsonp',
-      jsonp: 'jsoncallback',
-      success: function(data) {
-        window.userLocation = {
-          latitude: data.geoplugin_latitude,
-          longitude: data.geoplugin_longitude
-        };
-        $script.done('UserLocation');
-      }
-    });
-
-    $script('//connect.facebook.net/en_US/all.js', function() {
-      appendLoadingProgress('Social module loaded...');
-      FB.init({
-        appId      : '580227458695144',
-        channelUrl : location.origin + '/fb_channel.html',
-        status     : true,
-        cookie     : true,
-        xfbml      : true
-      });
-      FB.getLoginStatus(function (response) {
-        appendLoadingProgress('User identity checked...');
-        if (response.status === 'connected') {
-          window.user = response.authResponse;
-        } else {
-          window.user = {};
-        }
-        $script.done('Facebook');
-      });
-    });
-
-    $script([
-      <%= javascript_path_with_manifest('home/index.js') %>,
-      '//maps.googleapis.com/maps/api/js?key=AIzaSyAGJjfEZSf93ey42aqJDIVuOVaLnpUUzWs&libraries=places&sensor=true&callback=initGoogleMaps'
-    ], 'Application', function() {
-      appendLoadingProgress('Application layer ready...');
-    });
-
-    $script.ready(['UserLocation', 'Facebook', 'Application'], function() {
-      angular.bootstrap(document, ['mapApp']);
-    });
-
-    function appendLoadingProgress(message) {$('#load_progress').append($('<li>').html(message));}
-    function initGoogleMaps() {appendLoadingProgress('Google Map module loaded...');}
-  </script>
+  <%= stylesheet_link_tag 'application', media: 'all' %>
+  <script src="javascripts/_libraries/modernizr.min.js"></script>
+  <script src="javascripts/_libraries/jquery.js"></script>
+  <script src="javascripts/index_script_loader.js"></script>
   <%= csrf_meta_tags %>
 </head>
 <body>
@@ -110,15 +56,6 @@
 </div>
 
 
-<%= render 'mp_user_section_templates' %>
-<%= render 'mp_easy_modal_templates' %>
-<%= render 'mp_bottom_modalbox_templates' %>
-<%= render 'ng_toolbar_templates' %>
-<%= render 'ng_map_templates' %>
-<%= render 'ng_views_templates' %>
-<%= render 'ng_chat_templates' %>
-
-
 <script>
 (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
 (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
@@ -127,5 +64,6 @@ m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
 ga('create', 'UA-40390313-3', 'herokuapp.com');
 ga('send', 'pageview');
 </script>
+
 </body>
 </html>
