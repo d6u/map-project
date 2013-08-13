@@ -1,21 +1,27 @@
 # mp-control-toolbar
 # ========================================
-app.directive 'mpControlToolbar', ['$templateCache', '$compile',
-($templateCache, $compile) ->
+app.directive 'mpControlToolbar', ['$templateCache', '$compile', '$route',
+'$timeout', 'mpTemplateCache',
+($templateCache, $compile, $route, $timeout, mpTemplateCache) ->
 
-  link: (scope, element, attrs) ->
+  currentTemplate = ->
+    switch $route.current.$$route.controller
+      when 'OutsideViewCtrl'
+        return 'scripts/keepers/mp-control-toolbar-mapview.html'
+      when 'AllProjectsViewCtrl'
+        return 'scripts/keepers/mp-control-toolbar-all-project-view.html'
+      when 'NewProjectViewCtrl'
+        return 'scripts/keepers/mp-control-toolbar-mapview-inside.html'
+      when 'ProjectViewCtrl'
+        return 'scripts/keepers/mp-control-toolbar-mapview-inside.html'
 
-    scope.$on '$routeChangeSuccess', (event, current) ->
-      switch current.$$route.controller
-        when 'OutsideViewCtrl'
-          template = $templateCache.get 'mp_control_toolbar_mapview_template'
-        when 'AllProjectsViewCtrl'
-          template = $templateCache.get 'mp_control_toolbar_all_project_view_template'
-        when 'NewProjectViewCtrl'
-          template = $templateCache.get 'mp_control_toolbar_inside_mapview_template'
-        when 'ProjectViewCtrl'
-          template = $templateCache.get 'mp_control_toolbar_inside_mapview_template'
+  return {
+    compile: (element, attrs, transclude) ->
+      console.log transclude
+      return (scope, element, attrs) ->
+        mpTemplateCache.get(currentTemplate()).then (template) ->
+          element.html $compile(template)(scope)
+    link: (scope, element, attrs) ->
 
-      html = $compile(template)(scope)
-      element.html html
+  }
 ]

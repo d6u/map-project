@@ -4,7 +4,7 @@
 app.directive 'mpPlacesList', ['$window', '$rootScope',
 ($window, $rootScope) ->
 
-  templateUrl: 'mp_places_list_template'
+  templateUrl: 'scripts/views/shared/mp-places-list.html'
   link: (scope, element, attrs) ->
 
     hideListAccordingly = ->

@@ -1,0 +1,49 @@
+<div class="mp-halfscreen-left">
+
+  <!-- Toolbar -->
+  <div class="mp-drawer-toolbar">
+    <div class="input-group">
+      <span class="input-group-btn">
+        <button class="btn btn-default" type="button" ng-click="interface.showUserSection = true">
+          <i class="icon-user"></i>
+        </button>
+        <button class="btn btn-default" type="button" ng-click="interface.showMapDrawer = !interface.showMapDrawer">Show detail</button>
+      </span>
+      <input type="text" class="form-control" mp-map-searchbox ng-model="searchbox.input">
+      <span class="input-group-btn">
+        <button class="btn btn-primary" type="button" ng-click="clearInput()">
+          <i class="icon-remove"></i>
+        </button>
+        <button class="btn btn-primary" type="button">Go!</button>
+      </span>
+    </div>
+  </div>
+
+  <!-- Search results -->
+  <div class="mp-search-results" perfect-scrollbar="TheMap.searchResults.length">
+    <div class="mp-list-contents-header lead">Showing {{TheMap.searchResults.length}} search results</div>
+
+    <div class="mp-place-search-result-item" ng-repeat="place in TheMap.searchResults">
+      <div class="mp-place-marker-icon">
+        <a href="" ng-click="centerPlaceInMap(place.geometry.location)">
+          <img ng-src="{{place.icon}}">
+        </a>
+      </div>
+      <div class="mp-place-actions">
+        <a href="" ng-click="addPlaceToList(place.mpObject)">
+          <i class="icon-ok"></i>
+        </a>
+      </div>
+      <div class="mp-place-detail-sidebar">
+        <div class="mp-place-name-sidebar">{{place.name}}</div>
+        <address>{{place.formatted_address}}</address>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+
+<div class="mp-halfscreen-right">
+
+</div>

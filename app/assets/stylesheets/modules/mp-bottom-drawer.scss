@@ -1,0 +1,47 @@
+// container
+.mp-bottom-drawer {
+  @include transition();
+  height: 450px;
+  position: absolute;
+  z-index: 500;
+  bottom: -450px;
+  left: 0;
+  width: 100%;
+  background-color: white;
+  @include border-shadows();
+  border-right: none;
+  border-left: none;
+  border-bottom: none;
+}
+
+.mp-bottom-drawer-show {
+  bottom: 0;
+  .mp-drawer-toolbar .input-group {
+    top: 5px;
+  }
+  ~ [mp-map-canvas] {
+    bottom: 450px;
+  }
+}
+
+// toolbar
+.mp-drawer-toolbar {
+  padding: 5px;
+  height: 44px;
+
+  .input-group {
+    @include transition();
+    position: absolute;
+    top: -39px;
+  }
+}
+
+// search results
+.mp-search-results {
+  position: absolute;
+  top: 45px;
+  bottom: 0;
+  padding: 10px;
+  width: 100%;
+  overflow: hidden;
+}

@@ -5,60 +5,33 @@
 
 
 @import "variables/colors";
-
 @import "mixins/flexbox";
 @import "mixins/animation";
+@import "mixins/border-shadows";
+
+@import "base/base";
+
+@import "layouts/base-layout";
+@import "layouts/map-layout";
 
 @import 'components/mp_inputbox';
 
+@import "modules/mp-loading-screen";
+@import 'modules/mp-user-section';
+@import "modules/mp-bottom-drawer";
+
+
+
+
+
 @import 'modules/mp_control_toolbar';
-@import 'modules/mp_user_section';
 @import 'modules/mp_headsup_messager';
 @import 'modules/mp_bottom_modalbox';
 @import 'modules/mp_chatbox';
 @import 'modules/mp_easy_modals';
-
-
-// Default & Overall
-// ========================================
-html, body,
-.mp-application,
-.mp-view-container,
-.mp-map-container,
-.mp-map-view-wrapper {
-    height: 100%;
-}
-
-%transition {
-    -webkit-transition: all 150ms ease-out;
-       -moz-transition: all 150ms ease-out;
-        -ms-transition: all 150ms ease-out;
-         -o-transition: all 150ms ease-out;
-            transition: all 150ms ease-out;
-}
-
-.mp-application {}
-
-// Loader
-// ========================================
-.mp-loading-screen {
-    height: 100%;
-    background-color: white;
-    position: relative;
-    z-index: 1100;
-}
-
-
-// Control Toolbar
-// mp-control-toolbar
-// ========================================
-
-
-
-// Containers
-// ========================================
-
 @import 'modules/mp_map';
+
+
 
 
 // Navbar
@@ -192,90 +165,7 @@ html, body,
 }
 
 
-// Map & Project List
-// ----------------------------------------
-.mp-map-canvas {
-    position: relative;
-    height: 100%;
-    width: 100%;
-}
 
-.mp-places-button-group {
-    width: 100%;
-    @include display_flex;
-    @include justify-content(space-around);
-    // -webkit-justify-content: space-around;
-}
-
-.mp-sidebar-places {
-    -webkit-transition: all 350ms ease-out 50ms;
-       -moz-transition: all 350ms ease-out 50ms;
-        -ms-transition: all 350ms ease-out 50ms;
-         -o-transition: all 350ms ease-out 50ms;
-            transition: all 350ms ease-out 50ms;
-    margin-top: 50px;
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    width: 100%;
-    overflow: hidden;
-}
-
-.mp-sidebar-place {
-    padding: 10px;
-    background-color: white;
-    address {
-        margin: 0;
-    }
-    &.ui-sortable-helper {
-        background-color: $gray1;
-    }
-}
-
-.mp-place-marker-icon {
-    float: left;
-    margin-right: 10px;
-}
-
-.mp-place-actions {
-    float: right;
-    font-size: 18px;
-    margin-left: 10px;
-    a {
-        &:hover {
-            text-decoration: none;
-            color: $red;
-        }
-    }
-}
-
-.mp-place-detail-sidebar {
-    overflow: hidden;
-}
-
-.mp-place-name-sidebar {
-    font-weight: bold;
-}
-
-.mp-create-account-promot {
-    @extend %transition;
-    position: absolute;
-    top: -200px;
-    left: 10px;
-    right: 10px;
-    padding: 10px;
-    border: 1px solid $gray3;
-    border-radius: 3px;
-    text-align: center;
-    &.js-create-account-promot-show ~ .mp-sidebar-places {
-        margin-top: 179px;
-    }
-}
-
-.mp-info-window-wrapper {
-    // TODO: fix google map infoWindow overflow on bottom
-    width: 300px;
-}
 
 
 // All Project List
