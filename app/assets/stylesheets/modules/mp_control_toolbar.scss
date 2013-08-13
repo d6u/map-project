@@ -7,9 +7,7 @@
     background-color: white;
     width: 402px;
     height: 72px;
-    border: 1px solid #999;
-    box-shadow: 1px 1px 3px rgba(0,0,0,.3);
-    border-radius: 1px;
+    @include border-shadows();
     overflow: hidden;
 }
 

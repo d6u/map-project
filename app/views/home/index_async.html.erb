@@ -7,25 +7,18 @@
   <meta name="viewport"    content="width=device-width, initial-scale=1.0">
   <title>Map Project</title>
   <%= stylesheet_link_tag 'application', media: 'all' %>
-  <script src="javascripts/_libraries/modernizr.min.js"></script>
-  <script src="javascripts/_libraries/jquery.js"></script>
-  <script src="javascripts/index_script_loader.js"></script>
+  <script src="/javascripts/_libraries/modernizr.min.js"></script>
+  <script src="/javascripts/_libraries/jquery.js"></script>
+  <script src="/javascripts/index_script_loader.js"></script>
   <%= csrf_meta_tags %>
 </head>
 <body>
 
 <div class="mp-application">
+
   <section class="mp-user-section" ng-class="{'mp-user-section-show': interface.showUserSection}" mp-user-section></section>
 
-  <header class="mp-headsup-messager" mp-headsup-messager>
-    <div class="alert" ng-class="message.type">
-      <button type="button" class="close" id="mp_headsup_messager_close_button">&times;</button>
-      <strong>{{message.title}}</strong> {{message.content}}
-    </div>
-  </header>
-
-  <!-- ng-view -->
-  <div ng-view class="mp-view-container">
+  <section ng-view>
     <!-- Loader, this will be removed when angular runs -->
     <div class="mp-loading-screen">
       <div class="container">
@@ -39,20 +32,8 @@
         </div>
       </div>
     </div>
-  </div>
-
-  <!-- Modal -->
-  <section class="mp-bottom-modalbox" mp-bottom-modalbox>
-    <div class="mp-bottom-modalbox-bg" ng-click="closeModal()"></div>
-    <div class="mp-bottom-modalbox-container"></div>
   </section>
 
-  <!-- jQuery easyModal -->
-  <section class="jq-easy-modal" jq-easy-modal>
-    <div class="jq-eady-modal-inner"></div>
-  </section>
-
-  <section class="mp-bottom-messager" mp-bottom-messager></section>
 </div>
 
 

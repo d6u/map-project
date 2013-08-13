@@ -1,7 +1,7 @@
 # MpProjects
 # ========================================
-app.factory 'MpProjects', ['Restangular', '$rootScope', 'TheMap', '$location',
-(Restangular, $rootScope, TheMap, $location) ->
+app.factory 'MpProjects', ['Restangular', '$rootScope', '$location',
+(Restangular, $rootScope, $location) ->
 
   # REST /projects/:id
   Restangular.addElementTransformer 'projects', true, (projects) ->
@@ -34,6 +34,10 @@ app.factory 'MpProjects', ['Restangular', '$rootScope', 'TheMap', '$location',
       $projects.getList(queryParams).then (projects) =>
         @projects = _.union @projects, projects
         @__projects = _.clone(MpProjects.projects)
+
+    removePlace: (place, index) ->
+      @currentProject.places.splice(index, 1)[0]
+      place.$$marker.setMap null
 
 
   # events

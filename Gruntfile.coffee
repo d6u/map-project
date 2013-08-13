@@ -7,10 +7,11 @@ getFileTree = (basePath) ->
     fs.readdirSync(path).forEach (child) ->
       if !/^\..*/.test(child)
         stats = fs.statSync path+'/'+child
-        if stats.isFile()
-          paths.push path+'/'+child
-        else
-          loadTree(path+'/'+child)
+        if /.+(\.coffee)$/.test(child) || stats.isDirectory()
+          if stats.isFile()
+            paths.push path+'/'+child
+          else
+            loadTree(path+'/'+child)
 
   loadTree(basePath)
 
@@ -32,18 +33,18 @@ module.exports = (grunt) ->
 
   manifest.forEach (path) ->
     if /.+(\.js)$/.test path
-      scriptLoadingPaths.push 'javascripts/'+path
+      scriptLoadingPaths.push '/javascripts/'+path
     else
       if fs.statSync('public/scripts/'+path).isFile()
         match = /^(.+)\.coffee/.exec path
         coffeeFiles['public/javascripts/'+match[1]+'.js'] = 'public/scripts/'+path
-        scriptLoadingPaths.push 'javascripts/'+match[1]+'.js'
+        scriptLoadingPaths.push '/javascripts/'+match[1]+'.js'
       else
         files = getFileTree('public/scripts/'+path)
         files.forEach (file) ->
           match = /^(.+)\.coffee/.exec file
           coffeeFiles['public/javascripts/'+path+'/'+match[1]+'.js'] = 'public/scripts/'+path+'/'+file
-          scriptLoadingPaths.push 'javascripts/'+path+'/'+match[1]+'.js'
+          scriptLoadingPaths.push '/javascripts/'+path+'/'+match[1]+'.js'
 
 
   # Project configuration.
@@ -65,15 +66,23 @@ module.exports = (grunt) ->
           bare: true
           sourceMap: true
         files: coffeeFiles
+
+    watch:
+      files: 'public/scripts/**/*.coffee'
+      tasks: ['clean', 'copy', 'coffee']
+      options:
+        spawn: false
+        livereload: true
   })
 
   # Load the plugin that provides task(s).
   grunt.loadNpmTasks('grunt-contrib-clean')
   grunt.loadNpmTasks('grunt-contrib-copy')
   grunt.loadNpmTasks('grunt-contrib-coffee')
+  grunt.loadNpmTasks('grunt-contrib-watch')
 
   # Default task(s).
-  grunt.registerTask('default', ['clean', 'copy', 'coffee'])
+  grunt.registerTask('default', ['clean', 'copy', 'coffee', 'watch'])
 
   # $script loader
-  console.log '--> Include this array in $script loader\n\n', scriptLoadingPaths.join(',\n'), '\n\n'
+  console.log '--> Include this array in $script loader\n\n', scriptLoadingPaths

@@ -1,0 +1,26 @@
+<div class="mp-chatbox-expanded">
+  <header class="mp-chatbox-header">
+    <div class="mp-chatbox-header-friends-list">
+      <a href="" class="mp-chatbox-header-friends-item" ng-repeat="friend in participatedUsers" bs-tooltip="{{friend.name}}" bs-tooltip-placement="bottom" ng-class="{'mp-chatbox-header-friends-item-online': friend.$$online}">
+        <img ng-src="{{friend.fb_user_picture}}">
+      </a>
+    </div>
+    <a href="" class="mp-chatbox-header-action-button mp-chatbox-header-close-button" ng-click="collapseChatbox()">
+      <i class="icon-remove"></i>
+    </a>
+  </header>
+
+  <!-- chat-history -->
+  <div class="mp-chat-history" perfect-scrollbar="chatHistory.length" mp-chat-history>
+
+    <!-- chat-item -->
+    <div class="mp-chat-history-item" ng-repeat="chatItem in chatHistory" mp-chat-history-item></div>
+
+  </div>
+
+  <!-- chat-inputs -->
+  <div class="mp-chat-inputs">
+    <textarea name="" class="form-control mp-naked-input" placeholder="Say something" mp-chatbox-input></textarea>
+    <button class="btn btn-default">Send</button>
+  </div>
+</div>

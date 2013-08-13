@@ -6,6 +6,11 @@
     display: flex;             /* NEW, Spec - Opera 12.1, Firefox 20+ */
 }
 
+// TODO: cross browser
+@mixin flex-direction ($direction) {
+  flex-direction: $direction;
+}
+
 @mixin flex_grow($flex-grow) {
              display: block;
     -webkit-box-flex: $flex-grow; /* OLD - iOS 6-, Safari 3.1-6 */

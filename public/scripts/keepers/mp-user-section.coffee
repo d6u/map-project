@@ -1,15 +1,12 @@
 # mp-user-section
 # --------------------------------------------
-app.directive 'mpUserSection', ['$rootScope', '$compile', '$templateCache',
-'MpProjects', '$location', '$timeout', 'Restangular', 'MpChatbox',
-($rootScope, $compile, $templateCache, MpProjects, $location, $timeout,
- Restangular, MpChatbox) ->
+app.directive 'mpUserSection', ['$rootScope', '$compile', 'MpProjects',
+'$location', '$timeout', 'Restangular', 'MpChatbox', 'mpTemplateCache',
+($rootScope, $compile, MpProjects, $location, $timeout,
+ Restangular, MpChatbox, mpTemplateCache) ->
 
-  getTemplate = ->
-    if $rootScope.User.checkLogin()
-      return $templateCache.get 'mp_user_section_tempalte_login'
-    else
-      return $templateCache.get 'mp_user_section_tempalte_logout'
+  currentTemplate = ->
+    return if $rootScope.User.checkLogin() then '/scripts/keepers/mp-user-section-after-login.html' else '/scripts/keepers/mp-user-section-before-login.html'
 
   # return
   scope: true
@@ -23,21 +20,21 @@ app.directive 'mpUserSection', ['$rootScope', '$compile', '$templateCache',
       $rootScope.User.logout()
 
     scope.showEmailLogin = ->
-      template = $templateCache.get 'mp_user_section_tempalte_loginform'
-      element.html $compile(template)(scope)
+      mpTemplateCache.get('/scripts/keepers/mp-user-section-login-form.html').then (template) ->
+        element.html $compile(template)(scope)
 
     scope.showEmailRegister = ->
-      template = $templateCache.get 'mp_user_section_tempalte_logout'
-      element.html $compile(template)(scope)
+      mpTemplateCache.get('/scripts/keepers/mp-user-section-before-login.html').then (template) ->
+        element.html $compile(template)(scope)
 
     scope.showFriendsPanel = ->
       $rootScope.$broadcast 'pop_jqEasyModal', {type: 'friends_panel'}
 
-
+    # events
+    # ----------------------------------------
     scope.$on '$routeChangeSuccess', (event, current) ->
-      if current.$$route.controller != 'OutsideViewCtrl'
-        scope.interface.showUserSection = false
-      else
-        scope.interface.showUserSection = true
-      element.html $compile(getTemplate())(scope)
+      mpTemplateCache.get(currentTemplate()).then (template) ->
+        element.html $compile(template)(scope)
+      scope.interface.showUserSection = false
+      # scope.interface.showUserSection = (current.$$route.controller == 'OutsideViewCtrl')
 ]
