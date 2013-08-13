@@ -1,7 +1,6 @@
-app = angular.module 'angular-mp.home.initializer', ['restangular']
-
-
-# User
+###
+resolver - User
+###
 app.factory 'User', ['$q', '$window', '$rootScope', 'Restangular', '$location',
 '$route',
 ($q, $window, $rootScope, Restangular, $location, $route) ->

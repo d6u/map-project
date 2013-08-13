@@ -1,6 +1,3 @@
-app = angular.module 'angular-mp.home.modals', ['restangular']
-
-
 # mp-friends-panel
 app.directive 'mpFriendsPanel', ['$templateCache', '$compile', 'Restangular',
 'MpChatbox',

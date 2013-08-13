@@ -1,6 +1,3 @@
-app = angular.module 'angular-mp.home.outside-view', []
-
-
 app.controller 'OutsideViewCtrl',['MpProjects', 'TheMap',
 (MpProjects, TheMap) ->
 

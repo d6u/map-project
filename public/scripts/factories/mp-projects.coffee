@@ -1,6 +1,3 @@
-app = angular.module 'angular-mp.api', ['restangular']
-
-
 # MpProjects
 # ========================================
 app.factory 'MpProjects', ['Restangular', '$rootScope', 'TheMap', '$location',
@@ -220,14 +217,4 @@ app.factory 'MpProjects', ['Restangular', '$rootScope', 'TheMap', '$location',
   # return
   # ----------------------------------------
   return MpProjects
-]
-
-
-# invitations
-app.factory 'Invitation', ['$http', ($http) ->
-
-  generate: (project_id)->
-    postBody =
-      invitation: {project_id: project_id}
-    $http.post('/invitation/generate', postBody).then (response) -> response.data.code
 ]

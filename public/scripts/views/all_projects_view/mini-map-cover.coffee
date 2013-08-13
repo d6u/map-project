@@ -1,36 +1,3 @@
-app = angular.module 'angular-mp.home.all-projects-view', []
-
-
-# AllProjectsCtrl
-app.controller 'AllProjectsViewCtrl',
-['$rootScope', '$scope', 'MpProjects', '$location', 'User', '$window','TheMap',
-'$route',
-($rootScope, $scope, MpProjects, $location, User, $window, TheMap, $route) ->
-
-  if !User.checkLogin() then return
-
-  $scope.userLocation = $window.userLocation
-
-  $scope.showEditProjectModal = (project) ->
-    $rootScope.$broadcast 'showBottomModalbox', {type: 'editProject', project: project}
-
-  $scope.openProjectView = (project) ->
-    $location.path '/project/' + project.id
-
-  # init
-  console.log 'AllProjectsCtrl'
-]
-
-
-# mp-all-projects-item
-app.directive 'mpAllProjectsItem', [->
-  (scope, element, attrs) ->
-
-    if scope.project.owner_id != scope.User.$$user.id
-      scope.projectMessage = 'This is a group project'
-]
-
-
 # mini-map-cover
 app.directive 'miniMapCover', [ ->
   scope: true
