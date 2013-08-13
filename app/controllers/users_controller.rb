@@ -28,6 +28,7 @@ class UsersController < ApplicationController
     if user.validate_with_facebook
       user.save if user.changed?
       session[:user_id] = user.id
+      authenticate_socket_io_handshake(user)
       render :json => user, :status => 200
     else
       head 401
@@ -61,6 +62,7 @@ class UsersController < ApplicationController
     if user.validate_with_facebook
       user.save
       session[:user_id] = user.id
+      authenticate_socket_io_handshake(user)
       render :json => user
     else
       head 406
@@ -74,12 +76,18 @@ class UsersController < ApplicationController
       project = Project.find_by_id(params[:project_id])
       if project
         users = project.participated_users
-        users += [project.owner]
         render :json => users, :only => [:id, :name, :fb_user_picture] and return
       else
         head 404 and return
       end
     end
+
+    if params[:name]
+      name = "%#{params[:name]}%"
+      users = User.where('lower(name) LIKE lower(?) AND id <> ?', name, @user.id)
+      render :json => users, :only => [:id, :name, :fb_user_picture] and return
+    end
+
     head 401
   end
 

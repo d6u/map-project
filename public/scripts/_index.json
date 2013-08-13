@@ -1,0 +1,21 @@
+[
+  "_libraries/lodash.js",
+  "_libraries/socket.io.min.js",
+  "_libraries/jquery-ui-1.10.3.custom.min.js",
+  "_libraries/jquery.easyModal.js",
+  "_libraries/masonry.pkgd.min.js",
+  "_libraries/bootstrap.min.js",
+  "_libraries/perfect-scrollbar-0.4.3.min.js",
+  "_libraries/perfect-scrollbar-0.4.3.with-mousewheel.min.js",
+  "_libraries/angular.js",
+  "_libraries/restangular.js",
+  "_modules_for_libraries/angular-easy-modal.coffee",
+  "_modules_for_libraries/angular-masonry.coffee",
+  "_modules_for_libraries/angular-perfect-scrollbar.coffee",
+  "_modules_for_libraries/angular-bootstrap.coffee",
+  "_modules_for_libraries/angular-jquery-ui.coffee",
+  "application",
+  "factories",
+  "keepers",
+  "views"
+]

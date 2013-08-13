@@ -51,7 +51,6 @@ io.configure ->
 # ========================================
 
 clientsList = {}
-clientsFollowersList = {}
 
 # socket.io connection
 io.sockets.on 'connection', (socket) ->
@@ -93,52 +92,20 @@ io.sockets.on 'connection', (socket) ->
     clientsList[socket.handshake.user.id].friendsList = friendsList
     if clientsList[socket.handshake.user.id] && clientsList[socket.handshake.user.id].length == 0
       # notice friends if no socket remains online
-      for id in friendsList
-        if clientsList[id] && clientsList[id].length > 0
-          for socketId in clientsList[id]
-            io.sockets.socket(socketId).emit 'userDisconnected', socket.handshake.user.id
+      if friendsList
+        for id in friendsList
+          if clientsList[id] && clientsList[id].length > 0
+            for socketId in clientsList[id]
+              io.sockets.socket(socketId).emit 'userDisconnected', socket.handshake.user.id
       # remove the socket
       delete clientsList[socket.handshake.user.id]
     console.log clientsList
 
-
-
-  # userJoinLeftBehavior = (event, room) ->
-  #   socket.broadcast.to(room).emit 'chatContent', {
-  #     type: 'userBehavior'
-  #     event: event
-  #     userId: socket.handshake.user.id
-  #     userName: socket.handshake.user.name
-  #   }
-
-
-  # socket.on 'joinRoom', (roomId, fn) ->
-  #   targetRoom = 'project_room:' + roomId
-  #   socket.join targetRoom
-  #   userJoinLeftBehavior('joinRoom', targetRoom)
-  #   console.log io.sockets.manager.roomClients[socket.id]
-  #   roomClients = io.sockets.clients targetRoom
-  #   roomClientIds = []
-  #   for roomClient in roomClients
-  #     roomClientIds.push socketList[roomClient.id].handshake.user.id
-  #   fn(roomClientIds)
-
-  # socket.on 'leaveRoom', (roomId, fn) ->
-  #   # roomId will be null if no roomId
-  #   if roomId
-  #     userJoinLeftBehavior('leaveRoom', 'project_room:' + roomId)
-  #     socket.leave 'project_room:' + roomId
-  #     console.log io.sockets.manager.roomClients[socket.id]
-  #   else
-  #     userJoinLeftBehavior('leaveRoom', targetRoom)
-  #     socket.leave targetRoom
-  #     targetRoom = null
-  #     console.log io.sockets.manager.roomClients[socket.id]
-
-  # socket.on 'chatContent', (data) ->
-  #   socket.broadcast.to(targetRoom).emit 'chatContent', data
-
-  # socket.on 'disconnect', ->
-  #   userJoinLeftBehavior('leaveRoom', targetRoom)
-  #   console.log 'disconnect'
-  #   delete socketList[socket.id]
+  # client message
+  # ----------------------------------------
+  socket.on 'clientMessage', (data) ->
+    console.log 'receive clientMessage', data
+    _.forEach data.receivers_ids, (id) ->
+      if clientsList[id] && clientsList[id].length > 0
+        _.forEach clientsList[id], (socketId) ->
+          io.sockets.socket(socketId).emit 'serverMessage', data

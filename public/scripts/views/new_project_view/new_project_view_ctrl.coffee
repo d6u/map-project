@@ -1,6 +1,3 @@
-app = angular.module 'angular-mp.home.new-project-view', []
-
-
 app.controller 'NewProjectViewCtrl',
 ['$scope', '$location', '$rootScope', '$q', '$timeout',
  '$templateCache', '$compile', 'User', 'TheMap',

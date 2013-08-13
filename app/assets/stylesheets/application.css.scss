@@ -1,4 +1,4 @@
-//= require bootstrap.min.css
+//= require bootstrap.css
 //= require font-awesome.scss
 //= require perfect-scrollbar-0.4.3.min.css
 //= require_self
@@ -16,6 +16,7 @@
 @import 'modules/mp_headsup_messager';
 @import 'modules/mp_bottom_modalbox';
 @import 'modules/mp_chatbox';
+@import 'modules/mp_easy_modals';
 
 
 // Default & Overall
@@ -280,9 +281,8 @@ html, body,
 // All Project List
 // ========================================
 .mp-all-projects-list {
-    margin-right: 442px;
     overflow: hidden;
-    padding: 0 40px 0 40px;
+    padding: 50px 40px 0 40px;
     position: relative;
 }
 

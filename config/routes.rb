@@ -10,6 +10,7 @@ MapProject::Application.routes.draw do
   scope '/users' do
     post 'login'    => 'users#login'
     get  'logout'   => 'users#logout'
+    post 'register' => 'users#create'
   end
   resources :users
 
