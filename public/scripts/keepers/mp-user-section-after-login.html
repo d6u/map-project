@@ -1,17 +1,32 @@
 <a href="" class="mp-user-section-close-button" ng-click="interface.showUserSection = false"><i class="icon-remove"></i></a>
 
-<div class="mp-user-section-user-info">
-  <img ng-src="{{User.fb_user_picture()}}" alt="">
+<div class="mp-user-section-user-info clearfix">
+  <img class="mp-user-info-profile-picture" ng-src="{{User.fb_user_picture()}}">
   <div class="mp-user-info-details">
-    <div class="">{{User.name()}}</div>
+    <div class="mp-user-info-name">{{User.name()}}</div>
     <div class="">{{User.email()}}</div>
   </div>
 </div>
 
-<div>
-  <a href="" class="btn btn-default">New messages <span class="badge">{{}}</span></a>
-  <a href="" class="btn btn-primary" ng-click="showFriendsPanel()">Friends</a>
-  <a href="" class="btn btn-primary" ng-click="showFriendsPanel()">Add friends</a>
+<div mp-user-section-tabs>
+  <div class="btn-group">
+    <button type="button" class="btn btn-primary" ng-click="showTab(0)">Notification
+      <span class="badge">{{}}</span>
+    </button>
+    <button type="button" class="btn btn-default" ng-click="showTab(1)">Friends</button>
+    <button type="button" class="btn btn-default" ng-click="showTab(2)"><i class="icon-search"></i></button>
+  </div>
+
+  <div class="mp-user-section-tabs-content">
+    <!-- Tab 1 -->
+    <div class="mp-user-section-tab-body" ng-show="tabs[0]"></div>
+    <!-- Tab 2 -->
+    <div class="mp-user-section-tab-body" ng-show="tabs[1]">
+      <div class="mp-user-sectin-friends-list"></div>
+    </div>
+    <!-- Tab 3 -->
+    <div class="mp-user-section-tab-body" ng-show="tabs[2]"></div>
+  </div>
 </div>
 
 <div class="mp-user-section-bottom">
