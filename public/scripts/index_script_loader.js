@@ -71,6 +71,7 @@ $script([
   '/javascripts/views/all_projects_view/all-projects-view-ctrl.js',
   '/javascripts/views/all_projects_view/mini-map-cover.js',
   '/javascripts/views/all_projects_view/mp-all-projects-item.js',
+  '/javascripts/views/all_projects_view/mp-navbar-bottom.js',
   '/javascripts/views/new_project_view/new-project-view-ctrl.js',
   '/javascripts/views/outside_view/outside-view-ctrl.js',
   '/javascripts/views/project_view/mp-chat-history-item.js',

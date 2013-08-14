@@ -32,7 +32,7 @@ app.directive 'mpEditProjectForm', ['$rootScope', '$location',
 
     # init
     # ----------------------------------------
-    # editProjectForm
+    # form object => editProjectForm
     scope.editProject = {}
 
     scope.$watch 'MpProjects.currentProject.title', (newVal, oldVal) ->
