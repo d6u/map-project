@@ -22,10 +22,25 @@
     <div class="mp-user-section-tab-body" ng-show="tabs[0]"></div>
     <!-- Tab 2 -->
     <div class="mp-user-section-tab-body" ng-show="tabs[1]">
-      <div class="mp-user-sectin-friends-list"></div>
+      <ul class="mp-user-sectin-friends-list" perfect-scrollbar="MpChatbox.friends.length">
+        <li class="mp-user-sectin-friends-item" ng-repeat="friend in MpChatbox.friends">
+          <img ng-src="{{friend.fb_user_picture}}">
+          {{friend.name}}
+        </li>
+      </ul>
     </div>
     <!-- Tab 3 -->
-    <div class="mp-user-section-tab-body" ng-show="tabs[2]"></div>
+    <div class="mp-user-section-tab-body mp-user-section-search-user" ng-show="tabs[2]">
+      <input type="text" class="form-control" placeholder="Search user's name" ng-model="searchFriends.input">
+      <ul class="mp-user-section-friends-list" perfect-scrollbar="searchFriends.results.length">
+        <li class="mp-user-sectin-friends-item" ng-repeat="user in searchFriends.results">
+          <img ng-src="{{user.fb_user_picture}}">
+          {{user.name}}
+          <a href="" ng-click="sendFriendRequest(user.id)">add friend</a>
+        </li>
+      </ul>
+    </div>
+    <!-- END -->
   </div>
 </div>
 

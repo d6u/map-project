@@ -73,7 +73,28 @@
   width: 359px;
 }
 
+.mp-user-section-tab-body {
+  height: 100%;
+}
+
+// search user
+// ----------------------------------------
+.mp-user-section-search-user {
+  @include display_flex();
+  @include flex-direction(column);
+}
+
+.mp-user-section-friends-list {
+  @include flex_grow(1);
+  margin-top: 10px;
+  margin-bottom: 0;
+  padding-left: 0;
+  overflow: hidden;
+  position: relative;
+}
+
 // mp-user-section-bottom
+// ----------------------------------------
 .mp-user-section-bottom {
   position: absolute;
   width: 100%;

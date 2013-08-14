@@ -16,8 +16,16 @@ class FriendshipsController < ApplicationController
 
 
   def create
-    friendship = Friendship.new params.require(:friendship).permit(:friend_id, :status, :comments)
-    @user.friendships << friendship
+    friendship = @user.friendships.find_by_friend_id params[:friendship][:friend_id]
+    if friendship
+      head 200 and return if friendship.status > 0
+      friendship.status = 0
+      friendship.save
+    else
+      friendship = Friendship.new params.require(:friendship).permit(:friend_id, :status, :comments)
+      @user.friendships << friendship
+    end
+
     render :json => friendship
   end
 
