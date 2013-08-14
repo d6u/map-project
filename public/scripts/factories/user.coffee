@@ -21,7 +21,7 @@ app.factory 'User', ['$q', '$window', '$rootScope', 'Restangular', '$location',
   # service body
   User =
     $$user: null
-    checkLogin: -> return @$$user && @$$user.fb_access_token && @$$user.id
+    checkLogin: -> return if (@$$user && @$$user.fb_access_token && @$$user.id) then true else false
     getId: -> return if @$$user then @$$user.id else undefined
     name: -> return if @$$user then @$$user.name else undefined
     email: -> return if @$$user then @$$user.email else undefined
