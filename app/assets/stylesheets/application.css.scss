@@ -20,6 +20,8 @@
 @import "modules/mp-loading-screen";
 @import 'modules/mp-user-section';
 @import "modules/mp-bottom-drawer";
+@import "modules/mp-all-projects-view";
+@import "modules/mp-navbar-bottom";
 
 
 
@@ -31,6 +33,9 @@
 @import 'modules/mp_chatbox';
 @import 'modules/mp_easy_modals';
 @import 'modules/mp_map';
+
+
+@import "shame";
 
 
 
@@ -163,65 +168,6 @@
         color: $gray6;
         font-size: 18px;
     }
-}
-
-
-
-
-
-// All Project List
-// ========================================
-.mp-all-projects-list {
-    overflow: hidden;
-    padding: 50px 40px 0 40px;
-    position: relative;
-}
-
-.mp-all-projects-list-inner {
-    margin: 0 auto 100px;
-    width: 940px;
-}
-
-.mp-all-projects-list-header {
-    line-height: 50px;
-    font-size: 32px;
-    font-weight: bold;
-    border-bottom: 1px solid $gray6;
-    margin-top: 20px;
-    margin-bottom: 20px;
-
-    a {
-        font-size: 16px;
-    }
-}
-
-.mp-all-projects-list-masonry {
-
-}
-
-.mp-project-item {
-    width: 300px;
-    border: 1px solid $gray2;
-    margin-bottom: 20px;
-}
-
-.mp-project-item-cover {
-    height: 200px;
-}
-
-.mp-project-item-detail {
-    padding: 10px;
-}
-
-.mp-project-item-header {
-    font-size: 18px;
-    line-height: 24px;
-    border-bottom: 1px solid $gray6;
-    margin-top: 10px;
-}
-
-.mp-project-item-notes {
-    margin-top: 10px;
 }
 
 

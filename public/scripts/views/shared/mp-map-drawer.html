@@ -7,7 +7,19 @@
         <button class="btn btn-default" type="button" ng-click="interface.showUserSection = true">
           <i class="icon-user"></i>
         </button>
-        <button class="btn btn-default" type="button" ng-click="interface.showMapDrawer = !interface.showMapDrawer">Show detail</button>
+        <!-- show when logout -->
+        <button class="btn btn-default" type="button" ng-click="interface.showMapDrawer = !interface.showMapDrawer" ng-hide="User.checkLogin()">Show detail</button>
+        <!-- show when login -->
+        <div class="btn-group dropup" ng-hide="!User.checkLogin()">
+          <button type="button" class="btn btn-default" ng-click="interface.showMapDrawer = !interface.showMapDrawer">Show detail</button>
+          <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+            <span class="caret"></span>
+          </button>
+          <ul class="dropdown-menu">
+            <li><a href="/all_projects">Return to all projects</a></li>
+          </ul>
+        </div>
+        <!-- END -->
       </span>
       <input type="text" class="form-control" mp-map-searchbox ng-model="searchbox.input">
       <span class="input-group-btn">
@@ -87,7 +99,8 @@
 
     <!-- Tab 2 -->
     <div class="mp-tab-content-box" ng-show="tabs[1].show">
-      <div class="mp-drawer-body">
+      <!-- show when logout -->
+      <div class="mp-drawer-body" ng-hide="User.checkLogin()">
         <h3>Sign up with Facebook to save your marked places</h3>
         <p class="lead">After sign up you can:</p>
         <ol class="lead">
@@ -97,6 +110,33 @@
         </ol>
         <a href="" ng-click="fbLogin()" class="btn btn-primary">Sign up with Facebook</a>
       </div>
+      <!-- show when login -->
+      <div class="mp-drawer-body" ng-hide="!User.checkLogin()" mp-edit-project-form>
+        <form class="form-horizontal" name="editProjectForm">
+          <legend>Edit Project: {{MpProjects.currentProject.title}}</legend>
+          <div class="form-group">
+            <label for="mp_edit_project_title" class="col-lg-2 control-label">Title</label>
+            <div class="col-lg-10">
+              <input type="text" class="form-control" id="mp_edit_project_title" placeholder="Project title" ng-model="editProject.title" name="title">
+            </div>
+          </div>
+          <p class="text-danger">{{editProject.errorMessage}}</p>
+          <div class="form-group">
+            <label for="mp_edit_project_notes" class="col-lg-2 control-label">Notes</label>
+            <div class="col-lg-10">
+              <textarea id="mp_edit_project_notes" class="form-control" placeholder="Project notes" name="notes" ng-model="editProject.notes"></textarea>
+            </div>
+          </div>
+          <div class="form-group">
+            <div class="col-lg-offset-2 col-lg-10">
+              <button type="button" class="btn btn-danger" ng-click="deleteProject()">Delete</button>
+              <button type="submit" class="btn btn-primary" ng-click="saveChanges()">Save</button>
+              <button type="button" class="btn btn-default" ng-click="revertChanges()">Revert</button>
+            </div>
+          </div>
+        </form>
+      </div>
+      <!-- END -->
     </div>
 
   </div>
