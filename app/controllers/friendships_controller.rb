@@ -45,6 +45,7 @@ class FriendshipsController < ApplicationController
     if friendship
       friendship.attributes = params.require(:friendship).permit(:status, :comments)
       friendship.save if friendship.changed?
+      @user.friendships << friendship.reverse_friendship
       render :json => friendship
     else
       head 404

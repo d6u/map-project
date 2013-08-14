@@ -19,7 +19,21 @@
 
   <div class="mp-user-section-tabs-content">
     <!-- Tab 1 -->
-    <div class="mp-user-section-tab-body" ng-show="tabs[0]"></div>
+    <div class="mp-user-section-tab-body" ng-show="tabs[0]">
+      <ol class="mp-notification-center">
+        <li ng-repeat="notice in MpChatbox.notifications">
+          <img ng-src="{{notice.sender.fb_user_picture}}">
+          <div class="mp-user-info-details">
+            <div class="mp-user-info-name">{{notice.sender.name}}</div>
+            <div class="mp-notice-body">Wants to add you as a friend</div>
+            <div class="btn-group">
+              <button type="button" class="btn btn-primary" ng-click="acceptFriendRequest(notice)">Accept</button>
+              <button type="button" class="btn btn-default" ng-click="ignoreFriendRequest(notice)">Ignore</button>
+            </div>
+          </div>
+        </li>
+      </ol>
+    </div>
     <!-- Tab 2 -->
     <div class="mp-user-section-tab-body" ng-show="tabs[1]">
       <ul class="mp-user-sectin-friends-list" perfect-scrollbar="MpChatbox.friends.length">

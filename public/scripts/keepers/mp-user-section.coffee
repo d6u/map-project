@@ -32,7 +32,25 @@ app.directive 'mpUserSection', ['$rootScope', '$compile', 'MpProjects',
 
     scope.sendFriendRequest = (id) ->
       $friendships = Restangular.all 'friendships'
-      $friendships.post {friend_id: id, status: 0}
+      $friendships.post({friend_id: id, status: 0}).then (friendship) ->
+        data =
+          type: 'addFriendRequest'
+          sender:
+            id: $rootScope.User.getId()
+            name: $rootScope.User.name()
+            fb_user_picture: $rootScope.User.fb_user_picture()
+          receivers_ids: [id]
+          body:
+            friendship_id: friendship.id
+        MpChatbox.sendClientMessage(data)
+
+    scope.acceptFriendRequest = (notice) ->
+      friendship = Restangular.one('friendships', notice.body.friendship_id)
+      friendship.status = 1
+      friendship.put()
+
+    scope.ignoreFriendRequest = (notice) ->
+      MpChatbox.notifications = _.without MpChatbox.notifications, notice
 
     # init
     scope.searchFriends = {}
