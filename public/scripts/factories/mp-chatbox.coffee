@@ -51,6 +51,7 @@ angular.module('mp-chatbox-provider', []).provider 'MpChatbox', class
       rooms: {}
       friends: []
       eventDeregisters: []
+      notifications: []
 
       initialize: ->
         $friends.getList().then (friends) =>
@@ -122,6 +123,7 @@ angular.module('mp-chatbox-provider', []).provider 'MpChatbox', class
               @rooms[data.project_id] = [data]
           when 'addFriendRequest'
             console.debug 'receive addFriendRequest', data
+            @notifications.push data
 
       sendClientMessage: (data) ->
         socket.emit 'clientMessage', data

@@ -15,38 +15,13 @@ class FriendsController < ApplicationController
   end
 
 
-  def create
-    friendship = Friendship.new params.require(:friendship).permit(:friend_id, :status, :comments)
-    @user.friendships << friendship
-    render :json => friendship
-  end
-
-
   def show
-    friendship = Friendship.find_by_id params[:id]
-    if friendship
-      render :json => friendship
+    friend = @user.friends.find_by_id params[:id]
+    if friend
+      render :json => friend, :only => [:id, :name, :fb_user_picture]
     else
       head 404
     end
-  end
-
-
-  def update
-    friendship = Friendship.find_by_id params[:id]
-    if friendship
-      friendship.attributes = params.require(:friendship).permit(:status, :comments)
-      friendship.save if friendship.changed?
-      render :json => friendship
-    else
-      head 404
-    end
-  end
-
-
-  def destroy
-    Friendship.destroy_all :id => params[:id]
-    head 200
   end
 
 end

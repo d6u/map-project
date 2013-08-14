@@ -1,3 +1,4 @@
+# mp-tabs
 app.directive 'mpTabs', [->
 
   scope: true
