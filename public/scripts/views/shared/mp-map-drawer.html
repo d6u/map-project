@@ -111,27 +111,27 @@
         <a href="" ng-click="fbLogin()" class="btn btn-primary">Sign up with Facebook</a>
       </div>
       <!-- show when login -->
-      <div class="mp-drawer-body" ng-hide="!User.checkLogin()">
-        <form class="form-horizontal" name="modalboxForm">
-          <legend>Edit Project: {{project.title}}</legend>
+      <div class="mp-drawer-body" ng-hide="!User.checkLogin()" mp-edit-project-form>
+        <form class="form-horizontal" name="editProjectForm">
+          <legend>Edit Project: {{MpProjects.currentProject.title}}</legend>
           <div class="form-group">
-            <label for="mp_modalbox_input_project_title" class="col-lg-2 control-label">Title</label>
+            <label for="mp_edit_project_title" class="col-lg-2 control-label">Title</label>
             <div class="col-lg-10">
-              <input type="text" class="form-control" id="mp_modalbox_input_project_title" placeholder="Project title" ng-model="modalbox.title" name="title">
+              <input type="text" class="form-control" id="mp_edit_project_title" placeholder="Project title" ng-model="editProject.title" name="title">
             </div>
           </div>
-          <p class="text-danger">{{errorMessage}}</p>
+          <p class="text-danger">{{editProject.errorMessage}}</p>
           <div class="form-group">
-            <label for="mp_modalbox_input_project_notes" class="col-lg-2 control-label">Notes</label>
+            <label for="mp_edit_project_notes" class="col-lg-2 control-label">Notes</label>
             <div class="col-lg-10">
-              <textarea id="mp_modalbox_input_project_notes" class="form-control" placeholder="Project notes" name="notes" ng-model="modalbox.notes"></textarea>
+              <textarea id="mp_edit_project_notes" class="form-control" placeholder="Project notes" name="notes" ng-model="editProject.notes"></textarea>
             </div>
           </div>
           <div class="form-group">
             <div class="col-lg-offset-2 col-lg-10">
               <button type="button" class="btn btn-danger" ng-click="deleteProject()">Delete</button>
-              <button type="submit" class="btn btn-primary" ng-click="saveProject()">Save</button>
-              <button type="button" class="btn btn-default" ng-click="closeModal()">Cancel</button>
+              <button type="submit" class="btn btn-primary" ng-click="saveChanges()">Save</button>
+              <button type="button" class="btn btn-default" ng-click="revertChanges()">Revert</button>
             </div>
           </div>
         </form>
