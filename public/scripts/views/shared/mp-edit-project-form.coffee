@@ -17,13 +17,9 @@ app.directive 'mpEditProjectForm', ['$rootScope', '$location',
         scope.editProject.errorMessage = null
         scope.MpProjects.currentProject.title = scope.editProject.title
         scope.MpProjects.currentProject.notes = scope.editProject.notes
-        _places = scope.MpProjects.currentProject.places
-        delete scope.MpProjects.__currentProjectPlaces
-        delete scope.MpProjects.currentProject.places
-        scope.MpProjects.currentProject.put().then ->
+        scope.MpProjects.currentProject.put().then (project) ->
+          $location.path('/project/'+project.id) if $location.path() == '/new_project'
           $rootScope.$broadcast 'projectUpdated'
-        scope.MpProjects.currentProject.places = _places
-        scope.MpProjects.__currentProjectPlaces = _places
 
     scope.revertChanges = ->
       scope.editProject.title = scope.MpProjects.currentProject.title

@@ -13,7 +13,9 @@ angular.module('mp-chatbox-provider', []).provider 'MpChatbox', class
   ($rootScope, $timeout, $q, Restangular, $route) ->
 
     [socketServer, handshakeQuery] = [@$$socketServer, @handshakeQuery]
-    $friends = Restangular.all 'friends'
+    $friendships   = Restangular.all 'friendships'
+    $friends       = Restangular.all 'friends'
+    $notifications = Restangular.all 'notifications'
 
     # socket.io
     # ----------------------------------------
@@ -55,15 +57,18 @@ angular.module('mp-chatbox-provider', []).provider 'MpChatbox', class
       notifications: []
 
       initialize: ->
+        $notifications.getList().then (notifications) =>
+          @notifications.push notice for notice in notifications
+
         $friends.getList().then (friends) =>
           @friends = friends
           friendsIds = _.pluck(friends, 'id')
           socket.emit 'getOnlineFriendsList', friendsIds, (onlineFriendsIds) =>
-            console.debug 'Got online friends ids list', onlineFriendsIds
             onlineFriends = _.filter @friends, (friend) ->
               return _.contains(onlineFriendsIds, friend.id)
             _.forEach onlineFriends, (friend) ->
               friend.$$online = true
+
         # setup listeners
         socket.on 'userConnected', (userId) =>
           console.debug 'userConnected', userId
@@ -115,7 +120,6 @@ angular.module('mp-chatbox-provider', []).provider 'MpChatbox', class
           eventDeregister()
 
       processServerMessage: (data) ->
-        console.debug 'receive serverMessage', data
         switch data.type
           when 'message'
             if @rooms[data.project_id]
@@ -123,11 +127,54 @@ angular.module('mp-chatbox-provider', []).provider 'MpChatbox', class
             else
               @rooms[data.project_id] = [data]
           when 'addFriendRequest'
-            console.debug 'receive addFriendRequest', data
-            @notifications.push data
+            if !_.find @notifications, {body: {friendship_id: data.body.friendship_id}}
+              @notifications.push data
 
       sendClientMessage: (data) ->
-        socket.emit 'clientMessage', data
+        @socket.emit 'clientMessage', data
+
+      # specific actions
+      # ----------------------------------------
+      # friend request handling
+      #   used in mp-user-section
+      sendFriendRequest: (user) ->
+        $friendships.post({friend_id: user.id, status: 0}).then(
+          ((friendship) ->
+            data = {
+              type: 'addFriendRequest'
+              sender:
+                id:              $rootScope.MpUser.getId()
+                name:            $rootScope.MpUser.name()
+                fb_user_picture: $rootScope.MpUser.fb_user_picture()
+              receivers_ids:     [user.id]
+              body:
+                friendship_id:   friendship.id
+            }
+            MpChatbox.sendClientMessage(data)
+          ),
+          # client error, most likly due to duplicate requests, all blocked
+          ((error) ->
+            user.systemMessage = error.data.message if error.data.error == true
+          )
+        )
+
+      acceptFriendRequest: (notice) ->
+        friendship = Restangular.one('friendships', notice.body.friendship_id)
+        friendship.status = 1
+        friendship.put().then(
+          ((friend) ->
+            MpChatbox.notifications = _.without MpChatbox.notifications, notice
+            MpChatbox.friends.push friend
+          ),
+          (->
+            MpChatbox.notifications = _.without MpChatbox.notifications, notice
+          )
+        )
+
+      ignoreFriendRequest: (notice) ->
+        MpChatbox.notifications = _.without MpChatbox.notifications, notice
+        friendship = Restangular.one('friendships', notice.body.friendship_id)
+        friendship.remove()
 
 
     # return

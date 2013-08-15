@@ -174,6 +174,7 @@ app.config(['MpChatboxProvider', '$httpProvider', '$routeProvider',
           if MpChatbox.socket.online
             MpChatbox.socket.disconnect()
             MpChatbox.destroy()
+        filter.resolve()
 
       return filter.promise
   ]
@@ -187,6 +188,7 @@ app.config(['MpChatboxProvider', '$httpProvider', '$routeProvider',
     resolve:
       MpInitializer: 'MpInitializer'
       filter:         outsideFilter_MpProject
+      filter_MpChatbox: filter_MpChatbox
   })
   .when('/all_projects', {
     controller: 'AllProjectsViewCtrl'
@@ -194,6 +196,7 @@ app.config(['MpChatboxProvider', '$httpProvider', '$routeProvider',
     resolve:
       MpInitializer: 'MpInitializer'
       filter:         allProjectsFilter_MpProject
+      filter_MpChatbox: filter_MpChatbox
   })
   .when('/new_project', {
     controller: 'NewProjectViewCtrl'
@@ -201,6 +204,7 @@ app.config(['MpChatboxProvider', '$httpProvider', '$routeProvider',
     resolve:
       MpInitializer: 'MpInitializer'
       filter:         newProjectFilter_MpProject
+      filter_MpChatbox: filter_MpChatbox
   })
   .when('/project/:project_id', {
     controller: 'ProjectViewCtrl'
@@ -208,6 +212,7 @@ app.config(['MpChatboxProvider', '$httpProvider', '$routeProvider',
     resolve:
       MpInitializer: 'MpInitializer'
       filter:         projectFilter_MpProject
+      filter_MpChatbox: filter_MpChatbox
   })
   .otherwise({redirectTo: '/'})
 

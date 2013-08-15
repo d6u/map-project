@@ -11,7 +11,7 @@
 <div mp-user-section-tabs>
   <div class="btn-group">
     <button type="button" class="btn btn-primary" ng-click="showTab(0)">Notification
-      <span class="badge">{{}}</span>
+      <span class="badge" ng-hide="MpChatbox.notifications.length == 0">{{MpChatbox.notifications.length}}</span>
     </button>
     <button type="button" class="btn btn-default" ng-click="showTab(1)">Friends</button>
     <button type="button" class="btn btn-default" ng-click="showTab(2)"><i class="icon-search"></i></button>
@@ -27,8 +27,8 @@
             <div class="mp-user-info-name">{{notice.sender.name}}</div>
             <div class="mp-notice-body">Wants to add you as a friend</div>
             <div class="btn-group">
-              <button type="button" class="btn btn-primary" ng-click="acceptFriendRequest(notice)">Accept</button>
-              <button type="button" class="btn btn-default" ng-click="ignoreFriendRequest(notice)">Ignore</button>
+              <button type="button" class="btn btn-primary" ng-click="MpChatbox.acceptFriendRequest(notice)">Accept</button>
+              <button type="button" class="btn btn-default" ng-click="MpChatbox.ignoreFriendRequest(notice)">Ignore</button>
             </div>
           </div>
         </li>
@@ -50,7 +50,8 @@
         <li class="mp-user-sectin-friends-item" ng-repeat="user in searchFriends.results">
           <img ng-src="{{user.fb_user_picture}}">
           {{user.name}}
-          <a href="" ng-click="sendFriendRequest(user.id)">add friend</a>
+          <a href="" ng-click="MpChatbox.sendFriendRequest(user)">add friend</a>
+          <div class="mp-user-section-system-message">{{user.systemMessage}}</div>
         </li>
       </ul>
     </div>

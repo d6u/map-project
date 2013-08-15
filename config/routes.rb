@@ -27,6 +27,7 @@ MapProject::Application.routes.draw do
 
   resources :friends
   resources :friendships
+  resources :notifications
 
 
   post "invitation/generate"
