@@ -2,7 +2,7 @@
 # ========================================
 angular.module('mp-chatbox-provider', []).provider 'MpChatbox', class
 
-  setSocketServer: (@socketServer) ->
+  setSocketServer: (@$$socketServer) ->
   setHandshakeQuery: (handshakeQuery) ->
     queryArray = ("#{key}=#{value}" for key, value of handshakeQuery)
     @handshakeQuery = queryArray.join('&')
@@ -12,42 +12,43 @@ angular.module('mp-chatbox-provider', []).provider 'MpChatbox', class
   $get: ['$rootScope', '$timeout', '$q', 'Restangular', '$route',
   ($rootScope, $timeout, $q, Restangular, $route) ->
 
-    [socketServer, handshakeQuery] = [@socketServer, @handshakeQuery]
+    [socketServer, handshakeQuery] = [@$$socketServer, @handshakeQuery]
     $friends = Restangular.all 'friends'
 
     # socket.io
     # ----------------------------------------
     socket =
-      socket: null
+      $$socket: null
       online: false
       connect: ->
         defer = $q.defer()
-        @socket.socket.connect()
+        @$$socket.socket.connect()
         @on 'connect', =>
           defer.resolve()
           @online = true
         return defer.promise
       disconnect: ->
-        @socket.removeAllListeners()
-        @socket.disconnect()
+        @$$socket.removeAllListeners()
+        @$$socket.disconnect()
         @online = false
       on: (eventName, callback) ->
-        @socket.on eventName, (args...) ->
-          $timeout -> callback.apply(@socket, args)
+        @$$socket.on eventName, (args...) ->
+          $timeout -> callback.apply(@$$socket, args)
       emit: (eventName, data, callback) ->
-        @socket.emit eventName, data, (args...) =>
-          $rootScope.$apply => callback.apply(@socket, args) if callback
+        @$$socket.emit eventName, data, (args...) =>
+          $rootScope.$apply => callback.apply(@$$socket, args) if callback
 
     # socket init
     socketOptions =
       'auto connect': false
       query: handshakeQuery
-    socket.socket = io.connect(socketServer, socketOptions)
+    socket.$$socket = io.connect(socketServer, socketOptions)
 
 
-    # Chatbox
+    # MpChatbox
     # ----------------------------------------
-    Chatbox =
+    MpChatbox =
+      socket: socket
       rooms: {}
       friends: []
       eventDeregisters: []
@@ -129,19 +130,7 @@ angular.module('mp-chatbox-provider', []).provider 'MpChatbox', class
         socket.emit 'clientMessage', data
 
 
-    # init
-    # ----------------------------------------
-    # events
-    $rootScope.$on '$routeChangeSuccess', (event, current, previous) ->
-      if $rootScope.User.checkLogin()
-        if !socket.online then socket.connect().then -> Chatbox.initialize()
-      else
-        if socket.online
-          socket.disconnect()
-          Chatbox.destroy()
-
-
     # return
     # ----------------------------------------
-    Chatbox
+    return MpChatbox
   ]

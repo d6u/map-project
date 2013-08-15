@@ -1,6 +1,5 @@
-app = angular.module 'angular-perfect-scrollbar', []
-
-app.directive 'perfectScrollbar', ['$window', ($window) ->
+angular.module('angular-perfect-scrollbar', [])
+.directive 'perfectScrollbar', ['$window', ($window) ->
   (scope, element, attrs) ->
 
     # init perfectScrollbar

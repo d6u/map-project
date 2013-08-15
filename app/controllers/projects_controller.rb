@@ -53,7 +53,11 @@ class ProjectsController < ApplicationController
 
   def show
     project = Project.find_by_id params[:id]
-    render :json => project
+    if project
+      render :json => project
+    else
+      head 401
+    end
   end
 
 

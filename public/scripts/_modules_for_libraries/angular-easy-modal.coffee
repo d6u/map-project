@@ -1,8 +1,6 @@
-app = angular.module 'angular-easy-modal', []
-
-
 # jq-easy-modal
-app.directive 'jqEasyModal', ['$templateCache', '$compile', '$rootScope',
+angular.module('angular-easy-modal', [])
+.directive 'jqEasyModal', ['$templateCache', '$compile', '$rootScope',
 ($templateCache, $compile, $rootScope) ->
 
   scope: true

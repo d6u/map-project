@@ -2,11 +2,14 @@
 # --------------------------------------------
 app.directive 'mpUserSection', ['$rootScope', '$compile', 'MpProjects',
 '$location', '$timeout', 'Restangular', 'MpChatbox', 'mpTemplateCache',
-($rootScope, $compile, MpProjects, $location, $timeout,
- Restangular, MpChatbox, mpTemplateCache) ->
+'$route',
+($rootScope, $compile, MpProjects, $location, $timeout, Restangular, MpChatbox,
+ mpTemplateCache, $route) ->
 
   currentTemplate = ->
-    return if $rootScope.User.checkLogin() then '/scripts/keepers/mp-user-section-after-login.html' else '/scripts/keepers/mp-user-section-before-login.html'
+    if $route.current.$$route.controller == 'OutsideViewCtrl'
+      return '/scripts/keepers/mp-user-section-before-login.html'
+    else return '/scripts/keepers/mp-user-section-after-login.html'
 
   # return
   scope: true
