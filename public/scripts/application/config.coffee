@@ -121,12 +121,14 @@ app.config(['MpChatboxProvider', '$httpProvider', '$routeProvider',
             project = _.find projects, {id: Number($route.current.params.project_id)}
             # did not find requested project
             if !project
-              # make it sure on server
+              # make double check on server
               $project = Restangular.one('projects', $route.current.params.project_id)
               $project.get().then(
                 ((project) ->
                   MpProjects.getProjects({include_participated: true})
                   MpProjects.currentProject = project
+                  project.getList('users').then (users) ->
+                    $rootScope.MpChatbox.participatedUsers = users
                   project.getList('places').then (places) ->
                     MpProjects.currentProjectPlaces   = places
                     MpProjects.__currentProjectPlaces = _.clone(places)
@@ -143,6 +145,8 @@ app.config(['MpChatboxProvider', '$httpProvider', '$routeProvider',
             # did find requested project
             else
               MpProjects.currentProject = project
+              project.getList('users').then (users) ->
+                $rootScope.MpChatbox.participatedUsers = users
               project.getList('places').then (places) ->
                 MpProjects.currentProjectPlaces   = places
                 MpProjects.__currentProjectPlaces = _.clone(places)

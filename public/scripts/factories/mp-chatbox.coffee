@@ -55,6 +55,7 @@ angular.module('mp-chatbox-provider', []).provider 'MpChatbox', class
       friends: []
       eventDeregisters: []
       notifications: []
+      participatedUsers: [] # this is a project related property
 
       initialize: ->
         $notifications.getList().then (notifications) =>
@@ -74,13 +75,13 @@ angular.module('mp-chatbox-provider', []).provider 'MpChatbox', class
 
         # register scope listeners
         enterNewMessage = $rootScope.$on 'enterNewMessage', (event, data) =>
-          console.debug @rooms
+          console.debug 'enterNewMessage @rooms ->', @rooms
           # project_id, receivers_ids: []
           data.type = 'message'
           data.user =
-            id: $rootScope.User.getId()
-            name: $rootScope.User.name()
-            fb_user_picture: $rootScope.User.fb_user_picture()
+            id: $rootScope.MpUser.getId()
+            name: $rootScope.MpUser.name()
+            fb_user_picture: $rootScope.MpUser.fb_user_picture()
           @sendClientMessage(data)
           data.self = true
           $rootScope.$apply =>
@@ -94,9 +95,9 @@ angular.module('mp-chatbox-provider', []).provider 'MpChatbox', class
           data =
             type: 'addFriendRequest'
             sender:
-              id: $rootScope.User.getId()
-              name: $rootScope.User.name()
-              fb_user_picture: $rootScope.User.fb_user_picture()
+              id: $rootScope.MpUser.getId()
+              name: $rootScope.MpUser.name()
+              fb_user_picture: $rootScope.MpUser.fb_user_picture()
             receivers_ids: [friend_id]
           @sendClientMessage(data)
 

@@ -1,6 +1,6 @@
 // Chatbox
 // ========================================
-.mp-chatbox {
+.mp-chatbox-directive {
 
 }
 
@@ -39,7 +39,7 @@
     }
 }
 
-// mp-chatbox-expanded
+// mp-chatbox-directive-expanded
 // ========================================
 .mp-chatbox-expanded {
     position: fixed;
@@ -55,7 +55,7 @@
     border-radius: 1px;
 }
 
-// mp-chatbox-header
+// mp-chatbox-directive-header
 // ----------------------------------------
 .mp-chatbox-header {
     height: 35px;
