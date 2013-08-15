@@ -38,7 +38,14 @@ app.factory 'MpProjects', ['Restangular', '$rootScope',
 
     getProjects: (queryParams) ->
       $projects.getList(queryParams).then (projects) =>
-        @projects   = _.union @projects, projects
+        _projects = @projects
+        @projects = projects
+        newProjectsIds = _.pluck(projects, 'id')
+        oldProjectsIds = _.pluck(_projects, 'id')
+        remainingProjectsIds = _.difference(oldProjectsIds, newProjectsIds)
+        _.forEach remainingProjectsIds, (id) ->
+          project = _.find(_projects, {id: id})
+          @projects.push project
         @__projects = _.clone MpProjects.projects
         return projects
 

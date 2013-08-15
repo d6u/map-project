@@ -48,7 +48,7 @@ end
 
 
 
-gem 'puma'
+# gem 'puma', group: :production
 gem 'redis'
 gem 'awesome_print', group: :development
 gem 'oj'

@@ -55,11 +55,12 @@ app.config(['MpChatboxProvider', '$httpProvider', '$routeProvider',
 
       MpInitializer.then ->
         if $rootScope.MpUser.checkLogin()
-          if !MpProjects.projects.post
+          if !MpProjects.projects.route
             loadProjects = MpProjects.getProjects({include_participated: true})
           # from OutsideViewCtrl
-          if $route.previous.controller == 'OutsideViewCtrl' && MpProjects.currentProjectPlaces.length > 0
+          if $route.previous && $route.previous.controller == 'OutsideViewCtrl' && MpProjects.currentProjectPlaces.length > 0
             # have unsaved places
+            debugger
             $projects = Restangular.all('projects')
             $projects.post({title: 'last unsaved project'}).then (project) ->
               $places = project.all('places')
@@ -83,7 +84,7 @@ app.config(['MpChatboxProvider', '$httpProvider', '$routeProvider',
                   # --- END ---
                   filter.resolve()
               else
-                project = _.find MpProjects, {title: 'last unsaved project'}
+                project = _.find MpProjects.projects, {title: 'last unsaved project'}
                 if project
                   MpProjects.currentProject = project
                   project.getList('places').then (places) ->
@@ -114,10 +115,10 @@ app.config(['MpChatboxProvider', '$httpProvider', '$routeProvider',
 
       MpInitializer.then ->
         if $rootScope.MpUser.checkLogin()
-          if !MpProjects.projects.post
+          if !MpProjects.projects.route
             loadProjects = MpProjects.getProjects({include_participated: true})
           standardProcedure = (projects) ->
-            project = _.find projects, {id: $route.current.params.project_id}
+            project = _.find projects, {id: Number($route.current.params.project_id)}
             # did not find requested project
             if !project
               # make it sure on server
@@ -206,7 +207,7 @@ app.config(['MpChatboxProvider', '$httpProvider', '$routeProvider',
     templateUrl: '/scripts/views/project_view/project-view.html'
     resolve:
       MpInitializer: 'MpInitializer'
-      filter:         outsideFilter_MpProject
+      filter:         projectFilter_MpProject
   })
   .otherwise({redirectTo: '/'})
 
