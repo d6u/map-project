@@ -1,5 +1,5 @@
-app.directive 'mpMapDrawer', ['TheMap', '$rootScope', 'MpProjects', '$timeout',
-(TheMap, $rootScope, MpProjects, $timeout) ->
+app.directive 'mpMapDrawer', ['$rootScope', '$timeout',
+($rootScope, $timeout) ->
 
   templateUrl: '/scripts/views/shared/mp-map-drawer.html'
   scope: true
@@ -10,11 +10,11 @@ app.directive 'mpMapDrawer', ['TheMap', '$rootScope', 'MpProjects', '$timeout',
     scope.clearInput = (control) ->
       scope.searchbox.input = ''
       element.find('input').val('')
-      $rootScope.$broadcast 'mpInputboxClearInput'
+      scope.TheMap.searchResults = []
 
     scope.fbLogin = ->
       $rootScope.User.login ->
-        return if MpProjects.currentProject.places.length > 0 then '/new_project' else '/all_projects'
+        return if scope.MpProjects.currentProjectPlaces.length > 0 then '/new_project' else '/all_projects'
 
     # watcher
     scope.$watch 'searchbox.input.length', (newVal) ->
@@ -22,5 +22,5 @@ app.directive 'mpMapDrawer', ['TheMap', '$rootScope', 'MpProjects', '$timeout',
         scope.interface.showMapDrawer = true
 
     scope.$watch 'interface.showMapDrawer', (newVal) ->
-      $timeout (-> google.maps.event.trigger(TheMap.map, 'resize')), 300
+      $timeout (-> google.maps.event.trigger(scope.TheMap.map, 'resize')), 300
 ]

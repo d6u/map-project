@@ -1,3 +1,3 @@
 nodejs:    coffee streaming.coffee
-rails:     rails s puma
+rails:     rails s
 redis:     redis-server

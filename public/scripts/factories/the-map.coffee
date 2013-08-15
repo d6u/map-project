@@ -8,7 +8,7 @@ app.factory 'TheMap', ['$rootScope', 'MpProjects', '$timeout',
   # ----------------------------------------
   bindInfoWindow = (place) ->
     google.maps.event.addListener place.$$marker, 'click', ->
-      mpTemplateCache.get('scripts/views/shared/marker-info.html').then (template) ->
+      mpTemplateCache.get('/scripts/views/shared/marker-info.html').then (template) ->
         newScope = $rootScope.$new()
         newScope.place = place
         compiled = $compile(template)(newScope)
@@ -26,25 +26,24 @@ app.factory 'TheMap', ['$rootScope', 'MpProjects', '$timeout',
     infoWindow: new google.maps.InfoWindow()
     searchBox: null
     # need to be reset
-    markers: []
-    searchResults: []
+    markers:         []
+    searchResults:   []
     __searchResults: []
 
     reset: ->
-      @markers = []
-      @searchResults = []
+      @markers         = []
+      @searchResults   = []
       @__searchResults = []
 
     addPlaceToList: (place) ->
-      # remove selected marker from this.markers
+      # remove selected marker from TheMap.markers
       @markers = _.filter @markers, (marker) ->
         return true if marker.__gm_id != place.$$marker.__gm_id
 
       place.$$marker.setMap null
-      delete place.$$marker
-      place.id = true
-      place.order = MpProjects.currentProject.places.length
-      MpProjects.currentProject.places.push place
+      place.order = MpProjects.currentProjectPlaces.length
+      MpProjects.currentProjectPlaces.push place
+      place.$$saved = true
 
     centerPlaceInMap: (location) ->
       @map.setCenter location
@@ -59,7 +58,7 @@ app.factory 'TheMap', ['$rootScope', 'MpProjects', '$timeout',
 
   # watcher
   # ----------------------------------------
-  # TheMap.searchResults
+  # TheMap.searchResults, add marker for each result
   $rootScope.$watch(
     (->
       return _.pluck TheMap.searchResults, 'id'
@@ -69,26 +68,23 @@ app.factory 'TheMap', ['$rootScope', 'MpProjects', '$timeout',
       TheMap.markers = []
       return if newVal.length == 0
 
-      # entered new searchResults
+      # new searchResults entered
       places = TheMap.searchResults
       bounds = new google.maps.LatLngBounds()
       animation = if places.length == 1 then google.maps.Animation.DROP else null
       _.forEach places, (place) ->
         markerOptions =
-          map: TheMap.map
-          title: place.name
-          position: place.geometry.location
+          map:       TheMap.map
+          title:     place.name
+          position:  place.geometry.location
           animation: animation
-        newPlace =
-          $$marker: new google.maps.Marker markerOptions
-          notes: null
-          name: place.name
-          address: place.formatted_address
-          coord: place.geometry.location.toString()
-        TheMap.markers.push newPlace.$$marker
-        place.mpObject = newPlace
-        bounds.extend newPlace.$$marker.getPosition()
-        bindInfoWindow newPlace
+        place.$$marker = new google.maps.Marker markerOptions
+        place.notes    = null
+        place.address  = place.formatted_address
+        place.coord    = place.geometry.location.toString()
+        TheMap.markers.push place.$$marker
+        bounds.extend place.$$marker.getPosition()
+        bindInfoWindow place
 
       TheMap.map.fitBounds bounds
       TheMap.map.setZoom(12) if places.length < 3 && TheMap.map.getZoom() > 12
@@ -99,29 +95,30 @@ app.factory 'TheMap', ['$rootScope', 'MpProjects', '$timeout',
   # watch for marked places and make marker for them
   $rootScope.$watch(
     (->
-      return if $rootScope.User && $rootScope.User.checkLogin() then {attr: 'id', content: _.pluck(MpProjects.currentProject.places, 'id')} else {attr: 'order', content: _.pluck(MpProjects.currentProject.places, 'order')}
+      return _.pluck(MpProjects.currentProjectPlaces, 'id')
     ),
     ((newVal, oldVal) ->
-      _.forEach  MpProjects.currentProject.places, (place, idx) ->
+      _.forEach MpProjects.currentProjectPlaces, (place, idx) ->
         if place.$$marker
           place.$$marker.setMap null
           delete place.$$marker
-        coordMatch = /\((.+), (.+)\)/.exec place.coord
-        latLog = new google.maps.LatLng coordMatch[1], coordMatch[2]
+        if place.geometry
+          latLog = place.geometry.location
+        else
+          coordMatch = /\((.+), (.+)\)/.exec place.coord
+          latLog = new google.maps.LatLng coordMatch[1], coordMatch[2]
         markerOptions =
           map: TheMap.map
           title: place.name
           position: latLog
           icon:
-            url: "/assets/number_#{idx}.png"
+            url: "/img/markers/number_#{idx}.png"
         place.$$marker = new google.maps.Marker markerOptions
     ), true
   )
 
-  # TODO: remove if only one place use it
-  $rootScope.$on 'mpInputboxClearInput', -> TheMap.searchResults = []
-
 
   # return
+  # ----------------------------------------
   return TheMap
 ]
