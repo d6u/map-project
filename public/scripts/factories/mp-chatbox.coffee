@@ -59,16 +59,7 @@ angular.module('mp-chatbox-provider', []).provider 'MpChatbox', class
       initialize: ->
         $notifications.getList().then (notifications) =>
           @notifications.push notice for notice in notifications
-
-        $friends.getList().then (friends) =>
-          @friends = friends
-          friendsIds = _.pluck(friends, 'id')
-          socket.emit 'getOnlineFriendsList', friendsIds, (onlineFriendsIds) =>
-            onlineFriends = _.filter @friends, (friend) ->
-              return _.contains(onlineFriendsIds, friend.id)
-            _.forEach onlineFriends, (friend) ->
-              friend.$$online = true
-
+        @updateFriendsList()
         # setup listeners
         socket.on 'userConnected', (userId) =>
           console.debug 'userConnected', userId
@@ -135,8 +126,18 @@ angular.module('mp-chatbox-provider', []).provider 'MpChatbox', class
 
       # specific actions
       # ----------------------------------------
+      # used in mp-user-section
+      updateFriendsList: ->
+        $friends.getList().then (friends) =>
+          @friends = friends
+          friendsIds = _.pluck(friends, 'id')
+          socket.emit 'getOnlineFriendsList', friendsIds, (onlineFriendsIds) =>
+            onlineFriends = _.filter @friends, (friend) ->
+              return _.contains(onlineFriendsIds, friend.id)
+            _.forEach onlineFriends, (friend) ->
+              friend.$$online = true
+
       # friend request handling
-      #   used in mp-user-section
       sendFriendRequest: (user) ->
         $friendships.post({friend_id: user.id, status: 0}).then(
           ((friendship) ->

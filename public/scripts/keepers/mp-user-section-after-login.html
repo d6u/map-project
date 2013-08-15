@@ -13,14 +13,14 @@
     <button type="button" class="btn btn-primary" ng-click="showTab(0)">Notification
       <span class="badge" ng-hide="MpChatbox.notifications.length == 0">{{MpChatbox.notifications.length}}</span>
     </button>
-    <button type="button" class="btn btn-default" ng-click="showTab(1)">Friends</button>
+    <button type="button" class="btn btn-default" ng-click="showTab(1); MpChatbox.updateFriendsList()">Friends</button>
     <button type="button" class="btn btn-default" ng-click="showTab(2)"><i class="icon-search"></i></button>
   </div>
 
   <div class="mp-user-section-tabs-content">
     <!-- Tab 1 -->
     <div class="mp-user-section-tab-body" ng-show="tabs[0]">
-      <ol class="mp-notification-center">
+      <ol class="mp-notification-center" perfect-scrollbar="MpChatbox.notifications.length">
         <li ng-repeat="notice in MpChatbox.notifications">
           <img ng-src="{{notice.sender.fb_user_picture}}">
           <div class="mp-user-info-details">
