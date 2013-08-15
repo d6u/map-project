@@ -14,6 +14,16 @@ app.factory 'MpProjects', ['Restangular', '$rootScope',
 
   $projects = Restangular.all 'projects'
 
+  # intercept places object
+  Restangular.setRequestInterceptor (element, operation, route, url) ->
+    if route == 'places'
+      # id, name, address, coord, order, project_id, created_at, updated_at
+      copy = _.pick element, ['id', 'name', 'address', 'coord', 'order', 'project_id', 'created_at', 'updated_at']
+    else
+      copy = element
+    return copy
+
+
   ###
   properties start with `__` is a shallow clone of related property, this gives
     $watch the abilities to update the properties (if it's a array) by itself
@@ -72,7 +82,7 @@ app.factory 'MpProjects', ['Restangular', '$rootScope',
   $rootScope.$watch (->
     return _.pluck MpProjects.currentProjectPlaces, 'id'
   ), ((newVal, oldVal) ->
-    if !$rootScope.User || !$rootScope.User.checkLogin()
+    if !$rootScope.MpUser || !$rootScope.MpUser.checkLogin()
       MpProjects.__currentProjectPlaces = _.clone MpProjects.currentProjectPlaces
       return
     newPlaces     = _.difference MpProjects.currentProjectPlaces, MpProjects.__currentProjectPlaces

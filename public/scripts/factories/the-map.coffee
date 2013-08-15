@@ -37,13 +37,15 @@ app.factory 'TheMap', ['$rootScope', 'MpProjects', '$timeout',
 
     addPlaceToList: (place) ->
       # remove selected marker from TheMap.markers
+      return if !place.$$marker
       @markers = _.filter @markers, (marker) ->
         return true if marker.__gm_id != place.$$marker.__gm_id
 
       place.$$marker.setMap null
-      place.order = MpProjects.currentProjectPlaces.length
-      MpProjects.currentProjectPlaces.push place
-      place.$$saved = true
+      delete place.$$marker
+      _place = _.clone(place)
+      _place.order = MpProjects.currentProjectPlaces.length
+      MpProjects.currentProjectPlaces.push _place
 
     centerPlaceInMap: (location) ->
       @map.setCenter location
@@ -99,6 +101,7 @@ app.factory 'TheMap', ['$rootScope', 'MpProjects', '$timeout',
     ),
     ((newVal, oldVal) ->
       _.forEach MpProjects.currentProjectPlaces, (place, idx) ->
+        place.$$saved = true
         if place.$$marker
           place.$$marker.setMap null
           delete place.$$marker
@@ -114,6 +117,7 @@ app.factory 'TheMap', ['$rootScope', 'MpProjects', '$timeout',
           icon:
             url: "/img/markers/number_#{idx}.png"
         place.$$marker = new google.maps.Marker markerOptions
+        bindInfoWindow place
     ), true
   )
 

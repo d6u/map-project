@@ -13,7 +13,7 @@ app.directive 'mpMapDrawer', ['$rootScope', '$timeout',
       scope.TheMap.searchResults = []
 
     scope.fbLogin = ->
-      $rootScope.User.login ->
+      $rootScope.MpUser.login ->
         return if scope.MpProjects.currentProjectPlaces.length > 0 then '/new_project' else '/all_projects'
 
     # watcher
