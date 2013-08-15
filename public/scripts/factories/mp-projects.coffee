@@ -1,9 +1,10 @@
 # MpProjects
 # ========================================
-app.factory 'MpProjects', ['Restangular', '$rootScope', '$location',
-(Restangular, $rootScope, $location) ->
+app.factory 'MpProjects', ['Restangular', '$rootScope',
+(Restangular, $rootScope) ->
 
   # REST /projects/:id
+  # addRestangularMethod (name, operation, path, params, headers, elementToPost)
   Restangular.addElementTransformer 'projects', true, (projects) ->
     projects.addRestangularMethod 'find_by_title', 'get', '', {title: 'last unsaved project'}
     return projects
@@ -13,208 +14,81 @@ app.factory 'MpProjects', ['Restangular', '$rootScope', '$location',
 
   $projects = Restangular.all 'projects'
 
-  # Object structure
-  MpProjects =
-    $$projects: $projects
-    projects: []
-    __projects: []
-    currentProject: {places: []}
+  ###
+  properties start with `__` is a shallow clone of related property, this gives
+    $watch the abilities to update the properties (if it's a array) by itself
+  ###
+  MpProjects = {
+    $$projects:             $projects
+    projects:               []
+    __projects:             []
+    currentProject:         {}
+    currentProjectPlaces:   []
     __currentProjectPlaces: []
 
-    clean: ->
-      @currentProject = {places: []}
+    resetCurrent: ->
+      @currentProject         = {}
+      @currentProjectPlaces   = []
       @__currentProjectPlaces = []
-    reset: ->
-      @projects = []
+
+    resetAll: ->
+      @projects   = []
       @__projects = []
-      @currentProject = {places: []}
-      @__currentProjectPlaces = []
+      @resetCurrent()
 
     getProjects: (queryParams) ->
       $projects.getList(queryParams).then (projects) =>
-        @projects = _.union @projects, projects
-        @__projects = _.clone(MpProjects.projects)
+        _projects = @projects
+        @projects = projects
+        newProjectsIds = _.pluck(projects, 'id')
+        oldProjectsIds = _.pluck(_projects, 'id')
+        remainingProjectsIds = _.difference(oldProjectsIds, newProjectsIds)
+        _.forEach remainingProjectsIds, (id) ->
+          project = _.find(_projects, {id: id})
+          @projects.push project
+        @__projects = _.clone MpProjects.projects
+        return projects
 
-    removePlace: (place, index) ->
-      @currentProject.places.splice(index, 1)[0]
+    removePlace: (place) ->
       place.$$marker.setMap null
+      @currentProjectPlaces = _.without @currentProjectPlaces, place
+  }
 
-
-  # events
-  $rootScope.$on '$routeChangeSuccess', (event, current, previous) ->
-    # debugger
-    # arrive directly
-    if !previous
-      # in
-      if $rootScope.User.checkLogin()
-        MpProjects.getProjects({include_participated: true}).then ->
-          # AllProjectsViewCtrl
-          if current.$$route.controller == 'AllProjectsViewCtrl'
-            if MpProjects.projects.length == 0 then $location.path '/new_project'
-          # NewProjectViewCtrl
-          else if current.$$route.controller == 'NewProjectViewCtrl'
-            if MpProjects.projects.length == 0
-              $projects.post({title: 'last unsaved project'}).then (project) ->
-                MpProjects.projects.push project
-                MpProjects.currentProject = project
-            else
-              project = _.find MpProjects.projects, {title: 'last unsaved project'}
-              # no project named 'last unsaved project' then create one
-              if !project
-                $projects.post({title: 'last unsaved project'}).then (project) ->
-                  MpProjects.projects.push project
-                  MpProjects.currentProject = project
-                  MpProjects.currentProject.places = []
-              # has project named 'last unsaved project'
-              else
-                MpProjects.currentProject = project
-                project.getList('places').then (places) ->
-                  MpProjects.__currentProjectPlaces = places
-                  MpProjects.currentProject.places = places
-          # ProjectViewCtrl
-          else if current.$$route.controller == 'ProjectViewCtrl'
-            project = _.find MpProjects.projects, {id: Number(current.params.project_id)}
-            if !project
-              $location.path('/all_projects') # TODO: promote to create one
-            else
-              MpProjects.currentProject = project
-              project.getList('places').then (places) ->
-                MpProjects.__currentProjectPlaces = places
-                MpProjects.currentProject.places = places
-    # not directly
-    else
-      # in
-      if $rootScope.User.checkLogin()
-        # from OutsideViewCtrl
-        if previous.$$route.controller == 'OutsideViewCtrl'
-          # to NewProjectViewCtrl
-          if current.$$route.controller == 'NewProjectViewCtrl'
-            # arrived without any unsaved place
-            if MpProjects.currentProject.places.length == 0
-              MpProjects.getProjects({include_participated: true}).then ->
-                if MpProjects.projects.length == 0
-                  $projects.post({title: 'last unsaved project'}).then (project) ->
-                    MpProjects.projects.push project
-                    MpProjects.currentProject = project
-                else
-                  project = _.find MpProjects.projects, {title: 'last unsaved project'}
-                  # no project named 'last unsaved project' then create one
-                  if !project
-                    $projects.post({title: 'last unsaved project'}).then (project) ->
-                      MpProjects.projects.push project
-                      MpProjects.currentProject = project
-                      MpProjects.currentProject.places = []
-                  # has project named 'last unsaved project'
-                  else
-                    MpProjects.currentProject = project
-                    project.getList('places').then (places) ->
-                      MpProjects.__currentProjectPlaces = places
-                      MpProjects.currentProject.places = places
-            # arrived with unsaved places
-            else
-              MpProjects.getProjects({include_participated: true})
-              _places = MpProjects.currentProject.places
-              MpProjects.currentProject.places = []
-              $projects.post({title: 'last unsaved project'}).then (project) ->
-                MpProjects.projects.push project
-                MpProjects.currentProject = project
-                MpProjects.currentProject.places = _places
-          # to Other
-          else
-            MpProjects.getProjects({include_participated: true}).then ->
-              # to AllProjectsViewCtrl
-              if current.$$route.controller == 'AllProjectsViewCtrl'
-                if MpProjects.projects.length == 0 then $location.path '/new_project'
-              # to ProjectViewCtrl
-              else if current.$$route.controller == 'ProjectViewCtrl'
-                project = _.find MpProjects.projects, {id: Number(current.params.project_id)}
-                if !project
-                  $location.path('/all_projects') # TODO: promote to create one
-                else
-                  MpProjects.currentProject = project
-                  project.getList('places').then (places) ->
-                    MpProjects.__currentProjectPlaces = places
-                    MpProjects.currentProject.places = places
-        # from Other
-        else
-          # to AllProjectsViewCtrl
-          if current.$$route.controller == 'AllProjectsViewCtrl'
-            if MpProjects.projects.length == 0 then $location.path '/new_project'
-          # to NewProjectViewCtrl
-          else if current.$$route.controller == 'NewProjectViewCtrl'
-            if MpProjects.projects.length == 0
-              $projects.post({title: 'last unsaved project'}).then (project) ->
-                MpProjects.projects.push project
-                MpProjects.currentProject = project
-            else
-              project = _.find MpProjects.projects, {title: 'last unsaved project'}
-              # no project named 'last unsaved project' then create one
-              if !project
-                $projects.post({title: 'last unsaved project'}).then (project) ->
-                  MpProjects.projects.push project
-                  MpProjects.currentProject = project
-                  MpProjects.currentProject.places = []
-              # has project named 'last unsaved project'
-              else
-                MpProjects.currentProject = project
-                project.getList('places').then (places) ->
-                  MpProjects.__currentProjectPlaces = places
-                  MpProjects.currentProject.places = places
-          # to ProjectViewCtrl
-          else if current.$$route.controller == 'ProjectViewCtrl'
-            project = _.find MpProjects.projects, {id: Number(current.params.project_id)}
-            if !project
-              $location.path('/all_projects') # TODO: promote to create one
-            else
-              MpProjects.currentProject = project
-              project.getList('places').then (places) ->
-                MpProjects.__currentProjectPlaces = places
-                MpProjects.currentProject.places = places
-      else
-        MpProjects.reset()
-
-
+  # watchers
   # ----------------------------------------
-  # watch for changes in currentProject.places
+  # $watch for changes in projects, delete the removed one from server
   $rootScope.$watch (->
-    return _.pluck MpProjects.currentProject.places, 'id'
+    return _.pluck(MpProjects.projects, 'id').sort()
   ), ((newVal, oldVal) ->
     if !$rootScope.User || !$rootScope.User.checkLogin()
-      MpProjects.__currentProjectPlaces = _.clone MpProjects.currentProject.places
+      MpProjects.__projects = _.clone MpProjects.projects
       return
-    newPlaces     = _.difference MpProjects.currentProject.places, MpProjects.__currentProjectPlaces
-    oldPlaces     = _.difference MpProjects.__currentProjectPlaces, MpProjects.currentProject.places
-    changedPlaces = _.filter MpProjects.currentProject.places, (val, idx) ->
+    removedProject = _.difference MpProjects.__projects, MpProjects.projects
+    project.remove() for project in removedProject
+    MpProjects.__projects = _.clone MpProjects.projects
+  ), true
+
+  # $watch for changes in currentProjectPlaces
+  $rootScope.$watch (->
+    return _.pluck MpProjects.currentProjectPlaces, 'id'
+  ), ((newVal, oldVal) ->
+    if !$rootScope.User || !$rootScope.User.checkLogin()
+      MpProjects.__currentProjectPlaces = _.clone MpProjects.currentProjectPlaces
+      return
+    newPlaces     = _.difference MpProjects.currentProjectPlaces, MpProjects.__currentProjectPlaces
+    oldPlaces     = _.difference MpProjects.__currentProjectPlaces, MpProjects.currentProjectPlaces
+    changedPlaces = _.filter MpProjects.currentProjectPlaces, (val, idx) ->
       if val.order != idx then val.order = idx; return true else return false
     # actions
     _.forEach newPlaces, (val, idx) ->
-      _marker = val.$$marker
-      delete val.$$marker
       MpProjects.currentProject.all('places').post(val).then (place) ->
         angular.extend val, place
-      val.$$marker = _marker
     _.forEach oldPlaces, (val, idx) ->
-      if val.remove
-        delete val.$$marker
-        val.remove()
+      val.remove()
     _.forEach changedPlaces, (val, idx) ->
-      if val.put
-        _marker = val.$$marker
-        delete val.$$marker
-        val.put()
-        val.$$marker = _marker
+      val.put()
     # clone
-    MpProjects.__currentProjectPlaces = _.clone MpProjects.currentProject.places
-  ), true
-
-  # watch for changes in projects, remove the missing one from server
-  $rootScope.$watch ((currentScope) ->
-    return _.pluck(MpProjects.projects, 'id').sort()
-  ), ((newVal, oldVal, currentScope) ->
-    if !$rootScope.User || !$rootScope.User.checkLogin() then return
-    missingProject = _.difference oldVal, newVal
-    for id in missingProject
-      Restangular.one('projects', id).remove()
+    MpProjects.__currentProjectPlaces = _.clone MpProjects.currentProjectPlaces
   ), true
 
 

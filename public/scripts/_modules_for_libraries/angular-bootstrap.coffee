@@ -1,8 +1,6 @@
-app = angular.module 'angular-bootstrap', []
-
-
 # bs-tooltip, bs-tooltip-placement
-app.directive 'bsTooltip', ['$timeout', ($timeout) ->
+angular.module('angular-bootstrap', [])
+.directive 'bsTooltip', ['$timeout', ($timeout) ->
   (scope, element, attrs) ->
 
     # init

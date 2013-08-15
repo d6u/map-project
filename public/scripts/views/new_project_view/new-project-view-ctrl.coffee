@@ -1,10 +1,6 @@
 app.controller 'NewProjectViewCtrl',
-['$scope', '$location', '$rootScope', '$q', '$timeout', '$templateCache',
-'$compile', 'User', 'TheMap', 'MpProjects',
-($scope, $location, $rootScope, $q, $timeout, $templateCache,
- $compile, User, TheMap, MpProjects) ->
-
-  if !User.checkLogin() then return
+['$scope', '$location',
+($scope, $location) ->
 
   # events
   $scope.$on 'projectUpdated', ->

@@ -1,10 +1,5 @@
 app.controller 'ProjectViewCtrl',
-['$scope', 'MpProjects', 'TheMap', '$location', '$route', '$rootScope',
-'$routeParams', 'User',
-($scope, MpProjects, TheMap, $location, $route, $rootScope, $routeParams,
- User) ->
-
-  if !User.checkLogin() then return
+['$scope', '$location', ($scope, $location) ->
 
   # events
   $scope.$on 'projectRemoved', (event) ->

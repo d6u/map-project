@@ -1,7 +1,5 @@
-app = angular.module 'angular-jquery-ui', []
-
-
-app.directive 'jqueryUiSortable', [ ->
+angular.module('angular-jquery-ui', [])
+.directive 'jqueryUiSortable', [ ->
   (scope, element, attrs) ->
 
     # event funcions

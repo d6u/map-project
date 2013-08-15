@@ -1,6 +1,5 @@
-app = angular.module 'angular-masonry', []
-
-app.directive 'mpMasonry', ['$timeout', ($timeout) ->
+angular.module('angular-masonry', [])
+.directive 'mpMasonry', ['$timeout', ($timeout) ->
   (scope, element, attrs) ->
 
     # init masonry
