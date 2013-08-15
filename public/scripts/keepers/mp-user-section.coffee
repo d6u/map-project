@@ -16,11 +16,11 @@ app.directive 'mpUserSection', ['$rootScope', '$compile', 'MpProjects',
   link: (scope, element, attrs) ->
 
     scope.fbLogin = ->
-      $rootScope.User.login ->
-        return if MpProjects.currentProject.places.length > 0 then '/new_project' else '/all_projects'
+      $rootScope.MpUser.login ->
+        return if MpProjects.currentProjectPlaces.length > 0 then '/new_project' else '/all_projects'
 
     scope.logout = ->
-      $rootScope.User.logout()
+      $rootScope.MpUser.logout()
 
     scope.showEmailLogin = ->
       mpTemplateCache.get('/scripts/keepers/mp-user-section-login-form.html').then (template) ->
@@ -39,9 +39,9 @@ app.directive 'mpUserSection', ['$rootScope', '$compile', 'MpProjects',
         data =
           type: 'addFriendRequest'
           sender:
-            id: $rootScope.User.getId()
-            name: $rootScope.User.name()
-            fb_user_picture: $rootScope.User.fb_user_picture()
+            id: $rootScope.MpUser.getId()
+            name: $rootScope.MpUser.name()
+            fb_user_picture: $rootScope.MpUser.fb_user_picture()
           receivers_ids: [id]
           body:
             friendship_id: friendship.id

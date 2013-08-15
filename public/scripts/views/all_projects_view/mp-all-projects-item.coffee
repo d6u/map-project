@@ -2,6 +2,6 @@
 app.directive 'mpAllProjectsItem', [->
   (scope, element, attrs) ->
 
-    if scope.project.owner_id != scope.User.$$user.id
+    if scope.project.owner_id != scope.MpUser.$$user.id
       scope.projectMessage = 'This is a group project'
 ]

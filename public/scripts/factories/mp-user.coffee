@@ -80,10 +80,10 @@ app.factory 'MpUser', ['$q', '$window', '$rootScope', 'Restangular', '$location'
     error   (function)
     ###
     login: (path, success, error) ->
-      FB.login (response) ->
+      FB.login (response) =>
         if response.authResponse
-          fbLoginCallback(response.authResponse, path, success)
-        else notLoggedIn(error)
+          @fbLoginCallback(response.authResponse, path, success)
+        else @notLoggedIn(error)
 
     logout: (callback) ->
       [fbLoggedOut, mpLoggedOut] = [$q.defer(), $q.defer()]

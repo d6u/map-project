@@ -6,8 +6,8 @@ MpInitializer is in charge of init check of login status and attach REST
 ###
 
 app.factory 'MpInitializer', ['$q', 'MpUser', '$window', '$rootScope',
-'MpProjects', 'MpChatbox', 'TheMap',
-($q, MpUser, $window, $rootScope, MpProjects, MpChatbox, TheMap) ->
+'MpProjects', 'MpChatbox', 'TheMap', '$route',
+($q, MpUser, $window, $rootScope, MpProjects, MpChatbox, TheMap, $route) ->
 
   $rootScope.MpUser     = MpUser
   $rootScope.MpProjects = MpProjects

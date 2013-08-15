@@ -33,7 +33,7 @@ app.config(['MpChatboxProvider', '$httpProvider', '$routeProvider',
       filter = $q.defer()
 
       MpInitializer.then ->
-        if $rootScope.User.checkLogin()
+        if $rootScope.MpUser.checkLogin()
           MpProjects.getProjects({include_participated: true}).then (projects) ->
             if projects.length == 0
               $location.path('/new_project')
@@ -54,7 +54,7 @@ app.config(['MpChatboxProvider', '$httpProvider', '$routeProvider',
       filter = $q.defer()
 
       MpInitializer.then ->
-        if $rootScope.User.checkLogin()
+        if $rootScope.MpUser.checkLogin()
           if !MpProjects.projects.post
             loadProjects = MpProjects.getProjects({include_participated: true})
           # from OutsideViewCtrl
@@ -113,7 +113,7 @@ app.config(['MpChatboxProvider', '$httpProvider', '$routeProvider',
       filter = $q.defer()
 
       MpInitializer.then ->
-        if $rootScope.User.checkLogin()
+        if $rootScope.MpUser.checkLogin()
           if !MpProjects.projects.post
             loadProjects = MpProjects.getProjects({include_participated: true})
           standardProcedure = (projects) ->
@@ -155,6 +155,7 @@ app.config(['MpChatboxProvider', '$httpProvider', '$routeProvider',
 
       return filter.promise
   ]
+
   # MpChatbox
   # ----------------------------------------
   filter_MpChatbox = ['MpInitializer', '$q', '$timeout', '$rootScope',
@@ -164,7 +165,7 @@ app.config(['MpChatboxProvider', '$httpProvider', '$routeProvider',
       filter = $q.defer()
 
       MpInitializer.then ->
-        if $rootScope.User.checkLogin()
+        if $rootScope.MpUser.checkLogin()
           if !MpChatbox.socket.online
             MpChatbox.socket.connect().then ->
               MpChatbox.initialize()
