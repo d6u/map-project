@@ -1,9 +1,7 @@
 # Map Components
 # ----------------------------------------
 # google-map
-app.directive 'mpMapCanvas', ['$window', 'TheMap', '$compile',
-'$timeout', 'MpProjects', '$rootScope', 'mpTemplateCache',
-($window, TheMap, $compile, $timeout, MpProjects, $rootScope, mpTemplateCache) ->
+app.directive 'mpMapCanvas', ['$window', ($window) ->
   (scope, element, attrs) ->
 
     # init map
@@ -13,5 +11,5 @@ app.directive 'mpMapCanvas', ['$window', 'TheMap', '$compile',
       mapTypeId: google.maps.MapTypeId.ROADMAP
       disableDefaultUI: true
 
-    TheMap.map = new google.maps.Map(element[0], mapOptions)
+    scope.TheMap.map = new google.maps.Map(element[0], mapOptions)
 ]

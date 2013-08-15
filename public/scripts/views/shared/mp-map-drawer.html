@@ -39,12 +39,12 @@
       <div class="mp-list-content-body">
         <div class="mp-place-search-results-item" ng-repeat="place in TheMap.searchResults">
           <div class="mp-place-marker-icon">
-            <a href="" ng-click="TheMap.centerPlaceInMap(place.geometry.location)">
+            <a href="" ng-click="TheMap.centerPlaceInMap(place.$$marker.getPosition())">
               <img ng-src="{{place.icon}}">
             </a>
           </div>
           <div class="mp-place-actions">
-            <a href="" ng-click="TheMap.addPlaceToList(place.mpObject)">
+            <a href="" ng-click="TheMap.addPlaceToList(place)">
               <i class="icon-ok"></i>
             </a>
           </div>
@@ -70,16 +70,16 @@
   <div class="mp-tab-content">
 
     <!-- Tab 1 -->
-    <div class="mp-tab-content-box mp-saved-places-list" perfect-scrollbar="MpProjects.currentProject.places.length" ng-show="tabs[0].show">
+    <div class="mp-tab-content-box mp-saved-places-list" perfect-scrollbar="MpProjects.currentProjectPlaces.length" ng-show="tabs[0].show">
       <div class="mp-drawer-body">
         <div class="mp-list-contents-header lead" ng-hide="!MpProjects.currentProject.title">{{MpProjects.currentProject.title}}</div>
-        <div class="mp-list-contents-header lead" ng-hide="MpProjects.currentProject.title">{{MpProjects.currentProject.places.length}} marked places</div>
+        <div class="mp-list-contents-header lead" ng-hide="MpProjects.currentProject.title">{{MpProjects.currentProjectPlaces.length}} marked places</div>
 
-        <div jquery-ui-sortable="place in MpProjects.currentProject.places">
-          <div class="mp-marked-place" ng-repeat="place in MpProjects.currentProject.places" sidebar-place>
+        <div jquery-ui-sortable="place in MpProjects.currentProjectPlaces">
+          <div class="mp-marked-place" ng-repeat="place in MpProjects.currentProjectPlaces" sidebar-place>
             <div class="mp-place-marker-icon">
               <a href="" ng-click="TheMap.centerPlaceInMap(place.$$marker.getPosition())">
-                <img ng-src="/assets/number_{{$index}}.png">
+                <img ng-src="/img/markers/number_{{$index}}.png">
               </a>
             </div>
             <div class="mp-place-actions">

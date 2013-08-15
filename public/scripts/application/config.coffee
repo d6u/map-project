@@ -68,7 +68,7 @@ app.config(['MpChatboxProvider', '$httpProvider', '$routeProvider',
                 $places.post(place)
               $q.all(_places).then (places) ->
                 MpProjects.currentProjectPlaces   = places
-                MpProjects.__currentProjectPlaces = places
+                MpProjects.__currentProjectPlaces = _.clone(places)
                 # --- END ---
                 filter.resolve()
               MpProjects.projects.push project
@@ -89,7 +89,7 @@ app.config(['MpChatboxProvider', '$httpProvider', '$routeProvider',
                   MpProjects.currentProject = project
                   project.getList('places').then (places) ->
                     MpProjects.currentProjectPlaces   = places
-                    MpProjects.__currentProjectPlaces = places
+                    MpProjects.__currentProjectPlaces = _.clone(places)
                     # --- END ---
                     filter.resolve()
                 else
@@ -129,7 +129,7 @@ app.config(['MpChatboxProvider', '$httpProvider', '$routeProvider',
                   MpProjects.currentProject = project
                   project.getList('places').then (places) ->
                     MpProjects.currentProjectPlaces   = places
-                    MpProjects.__currentProjectPlaces = places
+                    MpProjects.__currentProjectPlaces = _.clone(places)
                     # --- END ---
                     filter.resolve()
                 ),
@@ -145,7 +145,7 @@ app.config(['MpChatboxProvider', '$httpProvider', '$routeProvider',
               MpProjects.currentProject = project
               project.getList('places').then (places) ->
                 MpProjects.currentProjectPlaces   = places
-                MpProjects.__currentProjectPlaces = places
+                MpProjects.__currentProjectPlaces = _.clone(places)
                 # --- END ---
                 filter.resolve()
           # --- END of stardardProcedure ---

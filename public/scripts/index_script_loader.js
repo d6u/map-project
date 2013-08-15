@@ -70,7 +70,6 @@ $script([
     '/javascripts/keepers/mp-center-user-location.js',
     '/javascripts/keepers/mp-friends-panel.js',
     '/javascripts/keepers/mp-headsup-messager.js',
-    '/javascripts/keepers/mp-map-searchbox.js',
     '/javascripts/keepers/mp-user-section-tabs.js',
     '/javascripts/keepers/mp-user-section.js',
     '/javascripts/views/all_projects_view/all-projects-view-ctrl.js',
@@ -88,6 +87,7 @@ $script([
     '/javascripts/views/shared/mp-edit-project-form.js',
     '/javascripts/views/shared/mp-map-canvas.js',
     '/javascripts/views/shared/mp-map-drawer.js',
+    '/javascripts/views/shared/mp-map-searchbox.js',
     '/javascripts/views/shared/mp-tabs.js',
     '/javascripts/views/shared/sidebar-place.js'
   ], 'Application', function() {
