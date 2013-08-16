@@ -45,12 +45,12 @@ class ProjectsController < ApplicationController
     if params[:include_participated] == 'true'
       user_projects = @user.projects
       participated_projects = @user.participated_projects
-      projects = user_projects + participated_projects
-      projects.sort! {|a,b| b.updated_at <=> a.updated_at}
+      @projects = user_projects + participated_projects
+      @projects.sort! {|a,b| b.updated_at <=> a.updated_at}
     else
-      projects = @user.projects.order 'updated_at DESC'
+      @projects = @user.projects.order 'updated_at DESC'
     end
-    render :json => projects, :methods => :places_attrs
+    render :json => @projects, :methods => :places_attrs
   end
 
 
