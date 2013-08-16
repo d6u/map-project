@@ -23,7 +23,7 @@ app.directive 'mpChatHistory', ['MpChatbox', '$route', (MpChatbox, $route) ->
 
           if lastChildToBottom < 40
             totalHeight = element.scrollTop() + lastChildToTop + 5 + lastChild.height()
-            scrollTop = totalHeight - elementHeight
+            scrollTop = totalHeight - elementHeight + 100 # TODO: improve
             element.stop().animate {scrollTop: scrollTop}, 100, ->
               element.perfectScrollbar 'update'
 ]
