@@ -1,0 +1,21 @@
+<div class="mp-navbar-bottom navbar navbar-fixed-bottom" mp-navbar-bottom></div>
+
+<div class="mp-fullscreen" style="overflow:hidden" perfect-scrollbar="MpProjects.projects.length,controlToolbar.input">
+  <div class="mp-all-projects-list">
+    <header class="mp-all-projects-list-header">All Projects <a href="/new_project">new project</a></header>
+    <div class="mp-all-projects-list-masonry" mp-masonry="MpProjects.projects.length,controlToolbar.input">
+      <div class="mp-project-item" ng-repeat="project in MpProjects.projects | filter:navbarBottom.input" mp-all-projects-item>
+        <div class="mp-project-item-cover" mini-map-cover></div>
+        <div class="mp-project-item-detail">
+          <header class="mp-project-item-header">
+            <p class="lead">{{projectMessage}}</p>
+            <a ng-click="openProjectView(project)" href="">{{project.title}} <span class="badge">{{project.places_attrs.places_count}}</span></a>
+          </header>
+          <a href="" ng-click="showEditProjectModal(project)">Edit project details</a>
+          <p class="mp-project-item-notes">{{project.notes || "No notes yet..."}}</p>
+        </div>
+        <div class="mp-project-item-friends"></div>
+      </div>
+    </div>
+  </div>
+</div>
