@@ -14,8 +14,9 @@
 @import "layouts/base-layout";
 @import "layouts/map-layout";
 
-@import 'components/mp_inputbox';
+@import "components/mp-inputbox";
 @import "components/mp-side-tabs";
+@import "components/md-modal";
 
 @import "modules/mp-loading-screen";
 @import "modules/mp-user-section";
@@ -24,6 +25,8 @@
 @import "modules/mp-all-projects-view";
 @import "modules/mp-navbar-bottom";
 @import "modules/mp-chatbox-directive";
+@import "modules/mp-project-add-friends-box";
+@import "modules/mp-friends-list";
 
 
 
@@ -169,42 +172,6 @@
         color: $gray6;
         font-size: 18px;
     }
-}
-
-
-// modal
-// ----------------------------------------
-.mp-friendships-list {
-    list-style: none;
-    margin-bottom: 0;
-    padding-left: 0;
-}
-
-.mp-frienships-list-item {
-    float: left;
-    margin: 5px;
-    background-color: white;
-    border: 1px solid $gray2;
-    height: 42px;
-}
-
-.mp-friendships-list-friend-picture {
-    width: 40px;
-    height: 40px;
-}
-
-.mp-friendships-list-friend-detail {
-    padding: 0 5px;
-}
-
-.mp-invite-friends-promot {
-    text-align: center;
-    margin-top: 20px;
-}
-
-.mp-friends-list-selected {
-    background-color: $blue;
-    color: white;
 }
 
 

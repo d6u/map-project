@@ -54,7 +54,7 @@ class UsersController < ApplicationController
 
 
   ##
-  # register
+  # POST /register
   # ----------------------------------------
   def create
     user = User.new params.require(:user).permit(:fb_access_token, :fb_user_id, :name, :email, :fb_user_picture)
@@ -70,20 +70,25 @@ class UsersController < ApplicationController
   end
 
 
+  # GET /projects/:project_id/users
+  #   get paricipated_users for, return results include project owner
+  # GET /users
+  #   search users by name
   def index
-    # get participated users for project
+    # get paricipated_users for
     if params[:project_id]
       project = Project.find_by_id(params[:project_id])
       if project
         users = project.participated_users
-        render :json => users, :only => [:id, :name, :fb_user_picture] and return
+        render :json => (users + [project.owner]), :only => [:id, :name, :fb_user_picture] and return
       else
         head 404 and return
       end
     end
 
+    # search users by name
     if params[:name]
-      name = "%#{params[:name]}%"
+      name  = "%#{params[:name]}%"
       users = User.where('lower(name) LIKE lower(?) AND id <> ?', name, @user.id)
       render :json => users, :only => [:id, :name, :fb_user_picture] and return
     end
@@ -92,6 +97,7 @@ class UsersController < ApplicationController
   end
 
 
+  # PUT & PATCH /users/:id
   def update
     if @user.id == params[:user][:id]
       @user.attributes = params.require(:user).permit(:fb_access_token, :fb_user_id, :name, :email, :fb_user_picture)
