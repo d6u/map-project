@@ -128,7 +128,7 @@ app.config(['MpChatboxProvider', '$httpProvider', '$routeProvider',
                   MpProjects.getProjects({include_participated: true})
                   MpProjects.currentProject = project
                   project.getList('users').then (users) ->
-                    $rootScope.MpChatbox.participatedUsers = users
+                    $rootScope.MpChatbox.__participatedUsers = users
                   project.getList('places').then (places) ->
                     MpProjects.currentProjectPlaces   = places
                     MpProjects.__currentProjectPlaces = _.clone(places)
@@ -146,7 +146,7 @@ app.config(['MpChatboxProvider', '$httpProvider', '$routeProvider',
             else
               MpProjects.currentProject = project
               project.getList('users').then (users) ->
-                $rootScope.MpChatbox.participatedUsers = users
+                $rootScope.MpChatbox.__participatedUsers = users
               project.getList('places').then (places) ->
                 MpProjects.currentProjectPlaces   = places
                 MpProjects.__currentProjectPlaces = _.clone(places)

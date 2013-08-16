@@ -55,7 +55,11 @@ angular.module('mp-chatbox-provider', []).provider 'MpChatbox', class
       friends: []
       eventDeregisters: []
       notifications: []
-      participatedUsers: [] # this is a project related property
+      # this is a project related property, if user is a friend, object from
+      #   friends property will be referred, otherwise will refer to object in
+      #   __participatedUsers
+      participatedUsers: []
+      __participatedUsers: [] # used to store orginal server object
 
       initialize: ->
         $notifications.getList().then (notifications) =>
@@ -177,6 +181,28 @@ angular.module('mp-chatbox-provider', []).provider 'MpChatbox', class
         MpChatbox.notifications = _.without MpChatbox.notifications, notice
         friendship = Restangular.one('friendships', notice.body.friendship_id)
         friendship.remove()
+
+
+    # watcher
+    # ----------------------------------------
+    # watch for changes in participated users, mark online users automatically
+    $rootScope.$watch(
+      (->
+        return (_.pluck MpChatbox.__participatedUsers, 'id').sort()
+      ),
+      ((newVal, oldVal) ->
+        MpChatbox.participatedUsers = []
+        _.forEach MpChatbox.__participatedUsers, (user, index) ->
+          friend = _.find MpChatbox.friends, {id: user.id}
+          if friend
+            MpChatbox.participatedUsers[index] = friend
+          else if user.id == $rootScope.MpUser.getId()
+            $rootScope.MpUser.$$user.$$online = true
+            MpChatbox.participatedUsers[index] = $rootScope.MpUser.$$user
+          else
+            MpChatbox.participatedUsers[index] = user
+      ), true
+    )
 
 
     # return
