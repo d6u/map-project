@@ -5,11 +5,11 @@ app.directive 'mpChatHistoryItem', ['$compile', 'mpTemplateCache', '$rootScope',
   chooseTemplate = (type) ->
     switch type
       when 'message'
-        return '/scripts/views/project_view/mp-chat-history-message.html'
+        return '/scripts/views/project-view/mp-chat-history-message.html'
       when 'userBehavior'
-        return '/scripts/views/project_view/mp-chat-history-user-behavior.html'
+        return '/scripts/views/project-view/mp-chat-history-user-behavior.html'
       when 'addPlaceToList'
-        return '/scripts/views/project_view/mp-chat-history-place.html'
+        return '/scripts/views/project-view/mp-chat-history-place.html'
 
   # return
   link: (scope, element, attrs) ->

@@ -5,6 +5,7 @@ define ['angular'], ->
     'ngAnimate',
     'ngRoute',
     'route-segment',
+    'view-segment',
 
     'restangular',
     'angular-masonry',
@@ -17,9 +18,10 @@ define ['angular'], ->
 
 
   # config
-  app.config(['MpChatboxProvider', '$httpProvider', '$routeProvider',
-  '$locationProvider',
-  (MpChatboxProvider, $httpProvider, $routeProvider, $locationProvider) ->
+  app.config(['MpChatboxProvider', '$httpProvider', '$routeSegmentProvider',
+  '$locationProvider', '$routeProvider',
+  (MpChatboxProvider, $httpProvider, $routeSegmentProvider, $locationProvider,
+   $routeProvider) ->
 
     # Filters
     # ========================================
@@ -188,42 +190,81 @@ define ['angular'], ->
         return filter.promise
     ]
 
-
     # route
-    $routeProvider
-    .when('/', {
-      controller: 'OutsideViewCtrl'
-      templateUrl: '/scripts/views/outside_view/outside-view.html'
-      resolve:
-        MpInitializer: 'MpInitializer'
-        filter:         outsideFilter_MpProject
-        filter_MpChatbox: filter_MpChatbox
-    })
-    .when('/all_projects', {
-      controller: 'AllProjectsViewCtrl'
-      templateUrl: '/scripts/views/all_projects_view/all-projects-view.html'
-      resolve:
-        MpInitializer: 'MpInitializer'
-        filter:         allProjectsFilter_MpProject
-        filter_MpChatbox: filter_MpChatbox
-    })
-    .when('/new_project', {
-      controller: 'NewProjectViewCtrl'
-      templateUrl: '/scripts/views/new_project_view/new-project-view.html'
-      resolve:
-        MpInitializer: 'MpInitializer'
-        filter:         newProjectFilter_MpProject
-        filter_MpChatbox: filter_MpChatbox
-    })
-    .when('/project/:project_id', {
-      controller: 'ProjectViewCtrl'
-      templateUrl: '/scripts/views/project_view/project-view.html'
-      resolve:
-        MpInitializer: 'MpInitializer'
-        filter:         projectFilter_MpProject
-        filter_MpChatbox: filter_MpChatbox
-    })
-    .otherwise({redirectTo: '/'})
+    $routeSegmentProvider.options.autoLoadTemplates = true
+
+    $routeSegmentProvider
+      .when('/',                         'ot')
+      .when('/home',                     'in.allProjects')
+      .when('/home/project/:project_id', 'in.project')
+
+      .segment('ot', {
+        templateUrl: '/scripts/views/outside-view/outside-view.html'
+        controller:  'OutsideViewCtrl'
+        resolve:
+          MpInitializer:    'MpInitializer'
+          filter:           outsideFilter_MpProject
+          filter_MpChatbox: filter_MpChatbox
+        })
+
+      .segment('in', {
+        templateUrl: '/scripts/views/inside-view/inside-view.html'
+        controller: 'InsideViewCtrl'
+        resolve:
+          MpInitializer:    'MpInitializer'
+          filter_MpChatbox: filter_MpChatbox
+        })
+
+      .within()
+        .segment('allProjects', {
+          templateUrl: '/scripts/views/all-projects-view/all-projects-view.html'
+          controller: 'AllProjectsViewCtrl'
+          resolve:
+            filter: allProjectsFilter_MpProject
+          })
+        .segment('project', {
+          templateUrl: '/scripts/views/project-view/project-view.html'
+          controller: 'ProjectViewCtrl'
+          resolve:
+            filter: projectFilter_MpProject
+          })
+
+      # .segment('in', {
+      #   templateUrl: '/scripts/views/inside-view/inside-view.html'
+      #   controller: 'InsideViewCtrl'
+      #   })
+
+    # .when('/', {
+    #   controller: 'OutsideViewCtrl'
+    #   templateUrl: '/scripts/views/outside_view/outside-view.html'
+    #   resolve:
+
+    # })
+    # .when('/all_projects', {
+    #   controller: 'AllProjectsViewCtrl'
+    #   templateUrl: '/scripts/views/all-projects-view/all-projects-view.html'
+    #   resolve:
+    #     MpInitializer: 'MpInitializer'
+    #     filter:         allProjectsFilter_MpProject
+    #     filter_MpChatbox: filter_MpChatbox
+    # })
+    # .when('/new_project', {
+    #   controller: 'NewProjectViewCtrl'
+    #   templateUrl: '/scripts/views/new_project-view/new-project-view.html'
+    #   resolve:
+    #     MpInitializer: 'MpInitializer'
+    #     filter:         newProjectFilter_MpProject
+    #     filter_MpChatbox: filter_MpChatbox
+    # })
+    # .when('/project/:project_id', {
+    #   controller: 'ProjectViewCtrl'
+    #   templateUrl: '/scripts/views/project-view/project-view.html'
+    #   resolve:
+    #     MpInitializer: 'MpInitializer'
+    #     filter:         projectFilter_MpProject
+    #     filter_MpChatbox: filter_MpChatbox
+    # })
+    $routeProvider.otherwise({redirectTo: '/'})
 
     $locationProvider.html5Mode(true)
 

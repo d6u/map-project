@@ -3,12 +3,12 @@
 app.directive 'mpChatboxDirective', ['mpTemplateCache', '$compile', '$timeout',
 (mpTemplateCache, $compile, $timeout)->
 
-  templateUrl: '/scripts/views/project_view/mp-chatbox-directive.html'
+  templateUrl: '/scripts/views/project-view/mp-chatbox-directive.html'
   link: (scope, element, attrs) ->
 
     scope.expandChatbox = ->
       element.addClass 'mp-chatbox-show'
-      mpTemplateCache.get('/scripts/views/project_view/mp-chatbox-directive-expanded.html')
+      mpTemplateCache.get('/scripts/views/project-view/mp-chatbox-directive-expanded.html')
       .then (template) ->
         element.html $compile(template)(scope)
 
@@ -26,7 +26,7 @@ app.directive 'mpChatboxDirective', ['mpTemplateCache', '$compile', '$timeout',
 
     scope.collapseChatbox = ->
       element.removeClass 'mp-chatbox-show'
-      mpTemplateCache.get('/scripts/views/project_view/mp-chatbox-directive.html')
+      mpTemplateCache.get('/scripts/views/project-view/mp-chatbox-directive.html')
       .then (template) ->
         element.html $compile(template)(scope)
 ]

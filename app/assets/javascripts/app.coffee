@@ -21,21 +21,21 @@ dependencies = [
   'keepers/mp-user-section-tabs',
   'keepers/mp-user-section',
 
-  'views/all_projects_view/all-projects-view-ctrl'
-  'views/all_projects_view/mini-map-cover'
-  'views/all_projects_view/mp-all-projects-item'
-  'views/all_projects_view/mp-navbar-bottom'
+  'views/all-projects-view/all-projects-view-ctrl'
+  'views/all-projects-view/mini-map-cover'
+  'views/all-projects-view/mp-all-projects-item'
+  'views/all-projects-view/mp-navbar-bottom'
 
-  'views/new_project_view/new-project-view-ctrl'
+  'views/new-project-view/new-project-view-ctrl'
 
-  'views/outside_view/outside-view-ctrl'
+  'views/outside-view/outside-view-ctrl'
 
-  'views/project_view/mp-chat-history-item'
-  'views/project_view/mp-chat-history'
-  'views/project_view/mp-chatbox-directive'
-  'views/project_view/mp-chatbox-input'
-  'views/project_view/mp-project-add-friends-modal'
-  'views/project_view/project-view-ctrl'
+  'views/project-view/mp-chat-history-item'
+  'views/project-view/mp-chat-history'
+  'views/project-view/mp-chatbox-directive'
+  'views/project-view/mp-chatbox-input'
+  'views/project-view/mp-project-add-friends-modal'
+  'views/project-view/project-view-ctrl'
 
   'views/shared/marker-info'
   'views/shared/mp-edit-project-form'

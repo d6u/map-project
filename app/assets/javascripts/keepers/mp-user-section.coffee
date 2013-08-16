@@ -2,18 +2,23 @@
 # --------------------------------------------
 app.directive 'mpUserSection', ['$rootScope', '$compile', 'MpProjects',
 '$location', '$timeout', 'Restangular', 'MpChatbox', 'mpTemplateCache',
-'$route',
+'$routeSegment',
 ($rootScope, $compile, MpProjects, $location, $timeout, Restangular, MpChatbox,
- mpTemplateCache, $route) ->
+ mpTemplateCache, $routeSegment) ->
 
   currentTemplate = ->
-    if $route.current.$$route.controller == 'OutsideViewCtrl'
+    if $routeSegment.startsWith('ot')
       return '/scripts/keepers/mp-user-section-before-login.html'
     else return '/scripts/keepers/mp-user-section-after-login.html'
 
   # return
   scope: true
+  templateUrl: '/scripts/keepers/mp-user-section-before-login.html'
   link: (scope, element, attrs) ->
+
+    mpTemplateCache.get(currentTemplate()).then (template) ->
+      element.html $compile(template)(scope)
+    scope.interface.showUserSection = false
 
     scope.fbLogin = ->
       $rootScope.MpUser.login ->
@@ -36,12 +41,6 @@ app.directive 'mpUserSection', ['$rootScope', '$compile', 'MpProjects',
 
     # events
     # ----------------------------------------
-    scope.$on '$routeChangeSuccess', (event, current) ->
-      mpTemplateCache.get(currentTemplate()).then (template) ->
-        element.html $compile(template)(scope)
-      scope.interface.showUserSection = false
-      # scope.interface.showUserSection = (current.$$route.controller == 'OutsideViewCtrl')
-
     scope.$watch 'searchFriends.input', (newVal, oldVal) ->
       if newVal && newVal.length > 0
         $users = Restangular.all 'users'

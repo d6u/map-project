@@ -11,25 +11,21 @@
 </head>
 <body>
 
-<div class="mp-application">
+<div app-view-segment="0" class="mp-application">
 
-  <section class="mp-user-section" ng-class="{'mp-user-section-show': interface.showUserSection}" mp-user-section></section>
-
-  <section ng-view>
-    <!-- Loader, this will be removed when angular runs -->
-    <div class="mp-loading-screen">
-      <div class="container">
-        <div class="row">
-          <div class="col-12">
-            <h1>Welcome to Map Project</h1>
-            <ul class="lead" id="load_progress">
-              <li class="">Loading assets...</li>
-            </ul>
-          </div>
+  <!-- Loader, this will be removed when angular runs -->
+  <div class="mp-loading-screen">
+    <div class="container">
+      <div class="row">
+        <div class="col-12">
+          <h1>Welcome to Map Project</h1>
+          <ul class="lead" id="load_progress">
+            <li class="">Loading assets...</li>
+          </ul>
         </div>
       </div>
     </div>
-  </section>
+  </div>
 
 </div>
 
