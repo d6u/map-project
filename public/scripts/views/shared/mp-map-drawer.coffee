@@ -16,6 +16,9 @@ app.directive 'mpMapDrawer', ['$rootScope', '$timeout',
       $rootScope.MpUser.login ->
         return if scope.MpProjects.currentProjectPlaces.length > 0 then '/new_project' else '/all_projects'
 
+    scope.showProjectAddFriendsModal = ->
+      $rootScope.$broadcast 'showProjectAddFriendsModal', {name: 'test'}
+
     # watcher
     scope.$watch 'searchbox.input.length', (newVal) ->
       if newVal > 0

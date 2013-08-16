@@ -10,26 +10,35 @@ class FriendshipsController < ApplicationController
   #                 DELETE /friendships/:id(.:format)        #destroy
 
 
+  # GET
   def index
     render :json => @user.friendships.order('status DESC'), :include => :friend
   end
 
 
+  # POST
   def create
     friendship = @user.friendships.find_by_friend_id params[:friendship][:friend_id]
     if friendship
-      head 200 and return if friendship.status > 0
-      friendship.status = 0
-      friendship.save
+      # including blocked situation
+      if friendship.status <= 0
+        render :json => {:error   => true,
+                         :message => 'Friend request has already sent.'},
+               :status => 409
+      elsif friendship.status > 0
+        render :json => {:error   => true,
+                         :message => 'You are already friends'},
+               :status => 409
+      end
     else
       friendship = Friendship.new params.require(:friendship).permit(:friend_id, :status, :comments)
       @user.friendships << friendship
+      render :json => friendship
     end
-
-    render :json => friendship
   end
 
 
+  # GET
   def show
     friendship = Friendship.find_by_id params[:id]
     if friendship
@@ -40,19 +49,31 @@ class FriendshipsController < ApplicationController
   end
 
 
+  # PUT
   def update
     friendship = Friendship.find_by_id params[:id]
     if friendship
       friendship.attributes = params.require(:friendship).permit(:status, :comments)
       friendship.save if friendship.changed?
-      @user.friendships << friendship.reverse_friendship
-      render :json => friendship
+      if friendship.status > 0
+        reverse_friendship = @user.friendships.find_by_friend_id friendship.user_id
+        if reverse_friendship
+          render :json => {:error   => true
+                           :message => 'You are already friends'},
+                 :status => 409
+        else
+          reverse_friendship = friendship.reverse_friendship
+          @user.friendships << reverse_friendship
+          render :json => reverse_friendship.friend
+        end
+      end
     else
       head 404
     end
   end
 
 
+  # DELETE
   def destroy
     Friendship.destroy_all :id => params[:id]
     head 200

@@ -25,6 +25,7 @@ ActiveRecord::Schema.define(version: 20130806040145) do
     t.datetime "updated_at"
   end
 
+  add_index "friendships", ["friend_id", "user_id"], name: "index_friendships_on_friend_id_and_user_id", unique: true, using: :btree
   add_index "friendships", ["friend_id"], name: "index_friendships_on_friend_id", using: :btree
   add_index "friendships", ["status"], name: "index_friendships_on_status", using: :btree
   add_index "friendships", ["user_id"], name: "index_friendships_on_user_id", using: :btree
@@ -59,6 +60,7 @@ ActiveRecord::Schema.define(version: 20130806040145) do
     t.integer "user_id"
   end
 
+  add_index "project_user", ["project_id", "user_id"], name: "index_project_user_on_project_id_and_user_id", unique: true, using: :btree
   add_index "project_user", ["project_id"], name: "index_project_user_on_project_id", using: :btree
   add_index "project_user", ["user_id"], name: "index_project_user_on_user_id", using: :btree
 
@@ -71,6 +73,7 @@ ActiveRecord::Schema.define(version: 20130806040145) do
   end
 
   add_index "projects", ["owner_id"], name: "index_projects_on_owner_id", using: :btree
+  add_index "projects", ["title"], name: "index_projects_on_title", using: :btree
 
   create_table "users", force: true do |t|
     t.string   "name"
@@ -83,6 +86,7 @@ ActiveRecord::Schema.define(version: 20130806040145) do
   end
 
   add_index "users", ["email"], name: "index_users_on_email", using: :btree
+  add_index "users", ["fb_user_id"], name: "index_users_on_fb_user_id", using: :btree
   add_index "users", ["name"], name: "index_users_on_name", using: :btree
 
 end

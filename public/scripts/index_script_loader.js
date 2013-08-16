@@ -82,6 +82,7 @@ $script([
     '/javascripts/views/project_view/mp-chat-history.js',
     '/javascripts/views/project_view/mp-chatbox-directive.js',
     '/javascripts/views/project_view/mp-chatbox-input.js',
+    '/javascripts/views/project_view/mp-project-add-friends-modal.js',
     '/javascripts/views/project_view/project-view-ctrl.js',
     '/javascripts/views/shared/marker-info.js',
     '/javascripts/views/shared/mp-edit-project-form.js',

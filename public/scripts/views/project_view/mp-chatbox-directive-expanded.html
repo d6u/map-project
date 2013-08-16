@@ -1,7 +1,7 @@
 <div class="mp-chatbox-expanded">
   <header class="mp-chatbox-header">
     <div class="mp-chatbox-header-friends-list">
-      <a href="" class="mp-chatbox-header-friends-item" ng-repeat="friend in participatedUsers" bs-tooltip="{{friend.name}}" bs-tooltip-placement="bottom" ng-class="{'mp-chatbox-header-friends-item-online': friend.$$online}">
+      <a href="" class="mp-chatbox-header-friends-item" ng-repeat="friend in MpChatbox.participatedUsers" bs-tooltip="{{friend.name}}" bs-tooltip-placement="bottom" ng-class="{'mp-chatbox-header-friends-item-online': friend.$$online}">
         <img ng-src="{{friend.fb_user_picture}}">
       </a>
     </div>

@@ -70,7 +70,7 @@ app.factory 'MpProjects', ['Restangular', '$rootScope',
   $rootScope.$watch (->
     return _.pluck(MpProjects.projects, 'id').sort()
   ), ((newVal, oldVal) ->
-    if !$rootScope.User || !$rootScope.User.checkLogin()
+    if !$rootScope.MpUser || !$rootScope.MpUser.checkLogin()
       MpProjects.__projects = _.clone MpProjects.projects
       return
     removedProject = _.difference MpProjects.__projects, MpProjects.projects

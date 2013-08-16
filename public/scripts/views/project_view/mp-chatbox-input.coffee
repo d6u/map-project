@@ -8,7 +8,7 @@ app.directive 'mpChatboxInput', ['$route', ($route) ->
           console.debug scope.participatedUsersIds, scope.chatHistory
           data =
             project_id: Number($route.current.params.project_id)
-            receivers_ids: _.pluck(scope.participatedUsers, 'id')
+            receivers_ids: _.without(_.pluck(scope.MpChatbox.participatedUsers, 'id'), scope.MpUser.getId())
             body:
               message: element.val()
           scope.$emit 'enterNewMessage', data
