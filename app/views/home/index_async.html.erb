@@ -7,36 +7,30 @@
   <meta name="viewport"    content="width=device-width, initial-scale=1.0">
   <title>Map Project</title>
   <%= stylesheet_link_tag 'application', media: 'all' %>
-  <script src="/javascripts/_libraries/modernizr.min.js"></script>
-  <script src="/javascripts/_libraries/jquery.js"></script>
-  <script src="/javascripts/index_script_loader.js"></script>
   <%= csrf_meta_tags %>
 </head>
 <body>
 
-<div class="mp-application">
+<div app-view-segment="0" class="mp-application">
 
-  <section class="mp-user-section" ng-class="{'mp-user-section-show': interface.showUserSection}" mp-user-section></section>
-
-  <section ng-view>
-    <!-- Loader, this will be removed when angular runs -->
-    <div class="mp-loading-screen">
-      <div class="container">
-        <div class="row">
-          <div class="col-12">
-            <h1>Welcome to Map Project</h1>
-            <ul class="lead" id="load_progress">
-              <li class="">Loading assets...</li>
-            </ul>
-          </div>
+  <!-- Loader, this will be removed when angular runs -->
+  <div class="mp-loading-screen">
+    <div class="container">
+      <div class="row">
+        <div class="col-12">
+          <h1>Welcome to Map Project</h1>
+          <ul class="lead" id="load_progress">
+            <li class="">Loading assets...</li>
+          </ul>
         </div>
       </div>
     </div>
-  </section>
+  </div>
 
 </div>
 
-
+<div id="fb-root"></div>
+<%= javascript_include_tag 'require.js', :'data-main' => javascript_path('app_loader.js') %>
 <script>
 (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
 (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),

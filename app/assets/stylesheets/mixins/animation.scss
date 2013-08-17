@@ -1,8 +1,8 @@
 @mixin transition($property: all, $duration: 150ms, $timeingFunction: ease-out, $delay: 0) {
 
-    -webkit-transition: all 150ms ease-out;
-       -moz-transition: all 150ms ease-out;
-        -ms-transition: all 150ms ease-out;
-         -o-transition: all 150ms ease-out;
-            transition: all 150ms ease-out;
+    -webkit-transition: $property $duration $timeingFunction $delay;
+       -moz-transition: $property $duration $timeingFunction $delay;
+        -ms-transition: $property $duration $timeingFunction $delay;
+         -o-transition: $property $duration $timeingFunction $delay;
+            transition: $property $duration $timeingFunction $delay;
 }

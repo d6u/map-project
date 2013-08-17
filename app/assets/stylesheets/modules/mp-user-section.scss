@@ -1,26 +1,8 @@
 // container
 .mp-user-section {
-  @include transition();
-  @include border-shadows();
-  border-top: none;
-  border-left: none;
-  border-bottom: none;
-  position: fixed;
-  z-index: 1000;
-  top: 0;
-  bottom: 0;
-  left: -400px;
-  width: 400px;
   background-color: white;
   overflow: hidden;
   padding: 20px;
-}
-
-.mp-user-section-show {
-  left: 0px;
-  ~ [ng-view] {
-    margin-left: 400px;
-  }
 }
 
 // close button

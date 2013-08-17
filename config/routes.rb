@@ -2,9 +2,8 @@ MapProject::Application.routes.draw do
 
   # root 'home#index'
   root 'home#index_async'
-  get  'all_projects'        => 'home#index_async'
-  get  'new_project'         => 'home#index_async'
-  get  'project/:project_id' => 'home#index_async'
+  get  'home'                     => 'home#index_async'
+  get  'home/project/:project_id' => 'home#index_async'
 
 
   scope '/users' do
