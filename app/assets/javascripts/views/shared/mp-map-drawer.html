@@ -10,10 +10,8 @@
       <input class="cp-input-naked form-control" type="text" placeholder="Type a place to start" mp-map-searchbox ng-model="searchbox.input" ng-change="hideHomepage(); getAutoComplete()">
       <button type="button" class="cp-input-btn btn btn-primary">Try</button>
       <!-- typeahead -->
-      <ul class="cp-typeahead" ng-class="{'cp-typeahead-dropup': !interface.showMapDrawer}">
-        <li ng-repeat="prediction in placePredictions">
-          {{prediction.terms | mpPredictionFilter}}
-        </li>
+      <ul class="cp-typeahead" ng-class="{'cp-typeahead-dropup': !interface.showMapDrawer}" ng-show="placePredictions.length">
+        <li ng-repeat="prediction in placePredictions">{{prediction.terms | mpPredictionFilter}}</li>
       </ul>
     </div>
   </div>
