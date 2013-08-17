@@ -1,13 +1,9 @@
-html, body, .mp-application, [ng-view]
+html, body, .mp-application
 {
   position: relative;
   height: 100%;
   width: 100%;
   overflow: hidden;
-}
-
-[ng-view] {
-  @include transition();
 }
 
 .mp-fullscreen {

@@ -1,6 +1,11 @@
-<section class="mp-user-section" ng-class="{'mp-user-section-show': interface.showUserSection}" mp-user-section></section>
+<div class="cp-pusher" ng-class="{'cp-pusher-pushed': interface.showUserSection}">
 
-<section>
-  <div class="mp-bottom-drawer clearfix" mp-map-drawer ng-class="{'mp-bottom-drawer-show': interface.showMapDrawer}"></div>
-  <div class="mp-fullscreen" mp-map-canvas></div>
-</section>
+  <section class="cp-pusher-side mp-user-section" mp-user-section></section>
+
+  <section class="cp-pusher-content">
+    <div class="mp-bottom-drawer clearfix" mp-map-drawer ng-class="{'mp-bottom-drawer-show': interface.showMapDrawer}"></div>
+    <div class="mp-fullscreen" mp-map-canvas></div>
+  </section>
+
+  <div class="cp-pusher-overlay" ng-click="interface.showUserSection = false"></div>
+</div>

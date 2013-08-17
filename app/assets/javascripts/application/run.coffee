@@ -9,7 +9,9 @@ app.run(['$rootScope', '$route',
   $rootScope.$on '$routeChangeStart', (event, future, current) ->
     $route.previous = if current then current.$$route else undefined
 
-  $rootScope.interface = {}
+  $rootScope.interface = {
+    showUserSection: false
+  }
 
   # events
   # $rootScope.$on '$routeChangeSuccess', (event, current) ->
