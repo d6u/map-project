@@ -7,8 +7,14 @@
         <i class="icon-user"></i>
       </button>
       <button class="cp-input-btn btn btn-default" type="button" ng-click="interface.showMapDrawer = !interface.showMapDrawer" ng-hide="interface.centerSearchBar">Show detail</button>
-      <input class="cp-input-naked form-control" type="text" placeholder="Search a starting point" mp-map-searchbox ng-model="searchbox.input" ng-change="hideHomepage()">
-      <button type="button" class="cp-input-btn btn btn-primary">Start</button>
+      <input class="cp-input-naked form-control" type="text" placeholder="Type a place to start" mp-map-searchbox ng-model="searchbox.input" ng-change="hideHomepage(); getAutoComplete()">
+      <button type="button" class="cp-input-btn btn btn-primary">Try</button>
+      <!-- typeahead -->
+      <ul class="cp-typeahead" ng-class="{'cp-typeahead-dropup': !interface.showMapDrawer}">
+        <li ng-repeat="prediction in placePredictions">
+          {{prediction.terms | mpPredictionFilter}}
+        </li>
+      </ul>
     </div>
   </div>
 

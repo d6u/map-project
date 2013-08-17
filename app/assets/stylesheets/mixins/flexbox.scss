@@ -68,3 +68,7 @@
         -ms-justify-content: $justify;
             justify-content: $justify;
 }
+
+@mixin align-items($alignment) {
+  align-items: $alignment;
+}
