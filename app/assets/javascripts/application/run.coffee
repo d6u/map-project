@@ -11,6 +11,7 @@ app.run(['$rootScope', '$route',
 
   $rootScope.interface = {
     showUserSection: false
+    centerSearchBar: true
   }
 
   # events

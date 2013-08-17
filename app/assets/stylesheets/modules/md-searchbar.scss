@@ -1,0 +1,28 @@
+.md-searchbar {
+  @include transition();
+  @include displa-flex();
+
+  position: absolute;
+  width: 100%;
+  left: 10px;
+  bottom: 10px;
+  padding-right: 20px;
+
+  input[type="text"] {
+    @include flex-grow(1);
+  }
+
+  button.cp-input-btn.btn-default {
+    border-right: none;
+    &:hover {
+      background-color: $blue;
+      color: white;
+    }
+  }
+
+  &.md-homepage-centered {
+    left: 50%;
+    bottom: 30px;
+    padding-right: 0;
+  }
+}

@@ -2,32 +2,13 @@
 
   <!-- Toolbar -->
   <div class="mp-drawer-toolbar">
-    <div class="input-group">
-      <span class="input-group-btn">
-        <button class="btn btn-default" type="button" ng-click="interface.showUserSection = true">
-          <i class="icon-user"></i>
-        </button>
-        <!-- show when logout -->
-        <button class="btn btn-default" type="button" ng-click="interface.showMapDrawer = !interface.showMapDrawer" ng-hide="MpUser.checkLogin()">Show detail</button>
-        <!-- show when login -->
-        <div class="btn-group dropup" ng-hide="!MpUser.checkLogin()">
-          <button type="button" class="btn btn-default" ng-click="interface.showMapDrawer = !interface.showMapDrawer">Show detail</button>
-          <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-            <span class="caret"></span>
-          </button>
-          <ul class="dropdown-menu">
-            <li><a href="/all_projects">Return to all projects</a></li>
-          </ul>
-        </div>
-        <!-- END -->
-      </span>
-      <input type="text" class="form-control" mp-map-searchbox ng-model="searchbox.input">
-      <span class="input-group-btn">
-        <button class="btn btn-default" type="button" ng-click="clearInput()">
-          <i class="icon-remove"></i>
-        </button>
-        <button class="btn btn-primary" type="button">Go!</button>
-      </span>
+    <div class="md-searchbar md-homepage-centered" ng-class="{'md-homepage-centered': interface.centerSearchBar}">
+      <button type="button" class="cp-input-btn btn btn-default" ng-hide="interface.centerSearchBar" ng-click="interface.showUserSection = true">
+        <i class="icon-user"></i>
+      </button>
+      <button class="cp-input-btn btn btn-default" type="button" ng-click="interface.showMapDrawer = !interface.showMapDrawer" ng-hide="interface.centerSearchBar">Show detail</button>
+      <input class="cp-input-naked form-control" type="text" placeholder="Search a starting point" mp-map-searchbox ng-model="searchbox.input" ng-change="hideHomepage()">
+      <button type="button" class="cp-input-btn btn btn-primary">Start</button>
     </div>
   </div>
 

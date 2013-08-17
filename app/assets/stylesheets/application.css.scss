@@ -14,10 +14,15 @@
 @import "layouts/base-layout";
 @import "layouts/map-layout";
 
+@import "components/cp-pusher";
+@import "components/cp-input";
+
 @import "components/mp-inputbox";
 @import "components/mp-side-tabs";
 @import "components/md-modal";
-@import "components/cp-pusher";
+
+@import "modules/md-homepage";
+@import "modules/md-searchbar";
 
 @import "modules/mp-loading-screen";
 @import "modules/mp-user-section";

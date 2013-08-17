@@ -20,10 +20,6 @@ app.directive 'mpMapDrawer', ['$rootScope', '$timeout',
       $rootScope.$broadcast 'showProjectAddFriendsModal', {name: 'test'}
 
     # watcher
-    scope.$watch 'searchbox.input.length', (newVal) ->
-      if newVal > 0
-        scope.interface.showMapDrawer = true
-
     scope.$watch 'interface.showMapDrawer', (newVal) ->
       $timeout (-> google.maps.event.trigger(scope.TheMap.map, 'resize')), 300
 ]

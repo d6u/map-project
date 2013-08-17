@@ -1,3 +1,11 @@
+@mixin displa-flex() {
+  display: -webkit-box;      /* OLD - iOS 6-, Safari 3.1-6 */
+  display: -moz-box;         /* OLD - Firefox 19- (buggy but mostly works) */
+  display: -ms-flexbox;      /* TWEENER - IE 10 */
+  display: -webkit-flex;     /* NEW - Chrome */
+  display: flex;             /* NEW, Spec - Opera 12.1, Firefox 20+ */
+}
+
 @mixin display_flex {
     display: -webkit-box;      /* OLD - iOS 6-, Safari 3.1-6 */
     display: -moz-box;         /* OLD - Firefox 19- (buggy but mostly works) */
@@ -9,6 +17,15 @@
 // TODO: cross browser
 @mixin flex-direction ($direction) {
   flex-direction: $direction;
+}
+
+@mixin flex-grow($flex-grow) {
+           display: block;
+  -webkit-box-flex: $flex-grow; /* OLD - iOS 6-, Safari 3.1-6 */
+     -moz-box-flex: $flex-grow; /* OLD - Firefox 19- */
+      -webkit-flex: $flex-grow; /* Chrome */
+          -ms-flex: $flex-grow; /* IE 10 */
+              flex: $flex-grow; /* NEW, Spec - Opera 12.1, Firefox 20+ */
 }
 
 @mixin flex_grow($flex-grow) {
