@@ -12,7 +12,7 @@ app.factory 'TheProject',
   return class TheProject
     constructor: (projectId) ->
       if projectId
-        MpProjects.getProjectById(projectId).then(
+        MpProjects.findProjectById(projectId).then(
           ((project) =>
             @project = project
             @$$places = Restangular.one('projects', project.id).all('places')
@@ -35,7 +35,7 @@ app.factory 'TheProject',
       place.order = @places.length
       @places.push place
       if @project
-        @$$project.post(place).then (_place) ->
+        @$$places.post(place).then (_place) ->
           angular.extend place, _place
 
     # place have to be object contains id, and other updated attributes

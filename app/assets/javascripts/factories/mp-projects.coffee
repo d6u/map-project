@@ -1,7 +1,10 @@
-# MpProjects
-# ========================================
-app.factory 'MpProjects', ['Restangular', '$rootScope',
-(Restangular, $rootScope) ->
+###
+MpProjects handles project query/create/update/delete
+###
+
+app.factory 'MpProjects',
+['Restangular', '$rootScope', '$q',
+( Restangular,   $rootScope,   $q) ->
 
   # REST /projects/:id
   # addRestangularMethod (name, operation, path, params, headers, elementToPost)
@@ -14,37 +17,18 @@ app.factory 'MpProjects', ['Restangular', '$rootScope',
 
   $projects = Restangular.all 'projects'
 
-  # intercept places object
-  Restangular.setRequestInterceptor (element, operation, route, url) ->
-    if route == 'places'
-      # id, name, address, coord, order, project_id, created_at, updated_at
-      copy = _.pick element, ['id', 'name', 'address', 'coord', 'order', 'project_id', 'created_at', 'updated_at']
-    else
-      copy = element
-    return copy
-
-
   ###
   properties start with `__` is a shallow clone of related property, this gives
     $watch the abilities to update the properties (if it's a array) by itself
   ###
   MpProjects = {
-    $$projects:             $projects
-    projects:               []
-    __projects:             []
-    currentProject:         {}
-    currentProjectPlaces:   []
-    __currentProjectPlaces: []
-
-    resetCurrent: ->
-      @currentProject         = {}
-      @currentProjectPlaces   = []
-      @__currentProjectPlaces = []
+    $$projects: $projects
+    projects:   []
+    __projects: []
 
     resetAll: ->
       @projects   = []
       @__projects = []
-      @resetCurrent()
 
     getProjects: (queryParams) ->
       $projects.getList(queryParams).then (projects) =>
@@ -53,53 +37,34 @@ app.factory 'MpProjects', ['Restangular', '$rootScope',
         newProjectsIds = _.pluck(projects, 'id')
         oldProjectsIds = _.pluck(_projects, 'id')
         remainingProjectsIds = _.difference(oldProjectsIds, newProjectsIds)
-        _.forEach remainingProjectsIds, (id) ->
+        _.forEach remainingProjectsIds, (id) =>
           project = _.find(_projects, {id: id})
           @projects.push project
         @__projects = _.clone MpProjects.projects
         return projects
 
-    removePlace: (place) ->
-      place.$$marker.setMap null
-      @currentProjectPlaces = _.without @currentProjectPlaces, place
+    createProject: (project) ->
+      if !project
+        project = {}
+      if !project.title
+        project.title = 'last unsaved project'
+      @$$projects.post(project).then (project) =>
+        @projects.push project
+        return project
+
+    findProjectById: (id) ->
+      found = $q.defer()
+      _id = Number(id)
+      found.resolve(_.find @projects, {id: _id})
+      return found.promise
+
+    updateProject: (project) ->
+      _id = project.id
+      delete project.id
+      _project = _.find @projects, {id: _id}
+      angular.extend _project, project
+      _project.put()
   }
-
-  # watchers
-  # ----------------------------------------
-  # $watch for changes in projects, delete the removed one from server
-  $rootScope.$watch (->
-    return _.pluck(MpProjects.projects, 'id').sort()
-  ), ((newVal, oldVal) ->
-    if !$rootScope.MpUser || !$rootScope.MpUser.checkLogin()
-      MpProjects.__projects = _.clone MpProjects.projects
-      return
-    removedProject = _.difference MpProjects.__projects, MpProjects.projects
-    project.remove() for project in removedProject
-    MpProjects.__projects = _.clone MpProjects.projects
-  ), true
-
-  # $watch for changes in currentProjectPlaces
-  $rootScope.$watch (->
-    return _.pluck MpProjects.currentProjectPlaces, 'id'
-  ), ((newVal, oldVal) ->
-    if !$rootScope.MpUser || !$rootScope.MpUser.checkLogin()
-      MpProjects.__currentProjectPlaces = _.clone MpProjects.currentProjectPlaces
-      return
-    newPlaces     = _.difference MpProjects.currentProjectPlaces, MpProjects.__currentProjectPlaces
-    oldPlaces     = _.difference MpProjects.__currentProjectPlaces, MpProjects.currentProjectPlaces
-    changedPlaces = _.filter MpProjects.currentProjectPlaces, (val, idx) ->
-      if val.order != idx then val.order = idx; return true else return false
-    # actions
-    _.forEach newPlaces, (val, idx) ->
-      MpProjects.currentProject.all('places').post(val).then (place) ->
-        angular.extend val, place
-    _.forEach oldPlaces, (val, idx) ->
-      val.remove()
-    _.forEach changedPlaces, (val, idx) ->
-      val.put()
-    # clone
-    MpProjects.__currentProjectPlaces = _.clone MpProjects.currentProjectPlaces
-  ), true
 
 
   # return

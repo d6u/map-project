@@ -1,35 +1,43 @@
-<div class="mp-bottom-drawer clearfix" mp-map-drawer ng-class="{'mp-bottom-drawer-show': interface.showMapDrawer}"></div>
-<div class="mp-fullscreen">
-  <div class="mp-fullscreen" mp-map-canvas></div>
-  <div class="mp-chatbox-directive" ng-class="" mp-chatbox-directive></div>
-</div>
+<div class="cp-pusher" ng-class="{'cp-pusher-pushed': interface.showUserSection}">
 
-<!-- Add friends to project modal -->
-<div class="md-modal md-effect-3" mp-project-add-friends-modal="showProjectAddFriendsModal">
-  <div class="md-content">
-    <div class="modal-content mp-project-add-friends-box">
-      <div class="modal-header">
-        <button type="button" class="close" aria-hidden="true" ng-click="closeModal()">&times;</button>
-        <h4 class="modal-title">Add friends to this project</h4>
-      </div>
-      <div class="modal-body">
-        <input class="form-control" type="text" placeholder="Search name" ng-model="inputs.name">
-        <ul class="mp-friends-list" perfect-scrollbar="MpChatbox.friends.length,inputs.name">
-          <li class="mp-friend-item" ng-repeat="friend in MpChatbox.friends | filter: inputs.name" ng-class="{'mp-active': friend.$$selected}">
-            <a href="" ng-click="friend.$$selected = !friend.$$selected">
-              <img ng-src="{{friend.fb_user_picture}}">{{friend.name}}
-            </a>
-          </li>
-        </ul>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-default" ng-click="closeModal()">Close</button>
-        <button type="button" class="btn btn-primary" ng-click="sendInvitations()">Save changes</button>
-      </div>
-    </div><!-- /.modal-content -->
+  <section class="cp-pusher-side mp-user-section" mp-user-section></section>
+
+  <section class="cp-pusher-content">
+
+    <div class="mp-bottom-drawer clearfix" mp-map-drawer ng-class="{'mp-bottom-drawer-show': interface.showMapDrawer}"></div>
+    <div class="mp-fullscreen" mp-map-canvas></div>
+    <div class="mp-chatbox-directive" ng-class="" mp-chatbox-directive></div>
+
+  </section>
+
+  <!-- Add friends to project modal -->
+  <div class="md-modal md-effect-3" mp-project-add-friends-modal="showProjectAddFriendsModal">
+    <div class="md-content">
+      <div class="modal-content mp-project-add-friends-box">
+        <div class="modal-header">
+          <button type="button" class="close" aria-hidden="true" ng-click="closeModal()">&times;</button>
+          <h4 class="modal-title">Add friends to this project</h4>
+        </div>
+        <div class="modal-body">
+          <input class="form-control" type="text" placeholder="Search name" ng-model="inputs.name">
+          <ul class="mp-friends-list" perfect-scrollbar="MpChatbox.friends.length,inputs.name">
+            <li class="mp-friend-item" ng-repeat="friend in MpChatbox.friends | filter: inputs.name" ng-class="{'mp-active': friend.$$selected}">
+              <a href="" ng-click="friend.$$selected = !friend.$$selected">
+                <img ng-src="{{friend.fb_user_picture}}">{{friend.name}}
+              </a>
+            </li>
+          </ul>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" ng-click="closeModal()">Close</button>
+          <button type="button" class="btn btn-primary" ng-click="sendInvitations()">Save changes</button>
+        </div>
+      </div><!-- /.modal-content -->
+    </div>
   </div>
-</div>
+  <!-- md-modal and md-overlay must be placed next to each other for modal directive to work -->
+  <div class="md-overlay"></div>
+  <!-- END -->
 
-<!-- md-modal and md-overlay must be placed next to each other for modal directive to work -->
-<div class="md-overlay"></div>
-<!-- END -->
+  <div class="cp-pusher-overlay" ng-click="interface.showUserSection = false"></div>
+</div>

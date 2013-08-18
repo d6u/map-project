@@ -6,20 +6,22 @@ MpInitializer is in charge of init check of login status and attach REST
 ###
 
 app.factory 'MpInitializer',
-['$q', 'MpUser', '$window', '$route',
-( $q,   MpUser,   $window,   $route) ->
+['$rootScope', '$q', 'MpUser', '$window', '$route', 'MpProjects',
+( $rootScope,   $q,   MpUser,   $window,   $route,   MpProjects) ->
+
+  $rootScope.MpUser     = MpUser
+  $rootScope.MpProjects = MpProjects
 
   initiation = $q.defer()
 
   # init
   # ----------------------------------------
   if $window.user.accessToken
-    MpUser.fbLoginCallback($window.user,
-      (->
-        return '/all_projects' if $route.current.$$route.controller == 'OutsideViewCtrl'
-      ),
-      (-> initiation.resolve())
-    )
+    MpUser.fbLoginCallback $window.user, ->
+      initiation.resolve()
+      if $route.current.$$route.controller == 'OutsideViewCtrl'
+        return '/home'
+      return
   else
     MpUser.notLoggedIn ->
       initiation.resolve()
