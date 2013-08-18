@@ -29,7 +29,7 @@
             </a>
           </div>
           <div class="mp-place-actions">
-            <a href="" ng-click="TheMap.addPlaceToList(place)">
+            <a href="" ng-click="outsideCtrl.addPlaceToList(place)">
               <i class="icon-ok"></i>
             </a>
           </div>
@@ -55,20 +55,20 @@
   <div class="mp-tab-content">
 
     <!-- Tab 1 -->
-    <div class="mp-tab-content-box mp-saved-places-list" perfect-scrollbar="MpProjects.currentProjectPlaces.length" ng-show="tabs[0].show">
+    <div class="mp-tab-content-box mp-saved-places-list" perfect-scrollbar="TheProject.places.length" ng-show="tabs[0].show">
       <div class="mp-drawer-body">
-        <div class="mp-list-contents-header lead" ng-hide="!MpProjects.currentProject.title">{{MpProjects.currentProject.title}}</div>
-        <div class="mp-list-contents-header lead" ng-hide="MpProjects.currentProject.title">{{MpProjects.currentProjectPlaces.length}} marked places</div>
+        <div class="mp-list-contents-header lead" ng-hide="!TheProject.project.title">{{TheProject.project.title}}</div>
+        <div class="mp-list-contents-header lead" ng-hide="TheProject.project.title">{{TheProject.places.length}} marked places</div>
 
-        <div jquery-ui-sortable="place in MpProjects.currentProjectPlaces">
-          <div class="mp-marked-place" ng-repeat="place in MpProjects.currentProjectPlaces" sidebar-place>
+        <div jquery-ui-sortable="place in TheProject.places">
+          <div class="mp-marked-place" ng-repeat="place in TheProject.places" sidebar-place>
             <div class="mp-place-marker-icon">
               <a href="" ng-click="TheMap.centerPlaceInMap(place.$$marker.getPosition())">
                 <img ng-src="/img/markers/number_{{$index}}.png">
               </a>
             </div>
             <div class="mp-place-actions">
-              <a href="" ng-click="MpProjects.removePlace(place, $index)">
+              <a href="" ng-click="TheProject.removePlace(place)">
                 <i class="icon-remove"></i>
               </a>
             </div>

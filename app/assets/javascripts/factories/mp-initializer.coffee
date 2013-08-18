@@ -5,14 +5,9 @@ MpInitializer is in charge of init check of login status and attach REST
   before amount everything
 ###
 
-app.factory 'MpInitializer', ['$q', 'MpUser', '$window', '$rootScope',
-'MpProjects', 'MpChatbox', 'TheMap', '$route',
-($q, MpUser, $window, $rootScope, MpProjects, MpChatbox, TheMap, $route) ->
-
-  $rootScope.MpUser     = MpUser
-  $rootScope.MpProjects = MpProjects
-  $rootScope.MpChatbox  = MpChatbox
-  $rootScope.TheMap     = TheMap
+app.factory 'MpInitializer',
+['$q', 'MpUser', '$window', '$route',
+( $q,   MpUser,   $window,   $route) ->
 
   initiation = $q.defer()
 

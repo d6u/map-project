@@ -13,6 +13,7 @@ dependencies = [
   'factories/mp-template-cache',
   'factories/mp-user',
   'factories/the-map',
+  'factories/the-project',
 
   'keepers/mp-bottom-modalbox',
   'keepers/mp-center-user-location',
