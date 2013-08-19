@@ -16,8 +16,4 @@ app.controller 'ProjectViewCtrl',
         $scope.TheProject.addPlace(place)
   else
     $scope.TheProject = new TheProject($routeParams.project_id)
-
-  # events
-  $scope.$on 'projectRemoved', (event) ->
-    $location.path('/all_projects')
 ]

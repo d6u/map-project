@@ -24,10 +24,6 @@ dependencies = [
 
   'views/all-projects-view/all-projects-view-ctrl'
   'views/all-projects-view/mini-map-cover'
-  'views/all-projects-view/mp-all-projects-item'
-  'views/all-projects-view/mp-navbar-bottom'
-
-  'views/new-project-view/new-project-view-ctrl'
 
   'views/outside-view/outside-view-ctrl'
 

@@ -48,7 +48,7 @@ app.factory 'MpProjects',
         project = {}
       if !project.title
         project.title = 'last unsaved project'
-      @$$projects.post(project).then (project) =>
+      return @$$projects.post(project).then (project) =>
         @projects.push project
         return project
 

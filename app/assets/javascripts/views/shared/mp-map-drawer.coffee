@@ -6,6 +6,8 @@ app.directive 'mpMapDrawer', ['$rootScope', '$timeout',
   link: (scope, element, attrs) ->
 
     scope.interface.showMapDrawer = false
+    scope.interface.centerSearchBar = false
+    element.find('.md-homepage-centered').removeClass 'md-homepage-centered'
 
     scope.clearInput = (control) ->
       scope.searchbox.input = ''
