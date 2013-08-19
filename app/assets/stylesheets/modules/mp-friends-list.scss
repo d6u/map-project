@@ -11,11 +11,11 @@
     text-align: center;
     line-height: 28px;
     img {
+        display: block;
         width: 44px;
         height: 44px;
         border-radius: 4px;
-        margin-top: 13px;
-        margin-bottom: 8px;
+        margin: 13px auto 8px;
         @include transition();
     }
     &.mp-active {

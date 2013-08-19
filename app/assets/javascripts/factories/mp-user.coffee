@@ -52,14 +52,16 @@ app.factory 'MpUser', ['$q', '$window', '$rootScope', 'Restangular', '$location'
             FB.api '/me', (response) ->
               MpUser.$$user.name  = response.name
               MpUser.$$user.email = response.email
-              $users.register(MpUser.$$user).then (user) ->
-                MpUser.$$user = user
-                MpUser.pathHandler(path)
-                # update user in server
-                FB.api '/me/picture', (response) ->
-                  $rootScope.$apply ->
-                    MpUser.$$user.fb_user_picture = response.data.url
-                  MpUser.$$user.put()
+              # again, force $digest
+              $timeout ->
+                $users.register(MpUser.$$user).then (user) ->
+                  MpUser.$$user = user
+                  MpUser.pathHandler(path)
+                  # update user in server
+                  FB.api '/me/picture', (response) ->
+                    $rootScope.$apply ->
+                      MpUser.$$user.fb_user_picture = response.data.url
+                    MpUser.$$user.put()
           )
         )
     # --- END fbLoginCallback ---

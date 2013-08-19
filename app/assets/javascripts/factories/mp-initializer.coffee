@@ -6,11 +6,12 @@ MpInitializer is in charge of init check of login status and attach REST
 ###
 
 app.factory 'MpInitializer',
-['$rootScope', '$q', 'MpUser', '$window', '$route', 'MpProjects',
-( $rootScope,   $q,   MpUser,   $window,   $route,   MpProjects) ->
+['$rootScope', '$q', 'MpUser', '$window', '$route', 'MpProjects', 'MpChatbox',
+( $rootScope,   $q,   MpUser,   $window,   $route,   MpProjects,   MpChatbox) ->
 
   $rootScope.MpUser     = MpUser
   $rootScope.MpProjects = MpProjects
+  $rootScope.MpChatbox  = MpChatbox
 
   initiation = $q.defer()
 

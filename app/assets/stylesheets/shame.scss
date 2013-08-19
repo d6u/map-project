@@ -6,3 +6,24 @@
     clear: none;
   }
 }
+
+
+// All Projects View
+.shame-show-user-section-button {
+  display: block;
+  position: absolute;
+  z-index: 1000;
+  left: 0;
+  top: 20px;
+  width: 40px;
+  font-size: 24px;
+  line-height: 40px;
+  text-align: center;
+  background-color: $blue;
+  color: white;
+  &:hover {
+    text-decoration: none;
+    background-color: $blueDark;
+    color: white;
+  }
+}

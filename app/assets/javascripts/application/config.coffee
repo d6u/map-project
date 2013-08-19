@@ -47,7 +47,7 @@ define ['angular'], ->
 
     # MpChatbox
     # ----------------------------------------
-    filter_MpChatbox = ['MpInitializer', '$q', '$timeout', '$rootScope',
+    chatboxFilter = ['MpInitializer', '$q', '$timeout', '$rootScope',
       '$location', 'MpChatbox',
       (MpInitializer, $q, $timeout, $rootScope, $location, MpChatbox) ->
 
@@ -55,14 +55,14 @@ define ['angular'], ->
 
         MpInitializer.then ->
           if $rootScope.MpUser.checkLogin()
-            if !MpChatbox.socket.online
-              MpChatbox.socket.connect().then ->
-                MpChatbox.initialize()
+            if !MpChatbox.$$online
+              MpChatbox.connect ->
+                filter.resolve()
+            else filter.resolve()
           else
-            if MpChatbox.socket.online
-              MpChatbox.socket.disconnect()
+            if MpChatbox.$$online
               MpChatbox.destroy()
-          filter.resolve()
+            filter.resolve()
 
         return filter.promise
     ]
@@ -84,6 +84,7 @@ define ['angular'], ->
       resolve: {
         MpInitializer: 'MpInitializer'
         insideFilter: insideFilter
+        chatboxFilter: chatboxFilter
       }
     })
     .when('/home/project/:project_id', {
@@ -93,6 +94,7 @@ define ['angular'], ->
       resolve: {
         MpInitializer: 'MpInitializer'
         insideFilter: insideFilter
+        chatboxFilter: chatboxFilter
       }
     })
     .otherwise({redirectTo: '/'})

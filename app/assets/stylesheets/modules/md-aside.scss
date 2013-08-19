@@ -1,0 +1,83 @@
+.md-aside-close {
+  position: absolute;
+  right: 20px;
+  top: 20px;
+  font-size: 22px;
+  line-height: 1;
+  color: $gray3;
+  &:hover {
+    text-decoration: none;
+    color: $gray6;
+  }
+}
+
+// Top
+.md-aside-user {
+  margin-bottom: 20px;
+}
+
+.md-aside-user-picture {
+  width: 50px;
+  height: 50px;
+  -webkit-border-radius: 2px;
+  -moz-border-radius: 2px;
+  border-radius: 2px;
+  float: left;
+}
+
+.md-aside-user-detail {
+  margin-left: 60px;
+}
+
+.md-aside-user-name {
+  font-size: 18px;
+  font-weight: bold;
+}
+
+// Middle
+.md-aside-middle {
+  position: absolute;
+  left: 20px;
+  top: 90px;
+  right: 20px;
+  bottom: 74px;
+}
+
+.md-aside-pages {
+  position: absolute;
+  top: 44px;
+  width: 100%;
+  bottom: 0;
+}
+
+.md-aside-pages-item {
+  @include transition();
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+// page 3
+.md-aside-search {}
+
+.md-aside-search-list {
+  position: absolute;
+  top: 44px;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  overflow: hidden;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+// Bottom
+.md-aside-bottom {
+  position: absolute;
+  bottom: 20px;
+  left: 20px;
+}
