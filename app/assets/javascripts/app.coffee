@@ -6,6 +6,8 @@ dependencies = [
 
   'application/run'
 
+  'directives/md-tabset'
+
   'factories/invitation',
   'factories/mp-chatbox',
   'factories/mp-initializer',

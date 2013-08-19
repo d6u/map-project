@@ -13,6 +13,8 @@ define ['angular'], ->
     'angular-bootstrap',
     'angular-jquery-ui',
 
+    'md-tabset',
+
     'mp-chatbox-provider'
   ])
 
