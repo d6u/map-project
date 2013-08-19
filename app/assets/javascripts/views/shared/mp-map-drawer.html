@@ -29,7 +29,7 @@
             </a>
           </div>
           <div class="mp-place-actions">
-            <a href="" ng-click="outsideCtrl.addPlaceToList(place)">
+            <a href="" ng-click="viewCtrl.addPlaceToList(place)">
               <i class="icon-ok"></i>
             </a>
           </div>
@@ -98,7 +98,7 @@
       <!-- show when login -->
       <div class="mp-drawer-body" ng-hide="!MpUser.checkLogin()" mp-edit-project-form>
         <form class="form-horizontal" name="editProjectForm">
-          <legend>Edit Project: {{MpProjects.currentProject.title}}</legend>
+          <legend>Edit Project: {{TheProject.project.title}}</legend>
           <div class="form-group">
             <label for="mp_edit_project_title" class="col-lg-2 control-label">Title</label>
             <div class="col-lg-10">
@@ -114,7 +114,7 @@
           </div>
           <div class="form-group">
             <div class="col-lg-offset-2 col-lg-10">
-              <button type="button" class="btn btn-danger" ng-click="deleteProject()" ng-show="MpProjects.currentProject.owner_id == MpUser.getId()">Delete</button>
+              <button type="button" class="btn btn-danger" ng-click="deleteProject()" ng-show="TheProject.project.owner_id == MpUser.getId()">Delete</button>
               <button type="submit" class="btn btn-primary" ng-click="saveChanges()">Save</button>
               <button type="button" class="btn btn-default" ng-click="revertChanges()">Revert</button>
             </div>

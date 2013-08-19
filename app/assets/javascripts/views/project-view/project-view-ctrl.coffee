@@ -16,4 +16,9 @@ app.controller 'ProjectViewCtrl',
         $scope.TheProject.addPlace(place)
   else
     $scope.TheProject = new TheProject($routeParams.project_id)
+
+
+  @addPlaceToList = (place) ->
+    $scope.TheMap.searchResults = _.without $scope.TheMap.searchResults, place
+    $scope.TheProject.addPlace(place)
 ]

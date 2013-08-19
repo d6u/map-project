@@ -69,7 +69,7 @@ define ['angular'], ->
     $routeProvider
     .when('/', {
       controller: 'OutsideViewCtrl'
-      controllerAs: 'outsideCtrl'
+      controllerAs: 'viewCtrl'
       templateUrl: '/scripts/views/outside-view/outside-view.html'
       resolve: {
         MpInitializer: 'MpInitializer'
@@ -86,7 +86,7 @@ define ['angular'], ->
     })
     .when('/home/project/:project_id', {
       controller: 'ProjectViewCtrl'
-      controllerAs: 'projectCtrl'
+      controllerAs: 'viewCtrl'
       templateUrl: '/scripts/views/project-view/project-view.html'
       resolve: {
         MpInitializer: 'MpInitializer'

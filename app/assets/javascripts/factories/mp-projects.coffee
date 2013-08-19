@@ -64,6 +64,10 @@ app.factory 'MpProjects',
       _project = _.find @projects, {id: _id}
       angular.extend _project, project
       _project.put()
+
+    removeProject: (project) ->
+      @projects = _.without @projects, project
+      project.remove()
   }
 
 
