@@ -30,7 +30,7 @@
     button.cp-input-btn.btn.btn-default
       i.icon-fullscreen
       |  Display all markers
-    button.cp-input-btn.btn.btn-default
+    button.cp-input-btn.btn.btn-default(ng-click="drawerCtrl.toggleEditProject()")
       i.icon-edit-sign
       |  Edit project details
 
@@ -55,8 +55,9 @@
             address {{place.formatted_address}}
 
   //- Project
-  .mp-halfscreen-right(perfect-scrollbar="TheProject.places.length")
-    .md-drawer-body-subsetion
+  .mp-halfscreen-right(perfect-scrollbar="TheProject.places.length", ng-class="{'md-drawer-show-edit-project-subsection': drawerCtrl.showEditProjectSubsection}")
+
+    .md-drawer-body-subsetion#md-drawer-body-subsetion-places
       header.md-drawer-list-header.lead {{drawerCtrl.getProjectTitle()}}
       ul.md-places
         li.md-places-item(ng-repeat="place in TheProject.places", sidebar-place="sidebar-place")
@@ -70,3 +71,5 @@
             .md-places-item-name {{place.name}}
             address {{place.formatted_address}}
             p {{place.notes}}
+
+    .md-drawer-body-subsetion#md-drawer-body-subsetion-edit-project(md-edit-project)

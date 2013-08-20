@@ -9,6 +9,7 @@ app.directive 'mpMapDrawer', ['$rootScope', '$timeout',
     @maxmize = false
     @showDrawer = false
     @toggleDrawerButtonText = 'Show drawer'
+    @showEditProjectSubsection = false
 
     # Actions
     @getProjectTitle = ->
@@ -26,6 +27,9 @@ app.directive 'mpMapDrawer', ['$rootScope', '$timeout',
 
     @toggleDrawerSize = ->
       @maxmize = !@maxmize
+
+    @toggleEditProject = ->
+      @showEditProjectSubsection = !@showEditProjectSubsection
 
   ]
   link: (scope, element, attrs, drawerCtrl) ->

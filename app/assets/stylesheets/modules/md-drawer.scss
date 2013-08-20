@@ -76,7 +76,14 @@
   }
 
   .md-drawer-body-subsetion {
+    @include transition();
+    opacity: 1;
+    visibility: visible;
     padding: 10px;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
   }
 
   .mp-halfscreen-right {
@@ -86,4 +93,21 @@
 
 .md-drawer-list-header {
   text-indent: 20px;
+}
+
+// Project subsection
+#md-drawer-body-subsetion-edit-project {
+  opacity: 0;
+  visibility: hidden;
+}
+
+.md-drawer-show-edit-project-subsection {
+  #md-drawer-body-subsetion-places {
+    opacity: 0;
+    visibility: hidden;
+  }
+  #md-drawer-body-subsetion-edit-project {
+    opacity: 1;
+    visibility: visible;
+  }
 }

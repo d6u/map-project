@@ -1,7 +1,11 @@
-# mp-edit-project-form
-app.directive 'mpEditProjectForm', ['$rootScope', '$location',
+# md-edit-project
+app.directive 'mdEditProject', ['$rootScope', '$location',
 ($rootScope, $location) ->
 
+  currentTemplateUrl = if $location.path() == '/' then '/scripts/views/shared/md-edit-project-outside.html' else '/scripts/views/shared/md-edit-project-inside.html'
+
+  # Return
+  templateUrl: currentTemplateUrl
   scope: true
   link: (scope, element, attrs) ->
 

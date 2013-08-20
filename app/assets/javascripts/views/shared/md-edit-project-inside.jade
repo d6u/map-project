@@ -1,0 +1,29 @@
+header.md-drawer-list-header.lead {{drawerCtrl.getProjectTitle()}}
+form.form-horizontal
+  .form-group
+    label.control-label.col-lg-2(for="project-title") Title
+    div.col-lg-10
+      input.form-control#project-title(type="text", placeholder="Project title")
+  .form-group
+    label.control-label.col-lg-2(for="project-notes") Notes
+    div.col-lg-10
+      input.form-control#project-notes(type="text", placeholder="Project notes")
+  .form-group
+    div.col-lg-offset-2.col-lg-10
+      button.btn.btn-primary(type="submit") Update
+      button.btn.btn-default Cancel
+  .form-group
+    div.col-lg-offset-2.col-lg-10
+      button.btn.btn-success Invite friends
+
+  //- Delete warning
+  .form-group
+    .col-lg-offset-2.col-lg-10
+      .checkbox
+        label
+          input(type="checkbox")
+          |  I understand delete this project is not reversable
+  .form-group
+    div.col-lg-offset-2.col-lg-10
+      button.btn.btn-danger Delete
+

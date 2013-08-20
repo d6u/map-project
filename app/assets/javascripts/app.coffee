@@ -37,7 +37,7 @@ dependencies = [
   'views/project-view/project-view-ctrl'
 
   'views/shared/marker-info'
-  'views/shared/mp-edit-project-form'
+  'views/shared/md-edit-project'
   'views/shared/mp-map-canvas'
   'views/shared/mp-map-drawer'
   'views/shared/mp-map-searchbox'
@@ -49,4 +49,5 @@ define ['masonry', 'application/config'], (Masonry) ->
   window.Masonry = Masonry
   require dependencies, ->
     appendLoadingProgress('Application layer ready...')
-    angular.bootstrap(document, ['mapApp'])
+    window.fbLoginChecked.then ->
+      angular.bootstrap(document, ['mapApp'])
