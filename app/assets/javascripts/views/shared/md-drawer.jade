@@ -1,0 +1,72 @@
+.md-drawer-resize
+  a(href="", ng-click="drawerCtrl.toggleDrawerSize()")
+    i.icon-chevron-down(ng-show="drawerCtrl.maxmize")
+    i.icon-chevron-up(ng-hide="drawerCtrl.maxmize")
+  a(href="", ng-click="drawerCtrl.toggleDrawer()")
+    i.icon-minus
+
+
+//- Toolbar
+.md-drawer-toolbar
+  //- Searchbar
+  .mp-halfscreen-left
+    .md-searchbar.md-homepage-centered(ng-class="{'md-homepage-centered': interface.centerSearchBar}")
+      button.cp-input-btn.btn.btn-default(ng-hide="interface.centerSearchBar", ng-click="interface.showUserSection = true")
+        i.icon-user
+      button.cp-input-btn.btn.btn-default(ng-click="drawerCtrl.toggleDrawer()", ng-hide="interface.centerSearchBar")
+        | {{drawerCtrl.toggleDrawerButtonText}}
+      input.cp-input-naked.form-control(type="text", placeholder="Type a place to start", mp-map-searchbox="", ng-model="searchbox.input", ng-change="hideHomepage(); getAutoComplete()")
+      button.cp-input-btn.btn.btn-primary(type="button")
+        | Try
+      ul.cp-typeahead.cp-typeahead-dropup(ng-show="placePredictions.length")
+        li(ng-repeat="prediction in placePredictions")
+          | {{prediction.terms | mpPredictionFilter}}
+
+  //- Actions
+  .mp-halfscreen-right
+    button.cp-input-btn.btn.btn-default
+      i.icon-map-marker
+      |  Show directions
+    button.cp-input-btn.btn.btn-default
+      i.icon-fullscreen
+      |  Display all markers
+    button.cp-input-btn.btn.btn-default
+      i.icon-edit-sign
+      |  Edit project details
+
+
+//- Body
+.md-drawer-body
+  //- Search
+  .mp-halfscreen-left(perfect-scrollbar="TheMap.searchResults.length")
+    .md-drawer-body-subsetion
+      header.md-drawer-list-header.lead
+        | Showing {{TheMap.searchResults.length}} search results
+      ul.md-places
+        li.md-places-item.clearfix(ng-repeat="place in TheMap.searchResults")
+          .md-places-item-image
+            a(href="", ng-click="TheMap.centerPlaceInMap(place.$$marker.getPosition())")
+              img(ng-src="{{place.icon}}")
+          .md-places-item-actions
+            a(href="", ng-click="viewCtrl.addPlaceToList(place)")
+              i.icon-ok
+          .md-places-item-details
+            .md-places-item-name {{place.name}}
+            address {{place.formatted_address}}
+
+  //- Project
+  .mp-halfscreen-right(perfect-scrollbar="TheProject.places.length")
+    .md-drawer-body-subsetion
+      header.md-drawer-list-header.lead {{drawerCtrl.getProjectTitle()}}
+      ul.md-places
+        li.md-places-item(ng-repeat="place in TheProject.places", sidebar-place="sidebar-place")
+          .md-places-item-image
+            a(href="", ng-click="TheMap.centerPlaceInMap(place.$$marker.getPosition())")
+              img(ng-src="/img/markers/number_{{$index}}.png")
+          .md-places-item-actions
+            a(href="", ng-click="TheProject.removePlace(place)")
+              i.icon-remove
+          .md-places-item-details
+            .md-places-item-name {{place.name}}
+            address {{place.formatted_address}}
+            p {{place.notes}}

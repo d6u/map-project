@@ -1,0 +1,41 @@
+.md-places {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+
+.md-places-item {
+  padding: 5px;
+  &:hover {
+    background-color: #ededed;
+  }
+}
+
+.md-places-item-image {
+  float: left;
+  img {
+    margin-top: 2px;
+    width: 25px;
+  }
+}
+
+.md-places-item-actions {
+  float: right;
+  a {
+    display: block;
+    width: 30px;
+    height: 30px;
+    font-size: 21px;
+    line-height: 30px;
+    text-align: center;
+    &:hover {
+      color: $green;
+      text-decoration: none;
+    }
+  }
+}
+
+.md-places-item-details {
+  margin-left: 35px;
+  margin-right: 40px;
+}
