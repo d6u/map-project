@@ -58,7 +58,7 @@ class FriendshipsController < ApplicationController
       if friendship.status > 0
         reverse_friendship = @user.friendships.find_by_friend_id friendship.user_id
         if reverse_friendship
-          render :json => {:error   => true
+          render :json => {:error   => true,
                            :message => 'You are already friends'},
                  :status => 409
         else

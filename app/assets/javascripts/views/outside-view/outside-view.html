@@ -4,12 +4,12 @@
 
   <section class="cp-pusher-content">
 
-    <div class="mp-bottom-drawer clearfix" mp-map-drawer ng-class="{'mp-bottom-drawer-show': interface.showMapDrawer}"></div>
+    <div class="md-drawer clearfix" mp-map-drawer ng-class="{'md-drawer-maxmize': drawerCtrl.maxmize}"></div>
     <div class="mp-fullscreen" mp-map-canvas></div>
 
     <div class="md-homepage" ng-class="{'md-homepage-fadeout': !interface.centerSearchBar}">
       <header class="md-homepage-header">
-        <a href="" class="btn btn-primary" ng-click="">Login with Facebook</a>
+        <a href="" class="btn btn-primary" ng-click="MpUser.login('/home')">Login with Facebook</a>
         <a href="" ng-click="interface.showUserSection = true">Login/Register</a>
       </header>
       <div class="container">

@@ -23,13 +23,15 @@
 @import "components/md-modal";
 
 @import "modules/md-homepage";
+@import "modules/md-projects";
+@import "modules/md-aside";
+@import "modules/md-notifications";
+@import "modules/md-drawer";
 @import "modules/md-searchbar";
+@import "modules/md-places";
 
 @import "modules/mp-loading-screen";
 @import "modules/mp-user-section";
-@import "modules/mp-notification-center";
-@import "modules/mp-bottom-drawer";
-@import "modules/mp-all-projects-view";
 @import "modules/mp-navbar-bottom";
 @import "modules/mp-chatbox-directive";
 @import "modules/mp-project-add-friends-box";

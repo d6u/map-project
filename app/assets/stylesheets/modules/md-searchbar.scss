@@ -1,12 +1,8 @@
 .md-searchbar {
   @include transition();
-  @include displa-flex();
+  @include display-flex();
 
-  position: absolute;
-  width: 100%;
-  left: 10px;
-  bottom: 10px;
-  padding-right: 20px;
+  position: relative;
 
   input[type="text"] {
     @include flex-grow(1);
@@ -22,7 +18,19 @@
 
   &.md-homepage-centered {
     left: 50%;
-    bottom: 30px;
-    padding-right: 0;
+    top: -100px !important;
+  }
+}
+
+
+.md-drawer {
+  .md-searchbar {
+    top: -54px;
+  }
+
+  &.md-drawer-show {
+    .md-searchbar {
+      top: 0;
+    }
   }
 }

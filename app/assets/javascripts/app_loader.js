@@ -54,6 +54,11 @@ require.config({
 });
 
 // -- Load --
+// Wait for FB the resolve
+require(['jquery'], function() {
+  window.fbLoginChecked = $.Deferred()
+})
+
 require(['jquery', 'facebook'], function() {
   appendLoadingProgress('Social module loaded...');
   FB.init({
@@ -70,6 +75,7 @@ require(['jquery', 'facebook'], function() {
     } else {
       window.user = {};
     }
+    window.fbLoginChecked.resolve()
   });
 })
 

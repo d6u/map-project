@@ -66,7 +66,7 @@ app.directive 'mpMapSearchbox', [->
               else
                 dropList.children().last().addClass('cp-typeahead-cursor-on')
             else
-              dropList.children().lastt().addClass('cp-typeahead-cursor-on')
+              dropList.children().last().addClass('cp-typeahead-cursor-on')
           # put selection text into input box
           element.val dropList.children('.cp-typeahead-cursor-on').html()
           return false

@@ -6,6 +6,8 @@ dependencies = [
 
   'application/run'
 
+  'directives/md-tabset'
+
   'factories/invitation',
   'factories/mp-chatbox',
   'factories/mp-initializer',
@@ -13,6 +15,7 @@ dependencies = [
   'factories/mp-template-cache',
   'factories/mp-user',
   'factories/the-map',
+  'factories/the-project',
 
   'keepers/mp-bottom-modalbox',
   'keepers/mp-center-user-location',
@@ -23,10 +26,6 @@ dependencies = [
 
   'views/all-projects-view/all-projects-view-ctrl'
   'views/all-projects-view/mini-map-cover'
-  'views/all-projects-view/mp-all-projects-item'
-  'views/all-projects-view/mp-navbar-bottom'
-
-  'views/new-project-view/new-project-view-ctrl'
 
   'views/outside-view/outside-view-ctrl'
 
@@ -38,7 +37,7 @@ dependencies = [
   'views/project-view/project-view-ctrl'
 
   'views/shared/marker-info'
-  'views/shared/mp-edit-project-form'
+  'views/shared/md-edit-project'
   'views/shared/mp-map-canvas'
   'views/shared/mp-map-drawer'
   'views/shared/mp-map-searchbox'
@@ -50,4 +49,5 @@ define ['masonry', 'application/config'], (Masonry) ->
   window.Masonry = Masonry
   require dependencies, ->
     appendLoadingProgress('Application layer ready...')
-    angular.bootstrap(document, ['mapApp'])
+    window.fbLoginChecked.then ->
+      angular.bootstrap(document, ['mapApp'])

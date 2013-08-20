@@ -1,8 +1,13 @@
 # Map Components
 # ----------------------------------------
 # google-map
-app.directive 'mpMapCanvas', ['$window', ($window) ->
+app.directive 'mpMapCanvas',
+['$window',
+( $window) ->
+
   (scope, element, attrs) ->
+
+    scope.TheMap.$$currentScope = scope
 
     # init map
     mapOptions =
@@ -12,4 +17,32 @@ app.directive 'mpMapCanvas', ['$window', ($window) ->
       disableDefaultUI: true
 
     scope.TheMap.map = new google.maps.Map(element[0], mapOptions)
+
+    # watch for marked places and make marker for them
+    scope.$watch(
+      (->
+        return _.pluck(scope.TheProject.places, 'id')
+      ),
+      ((newVal, oldVal) ->
+        _.forEach scope.TheProject.places, (place, idx) ->
+          # $$saved is used to hide infoWindow add place button
+          place.$$saved = true
+          if place.$$marker
+            place.$$marker.setMap null
+            delete place.$$marker
+          if place.geometry
+            latLog = place.geometry.location
+          else
+            coordMatch = /\((.+), (.+)\)/.exec place.coord
+            latLog = new google.maps.LatLng coordMatch[1], coordMatch[2]
+          markerOptions =
+            map: scope.TheMap.map
+            title: place.name
+            position: latLog
+            icon:
+              url: "/img/markers/number_#{idx}.png"
+          place.$$marker = new google.maps.Marker markerOptions
+          scope.TheMap.bindInfoWindow(place, scope)
+      ), true
+    )
 ]

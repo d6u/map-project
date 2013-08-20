@@ -103,9 +103,9 @@ io.sockets.on 'connection', (socket) ->
 
   # client message
   # ----------------------------------------
-  socket.on 'clientMessage', (data) ->
+  socket.on 'clientData', (data) ->
     console.log 'receive clientMessage', data
     _.forEach data.receivers_ids, (id) ->
       if clientsList[id] && clientsList[id].length > 0
         _.forEach clientsList[id], (socketId) ->
-          io.sockets.socket(socketId).emit 'serverMessage', data
+          io.sockets.socket(socketId).emit 'serverData', data
