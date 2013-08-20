@@ -1,5 +1,6 @@
-app.directive 'mpMapDrawer', ['$rootScope', '$timeout',
-($rootScope, $timeout) ->
+app.directive 'mpMapDrawer',
+['$rootScope', '$timeout', '$route',
+( $rootScope,   $timeout,   $route) ->
 
   templateUrl: '/scripts/views/shared/md-drawer.html'
   scope: true
@@ -38,8 +39,11 @@ app.directive 'mpMapDrawer', ['$rootScope', '$timeout',
     scope.drawerCtrl = drawerCtrl
 
     # Interface
-    scope.interface.centerSearchBar = true
-    # element.find('.md-homepage-centered').removeClass 'md-homepage-centered'
+    if $route.current.$$route.controller == 'OutsideViewCtrl'
+      scope.interface.centerSearchBar = true
+    else
+      scope.interface.centerSearchBar = false
+      element.find('.md-homepage-centered').removeClass 'md-homepage-centered'
 
     # Actions
     scope.clearInput = (control) ->

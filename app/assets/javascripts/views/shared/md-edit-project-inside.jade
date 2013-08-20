@@ -3,27 +3,27 @@ form.form-horizontal
   .form-group
     label.control-label.col-lg-2(for="project-title") Title
     div.col-lg-10
-      input.form-control#project-title(type="text", placeholder="Project title")
+      input.form-control#project-title(ng-model="editProjectCtrl.editProjectForm.title", type="text", placeholder="Project title")
   .form-group
     label.control-label.col-lg-2(for="project-notes") Notes
     div.col-lg-10
-      input.form-control#project-notes(type="text", placeholder="Project notes")
+      input.form-control#project-notes(ng-model="editProjectCtrl.editProjectForm.notes", type="text", placeholder="Project notes")
   .form-group
     div.col-lg-offset-2.col-lg-10
-      button.btn.btn-primary(type="submit") Update
-      button.btn.btn-default Cancel
+      button.btn.btn-primary(ng-click="editProjectCtrl.saveChanges()", type="submit") Update
+      button.btn.btn-default(ng-click="editProjectCtrl.revertChanges()") Cancel
   .form-group
     div.col-lg-offset-2.col-lg-10
-      button.btn.btn-success Invite friends
+      button.btn.btn-success#invite-friends-button Invite friends
 
   //- Delete warning
   .form-group
     .col-lg-offset-2.col-lg-10
       .checkbox
         label
-          input(type="checkbox")
+          input(type="checkbox", ng-model="editProjectCtrl.editProjectForm.deleteCheckbox")
           |  I understand delete this project is not reversable
   .form-group
     div.col-lg-offset-2.col-lg-10
-      button.btn.btn-danger Delete
+      button.btn.btn-danger(ng-click="editProjectCtrl.deleteProject()") Delete
 
