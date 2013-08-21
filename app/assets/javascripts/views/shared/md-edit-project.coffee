@@ -1,42 +1,47 @@
 # md-edit-project
-app.directive 'mdEditProject', ['$rootScope', '$location',
-($rootScope, $location) ->
+app.directive 'mdEditProject',
+['$rootScope', '$location',
+( $rootScope,   $location) ->
 
-  currentTemplateUrl = if $location.path() == '/' then '/scripts/views/shared/md-edit-project-outside.html' else '/scripts/views/shared/md-edit-project-inside.html'
-
-  # Return
-  templateUrl: currentTemplateUrl
+  templateUrl: if $location.path() == '/' then '/scripts/views/shared/md-edit-project-outside.html' else '/scripts/views/shared/md-edit-project-inside.html'
   scope: true
-  link: (scope, element, attrs) ->
+  controller: ['$scope', '$location', ($scope, $location) ->
 
-    scope.deleteProject = ->
-      scope.MpProjects.removeProject(scope.TheProject.project).then ->
-        $location.path('/home')
+    @editProjectForm = {}
 
-    scope.saveChanges = ->
-      if scope.editProject.title.length == 0
-        scope.editProject.errorMessage = "You must have a title to start with."
+    @deleteProject = ->
+      if @editProjectForm.deleteCheckbox
+        $scope.MpProjects.removeProject($scope.TheProject.project).then ->
+          $location.path('/home')
+
+    @saveChanges = ->
+      if @editProjectForm.title.length == 0
+        @editProjectForm.errorMessage = "You must have a title to start with."
       else
-        scope.editProject.errorMessage = null
-        scope.TheProject.project.title = scope.editProject.title
-        scope.TheProject.project.notes = scope.editProject.notes
-        scope.TheProject.project.put()
+        @editProjectForm.errorMessage = null
+        $scope.TheProject.project.title = @editProjectForm.title
+        $scope.TheProject.project.notes = @editProjectForm.notes
+        $scope.TheProject.project.put()
+        $scope.drawerCtrl.showEditProjectSubsection = false
 
-    scope.revertChanges = ->
-      scope.editProject.title = scope.TheProject.project.title
-      scope.editProject.notes = scope.TheProject.project.notes
+    @revertChanges = ->
+      @editProjectForm.title = $scope.TheProject.project.title
+      @editProjectForm.notes = $scope.TheProject.project.notes
+      $scope.drawerCtrl.showEditProjectSubsection = false
 
+    return
+  ]
+  controllerAs: 'editProjectCtrl'
+  link: (scope, element, attrs, editProjectCtrl) ->
 
-    # init
-    # ----------------------------------------
-    # form object => editProjectForm
-    scope.editProject = {}
+    element.find('#invite-friends-button').on 'click', (event) ->
+      $rootScope.$broadcast 'showProjectAddFriendsModal'
 
     scope.$watch 'TheProject.project.title', (newVal, oldVal) ->
-      if newVal != scope.editProject.title
-        scope.editProject.title = newVal
+      if newVal != editProjectCtrl.editProjectForm.title
+        editProjectCtrl.editProjectForm.title = newVal
 
     scope.$watch 'TheProject.project.notes', (newVal, oldVal) ->
-      if newVal != scope.editProject.notes
-        scope.editProject.notes = newVal
+      if newVal != editProjectCtrl.editProjectForm.notes
+        editProjectCtrl.editProjectForm.notes = newVal
 ]

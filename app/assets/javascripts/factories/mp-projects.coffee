@@ -31,6 +31,8 @@ app.factory 'MpProjects',
       @__projects = []
 
     getProjects: (queryParams) ->
+      if !queryParams
+        queryParams = {include_participated: true}
       $projects.getList(queryParams).then (projects) =>
         _projects = @projects
         @projects = projects

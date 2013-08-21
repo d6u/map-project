@@ -4,16 +4,20 @@ path = require('path')
 module.exports = (grunt) ->
 
   # Map jade file dest: src
-  jadeFiles = grunt.file.expandMapping('**/*.jade', 'public/scripts', {
-    cwd: 'app/assets/javascripts'
-    rename: (dest, matchedSrcPath, options) ->
-      withoutExt = /(.*)(\.jade)$/.exec(matchedSrcPath)[1]
-      return path.join(dest, withoutExt+'.html')
-  })
+  mapJadeFiles = ->
+    jadeFiles = grunt.file.expandMapping('**/*.jade', 'public/scripts', {
+      cwd: 'app/assets/javascripts'
+      rename: (dest, matchedSrcPath, options) ->
+        withoutExt = /(.*)(\.jade)$/.exec(matchedSrcPath)[1]
+        return path.join(dest, withoutExt+'.html')
+    })
 
-  jadeMap = {}
-  jadeFiles.forEach (item) ->
-    jadeMap[item.dest] = item.src
+    jadeMap = {}
+    jadeFiles.forEach (item) ->
+      jadeMap[item.dest] = item.src
+
+    return jadeMap
+
 
   # Project configuration.
   grunt.initConfig({
@@ -26,7 +30,7 @@ module.exports = (grunt) ->
       development:
         options:
           pretty: true
-        files: jadeMap
+        files: mapJadeFiles()
 
     copy:
       development:
@@ -51,3 +55,12 @@ module.exports = (grunt) ->
 
   # Default task(s).
   grunt.registerTask('default', ['clean', 'jade', 'copy', 'watch'])
+
+  ###
+  Dymanic change config for jade
+  Watch for new files, still have issues when add file to new folder or
+    folder not previouly watched
+  ###
+  grunt.event.on 'watch', (action, filepath) ->
+    jadeMap = mapJadeFiles()
+    grunt.config(['jade', 'development', 'files'], jadeMap)

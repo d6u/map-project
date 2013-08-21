@@ -1,20 +1,36 @@
 app.directive 'mpProjectAddFriendsModal', [->
-  (scope, element, attrs) ->
 
-    element.next().on('click', ->
-      element.removeClass 'md-show'
-    )
+  templateUrl: '/scripts/views/project-view/md-project-manage-friends.html'
+  controller: ['$element', '$scope', ($element, $scope) ->
 
-    scope.closeModal = ->
-      element.removeClass 'md-show'
+    @closeModal = ->
+      $element.removeClass 'md-show'
 
-    scope.sendInvitations = ->
-      $users = scope.MpProjects.currentProject.all('users')
-      selectedFriends = _.where scope.MpChatbox.friends, '$$selected'
-      ids = _.pluck selectedFriends, 'id'
-      $users.post({user_ids: ids.join(',')}).then (users) ->
-        # server will return an array of all participated users
+    @sendInvitations = ->
+      selectedFriends = _.where $scope.MpChatbox.friends, '$$selected'
+      $scope.TheProject.addParticipatedUsers(selectedFriends).then ->
+        for user in selectedFriends
+          $scope.MpChatbox.sendProjectAddUserNotice($scope.TheProject, user)
+
+    @getNotParticipatedUsers = ->
+      return _.filter $scope.MpChatbox.friends, (friend) ->
+        !_.find($scope.TheProject.participatedUsers, {id: friend.id})
+
+    @projectRemoveUser = (user) ->
+      user.$$selected = false
+      $scope.TheProject.removeParticipatedUser(user).then ->
+        $scope.MpChatbox.sendProjectRemoveUserNotice($scope.TheProject.project, user)
+
+
+    return
+  ]
+  controllerAs: 'mpProjectAddFriendsModalCtrl'
+  link: (scope, element, attrs, mpProjectAddFriendsModalCtrl) ->
+
+    element.next().on 'click', mpProjectAddFriendsModalCtrl.closeModal
 
     scope.$on attrs.mpProjectAddFriendsModal, (event, data) ->
+      for friend in scope.MpChatbox.friends
+        friend.$$selected = false
       element.addClass 'md-show'
 ]

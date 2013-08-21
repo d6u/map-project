@@ -5,7 +5,7 @@ require.config({
   paths: {
     // Utility libraries
     'jquery':                   '_libraries/jquery-2.0.3',
-    'bootstrap':                '_libraries/bootstrap.min',
+    'bootstrap':                '_libraries/bootstrap-3.0.0.min',
     'jquery.ui':                '_libraries/jquery-ui-1.10.3.custom.min',
     'jquery.perfect-scrollbar': '_libraries/perfect-scrollbar-0.4.3.with-mousewheel.min',
     'lodash':    '_libraries/lodash-1.3.1',
@@ -26,7 +26,7 @@ require.config({
     'angular':               '_libraries/angular-1.2.0rc1',
     'angular.animate':       '_libraries/angular-animate-1.2.0rc1',
     'angular.route':         '_libraries/angular-route-1.2.0rc1',
-    'angular.route.segment': '_libraries/angular-route-segment-1.0.3',
+    'angular.route.segment': '_libraries/angular-route-segment-1.1.0',
     'angular.restangular':   '_libraries/restangular-1.1.3',
     // 3rd parties
     'facebook':          '//connect.facebook.net/en_US/all',

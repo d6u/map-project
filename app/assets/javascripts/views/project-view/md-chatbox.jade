@@ -1,0 +1,20 @@
+a.mp-chatbox-show-button(href="", ng-click="mdChatboxCtrl.expandChatbox()", ng-hide="mdChatboxCtrl.chatboxExpanded") Show Chat box
+
+
+.mp-chatbox-expanded(ng-show="mdChatboxCtrl.chatboxExpanded")
+  header.mp-chatbox-header
+    .mp-chatbox-header-friends-list
+      a.mp-chatbox-header-friends-item(href="", ng-repeat="friend in TheProject.participatedUsers", bs-tooltip="{{friend.name}}", bs-tooltip-placement="bottom", ng-class="{'mp-chatbox-header-friends-item-online': friend.$$online}")
+        img(ng-src="{{friend.fb_user_picture}}")
+    a.mp-chatbox-header-action-button.mp-chatbox-header-close-button(href="", ng-click="mdChatboxCtrl.collapseChatbox()")
+      i.icon-remove
+
+  //- chat-history
+  .mp-chat-history(perfect-scrollbar="mpChatHistoryCtrl.chatHistory.length", mp-chat-history="")
+    //- chat-item
+    .mp-chat-history-item(ng-repeat="chatItem in mpChatHistoryCtrl.chatHistory", mp-chat-history-item="")
+
+  //- chat-inputs
+  .mp-chat-inputs
+    textarea.form-control.mp-naked-input(name="", placeholder="Say something", mp-chatbox-input="mp-chatbox-input")
+    button.btn.btn-default Send

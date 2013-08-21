@@ -15,7 +15,7 @@ app.controller 'ProjectViewCtrl',
       _places.forEach (place) ->
         $scope.TheProject.addPlace(place)
   else
-    $scope.TheProject = new TheProject($routeParams.project_id)
+    $scope.TheProject = new TheProject(Number($routeParams.project_id))
 
 
   @addPlaceToList = (place) ->

@@ -4,7 +4,7 @@ app.directive 'mpChatHistoryItem', ['$compile', 'mpTemplateCache', '$rootScope',
 
   chooseTemplate = (type) ->
     switch type
-      when 'message'
+      when 'chatMessage'
         return '/scripts/views/project-view/mp-chat-history-message.html'
       when 'userBehavior'
         return '/scripts/views/project-view/mp-chat-history-user-behavior.html'
@@ -13,11 +13,6 @@ app.directive 'mpChatHistoryItem', ['$compile', 'mpTemplateCache', '$rootScope',
 
   # return
   link: (scope, element, attrs) ->
-    # if scope.chatItem.type == 'addPlaceToList' && !scope.chatItem.self
-    #   scope.ActiveProject.project.one('places', scope.chatItem.placeId).get().then (place) ->
-    #     scope.chatItem.placeName = place.name
-    #     scope.chatItem.placeAddress = place.address
-    #     $rootScope.$broadcast 'updateInPlacesList'
 
     mpTemplateCache.get(chooseTemplate(scope.chatItem.type)).then (template) ->
       element.html $compile(template)(scope)

@@ -5,13 +5,7 @@ app.directive 'mpChatboxInput', ['$route', ($route) ->
     element.on 'keydown', (event) ->
       if event.keyCode == 13
         if element.val() != ''
-          console.debug scope.participatedUsersIds, scope.chatHistory
-          data =
-            project_id: Number($route.current.params.project_id)
-            receivers_ids: _.without(_.pluck(scope.MpChatbox.participatedUsers, 'id'), scope.MpUser.getId())
-            body:
-              message: element.val()
-          scope.$emit 'enterNewMessage', data
+          scope.$emit 'enterNewMessage', element.val()
           element.val ''
         return false
       return undefined

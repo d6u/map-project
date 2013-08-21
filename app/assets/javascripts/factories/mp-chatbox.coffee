@@ -92,19 +92,23 @@ angular.module('mp-chatbox-provider', []).provider 'MpChatbox', class
         @socket.emit 'clientData', data
 
       processServerData: (data) ->
+        console.debug 'receive serverData', data
         switch data.type
+          # global
           when 'addFriendRequest'
             if !_.find @notifications, {body: {friendship_id: data.body.friendship_id}}
               @notifications.push data
           when 'friendAcceptNotice'
             @updateFriendsList()
             @notifications.push data
-
-          # when 'message'
-          #   if @rooms[data.project_id]
-          #     @rooms[data.project_id].push data
-          #   else
-          #     @rooms[data.project_id] = [data]
+          when 'projectInvitation'
+            $rootScope.MpProjects.getProjects()
+            @notifications.push data
+          when 'projectRemoveUser'
+            @notifications.push data
+          # project specific
+          when 'chatMessage'
+            @roomAddNewData(data)
 
 
       # global
@@ -131,59 +135,67 @@ angular.module('mp-chatbox-provider', []).provider 'MpChatbox', class
           receivers_ids:     [friend.id]
         })
 
-      sendProjectInvitation: () ->
+      sendProjectAddUserNotice: (project, user) ->
+        MpChatbox.sendClientData({
+          type: 'projectInvitation'
+          sender:        $rootScope.MpUser.getUser()
+          receivers_ids: [user.id]
+          body:
+            project:
+              id:        project.id
+              title:     project.title
+              notes:     project.notes
+        })
+
+      sendProjectRemoveUserNotice: (project, user) ->
+        MpChatbox.sendClientData({
+          type: 'projectRemoveUser'
+          sender:        $rootScope.MpUser.getUser()
+          receivers_ids: [user.id]
+          body:
+            project:
+              id:        project.id
+              title:     project.title
+              notes:     project.notes
+        })
 
 
       # project
       # ----------------------------------------
-      sendChatMessage: () ->
+      # helper to insert data into room abject
+      roomAddNewData: (data) ->
+        $rootScope.$apply =>
+          if !@rooms[data.project_id]
+            @rooms[data.project_id] = [data]
+          else
+            @rooms[data.project_id].push data
+
+
+      # send actions
+      sendChatMessage: (message, TheProject) ->
+        chatMessageData = {
+          type: 'chatMessage'
+          sender:        $rootScope.MpUser.getUser()
+          receivers_ids: _.pluck TheProject.participatedUsers, 'id'
+          project_id:    TheProject.project.id
+          body:
+            message: message
+        }
+        MpChatbox.sendClientData(chatMessageData)
+        chatMessageData.self = true
+        @roomAddNewData(chatMessageData)
 
       sendActionAboutPlace: () ->
 
 
 
 
-
-      initialize: ->
-        # register scope listeners
-        # enterNewMessage = $rootScope.$on 'enterNewMessage', (event, data) =>
-        #   console.debug 'enterNewMessage @rooms ->', @rooms
-        #   # project_id, receivers_ids: []
-        #   data.type = 'message'
-        #   data.user =
-        #     id: $rootScope.MpUser.getId()
-        #     name: $rootScope.MpUser.name()
-        #     fb_user_picture: $rootScope.MpUser.fb_user_picture()
-        #   @sendClientMessage(data)
-        #   data.self = true
-        #   $rootScope.$apply =>
-        #     if @rooms[data.project_id]
-        #       @rooms[data.project_id].push data
-        #     else
-        #       @rooms[data.project_id] = [data]
-
-        # addFriendRequest = $rootScope.$on 'addFriendRequest', (event, friend_id) =>
-        #   console.debug 'addFriendRequest', friend_id
-        #   data =
-        #     type: 'addFriendRequest'
-        #     sender:
-        #       id: $rootScope.MpUser.getId()
-        #       name: $rootScope.MpUser.name()
-        #       fb_user_picture: $rootScope.MpUser.fb_user_picture()
-        #     receivers_ids: [friend_id]
-        #   @sendClientMessage(data)
-
-        # # save for future deregistration
-        # @eventDeregisters.push enterNewMessage
-        # @eventDeregisters.push addFriendRequest
-
+      # ----------------------------------------
+      # Remove trace of chatting and close connection
       destroy: ->
-        @$$online = true
+        @$$online = false
         @socket.disconnect()
         [@rooms, @friends] = [[], []]
-        # remove all listeners
-        # for eventDeregister in @eventDeregisters
-        #   eventDeregister()
 
 
     # return
