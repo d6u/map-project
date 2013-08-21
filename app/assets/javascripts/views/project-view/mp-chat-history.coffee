@@ -1,13 +1,18 @@
 # mp-chat-history
 app.directive 'mpChatHistory', ['MpChatbox', '$route', (MpChatbox, $route) ->
-  (scope, element, attrs) ->
 
+  controller: [->
     project_id = Number($route.current.params.project_id)
 
     if !MpChatbox.rooms[project_id]
       MpChatbox.rooms[project_id] = []
-    scope.chatHistory = MpChatbox.rooms[project_id]
-    console.debug 'MpChatbox.rooms', MpChatbox.rooms
+    @chatHistory = MpChatbox.rooms[project_id]
+
+
+    return
+  ]
+  controllerAs: 'mpChatHistoryCtrl'
+  link: (scope, element, attrs, mpChatHistoryCtrl) ->
 
     # watch for changed in chat history and determine whether to scroll down to
     #   newest item

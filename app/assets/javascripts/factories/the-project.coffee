@@ -90,9 +90,9 @@ app.factory 'TheProject',
       for user, index in users
         friend = _.find MpChatbox.friends, {id: user.id}
         if friend
-          @participatedUsers[index] = friend
+          @participatedUsers.push friend
         else if user.id != MpUser.getId()
-          @participatedUsers[index] = user
+          @participatedUsers.push user
 
     removeParticipatedUser: (user) ->
       Restangular.one('projects', @project.id).one('users', user.id)
