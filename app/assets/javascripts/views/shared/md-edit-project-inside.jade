@@ -10,11 +10,9 @@ form.form-horizontal
       input.form-control#project-notes(ng-model="editProjectCtrl.editProjectForm.notes", type="text", placeholder="Project notes")
   .form-group
     div.col-lg-offset-2.col-lg-10
+      button.btn.btn-success#invite-friends-button Invite friends
       button.btn.btn-primary(ng-click="editProjectCtrl.saveChanges()", type="submit") Update
       button.btn.btn-default(ng-click="editProjectCtrl.revertChanges()") Cancel
-  .form-group
-    div.col-lg-offset-2.col-lg-10
-      button.btn.btn-success#invite-friends-button Invite friends
 
   //- Delete warning
   .form-group

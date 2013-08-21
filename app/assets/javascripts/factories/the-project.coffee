@@ -5,8 +5,8 @@ TheProject is a class that will handle:
 ###
 
 app.factory 'TheProject',
-['MpProjects', 'Restangular',
-( MpProjects,   Restangular) ->
+['MpProjects', 'Restangular', 'MpChatbox', 'MpUser',
+( MpProjects,   Restangular,   MpChatbox,   MpUser) ->
 
   # Return a class
   return class TheProject
@@ -14,9 +14,11 @@ app.factory 'TheProject',
       if projectId
         MpProjects.findProjectById(projectId).then(
           ((project) =>
-            @project = project
+            @project  = project
             @$$places = Restangular.one('projects', project.id).all('places')
-            @getPlacesList()),
+            @getPlacesList()
+            @$$users  = Restangular.one('projects', project.id).all('users')
+            @getParticipatedUsers()),
           (=>
             # TODO: handle error, e.g. project is not authorized to view
           )
@@ -62,4 +64,29 @@ app.factory 'TheProject',
     updateProject: (project) ->
       angular.extend @project, project
       @project.put()
+
+    # Participated users
+    # ----------------------------------------
+    ###
+    If user is a friend, object from friends property will be referred,
+      otherwise will refer to object in __participatedUsers
+    ###
+    participatedUsers: []
+    __participatedUsers: [] # used to store orginal server object
+
+    getParticipatedUsers: ->
+      @$$users.getList().then (users) =>
+        @participatedUsers   = []
+        @__participatedUsers = users
+        for user, index in users
+          friend = _.find MpChatbox.friends, {id: user.id}
+          if friend
+            @participatedUsers[index] = friend
+          else if user.id != MpUser.getId()
+            @participatedUsers[index] = user
+
+    removeParticipatedUser: (user) ->
+      Restangular.one('projects', @project.id).one('users', user.id)
+      .remove().then =>
+        @participatedUsers = _.without @participatedUsers, user
 ]

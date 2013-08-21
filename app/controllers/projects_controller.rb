@@ -14,9 +14,6 @@ class ProjectsController < ApplicationController
   def add_user
     user_ids = params[:user_ids].split(',')
     project  = Project.find_by_id params[:project_id]
-    project.participated_users.each {|user|
-      project.participated_users.delete(user) if !(user_ids.include? user.id.to_s)
-    }
     users = user_ids.map {|id|
       user = User.find_by_id id
       begin
@@ -27,6 +24,15 @@ class ProjectsController < ApplicationController
       user
     }
     render :json => project.participated_users, :only => [:id, :name, :fb_user_picture]
+  end
+
+
+  # DELETE /projects/:project_id/users
+  def remove_user
+    project  = Project.find_by_id params[:project_id]
+    user     = project.participated_users.find_by_id params[:id]
+    project.participated_users.delete(user)
+    head 200
   end
 
 
