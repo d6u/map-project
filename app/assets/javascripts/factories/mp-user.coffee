@@ -23,6 +23,12 @@ app.factory 'MpUser', ['$q', '$window', '$rootScope', 'Restangular', '$location'
       return if @$$user then @$$user.email           else undefined
     fb_user_picture: ->
       return if @$$user then @$$user.fb_user_picture else undefined
+    getUser: ->
+      return {
+        id:              @getId()
+        name:            @name()
+        fb_user_picture: @fb_user_picture()
+      }
 
     fbLoginCallback: (authResponse, path) ->
       MpUser.$$user =

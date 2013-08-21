@@ -92,12 +92,18 @@ angular.module('mp-chatbox-provider', []).provider 'MpChatbox', class
         @socket.emit 'clientData', data
 
       processServerData: (data) ->
+        console.debug 'receive serverData', data
         switch data.type
           when 'addFriendRequest'
             if !_.find @notifications, {body: {friendship_id: data.body.friendship_id}}
               @notifications.push data
           when 'friendAcceptNotice'
             @updateFriendsList()
+            @notifications.push data
+          when 'projectInvitation'
+            $rootScope.MpProjects.getProjects()
+            @notifications.push data
+          when 'projectRemoveUser'
             @notifications.push data
 
           # when 'message'
@@ -131,7 +137,29 @@ angular.module('mp-chatbox-provider', []).provider 'MpChatbox', class
           receivers_ids:     [friend.id]
         })
 
-      sendProjectInvitation: () ->
+      sendProjectAddUserNotice: (project, user) ->
+        MpChatbox.sendClientData({
+          type: 'projectInvitation'
+          sender:        $rootScope.MpUser.getUser()
+          receivers_ids: [user.id]
+          body:
+            project:
+              id:        project.id
+              title:     project.title
+              notes:     project.notes
+        })
+
+      sendProjectRemoveUserNotice: (project, user) ->
+        MpChatbox.sendClientData({
+          type: 'projectRemoveUser'
+          sender:        $rootScope.MpUser.getUser()
+          receivers_ids: [user.id]
+          body:
+            project:
+              id:        project.id
+              title:     project.title
+              notes:     project.notes
+        })
 
 
       # project

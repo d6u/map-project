@@ -69,21 +69,30 @@ app.factory 'TheProject',
     # ----------------------------------------
     ###
     If user is a friend, object from friends property will be referred,
-      otherwise will refer to object in __participatedUsers
+      otherwise will refer to object in returned by server
     ###
     participatedUsers: []
-    __participatedUsers: [] # used to store orginal server object
 
     getParticipatedUsers: ->
       @$$users.getList().then (users) =>
-        @participatedUsers   = []
-        @__participatedUsers = users
-        for user, index in users
-          friend = _.find MpChatbox.friends, {id: user.id}
-          if friend
-            @participatedUsers[index] = friend
-          else if user.id != MpUser.getId()
-            @participatedUsers[index] = user
+        @organizeParticipatedUsers(users)
+
+    # users is an array contains user object, each object must have `id`
+    addParticipatedUsers: (users) ->
+      ids = _.pluck(users, 'id')
+      $users = @project.all('users')
+      $users.post({user_ids: ids.join(',')}).then (users) =>
+        @organizeParticipatedUsers(users)
+
+    # organize server returned participated users
+    organizeParticipatedUsers: (users) ->
+      @participatedUsers = []
+      for user, index in users
+        friend = _.find MpChatbox.friends, {id: user.id}
+        if friend
+          @participatedUsers[index] = friend
+        else if user.id != MpUser.getId()
+          @participatedUsers[index] = user
 
     removeParticipatedUser: (user) ->
       Restangular.one('projects', @project.id).one('users', user.id)
