@@ -1,9 +1,10 @@
 {
   "js": {
+    "sourceFolder": "development/js",
+    "targetFolder": "app/assets/javascripts",
     "copy": ["main-requirejs.js", "location-fallback.js"],
     "concat": {
-      "dest": "application.js",
-      "src": [
+      "application.js": [
         "_libraries/bootstrap-3.0.0.min.js",
         "_libraries/jquery-ui-1.10.3.custom.min.js",
         "_libraries/perfect-scrollbar-0.4.3.with-mousewheel.min.js",

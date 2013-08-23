@@ -23,7 +23,7 @@ require.config({
     },
     'application': {
       deps: ['jquery'],
-      exports: 'angular'
+      exports: ''
     }
   }
 })
@@ -57,6 +57,6 @@ require(['appPrepare', 'ipLocation'], function(appPrepare, ipLocation) {
 })
 
 // init, bootstrap angularjs
-define(['appPrepare', 'facebook', 'modernizr', 'google.maps', 'application'], function(appPrepare) {
-
+define(['appPrepare', 'application', 'facebook', 'modernizr', 'google.maps'], function(appPrepare) {
+  angular.bootstrap(document, ['mapApp']);
 })
