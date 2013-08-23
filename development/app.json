@@ -1,0 +1,28 @@
+{
+  "js": {
+    "sourceFolder": "development/js",
+    "targetFolder": "app/assets/javascripts",
+    "copy": ["main-requirejs.js", "location-fallback.js"],
+    "concat": {
+      "application.js": [
+        "_libraries/bootstrap-3.0.0.min.js",
+        "_libraries/jquery-ui-1.10.3.custom.min.js",
+        "_libraries/perfect-scrollbar-0.4.3.with-mousewheel.min.js",
+        "_libraries/lodash-1.3.1.min.js",
+        "_libraries/socket.io.min.js",
+        "_libraries/angular-loader-1.2.0rc1.min.js",
+        "_libraries/angular-1.2.0rc1.min.js",
+        "_libraries/angular-animate-1.2.0rc1.min.js",
+        "_libraries/angular-route-1.2.0rc1.min.js",
+        "_libraries/angular-route-segment-1.1.0.min.js",
+        "_libraries/restangular-1.1.3.min.js",
+        "_modules_for_libraries",
+        "application",
+        "directives",
+        "factories",
+        "keepers",
+        "views"
+      ]
+    }
+  }
+}

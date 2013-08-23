@@ -1,1 +1,1 @@
-$redis = Redis.new if Rails.env.development?
+$redis = Redis.new # if Rails.env.development?

@@ -1,43 +1,34 @@
-<!doctype html>
-<html lang="en">
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>Map Project</title>
   <meta name="description" content="">
   <meta name="viewport"    content="width=device-width, initial-scale=1.0">
-  <title>Map Project</title>
   <%= stylesheet_link_tag 'application', media: 'all' %>
+  <script>
+  var paths = {'jquery':'/js/jquery-2.0.3.min','modernizr':'/js/modernizr-2.6.2.min','google.maps':'//maps.googleapis.com/maps/api/js?key=AIzaSyAGJjfEZSf93ey42aqJDIVuOVaLnpUUzWs&libraries=places&sensor=true&callback=initGoogleMaps','facebook':'//connect.facebook.net/en_US/all','ipLocation':['http://www.geoplugin.net/json.gp?jsoncallback=define','<%= javascript_path_without_suffix('location-fallback.js') %>'],'application':['<%= javascript_path_without_suffix('application.js') %>']}
+  </script>
+  <script data-main="<%= javascript_path_without_suffix('main-requirejs.js') %>" src="/js/require.min.js"></script>
   <%= csrf_meta_tags %>
 </head>
 <body>
+<!--[if lt IE 7]>
+<p class="chromeframe">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">activate Google Chrome Frame</a> to improve your experience.</p>
+<![endif]-->
 
-<div ng-view class="mp-application">
-
-  <!-- Loader, this will be removed when angular runs -->
-  <div class="mp-loading-screen">
-    <div class="container">
-      <div class="row">
-        <div class="col-12">
-          <h1>Welcome to Map Project</h1>
-          <ul class="lead" id="load_progress">
-            <li class="">Loading assets...</li>
-          </ul>
-        </div>
-      </div>
-    </div>
-  </div>
-
-</div>
+<div ng-view class="mp-application"></div>
 
 <div id="fb-root"></div>
-<%= javascript_include_tag 'require.js', :'data-main' => javascript_path('app_loader.js') %>
 <script>
-(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
-ga('create', 'UA-40390313-3', 'herokuapp.com');
-ga('send', 'pageview');
+var _gaq=[['_setAccount','UA-40390313-3'],['_trackPageview']];
+(function(d,t){var g=d.createElement(t),s=d.getElementsByTagName(t)[0];
+g.src='//www.google-analytics.com/ga.js';
+s.parentNode.insertBefore(g,s)}(document,'script'));
 </script>
 
 </body>
