@@ -48,4 +48,3 @@ node_modules
 ########################################
 # Project specific settings
 app/assets/javascripts/*
-development/tmp
