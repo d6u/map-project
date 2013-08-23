@@ -1,0 +1,68 @@
+.mp-control-toolbar {
+    @include transition();
+    position: fixed;
+    z-index: 1000;
+    right: 40px;
+    top: 30px;
+    background-color: white;
+    width: 402px;
+    height: 72px;
+    @include border-shadows();
+    overflow: hidden;
+}
+
+.mp-toolbar-actions {
+    border-bottom: 1px solid $gray3;
+    height: 35px;
+}
+
+.mp-toolbar-action-button {
+    display: block;
+    float: left;
+    width: 25%;
+    height: 100%;
+    border-right: 1px solid $gray2;
+    color: $gray5;
+    font-size: 18px;
+    text-align: center;
+    line-height: 34px;
+
+    &:last-child {
+        border-right: none;
+    }
+
+    &:hover {
+        background-color: $blue;
+        color: white;
+        text-decoration: none;
+    }
+}
+
+.mp-toolbar-inputbox {
+    height: 35px;
+}
+
+
+// Google Map Searchbox API pull down drawer
+.pac-container {
+    background-color: white;
+    border: none;
+}
+
+.pac-item {
+    font-size: 14px;
+    line-height: 21px;
+    min-height: 35px;
+    padding: 7px 35px;
+    white-space: normal;
+    border-bottom: 1px solid $gray2;
+    color: $gray5;
+
+    b {
+        text-decoration: underline;
+    }
+
+    &:hover {
+        background-color: $gray2;
+    }
+}

@@ -1,0 +1,117 @@
+// container
+.md-drawer {
+  @include transition();
+  position: absolute;
+  z-index: 500;
+  bottom: -450px;
+  left: 0;
+  width: 100%;
+  height: 450px;
+  background-color: white;
+
+  &.md-drawer-show {
+    bottom: 0;
+    + [mp-map-canvas] {
+      @include transition();
+      position: absolute;
+      top: 0;
+      bottom: 450px;
+      left: 0;
+      width: 100%;
+      height: auto;
+    }
+  }
+
+  &.md-drawer-maxmize.md-drawer-show {
+    height: 100%;
+  }
+}
+
+// Resize button group
+.md-drawer-resize {
+  position: absolute;
+  z-index: 100;
+  right: 10px;
+  top: 10px;
+  a {
+    margin-left: 5px;
+    display: inline-block;
+    font-size: 18px;
+    line-height: 1;
+    width: 18px;
+    color: $gray3;
+    text-align: center;
+    &:hover {
+      text-decoration: none;
+      color: $gray6;
+    }
+  }
+}
+
+// Toolbar
+// ----------------------------------------
+.md-drawer-toolbar {
+  height: 54px;
+  border-bottom: 1px solid rgba(0,0,0,.1);
+
+  > div {
+    padding: 10px;
+  }
+}
+
+// Body
+// ----------------------------------------
+.md-drawer-body {
+  position: absolute;
+  top: 54px;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+
+  .mp-halfscreen-left,
+  .mp-halfscreen-right
+  {
+    position: relative;
+    overflow: hidden;
+  }
+
+  .md-drawer-body-subsetion {
+    @include transition();
+    opacity: 1;
+    visibility: visible;
+    padding: 10px;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    .form-group {
+      margin-left: 0;
+      margin-right: 0;
+    }
+  }
+
+  .mp-halfscreen-right {
+    box-shadow: -1px 0 0 rgba(0,0,0,.1);
+  }
+}
+
+.md-drawer-list-header {
+  text-indent: 20px;
+}
+
+// Project subsection
+#md-drawer-body-subsetion-edit-project {
+  opacity: 0;
+  visibility: hidden;
+}
+
+.md-drawer-show-edit-project-subsection {
+  #md-drawer-body-subsetion-places {
+    opacity: 0;
+    visibility: hidden;
+  }
+  #md-drawer-body-subsetion-edit-project {
+    opacity: 1;
+    visibility: visible;
+  }
+}

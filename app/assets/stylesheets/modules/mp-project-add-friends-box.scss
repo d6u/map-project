@@ -1,0 +1,46 @@
+.mp-project-add-friends-box {
+  .mp-friends-list {
+    height: 93px * 3;
+    position: relative;
+    overflow: hidden;
+  }
+}
+
+.mp-project-add-friends-box-participated-list {
+  list-style-type: none;
+  padding: 0;
+  margin-bottom: 10px;
+}
+
+.mp-project-add-friends-box-participated-item {
+  float: left;
+  margin: 0 5px;
+  position: relative;
+  &:hover {
+    a { display: block; }
+  }
+  img {
+    width: 40px;
+    height: 40px;
+    border-radius: 2px;
+  }
+  a {
+    display: none;
+    position: absolute;
+    top: -11px;
+    right: -11px;
+    // display: block;
+    width: 22px;
+    height: 22px;
+    text-align: center;
+    line-height: 16px;
+    background-color: black;
+    color: white;
+    border-radius: 11px;
+    border: 3px solid white;
+    box-shadow: 0 0 2px 1px rgba(0,0,0,.2);
+    &:hover {
+      text-decoration: none;
+    }
+  }
+}

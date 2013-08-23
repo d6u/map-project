@@ -1,0 +1,96 @@
+// container
+.mp-user-section {
+  background-color: white;
+  overflow: hidden;
+  padding: 20px;
+}
+
+// close button
+.mp-user-section-close-button {
+  position: absolute;
+  right: 20px;
+  top: 20px;
+  height: 18px;
+  width: 18px;
+  font-size: 18px;
+  display: block;
+  line-height: 18px;
+  text-align: center;
+  color: $gray3;
+  &:hover {
+    text-decoration: none;
+    color: $gray6;
+  }
+}
+
+// user info
+// ----------------------------------------
+.mp-user-section-user-info {
+  margin-bottom: 20px;
+}
+
+.mp-user-info-profile-picture {
+  width: 50px;
+  height: 50px;
+  float: left;
+}
+
+.mp-user-info-details {
+  margin-left: 60px;
+}
+
+.mp-user-info-name {
+  font-size: 18px;
+  font-weight: bold;
+}
+
+// mp-user-section-tabs-content
+// TODO: standardise
+// ----------------------------------------
+.mp-user-section-tabs-content {
+  position: absolute;
+  top: 134px;
+  bottom: 74px;
+  left: 20px;
+  width: 359px;
+}
+
+.mp-user-section-tab-body {
+  height: 100%;
+}
+
+// Friends list
+.mp-user-sectin-friends-list {
+  list-style-type: none;
+  padding-left: 0;
+  margin-bottom: 0;
+  height: 100%;
+  overflow: hidden;
+  position: relative;
+}
+
+// search user
+// ----------------------------------------
+.mp-user-section-search-user {
+  @include display_flex();
+  @include flex-direction(column);
+}
+
+.mp-user-section-friends-list {
+  @include flex_grow(1);
+  margin-top: 10px;
+  margin-bottom: 0;
+  padding-left: 0;
+  overflow: hidden;
+  position: relative;
+}
+
+// mp-user-section-bottom
+// ----------------------------------------
+.mp-user-section-bottom {
+  position: absolute;
+  width: 100%;
+  bottom: 0;
+  left: 0;
+  padding: 0 20px 20px;
+}

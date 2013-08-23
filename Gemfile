@@ -1,5 +1,7 @@
 source 'https://rubygems.org'
 
+ruby '2.0.0'
+
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '4.0.0'
 
@@ -46,7 +48,7 @@ end
 
 
 
-gem 'puma'
+# gem 'puma', group: :production
 gem 'redis'
 gem 'awesome_print', group: :development
 gem 'oj'

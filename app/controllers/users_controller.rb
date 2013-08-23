@@ -10,36 +10,28 @@ class UsersController < ApplicationController
   #           DELETE /users/:id(.:format)      users#destroy
 
 
-  skip_before_action :check_login_status, :only => [:login, :register, :logout]
+  skip_before_action :check_login_status, :only => [:login, :logout, :create]
 
 
   ##
   # Login in with fb user data
   # ----------------------------------------
   def login
-    head 404 and return unless user = User.find_by_fb_user_id(params[:user][:fb_user_id])
+    unless user = User.find_by_fb_user_id(params[:user][:fb_user_id])
+      # user not found
+      head 404 and return
+    end
 
     # TODO: fix always update access_token
     user.fb_access_token = params[:user][:fb_access_token]
+
     if user.validate_with_facebook
       user.save if user.changed?
       session[:user_id] = user.id
+      authenticate_socket_io_handshake(user)
       render :json => user, :status => 200
     else
-      head 406
-    end
-  end
-
-
-  ##
-  def register
-    user = User.new params.require(:user).permit(:fb_access_token, :fb_user_id, :name, :email)
-    if user.validate_with_facebook
-      user.save if user.changed?
-      session[:user_id] = user.id
-      render :json => user, :status => 200
-    else
-      head 406
+      head 401
     end
   end
 
@@ -48,14 +40,67 @@ class UsersController < ApplicationController
   # Logout
   # ----------------------------------------
   def logout
-    session[:user_id] = nil if session[:user_id]
-    head 200
+    if session[:user_id]
+      session[:user_id] = nil
+      # return empty JSON array to fix restangular .addRestangularMethod no
+      #   method error
+      render :json => [], :status => 202
+    else
+      # return empty JSON array to fix restangular .addRestangularMethod no
+      #   method error
+      render :json => [], :status => 200
+    end
   end
 
 
+  ##
+  # POST /register
+  # ----------------------------------------
+  def create
+    user = User.new params.require(:user).permit(:fb_access_token, :fb_user_id, :name, :email, :fb_user_picture)
+
+    if user.validate_with_facebook
+      user.save
+      session[:user_id] = user.id
+      authenticate_socket_io_handshake(user)
+      render :json => user
+    else
+      head 406
+    end
+  end
+
+
+  # GET /projects/:project_id/users
+  #   get paricipated_users for, return results include project owner
+  # GET /users
+  #   search users by name
+  def index
+    # get paricipated_users for
+    if params[:project_id]
+      project = Project.find_by_id(params[:project_id])
+      if project
+        users = project.participated_users
+        render :json => (users + [project.owner]), :only => [:id, :name, :fb_user_picture] and return
+      else
+        head 404 and return
+      end
+    end
+
+    # search users by name
+    if params[:name]
+      name  = "%#{params[:name]}%"
+      users = User.where('lower(name) LIKE lower(?) AND id <> ?', name, @user.id)
+      render :json => users, :only => [:id, :name, :fb_user_picture] and return
+    end
+
+    head 401
+  end
+
+
+  # PUT & PATCH /users/:id
   def update
     if @user.id == params[:user][:id]
-      @user.attributes = params.require(:user).permit(:fb_access_token, :fb_user_id, :name, :email)
+      @user.attributes = params.require(:user).permit(:fb_access_token, :fb_user_id, :name, :email, :fb_user_picture)
       @user.save if @user.changed?
       render :json => @user
     else

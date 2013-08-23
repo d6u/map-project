@@ -1,4 +1,4 @@
-//= require bootstrap.min.css
+//= require bootstrap.css
 //= require font-awesome.scss
 //= require perfect-scrollbar-0.4.3.min.css
 //= require_self
@@ -6,56 +6,52 @@
 
 @import "variables/colors";
 @import "mixins/flexbox";
+@import "mixins/animation";
+@import "mixins/border-shadows";
 
-// Default & Overall
-// ========================================
-html, body,
-.mp-view-container,
-.mp-map-container,
-.mp-map-view-wrapper,
-.mp-chatbox {
-    height: 100%;
-}
+@import "base/base";
 
-%transition {
-    -webkit-transition: all 150ms ease-out;
-       -moz-transition: all 150ms ease-out;
-        -ms-transition: all 150ms ease-out;
-         -o-transition: all 150ms ease-out;
-            transition: all 150ms ease-out;
-}
+@import "layouts/base-layout";
+@import "layouts/map-layout";
 
-// Containers
-// ========================================
-.mp-view-container {
-    @include display_flex;}
+@import "components/cp-pusher";
+@import "components/cp-input";
+@import "components/cp-typeahead";
 
-    .mp-map-view-wrapper {
-        @include flex_grow(1);
-        @include display_flex;}
+@import "components/mp-inputbox";
+@import "components/mp-side-tabs";
+@import "components/md-modal";
 
-        .mp-map-container {
-            @include flex_grow(1);}
+@import "modules/md-homepage";
+@import "modules/md-projects";
+@import "modules/md-aside";
+@import "modules/md-notifications";
+@import "modules/md-drawer";
+@import "modules/md-searchbar";
+@import "modules/md-places";
 
-        .mp-places-list {
-            @include flex_basis(300px);}
+@import "modules/mp-loading-screen";
+@import "modules/mp-user-section";
+@import "modules/mp-navbar-bottom";
+@import "modules/mp-chatbox-directive";
+@import "modules/mp-project-add-friends-box";
+@import "modules/mp-friends-list";
 
-    .mp-chatbox {
-        @include flex_basis(300px);}
 
-// Map View
-// ========================================
-.mp-map-container {
-    position: relative;
-}
 
-.mp-places-list {
-    @extend %transition;
-    overflow: hidden;
-    position: relative;
-    // hide
-    @include flex_basis(0);
-}
+
+
+@import 'modules/mp_control_toolbar';
+@import 'modules/mp_headsup_messager';
+@import 'modules/mp_bottom_modalbox';
+@import 'modules/mp_easy_modals';
+@import 'modules/mp_map';
+
+
+@import "shame";
+
+
+
 
 // Navbar
 // ----------------------------------------
@@ -187,173 +183,12 @@ html, body,
     }
 }
 
-// Google Map Search Box
-.pac-container {
-    background-color: rgba($blueDark, 0.9);
-    border: none;
-    color: white;
-}
 
-.pac-item {
-    font-size: 21px;
-    line-height: 2;
-    padding-left: 38px;
-    b {
-        text-decoration: underline;
-    }
-    &:hover {
-        background-color: white;
-        color: $gray6;
-    }
-}
-
-
-// Map & Project List
-// ----------------------------------------
-.mp-map-canvas {
-    position: absolute;
-    top: 50px;
-    bottom: 0;
-    width: 100%;
-}
-
-.mp-places-button-group {
-    width: 100%;
-    @include display_flex;
-    @include justify-content(space-around);
-    // -webkit-justify-content: space-around;
-}
-
-.mp-sidebar-places {
-    -webkit-transition: all 350ms ease-out 50ms;
-       -moz-transition: all 350ms ease-out 50ms;
-        -ms-transition: all 350ms ease-out 50ms;
-         -o-transition: all 350ms ease-out 50ms;
-            transition: all 350ms ease-out 50ms;
-    margin-top: 50px;
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    width: 100%;
-    overflow: hidden;
-}
-
-.mp-sidebar-place {
-    padding: 10px;
-    background-color: white;
-    address {
-        margin: 0;
-    }
-    &.ui-sortable-helper {
-        background-color: $gray1;
-    }
-}
-
-.mp-place-marker-icon {
-    float: left;
-    margin-right: 10px;
-}
-
-.mp-place-actions {
-    float: right;
-    font-size: 18px;
-    margin-left: 10px;
-    a {
-        &:hover {
-            text-decoration: none;
-            color: $red;
-        }
-    }
-}
-
-.mp-place-detail-sidebar {
-    overflow: hidden;
-}
-
-.mp-place-name-sidebar {
-    font-weight: bold;
-}
-
-.mp-create-account-promot {
-    @extend %transition;
-    position: absolute;
-    top: -200px;
-    left: 10px;
-    right: 10px;
-    padding: 10px;
-    border: 1px solid $gray3;
-    border-radius: 3px;
+// Invitation Controller
+// ========================================
+.mp-invitation-container {
+    margin-top: 100px;
     text-align: center;
-    &.js-create-account-promot-show ~ .mp-sidebar-places {
-        margin-top: 179px;
-    }
-}
-
-.mp-info-window-wrapper {
-    // TODO: fix google map infoWindow overflow on bottom
-    width: 300px;
-}
-
-
-// All Project List
-// ========================================
-.mp-all-projects-list {
-    position: absolute;
-    top: 50px;
-    bottom: 0;
-    width: 100%;
-    overflow: hidden;
-}
-
-.mp-all-projects-list-inner {
-    margin: 0 auto 100px;
-    width: 940px;
-}
-
-.mp-all-projects-list-header {
-    line-height: 50px;
-    font-size: 32px;
-    font-weight: bold;
-    border-bottom: 1px solid $gray6;
-    margin-top: 20px;
-    margin-bottom: 20px;
-}
-
-.mp-all-projects-list-masonry {
-
-}
-
-.mp-project-item {
-    width: 300px;
-    border: 1px solid $gray2;
-    margin-bottom: 20px;
-}
-
-.mp-project-item-cover {
-    height: 200px;
-}
-
-.mp-project-item-detail {
-    padding: 10px;
-}
-
-.mp-project-item-header {
-    font-size: 18px;
-    line-height: 24px;
-    border-bottom: 1px solid $gray6;
-    margin-top: 10px;
-}
-
-.mp-project-item-notes {
-    margin-top: 10px;
-}
-
-
-// Chatbox
-// ========================================
-.mp-chatbox {
-    @extend %transition;
-    @include flex_basis(0);
 }
 
 

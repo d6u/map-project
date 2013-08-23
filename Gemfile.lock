@@ -26,7 +26,7 @@ GEM
       thread_safe (~> 0.1)
       tzinfo (~> 0.3.37)
     arel (4.0.0)
-    atomic (1.1.10)
+    atomic (1.1.13)
     awesome_print (1.1.0)
     builder (3.1.4)
     coffee-rails (4.0.0)
@@ -40,7 +40,7 @@ GEM
     execjs (1.4.0)
       multi_json (~> 1.0)
     hike (1.2.3)
-    i18n (0.6.4)
+    i18n (0.6.5)
     jbuilder (1.5.0)
       activesupport (>= 3.0.0)
       multi_json (>= 1.2.0)
@@ -51,15 +51,13 @@ GEM
     mail (2.5.4)
       mime-types (~> 1.16)
       treetop (~> 1.4.8)
-    mime-types (1.23)
+    mime-types (1.24)
     minitest (4.7.5)
-    multi_json (1.7.7)
-    newrelic_rpm (3.6.5.130)
+    multi_json (1.7.9)
+    newrelic_rpm (3.6.6.147)
     oj (2.1.4)
     pg (0.16.0)
     polyglot (0.3.3)
-    puma (2.4.0)
-      rack (>= 1.1, < 2.0)
     rack (1.5.2)
     rack-test (0.6.2)
       rack (>= 1.0)
@@ -120,7 +118,6 @@ DEPENDENCIES
   newrelic_rpm
   oj
   pg
-  puma
   rails (= 4.0.0)
   redis
   sass-rails (~> 4.0.0)

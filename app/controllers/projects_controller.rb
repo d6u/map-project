@@ -10,18 +10,53 @@ class ProjectsController < ApplicationController
   #              DELETE /projects/:id(.:format)      projects#destroy
 
 
+  # POST /projects/:project_id/users
+  def add_user
+    user_ids = params[:user_ids].split(',')
+    project  = Project.find_by_id params[:project_id]
+    users = user_ids.map {|id|
+      user = User.find_by_id id
+      begin
+        project.participated_users << user
+      rescue ActiveRecord::RecordNotUnique
+        # do thing
+      end
+      user
+    }
+    render :json => project.participated_users, :only => [:id, :name, :fb_user_picture]
+  end
+
+
+  # DELETE /projects/:project_id/users
+  def remove_user
+    project  = Project.find_by_id params[:project_id]
+    user     = project.participated_users.find_by_id params[:id]
+    project.participated_users.delete(user)
+    head 200
+  end
+
+
+  # GET
   def index
     if params[:title]
       project = @user.projects.find_by_title params[:title]
       if project
-        render :json => project
+        render :json => project and return
       else
-        head 404
+        head 404 and return
       end
-    else
-      projects = @user.projects.order 'created_at DESC'
-      render :json => projects, :methods => :places_attrs
     end
+
+
+    if params[:include_participated] == 'true'
+      user_projects = @user.projects
+      participated_projects = @user.participated_projects
+      @projects = user_projects + participated_projects
+      @projects.sort! {|a,b| b.updated_at <=> a.updated_at}
+    else
+      @projects = @user.projects.order 'updated_at DESC'
+    end
+    render :json => @projects, :methods => :places_attrs
   end
 
 
@@ -34,7 +69,11 @@ class ProjectsController < ApplicationController
 
   def show
     project = Project.find_by_id params[:id]
-    render :json => project
+    if project
+      render :json => project
+    else
+      head 401
+    end
   end
 
 
@@ -48,7 +87,7 @@ class ProjectsController < ApplicationController
 
   def destroy
     Project.destroy_all :id => params[:id]
-    head 200
+    render :json => []
   end
 
 end

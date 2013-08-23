@@ -1,0 +1,43 @@
+[mp-map-canvas] {
+    @include transition();
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: auto;
+}
+
+
+
+
+
+// Map & Project List
+// ----------------------------------------
+.mp-place-detail-sidebar {
+    overflow: hidden;
+}
+
+.mp-place-name-sidebar {
+    font-weight: bold;
+}
+
+.mp-create-account-promot {
+    @extend %transition;
+    position: absolute;
+    top: -200px;
+    left: 10px;
+    right: 10px;
+    padding: 10px;
+    border: 1px solid $gray3;
+    border-radius: 3px;
+    text-align: center;
+    &.js-create-account-promot-show ~ .mp-sidebar-places {
+        margin-top: 179px;
+    }
+}
+
+.mp-info-window-wrapper {
+    // TODO: fix google map infoWindow overflow on bottom
+    width: 300px;
+}

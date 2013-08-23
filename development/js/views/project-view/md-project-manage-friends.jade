@@ -1,0 +1,22 @@
+.md-content
+  .modal-content.mp-project-add-friends-box
+    .modal-header
+      button.close(type="button", aria-hidden="true", ng-click="mpProjectAddFriendsModalCtrl.closeModal()") &times;
+      h4.modal-title Add friends to this project
+    .modal-body
+
+      ul.mp-project-add-friends-box-participated-list.clearfix
+        li.mp-project-add-friends-box-participated-item(ng-repeat="user in TheProject.participatedUsers")
+          img(ng-src="{{user.fb_user_picture}}")
+          a.mp-project-add-friends-box-participated-item-remove(href="", ng-click="mpProjectAddFriendsModalCtrl.projectRemoveUser(user)")
+            i.icon-remove
+
+      input.form-control(type="text", placeholder="Search name", ng-model="inputs.name")
+      ul.mp-friends-list(perfect-scrollbar="MpChatbox.friends.length,inputs.name")
+        li.mp-friend-item(ng-repeat="friend in mpProjectAddFriendsModalCtrl.getNotParticipatedUsers() | filter: inputs.name", ng-class="{'mp-active': friend.$$selected}")
+          a(href="", ng-click="friend.$$selected = !friend.$$selected")
+            img(ng-src="{{friend.fb_user_picture}}")
+            | {{friend.name}}
+    .modal-footer
+      button.btn.btn-default(type="button", ng-click="mpProjectAddFriendsModalCtrl.closeModal()") Close
+      button.btn.btn-primary(type="button", ng-click="mpProjectAddFriendsModalCtrl.sendInvitations()") Save changes

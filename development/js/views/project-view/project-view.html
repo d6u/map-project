@@ -1,0 +1,20 @@
+<div class="cp-pusher" ng-class="{'cp-pusher-pushed': interface.showUserSection}">
+
+  <section class="cp-pusher-side mp-user-section" mp-user-section></section>
+
+  <section class="cp-pusher-content">
+
+    <div class="md-drawer clearfix" mp-map-drawer ng-class="{'md-drawer-maxmize': drawerCtrl.maxmize}"></div>
+    <div class="mp-fullscreen" mp-map-canvas></div>
+    <div class="mp-chatbox-directive" ng-class="" mp-chatbox-directive></div>
+
+  </section>
+
+  <!-- Add friends to project modal -->
+  <div class="md-modal md-effect-3" mp-project-add-friends-modal="showProjectAddFriendsModal"></div>
+  <!-- md-modal and md-overlay must be placed next to each other for modal directive to work -->
+  <div class="md-overlay"></div>
+  <!-- END -->
+
+  <div class="cp-pusher-overlay" ng-click="interface.showUserSection = false"></div>
+</div>

@@ -1,0 +1,31 @@
+<div class="cp-pusher" ng-class="{'cp-pusher-pushed': interface.showUserSection}">
+
+  <section class="cp-pusher-side mp-user-section" mp-user-section></section>
+
+  <section class="cp-pusher-content">
+
+    <a href="" class="shame-show-user-section-button" ng-click="interface.showUserSection = true">
+      <i class="icon-user"></i>
+    </a>
+
+    <!-- Projects list -->
+    <div class="mp-fullscreen">
+      <ol class="md-projects" mp-masonry>
+        <li class="md-projects-item md-projects-create">
+          <a href="" ng-click="allProjectsCtrl.createNewProject()"><i class="icon-plus"></i></a>
+        </li>
+
+        <li class="md-projects-item" ng-repeat="project in MpProjects.projects">
+          <div class="md-projects-item-minimap" mini-map-cover></div>
+          <div class="md-projects-item-header">
+            <a ng-href="/home/project/{{project.id}}">{{project.title}}</a>
+          </div>
+          <div class="md-projects-item-detail">{{project.notes}}</div>
+        </li>
+      </ol>
+    </div>
+
+  </section>
+
+  <div class="cp-pusher-overlay" ng-click="interface.showUserSection = false"></div>
+</div>
