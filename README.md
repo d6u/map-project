@@ -18,15 +18,25 @@ Root folder contains files of a typical node.js project and grunt
 * Gruntfile.coffee: the gruntfile
 * Procfile: foreman procfile, used to quickly start all service in development
 
-### 2. /public
+### 2. /development
+
+This folder to used to store javascript files in development stage. Files in this folder are later concatenated then copied into `/app/assets/javascripts/` folder to be consumed by Rails asset pipeline.
+
+> Why use this folder: because by default Rails asset pipeline warp each coffee file content with an anonymous function, this is good behavior, but the Angular application is broke into so many pieces. Give each piece a module name is unrealistic. Instead, each piece relies on `app` global variable. Wrapper function this behavior unpredictable.
+
+> The solution is to use 3rd party compilers. This is case, I used Grunt.js to automate this process.
+
+
+### 3. /public
 
 Public folder has minor difference with a typical rails project.
 
-* img: to store images that isn't good for asset pipeline
-* scripts: to store angular template files
-* bower_components: store bower components (at this time is Masonry and its RequireJS dependencies)
+* __img__: to store images that are not good for asset pipeline
+* __js__: files that need not to be edited, concatenated or compiled by Rails asset pipeline are stored here. Accept access from public, these files usually work with RequireJS and setup the stage until AngularJS bootstrap the application
+* __scripts__: to store angular template files
+* __bower_components__: store bower components (at this time is Masonry and its RequireJS dependencies)
 
-## Grunt settings
+## Grunt settings (TODO: need to update)
 
 ### `grunt` (default task)
 

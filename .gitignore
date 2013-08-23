@@ -44,3 +44,8 @@ node_modules
 
 # foreman
 .env
+
+########################################
+# Project specific settings
+app/assets/javascripts/*
+development/tmp

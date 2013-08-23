@@ -1,5 +1,11 @@
 module ApplicationHelper
 
+  # remove the extion name from a js file path, use with RequireJS
+  def javascript_path_without_suffix(path)
+    /^(.+)(\.js)$/.match(javascript_path(path))[1]
+  end
+
+
   def javascript_path_with_manifest(path)
     html_string = javascript_include_tag path
     script_tags = html_string.split /\n/
