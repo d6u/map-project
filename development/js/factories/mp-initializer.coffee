@@ -17,15 +17,23 @@ app.factory 'MpInitializer',
 
   # init
   # ----------------------------------------
-  if $window.user.accessToken
-    MpUser.fbLoginCallback $window.user, ->
-      initiation.resolve()
-      if $route.current.$$route.controller == 'OutsideViewCtrl'
-        return '/home'
-      return
-  else
-    MpUser.notLoggedIn ->
-      initiation.resolve()
+  $.when(appPrepare.facebookLoginCheck, appPrepare.ipLocationCheck)
+  .then (response, location) ->
+    # TODO: add location error handling
+    $window.userLocation = {
+      latitude:  location.geoplugin_latitude
+      longitude: location.geoplugin_longitude
+    }
+    $rootScope.$apply ->
+      if response.accessToken
+        MpUser.fbLoginCallback $window.user, ->
+          initiation.resolve()
+          if $route.current.$$route.controller == 'OutsideViewCtrl'
+            return '/home'
+          return
+      else
+        MpUser.notLoggedIn ->
+          initiation.resolve()
 
   # Return
   # ----------------------------------------
