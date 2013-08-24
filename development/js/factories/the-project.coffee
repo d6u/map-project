@@ -11,6 +11,7 @@ app.factory 'TheProject',
   # Return a class
   return class TheProject
     constructor: (projectId) ->
+      @places = []
       if projectId
         MpProjects.findProjectById(projectId).then(
           ((project) =>
@@ -23,8 +24,6 @@ app.factory 'TheProject',
             # TODO: handle error, e.g. project is not authorized to view
           )
         )
-      else
-        @places = []
 
     # query places list from server
     getPlacesList: ->

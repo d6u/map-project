@@ -73,8 +73,8 @@ angular.module('mp-chatbox-provider', []).provider 'MpChatbox', class
             @processServerData(data)
           # change status
           @$$online = true
-          # exe callback
-          callback()
+          # execute callback
+          callback() if callback
 
 
       updateFriendsList: ->
