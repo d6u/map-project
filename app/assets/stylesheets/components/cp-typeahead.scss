@@ -5,14 +5,10 @@
 
   position: absolute;
   z-index: 2000;
-  top: 34px;
   list-style-type: none;
   padding: 0;
   margin: 0;
-  width: 478px;
-  border-left: 1px solid rgba($gray6, .2);
-  border-right: 1px solid rgba($gray6, .2);
-  border-bottom: 1px solid rgba($gray6, .2);
+  border: 1px solid rgba($gray6, .2);
 
   li {
     min-height: 34px;
@@ -28,13 +24,5 @@
       background-color: $blueDark;
       color: white;
     }
-  }
-
-  &.cp-typeahead-dropup {
-    @include flex-direction(column-reverse);
-    top: auto;
-    bottom: 34px;
-    border-bottom: none;
-    border-top: 1px solid rgba($gray6, .2);
   }
 }
