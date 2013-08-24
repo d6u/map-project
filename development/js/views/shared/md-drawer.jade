@@ -48,7 +48,7 @@
             a(href="", ng-click="TheMap.centerPlaceInMap(place.$$marker.getPosition())")
               img(ng-src="{{place.icon}}")
           .md-places-item-actions
-            a(href="", ng-click="viewCtrl.addPlaceToList(place)")
+            a(href="", ng-click="mapViewCtrl.addPlaceToList(place)")
               i.icon-ok
           .md-places-item-details
             .md-places-item-name {{place.name}}

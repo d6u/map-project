@@ -1,6 +1,6 @@
 app.directive 'mpProjectAddFriendsModal', [->
 
-  templateUrl: '/scripts/views/project-view/md-project-manage-friends.html'
+  templateUrl: '/scripts/views/in/project-view/md-project-manage-friends.html'
   controller: ['$element', '$scope', ($element, $scope) ->
 
     @closeModal = ->
