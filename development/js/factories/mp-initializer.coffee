@@ -24,16 +24,16 @@ app.factory 'MpInitializer',
       latitude:  location.geoplugin_latitude
       longitude: location.geoplugin_longitude
     }
-    $rootScope.$apply ->
-      if response.accessToken
-        MpUser.fbLoginCallback $window.user, ->
-          initiation.resolve()
-          if $route.current.$$route.controller == 'OutsideViewCtrl'
-            return '/home'
-          return
-      else
-        MpUser.notLoggedIn ->
-          initiation.resolve()
+
+    if response.authResponse
+      MpUser.fbLoginCallback response.authResponse, ->
+        initiation.resolve()
+        if $route.current.$$route.controller == 'OutsideViewCtrl'
+          return '/home'
+        return
+    else
+      MpUser.notLoggedIn ->
+        initiation.resolve()
 
   # Return
   # ----------------------------------------
