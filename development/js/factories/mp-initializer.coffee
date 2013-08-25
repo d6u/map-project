@@ -6,8 +6,8 @@ MpInitializer is in charge of init check of login status and attach REST
 ###
 
 app.factory 'MpInitializer',
-['$rootScope', '$q', 'MpUser', '$window', '$routeSegment', 'MpProjects', 'MpChatbox',
-( $rootScope,   $q,   MpUser,   $window,   $routeSegment,   MpProjects,   MpChatbox) ->
+['$rootScope', '$q', 'MpUser', '$window', '$routeSegment', 'MpProjects', 'MpChatbox', '$timeout',
+( $rootScope,   $q,   MpUser,   $window,   $routeSegment,   MpProjects,   MpChatbox,   $timeout) ->
 
   $rootScope.MpUser = MpUser
 
@@ -25,13 +25,15 @@ app.factory 'MpInitializer',
 
     if response.authResponse
       MpUser.fbLoginCallback response.authResponse, ->
-        initiation.resolve()
+        $timeout ->
+          initiation.resolve()
         if $routeSegment.name == 'ot'
           return '/home'
         return
     else
       MpUser.notLoggedIn ->
-        initiation.resolve()
+        $timeout ->
+          initiation.resolve()
 
   # Return
   # ----------------------------------------
