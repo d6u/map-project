@@ -3,7 +3,7 @@ require 'net/http'
 
 class User < ActiveRecord::Base
 
-  APP_ID       = 580227458695144
+  APP_ID       = 153060941567545
   REDIRECT_URL = 'http://local.dev:3000/fb_login_successful'
   APP_SECRET   = 'f4977efd531a4f5ebb2ceb678646f0ab'
 
