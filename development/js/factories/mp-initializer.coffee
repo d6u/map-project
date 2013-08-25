@@ -6,12 +6,10 @@ MpInitializer is in charge of init check of login status and attach REST
 ###
 
 app.factory 'MpInitializer',
-['$rootScope', '$q', 'MpUser', '$window', '$route', 'MpProjects', 'MpChatbox',
-( $rootScope,   $q,   MpUser,   $window,   $route,   MpProjects,   MpChatbox) ->
+['$rootScope', '$q', 'MpUser', '$window', '$routeSegment', 'MpProjects', 'MpChatbox', '$timeout',
+( $rootScope,   $q,   MpUser,   $window,   $routeSegment,   MpProjects,   MpChatbox,   $timeout) ->
 
-  $rootScope.MpUser     = MpUser
-  $rootScope.MpProjects = MpProjects
-  $rootScope.MpChatbox  = MpChatbox
+  $rootScope.MpUser = MpUser
 
   initiation = $q.defer()
 
@@ -24,15 +22,17 @@ app.factory 'MpInitializer',
       latitude:  location.geoplugin_latitude
       longitude: location.geoplugin_longitude
     }
-    $rootScope.$apply ->
-      if response.accessToken
-        MpUser.fbLoginCallback $window.user, ->
+
+    if response.authResponse
+      MpUser.fbLoginCallback response.authResponse, ->
+        $timeout ->
           initiation.resolve()
-          if $route.current.$$route.controller == 'OutsideViewCtrl'
-            return '/home'
-          return
-      else
-        MpUser.notLoggedIn ->
+        if $routeSegment.name == 'ot'
+          return '/home'
+        return
+    else
+      MpUser.notLoggedIn ->
+        $timeout ->
           initiation.resolve()
 
   # Return

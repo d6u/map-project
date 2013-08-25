@@ -1,6 +1,6 @@
 app.directive 'mpMapDrawer',
-['$rootScope', '$timeout', '$route',
-( $rootScope,   $timeout,   $route) ->
+['$rootScope', '$timeout', '$routeSegment',
+( $rootScope,   $timeout,   $routeSegment) ->
 
   templateUrl: '/scripts/views/shared/md-drawer.html'
   scope: true
@@ -14,10 +14,13 @@ app.directive 'mpMapDrawer',
 
     # Actions
     @getProjectTitle = ->
-      if $scope.TheProject.project
-        return $scope.TheProject.project.title
+      if $scope.TheProject
+        if $scope.TheProject.project
+          return $scope.TheProject.project.title
+        else
+          return $scope.TheProject.places.length + ' marked places'
       else
-        return $scope.TheProject.places.length + ' marked places'
+        return
 
     @toggleDrawer = ->
       $element.toggleClass 'md-drawer-show'
@@ -39,7 +42,7 @@ app.directive 'mpMapDrawer',
     scope.drawerCtrl = drawerCtrl
 
     # Interface
-    if $route.current.$$route.controller == 'OutsideViewCtrl'
+    if $routeSegment.name == 'ot'
       scope.interface.centerSearchBar = true
     else
       scope.interface.centerSearchBar = false

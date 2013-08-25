@@ -9,6 +9,7 @@ app = angular.module('mapApp', [
   'angular-perfect-scrollbar',
   'angular-bootstrap',
   'angular-jquery-ui',
+  'mini-typeahead',
 
   'md-tabset',
 
@@ -22,89 +23,61 @@ app.config(['MpChatboxProvider', '$httpProvider', '$routeSegmentProvider',
 (MpChatboxProvider, $httpProvider, $routeSegmentProvider, $locationProvider,
  $routeProvider) ->
 
-  # Filters
-  # ========================================
-  # MpProjects
+  # Segment Route
   # ----------------------------------------
-  insideFilter = ['MpInitializer', '$q', '$timeout', '$rootScope', '$location', 'MpProjects',
-  (MpInitializer, $q, $timeout,$rootScope, $location, MpProjects) ->
+  $routeSegmentProvider.options.autoLoadTemplates = true
 
-    filter = $q.defer()
+  $routeSegmentProvider
+  .when('/',                         'ot')
+  .when('/home',                     'in.home')
+  .when('/home/project/:project_id', 'in.project')
 
-    MpInitializer.then ->
-      if $rootScope.MpUser.checkLogin()
-        if !MpProjects.projects.length
-          MpProjects.getProjects().then ->
-            filter.resolve()
-        else
-          filter.resolve()
-
-    return filter.promise
-  ]
-
-  # MpChatbox
-  # ----------------------------------------
-  chatboxFilter = ['MpInitializer', '$q', '$timeout', '$rootScope',
-    '$location', 'MpChatbox',
-    (MpInitializer, $q, $timeout, $rootScope, $location, MpChatbox) ->
-
-      filter = $q.defer()
-
-      MpInitializer.then ->
-        if $rootScope.MpUser.checkLogin()
-          if !MpChatbox.$$online
-            MpChatbox.connect ->
-              filter.resolve()
-          else filter.resolve()
-        else
-          if MpChatbox.$$online
-            MpChatbox.destroy()
-          filter.resolve()
-
-      return filter.promise
-  ]
-
-  # route
-  $routeProvider
-  .when('/', {
-    controller: 'OutsideViewCtrl'
-    controllerAs: 'viewCtrl'
-    templateUrl: '/scripts/views/outside-view/outside-view.html'
-    resolve: {
+  # ot
+  .segment('ot', {
+    templateUrl:  '/scripts/views/outside-view.html'
+    controller:   'OutsideViewCtrl'
+    controllerAs: 'mapViewCtrl'
+    resolve:
       MpInitializer: 'MpInitializer'
-    }
   })
-  .when('/home', {
-    controller: 'AllProjectsViewCtrl'
-    controllerAs: 'allProjectsCtrl'
-    templateUrl: '/scripts/views/all-projects-view/all-projects-view.html'
-    resolve: {
+
+  # in
+  .segment('in', {
+    templateUrl:  '/scripts/views/inside-view.html'
+    controller:   'InsideViewCtrl'
+    controllerAs: 'insideViewCtrl'
+    resolve:
       MpInitializer: 'MpInitializer'
-      insideFilter: insideFilter
-      chatboxFilter: chatboxFilter
-    }
   })
-  .when('/home/project/:project_id', {
-    controller: 'ProjectViewCtrl'
-    controllerAs: 'viewCtrl'
-    templateUrl: '/scripts/views/project-view/project-view.html'
-    resolve: {
-      MpInitializer: 'MpInitializer'
-      insideFilter: insideFilter
-      chatboxFilter: chatboxFilter
-    }
-  })
-  .otherwise({redirectTo: '/'})
+  .within('in')
+
+    .segment('home', {
+      templateUrl:  '/scripts/views/in/dashboard-view/dashboard-view.html'
+      controller:   'DashboardViewCtrl'
+      controllerAs: 'dashboardViewCtrl'
+    })
+
+    .segment('project', {
+      templateUrl:  '/scripts/views/in/project-view/project-view.html'
+      controller:   'ProjectViewCtrl'
+      controllerAs: 'mapViewCtrl'
+    })
+
+  # otherwise
+  $routeProvider.otherwise({redirectTo: '/'})
 
   $locationProvider.html5Mode(true)
 
   # CSRF
+  # ----------------------------------------
   token = angular.element('meta[name="csrf-token"]').attr('content')
   $httpProvider.defaults.headers.common['X-CSRF-Token'] = token
 
-  # google map
+  # Google Maps
+  # ----------------------------------------
   google.maps.visualRefresh = true
 
-  # socket
+  # socket.io
+  # ----------------------------------------
   MpChatboxProvider.setSocketServer(location.protocol + '//' + location.hostname + ':4000')
 ])

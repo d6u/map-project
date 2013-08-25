@@ -1,11 +1,11 @@
 # mp-user-section
 # --------------------------------------------
 app.directive 'mpUserSection',
-['$location', 'Restangular', 'mpTemplateCache', '$route', '$compile',
-( $location,   Restangular,   mpTemplateCache,   $route,   $compile) ->
+['$location', 'Restangular', 'mpTemplateCache', '$routeSegment', '$compile',
+( $location,   Restangular,   mpTemplateCache,   $routeSegment,   $compile) ->
 
   currentTemplate = ->
-    if $route.current.$$route.controller == 'OutsideViewCtrl'
+    if $routeSegment.name == 'ot'
       return '/scripts/keepers/mp-user-section-before-login.html'
     else return '/scripts/keepers/md-user-section-inside.html'
 

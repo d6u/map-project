@@ -93,9 +93,10 @@ app.factory 'MpUser', ['$q', '$window', '$rootScope', 'Restangular', '$location'
 
     notLoggedIn: (callback) ->
       MpUser.$$user = null
-      $users.logout().then ->
-        $location.path '/'
-        callback() if callback
+      $timeout -> # again, force $digest
+        $users.logout().then ->
+          $location.path '/'
+          callback() if callback
 
     ###
     path    (string|function): a path to redirect to or function return a path
