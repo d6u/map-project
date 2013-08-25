@@ -4,8 +4,9 @@ require 'net/http'
 class User < ActiveRecord::Base
 
   APP_ID       = 153060941567545
-  REDIRECT_URL = 'http://local.dev:3000/fb_login_successful'
-  APP_SECRET   = 'f4977efd531a4f5ebb2ceb678646f0ab'
+  REDIRECT_URL = 'http://iwantmap.com/fb_login_successful'
+  APP_SECRET   = 'f41e82a1be4342b6154972013e5a543c'
+  DEVELOPER_ACCESS_TOKEN = 'CAACLNUcNFjkBAP6wskXaSGkKTgihUPhsIg9WXAY20mcot7GicGZBqV8rzdFJLNUAawIcx4wp3B9Xpd13nvH8vrZAkhuP54NWBI0kgbM5Uy5QcwuRFPZAjAAwHOGQqasztJZBB4Ao76IsMuySNLI6stRi145ZCN9ksBfPSZAkYE3QZDZD'
 
 
   has_many :projects,    :foreign_key => 'owner_id'
@@ -23,7 +24,7 @@ class User < ActiveRecord::Base
     fb_access_token = self.fb_access_token
     fb_user_id      = self.fb_user_id
 
-    user_data = MultiJson.load(Net::HTTP.get(URI("https://graph.facebook.com/debug_token?input_token=#{fb_access_token}&access_token=#{fb_access_token}")))
+    user_data = MultiJson.load(Net::HTTP.get(URI("https://graph.facebook.com/debug_token?input_token=#{fb_access_token}&access_token=#{DEVELOPER_ACCESS_TOKEN}")))
     return false if !user_data || !user_data['data']
     return user_data['data']['is_valid'] && user_data['data']['user_id'].to_s === fb_user_id
   end
