@@ -8,6 +8,7 @@
 
 //- Toolbar
 .md-drawer-toolbar
+
   //- Searchbar
   .mp-halfscreen-left
     .md-searchbar.md-homepage-centered(ng-class="{'md-homepage-centered': interface.centerSearchBar}")
@@ -15,14 +16,11 @@
         i.icon-user
       button.cp-input-btn.btn.btn-default(ng-click="drawerCtrl.toggleDrawer()", ng-hide="interface.centerSearchBar")
         | {{drawerCtrl.toggleDrawerButtonText}}
-      input.cp-input-naked.form-control(type="text", placeholder="Type a place to start", mp-map-searchbox="", ng-model="searchbox.input", ng-change="hideHomepage(); getAutoComplete()")
-      button.cp-input-btn.btn.btn-primary(type="button")
+      input.cp-input-naked.form-control(type="text", placeholder="Type a place to start", mp-map-searchbox="", mini-typeahead="typeaheadOptions", mini-typeahead-list="placePredictions", ng-model="searchbox.input", ng-change="hideHomepage(); getAutoComplete()")
+      button.cp-input-btn.btn.btn-primary(type="button", ng-click="showSearchResults()")
         | Try
-      ul.cp-typeahead.cp-typeahead-dropup(ng-show="placePredictions.length")
-        li(ng-repeat="prediction in placePredictions")
-          | {{prediction.terms | mpPredictionFilter}}
 
-  //- Actions
+  //- Actions to marked places list
   .mp-halfscreen-right
     button.cp-input-btn.btn.btn-default
       i.icon-map-marker

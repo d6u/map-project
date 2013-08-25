@@ -9,6 +9,7 @@ app = angular.module('mapApp', [
   'angular-perfect-scrollbar',
   'angular-bootstrap',
   'angular-jquery-ui',
+  'mini-typeahead',
 
   'md-tabset',
 
