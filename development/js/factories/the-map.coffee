@@ -54,46 +54,6 @@ app.factory 'TheMap',
           TheMap.infoWindow.open TheMap.map, place.$$marker
 
 
-  # watcher
-  # ----------------------------------------
-  # TheMap.searchResults, add marker for each result
-  $rootScope.$watch(
-    (->
-      return _.pluck TheMap.searchResults, 'id'
-    ),
-    ((newVal, oldVal) ->
-      TheMap.__searchResults.forEach (place) ->
-        place.$$marker.setMap null
-      if newVal.length == 0
-        TheMap.__searchResults = _.clone TheMap.searchResults
-        return
-        # --- END ---
-
-      # new searchResults entered
-      places = TheMap.searchResults
-      bounds = new google.maps.LatLngBounds()
-      animation = if places.length == 1 then google.maps.Animation.DROP else null
-      _.forEach places, (place) ->
-        markerOptions =
-          map:       TheMap.map
-          title:     place.name
-          position:  place.geometry.location
-          animation: animation
-        place.$$marker = new google.maps.Marker markerOptions
-        place.notes    = null
-        place.address  = place.formatted_address
-        place.coord    = place.geometry.location.toString()
-        bounds.extend place.$$marker.getPosition()
-        TheMap.bindInfoWindow place, TheMap.$$currentScope
-
-      TheMap.__searchResults = _.clone TheMap.searchResults
-      TheMap.map.fitBounds bounds
-      TheMap.map.setZoom(12) if places.length < 3 && TheMap.map.getZoom() > 12
-      $timeout (-> google.maps.event.trigger TheMap.searchResults[0].$$marker, 'click'), 800
-    ), true
-  )
-
-
   # return
   # ----------------------------------------
   return TheMap
