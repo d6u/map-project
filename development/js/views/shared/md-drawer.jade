@@ -57,8 +57,10 @@
 
     .md-drawer-body-subsetion#md-drawer-body-subsetion-places
       header.md-drawer-list-header.lead {{drawerCtrl.getProjectTitle()}}
+
       ul.md-places
-        li.md-places-item(ng-repeat="place in TheProject.places", sidebar-place="sidebar-place")
+        //- Item - place
+        li.md-places-item(ng-repeat-start="place in TheProject.places", sidebar-place="sidebar-place")
           .md-places-item-image
             a(href="", ng-click="TheMap.centerPlaceInMap(place.$$marker.getPosition())")
               img(ng-src="/img/blue-marker-3d.png")
@@ -69,5 +71,12 @@
             .md-places-item-name {{place.name}}
             address {{place.formatted_address}}
             p {{place.notes}}
+
+        //- Item - direction info
+        li.md-places-item.md-places-item-route(ng-repeat-end="", ng-show="place.$$leg")
+          span.md-places-item-route-duration {{place.$$leg.duration.text}}
+          | ,&nbsp;
+          span.md-places-item-route-distance {{place.$$leg.distance.text}}
+          |  to next place
 
     .md-drawer-body-subsetion#md-drawer-body-subsetion-edit-project(md-edit-project)

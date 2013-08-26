@@ -4,6 +4,7 @@ app.controller 'MapCtrl',
 
   # TODO: bind to mapCtrl
   @theProject       = new TheProject()
+  theProject        = @theProject
   $scope.TheProject = @theProject
   $scope.TheMap     = TheMap
 
@@ -59,7 +60,7 @@ app.controller 'MapCtrl',
       else
         requestObj.destination = place.$$marker.getPosition()
     # Send request
-    TheMap.directionsService.route requestObj, (result, status) ->
+    TheMap.directionsService.route requestObj, (result, status) =>
       if status == google.maps.DirectionsStatus.OK
         ###
         Renderer options
@@ -99,6 +100,9 @@ app.controller 'MapCtrl',
         }
         ###
         TheMap.directionsRenderer.setMap(TheMap.map) if !TheMap.directionsRenderer.getMap()
-        console.debug result
         TheMap.directionsRenderer.setDirections(result)
+        # Map the route leg data to places object, so it can be displayed in places list and infoWindow
+        $scope.$apply =>
+          for leg, idx in result.routes[0].legs
+            @theProject.places[idx].$$leg = leg
 ]

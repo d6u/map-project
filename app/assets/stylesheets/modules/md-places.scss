@@ -39,3 +39,18 @@
   margin-left: 35px;
   margin-right: 40px;
 }
+
+// Route
+.md-places-item-route {
+  cursor: pointer;
+  text-indent: 35px;
+  font-size: 18px;
+  font-weight: bold;
+  margin-bottom: 20px;
+  color: $blueDark;
+  span {
+    // margin-right: 20px;
+  }
+}
+
+.md-places-item-route-duration {}
