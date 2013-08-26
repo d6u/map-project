@@ -9,17 +9,20 @@
       .md-drawer.clearfix(mp-map-drawer="mp-map-drawer", ng-class="{'md-drawer-maxmize': drawerCtrl.maxmize}")
       .mp-fullscreen(mp-map-canvas="mp-map-canvas")
 
-      .md-homepage(ng-class="{'md-homepage-fadeout': !interface.centerSearchBar}")
-        header.md-homepage-header
-          a.btn.btn-primary(href="", ng-click="MpUser.login('/home')") Login with Facebook
-          a(href="", ng-click="interface.showUserSection = true") Login/Register
-        .container
-          .md-homepage-body
-            h1 Map Project = Trip planner + Map marker
-            h3 for you and your friends
-            ul.lead
-              li Your friends and you can mark places on the same map, at the same time
-              li Save your favoriate place for late
-              li Access your maps on any device (coming)
+    .md-homepage(ng-class="{'md-homepage-fadeout': !interface.centerSearchBar}")
+
+      header.md-homepage-header
+        a.btn.btn-primary(href="", ng-click="MpUser.login('/home')") Login with Facebook
+        a(href="", ng-click="interface.showUserSection = true") Login/Register
+
+      .container
+        .md-homepage-body
+          h1.md-homepage-h1 Why create a travel plan with friends is so hard?
+          h4
+            | Not any more!&nbsp;
+            a.md-homepage-linktoreason(href="") see why is that
+          .md-homepage-guidetostart
+            h4 Get start by searching your first place
+
 
   .cp-pusher-overlay(ng-click="interface.showUserSection = false")
