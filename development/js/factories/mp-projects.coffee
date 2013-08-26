@@ -24,40 +24,43 @@ app.factory 'MpProjects',
   MpProjects = {
     $$projects: $projects
     projects:   []
-    __projects: []
 
-    resetAll: ->
-      @projects   = []
-      @__projects = []
+    destroy: ->
+      @projects = []
 
-    getProjects: (queryParams) ->
-      if !queryParams
-        queryParams = {include_participated: true}
-      $projects.getList(queryParams).then (projects) =>
-        _projects = @projects
+    getProjects: (queryParams={include_participated: true}) ->
+      @gettingProjects = MpProjects.$$projects.getList(queryParams).then (projects) =>
         @projects = projects
-        newProjectsIds = _.pluck(projects, 'id')
-        oldProjectsIds = _.pluck(_projects, 'id')
-        remainingProjectsIds = _.difference(oldProjectsIds, newProjectsIds)
-        _.forEach remainingProjectsIds, (id) =>
-          project = _.find(_projects, {id: id})
-          @projects.push project
-        @__projects = _.clone MpProjects.projects
         return projects
 
-    createProject: (project) ->
-      if !project
-        project = {}
+    createProject: (project={}) ->
       if !project.title
         project.title = 'last unsaved project'
       return @$$projects.post(project).then (project) =>
         @projects.push project
         return project
 
+    # will return a promise which resolve into a project
+    # reject if no project for provided id
     findProjectById: (id) ->
+      _id   = Number(id)
       found = $q.defer()
-      _id = Number(id)
-      found.resolve(_.find @projects, {id: _id})
+      # if projects still in the process of GET data from server, this operation will wait
+      # this situation normally happends when user login directly navigate into project view
+      @gettingProjects.then =>
+        target = _.find(@projects, {id: _id})
+        if target
+          found.resolve(target)
+        # double check on server if no project found on local
+        else
+          Restangular.one('projects', _id).get().then ((project) ->
+            # found a project on server means local copies are not complete, local needs to update
+            found.resolve(project)
+            MpProjects.projects.push(project)
+            # TODO: update local
+          ), ->
+            found.reject()
+
       return found.promise
 
     updateProject: (project) ->
