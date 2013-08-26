@@ -36,7 +36,7 @@ app.config(['MpChatboxProvider', '$httpProvider', '$routeSegmentProvider',
   .segment('ot', {
     templateUrl:  '/scripts/views/outside-view.html'
     controller:   'OutsideViewCtrl'
-    controllerAs: 'mapViewCtrl'
+    controllerAs: 'outsideViewCtrl'
     resolve:
       MpInitializer: 'MpInitializer'
   })
@@ -60,7 +60,7 @@ app.config(['MpChatboxProvider', '$httpProvider', '$routeSegmentProvider',
     .segment('project', {
       templateUrl:  '/scripts/views/in/project-view/project-view.html'
       controller:   'ProjectViewCtrl'
-      controllerAs: 'mapViewCtrl'
+      controllerAs: 'projectViewCtrl'
     })
 
   # otherwise

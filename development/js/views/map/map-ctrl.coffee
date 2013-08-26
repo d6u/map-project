@@ -1,9 +1,13 @@
 app.controller 'MapCtrl',
-['$scope', 'TheProject', 'TheMap',
-( $scope,   TheProject,   TheMap) ->
+['$scope', 'TheProject', 'TheMap', '$routeSegment',
+( $scope,   TheProject,   TheMap,   $routeSegment) ->
 
   # TODO: bind to mapCtrl
-  @theProject       = new TheProject()
+  if $routeSegment.startsWith('ot')
+    @theProject = new TheProject()
+  else
+    @theProject = new TheProject(Number($routeSegment.$routeParams.project_id))
+
   theProject        = @theProject
   $scope.TheProject = @theProject
   $scope.TheMap     = TheMap
