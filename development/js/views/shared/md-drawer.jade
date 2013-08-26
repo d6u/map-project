@@ -22,8 +22,8 @@
 
   //- Actions to marked places list
   .mp-halfscreen-right
-    button.cp-input-btn.btn.btn-default
-      i.icon-map-marker
+    button.cp-input-btn.btn.btn-default(ng-click="mapCtrl.toggleDirections()")
+      i.icon-code-fork
       |  Show directions
     button.cp-input-btn.btn.btn-default
       i.icon-fullscreen
@@ -46,7 +46,7 @@
             a(href="", ng-click="TheMap.centerPlaceInMap(place.$$marker.getPosition())")
               img(ng-src="{{place.icon}}")
           .md-places-item-actions
-            a(href="", ng-click="mapViewCtrl.addPlaceToList(place)")
+            a(href="", ng-click="mapCtrl.addPlaceToList(place)")
               i.icon-ok
           .md-places-item-details
             .md-places-item-name {{place.name}}
@@ -61,7 +61,7 @@
         li.md-places-item(ng-repeat="place in TheProject.places", sidebar-place="sidebar-place")
           .md-places-item-image
             a(href="", ng-click="TheMap.centerPlaceInMap(place.$$marker.getPosition())")
-              img(ng-src="/img/markers/number_{{$index}}.png")
+              img(ng-src="/img/blue-marker-3d.png")
           .md-places-item-actions
             a(href="", ng-click="TheProject.removePlace(place)")
               i.icon-remove

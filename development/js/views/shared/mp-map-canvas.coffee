@@ -41,7 +41,7 @@ app.directive 'mpMapCanvas',
               title: place.name
               position: latLog
               icon:
-                url: "/img/markers/number_#{idx}.png"
+                url: "/img/blue-marker-3d.png"
             place.$$marker = new google.maps.Marker markerOptions
             scope.TheMap.bindInfoWindow(place, scope)
       ), true

@@ -7,9 +7,20 @@ app.factory 'TheMap',
   # service
   # ----------------------------------------
   TheMap =
+    # Map related service
+    infoWindow:         new google.maps.InfoWindow()
+    directionsService:  new google.maps.DirectionsService()
+    directionsRenderer: new google.maps.DirectionsRenderer({
+      polylineOptions:
+        strokeColor: '977ADC'
+        strokeOpacity: 1
+        strokeWeight: 5
+      suppressMarkers: true
+      suppressInfoWindows: true
+    })
+
     $$currentScope: null
     map: null
-    infoWindow: new google.maps.InfoWindow()
     searchBox: null
     # need to be reset
     searchResults:   []
