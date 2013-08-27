@@ -4,9 +4,7 @@ require 'net/http'
 class User < ActiveRecord::Base
 
   APP_ID       = 153060941567545
-  REDIRECT_URL = 'http://iwantmap.com/fb_login_successful'
   APP_SECRET   = 'f41e82a1be4342b6154972013e5a543c'
-  DEVELOPER_ACCESS_TOKEN = 'CAACLNUcNFjkBAP6wskXaSGkKTgihUPhsIg9WXAY20mcot7GicGZBqV8rzdFJLNUAawIcx4wp3B9Xpd13nvH8vrZAkhuP54NWBI0kgbM5Uy5QcwuRFPZAjAAwHOGQqasztJZBB4Ao76IsMuySNLI6stRi145ZCN9ksBfPSZAkYE3QZDZD'
 
 
   has_many :projects,    :foreign_key => 'owner_id'
