@@ -3,8 +3,8 @@ require 'net/http'
 
 class User < ActiveRecord::Base
 
-  APP_ID       = 580227458695144
-  APP_SECRET   = 'f4977efd531a4f5ebb2ceb678646f0ab'
+  APP_ID       = 153060941567545
+  APP_SECRET   = 'f41e82a1be4342b6154972013e5a543c'
 
 
   has_many :projects,    :foreign_key => 'owner_id'
