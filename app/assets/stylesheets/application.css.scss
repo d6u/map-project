@@ -1,13 +1,13 @@
-//= require bootstrap.css
-//= require font-awesome.scss
-//= require perfect-scrollbar-0.4.3.min.css
+//= require _libraries/bootstrap.css
+//= require _libraries/font-awesome.scss
+//= require _libraries/perfect-scrollbar-0.4.3.min.css
 //= require_self
 
 
-@import "variables/colors";
-@import "mixins/flexbox";
-@import "mixins/animation";
-@import "mixins/border-shadows";
+@import "_variables/colors";
+@import "_mixins/flexbox";
+@import "_mixins/animation";
+@import "_mixins/border-shadows";
 
 @import "base/base";
 

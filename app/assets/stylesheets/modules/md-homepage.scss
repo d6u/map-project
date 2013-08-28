@@ -1,3 +1,4 @@
+// Main
 .md-homepage {
   @include transition();
   position: absolute;
@@ -49,4 +50,21 @@
   bottom: 120px;
   left: 0;
   width: 100%;
+}
+
+
+// Smaller screen
+$max-width: 433px; // 433px is where homepage h1 becomes three line
+
+@media screen and (max-width: $max-width) {
+  .md-homepage-h1 {
+    font-size: 24px;
+    line-height: 1.5;
+  }
+  .md-homepage-body h4 {
+    font-size: 16px;
+  }
+  .md-homepage-guidetostart {
+    bottom: 50px;
+  }
 }
