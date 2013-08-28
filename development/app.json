@@ -26,15 +26,29 @@
         "_modules/angular-jquery-ui.coffee",
         "_modules/angular-perfect-scrollbar.coffee",
         "_modules/mini-typeahead.coffee",
-        "_modules/md-tabset.coffee"
+        "_modules/md-tabset.coffee",
 
         "application",
         "services",
 
         "views/in",
-        "views/out",
-        "views/map",
-        "views/pusher-side"
+        "views/ot",
+
+        "views/_map/map-ctrl.coffee",
+        "views/_map/marker-info.coffee",
+        "views/_map/md-edit-project.coffee",
+        "views/_map/mp-bottom-modalbox.coffee",
+        "views/_map/mp-center-user-location.coffee",
+        "views/_map/mp-map-canvas.coffee",
+        "views/_map/mp-map-drawer.coffee",
+        "views/_map/mp-map-searchbox.coffee",
+        "views/_map/marker-info.coffee",
+
+        "views/_pusher-side/mp-friends-panel.coffee",
+        "views/_pusher-side/mp-tabs.coffee",
+        "views/_pusher-side/mp-user-section-tabs.coffee",
+        "views/_pusher-side/mp-user-section.coffee",
+        "views/_pusher-side/sidebar-place.coffee"
       ],
 
       // Mobile
@@ -49,7 +63,26 @@
         "_libraries/restangular-1.1.3.min.js",
 
         "application-m",
-        "services"
+        "services",
+
+        "views/in-m",
+        "views/ot-m",
+
+        "views/_map/map-ctrl.coffee",
+        "views/_map/marker-info.coffee",
+        "views/_map/md-edit-project.coffee",
+        "views/_map/mp-bottom-modalbox.coffee",
+        "views/_map/mp-center-user-location.coffee",
+        "views/_map/mp-map-canvas.coffee",
+        "views/_map/mp-map-drawer.coffee",
+        "views/_map/mp-map-searchbox.coffee",
+        "views/_map/marker-info.coffee",
+
+        "views/_pusher-side/mp-friends-panel.coffee",
+        "views/_pusher-side/mp-tabs.coffee",
+        "views/_pusher-side/mp-user-section-tabs.coffee",
+        "views/_pusher-side/mp-user-section.coffee",
+        "views/_pusher-side/sidebar-place.coffee"
       ]
     }
   }

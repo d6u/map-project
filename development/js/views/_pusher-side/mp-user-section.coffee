@@ -6,8 +6,8 @@ app.directive 'mpUserSection',
 
   currentTemplate = ->
     if $routeSegment.name == 'ot'
-      return '/scripts/keepers/mp-user-section-before-login.html'
-    else return '/scripts/keepers/md-user-section-inside.html'
+      return '/scripts/views/_pusher-side/mp-user-section-before-login.html'
+    else return '/scripts/views/_pusher-side/md-user-section-inside.html'
 
   # return
   scope: true
@@ -20,18 +20,18 @@ app.directive 'mpUserSection',
             return $scope.MpProjects.createProject().then (project) ->
               $places = project.all('places')
               $scope.MpProjects.TheProject = $scope.TheProject
-              return '/home/project/'+project.id
-          else return '/home'
+              return '/project/'+project.id
+          else return '/dashboard'
 
       @logout = ->
         $scope.MpUser.logout()
 
       @showEmailLogin = ->
-        mpTemplateCache.get('/scripts/keepers/mp-user-section-login-form.html').then (template) ->
+        mpTemplateCache.get('/scripts/views/_pusher-side/mp-user-section-login-form.html').then (template) ->
           $element.html $compile(template)($scope)
 
       @showEmailRegister = ->
-        mpTemplateCache.get('/scripts/keepers/mp-user-section-before-login.html').then (template) ->
+        mpTemplateCache.get('/scripts/views/_pusher-side/mp-user-section-before-login.html').then (template) ->
           $element.html $compile(template)($scope)
 
       # Friend request handler

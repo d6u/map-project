@@ -43,7 +43,7 @@ app.factory 'TheMap',
     # bind callback to TheMap, make it accessable outside of TheMap factory
     bindInfoWindow: (place, scope) ->
       google.maps.event.addListener place.$$marker, 'click', ->
-        mpTemplateCache.get('/scripts/views/shared/marker-info.html').then (template) ->
+        mpTemplateCache.get('/scripts/views/_map/marker-info.html').then (template) ->
           newScope = scope.$new()
           newScope.place = place
           compiled = $compile(template)(newScope)

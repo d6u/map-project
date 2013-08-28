@@ -3,7 +3,7 @@
 app.directive 'mpChatboxDirective', ['mpTemplateCache', '$compile', '$timeout',
 (mpTemplateCache, $compile, $timeout)->
 
-  templateUrl: '/scripts/views/in/project-view/md-chatbox.html'
+  templateUrl: '/scripts/views/in/project/md-chatbox.html'
   controller: ['$element', '$scope', ($element, $scope) ->
 
     @chatboxExpanded = false

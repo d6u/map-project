@@ -8,5 +8,5 @@ app.controller 'DashboardViewCtrl',
 
   @createNewProject = ->
     $scope.MpProjects.createProject().then (project) ->
-      $location.path('/home/project/'+project.id)
+      $location.path('/project/'+project.id)
 ]

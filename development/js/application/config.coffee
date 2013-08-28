@@ -1,18 +1,20 @@
 # declear
 app = angular.module('mapApp', [
+  # 3rd party modules
   'ngAnimate',
   'ngRoute',
   'route-segment',
   'view-segment',
-
   'restangular',
+
+  # Self made modules
   'angular-perfect-scrollbar',
   'angular-bootstrap',
   'angular-jquery-ui',
   'mini-typeahead',
-
   'md-tabset',
 
+  # Application modules that have to run before `.config`
   'mp-chatbox-provider'
 ])
 
@@ -28,13 +30,13 @@ app.config(['MpChatboxProvider', '$httpProvider', '$routeSegmentProvider',
   $routeSegmentProvider.options.autoLoadTemplates = true
 
   $routeSegmentProvider
-  .when('/',                         'ot')
-  .when('/home',                     'in.home')
-  .when('/home/project/:project_id', 'in.project')
+  .when('/',                    'ot')
+  .when('/dashboard',           'in.dashboard')
+  .when('/project/:project_id', 'in.project')
 
   # ot
   .segment('ot', {
-    templateUrl:  '/scripts/views/outside-view.html'
+    templateUrl:  '/scripts/views/ot/outside-view.html'
     controller:   'OutsideViewCtrl'
     controllerAs: 'outsideViewCtrl'
     resolve:
@@ -43,7 +45,7 @@ app.config(['MpChatboxProvider', '$httpProvider', '$routeSegmentProvider',
 
   # in
   .segment('in', {
-    templateUrl:  '/scripts/views/inside-view.html'
+    templateUrl:  '/scripts/views/in/inside-view.html'
     controller:   'InsideViewCtrl'
     controllerAs: 'insideViewCtrl'
     resolve:
@@ -51,14 +53,14 @@ app.config(['MpChatboxProvider', '$httpProvider', '$routeSegmentProvider',
   })
   .within('in')
 
-    .segment('home', {
-      templateUrl:  '/scripts/views/in/dashboard-view/dashboard-view.html'
+    .segment('dashboard', {
+      templateUrl:  '/scripts/views/in/dashboard/dashboard-view.html'
       controller:   'DashboardViewCtrl'
       controllerAs: 'dashboardViewCtrl'
     })
 
     .segment('project', {
-      templateUrl:  '/scripts/views/in/project-view/project-view.html'
+      templateUrl:  '/scripts/views/in/project/project-view.html'
       controller:   'ProjectViewCtrl'
       controllerAs: 'projectViewCtrl'
     })

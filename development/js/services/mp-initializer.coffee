@@ -28,7 +28,7 @@ app.factory 'MpInitializer',
         $timeout ->
           initiation.resolve()
         if $route.current.$$route.segment == 'ot'
-          return '/home'
+          return '/dashboard'
         return
     else
       MpUser.notLoggedIn ->

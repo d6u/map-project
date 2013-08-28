@@ -3,7 +3,7 @@ app.directive 'mdEditProject',
 ['$rootScope', '$location',
 ( $rootScope,   $location) ->
 
-  templateUrl: if $location.path() == '/' then '/scripts/views/shared/md-edit-project-outside.html' else '/scripts/views/shared/md-edit-project-inside.html'
+  templateUrl: if $location.path() == '/' then '/scripts/views/_map/md-edit-project-outside.html' else '/scripts/views/_map/md-edit-project-inside.html'
   scope: true
   controller: ['$scope', '$location', ($scope, $location) ->
 

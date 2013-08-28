@@ -2,7 +2,7 @@ app.directive 'mpMapDrawer',
 ['$rootScope', '$timeout', '$routeSegment',
 ( $rootScope,   $timeout,   $routeSegment) ->
 
-  templateUrl: '/scripts/views/shared/md-drawer.html'
+  templateUrl: '/scripts/views/_map/md-drawer.html'
   scope: true
   controller: ['$scope', '$element', ($scope, $element) ->
 
