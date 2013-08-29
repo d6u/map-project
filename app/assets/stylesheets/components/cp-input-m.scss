@@ -9,3 +9,19 @@
     box-shadow: none;
   }
 }
+
+.cp-input-square-button {
+  height: 45px;
+  width: 45px;
+  display: block;
+  background-color: $blue;
+  color: white;
+  line-height: 45px;
+  text-align: center;
+  font-size: 20px;
+  &:hover {
+    background-color: $blueDark;
+    text-decoration: none;
+    color: white;
+  }
+}

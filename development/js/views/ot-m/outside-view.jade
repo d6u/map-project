@@ -12,6 +12,7 @@
     .ly-workplace
 
       .ly-workplace-map(ng-controller="MapCtrl as mapCtrl", ng-class="{'ly-workplace-map-scrollup': outsideViewCtrl.workplaceScrollup}")
+        //- Top
         .ly-workplace-map-top
           .ly-workplace-map-canvas(mp-map-canvas="")
 
@@ -19,21 +20,38 @@
           .ly-workplace-map-searchbox.md-searchbox
             .md-searchbox-inputgroup
               a.md-searchbox-inputgroup-button(href="", ng-click="outsideViewCtrl.workplaceScrollup = true")
-                i.icon-reorder
+                i.icon-angle-down
               input.md-searchbox-inputgroup-input.form-control.cp-input-naked(type="text",placeholder="Search place")
             .md-searchbox-results
 
-
-
-        .ly-workplace-map-bottom
+        //- Bottom
+        .ly-workplace-map-bottom.md-placelist
           .ly-workplace-map-placelist
-          .ly-workplace-map-toolbar
+          .ly-workplace-map-toolbar.md-placelist-toolbar
+            a.md-placelist-toolbar-button(href="", ng-click="outsideViewCtrl.workplaceScrollup = false")
+              i.icon-angle-up
+              | Back
+            a.md-placelist-toolbar-button(href="")
+              i.icon-fullscreen
+              | Map all
+            a.md-placelist-toolbar-button(href="")
+              i.icon-pencil
+              | Edit project
+            a.md-placelist-toolbar-button(href="")
+              i.icon-plus
+              | Add place
 
-      .ly-workplace-chat
+      //- Chat
+      .ly-workplace-chat(ng-class="{'ly-workplace-chat-show': outsideViewCtrl.showChat}")
 
-      .ly-workplace-buttons
+      //- Overlay button
+      .ly-workplace-buttons(ng-show="outsideViewCtrl.hideHomepage")
         .ly-workplace-buttons-left
+          a.cp-input-square-button(href="", ng-click="interface.showUserSection = true")
+            i.icon-reorder
         .ly-workplace-buttons-right
+          a.cp-input-square-button(href="", ng-click="outsideViewCtrl.showChat = !outsideViewCtrl.showChat")
+            i.icon-comments-alt
 
     //- Homepage
     .md-homepage(ng-hide="outsideViewCtrl.hideHomepage")

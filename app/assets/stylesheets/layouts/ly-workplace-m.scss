@@ -71,11 +71,16 @@
 
   @include transition();
   -webkit-transform: translate3d(100%, 0, 0);
+
+  &.ly-workplace-chat-show {
+    -webkit-transform: translate3d(0, 0, 0);
+  }
 }
 
 // Buttons
 .ly-workplace-buttons {
   position: absolute;
+  z-index: 600;
   top: 0;
   left: 0;
   width: 100%;

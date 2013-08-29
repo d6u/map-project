@@ -1,0 +1,28 @@
+.md-placelist {
+
+}
+
+.md-placelist-toolbar {
+  @include display-flex();
+  background-color: $blue;
+}
+
+.md-placelist-toolbar-button {
+  height: 45px;
+  padding-top: 5px;
+  color: white;
+  @include flex-grow(1);
+  display: block;
+  text-align: center;
+  &:hover {
+    color: white;
+    text-decoration: none;
+    background-color: $blueDark;
+  }
+
+  i {
+    font-size: 18px;
+    text-align: center;
+    display: block;
+  }
+}
