@@ -8,7 +8,35 @@
   //- Body
   section.ly-pusher-content
 
-    .md-homepage
+    //- Workplace
+    .ly-workplace
+
+      .ly-workplace-map(ng-controller="MapCtrl as mapCtrl", ng-class="{'ly-workplace-map-scrollup': outsideViewCtrl.workplaceScrollup}")
+        .ly-workplace-map-top
+          .ly-workplace-map-canvas(mp-map-canvas="")
+
+          //- Searchbox
+          .ly-workplace-map-searchbox.md-searchbox
+            .md-searchbox-inputgroup
+              a.md-searchbox-inputgroup-button(href="", ng-click="outsideViewCtrl.workplaceScrollup = true")
+                i.icon-reorder
+              input.md-searchbox-inputgroup-input.form-control.cp-input-naked(type="text",placeholder="Search place")
+            .md-searchbox-results
+
+
+
+        .ly-workplace-map-bottom
+          .ly-workplace-map-placelist
+          .ly-workplace-map-toolbar
+
+      .ly-workplace-chat
+
+      .ly-workplace-buttons
+        .ly-workplace-buttons-left
+        .ly-workplace-buttons-right
+
+    //- Homepage
+    .md-homepage(ng-hide="outsideViewCtrl.hideHomepage")
       header.md-homepage-header
         a.btn.btn-primary(href="", ng-click="MpUser.login('/home')") Login with Facebook
         a(href="", ng-click="interface.showUserSection = true") Login/Register
@@ -23,4 +51,4 @@
         .md-homepage-intro
           .md-homepage-intro-bg
 
-  .ly-pusher-overlay
+  .ly-pusher-overlay(ng-click="interface.showUserSection = false")

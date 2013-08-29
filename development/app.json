@@ -68,19 +68,7 @@
 
         "views/_map/map-ctrl.coffee",
         "views/_map/marker-info.coffee",
-        "views/_map/md-edit-project.coffee",
-        "views/_map/mp-bottom-modalbox.coffee",
-        "views/_map/mp-center-user-location.coffee",
-        "views/_map/mp-map-canvas.coffee",
-        "views/_map/mp-map-drawer.coffee",
-        "views/_map/mp-map-searchbox.coffee",
-        "views/_map/marker-info.coffee",
-
-        "views/_pusher-side/mp-friends-panel.coffee",
-        "views/_pusher-side/mp-tabs.coffee",
-        "views/_pusher-side/mp-user-section-tabs.coffee",
-        "views/_pusher-side/mp-user-section.coffee",
-        "views/_pusher-side/sidebar-place.coffee"
+        "views/_map/mp-map-canvas.coffee"
       ]
     }
   }

@@ -1,0 +1,11 @@
+.cp-input-naked {
+  @include transition(all, 300ms);
+  border: none;
+  border-radius: 0;
+  box-shadow: none;
+  display: inline-block;
+  width: auto;
+  &:focus {
+    box-shadow: none;
+  }
+}
