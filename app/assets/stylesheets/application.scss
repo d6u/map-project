@@ -13,8 +13,8 @@
 
 @import "layouts/base-layout";
 @import "layouts/map-layout";
+@import "layouts/ly-pusher";
 
-@import "components/cp-pusher";
 @import "components/cp-input";
 @import "components/cp-typeahead";
 
@@ -98,55 +98,6 @@
     border-radius: 0;
     &:focus {
         box-shadow: none;
-    }
-}
-
-.mp-navbar-search-box {
-    position: relative;
-    @include flex_grow(1);
-
-    input {
-        @extend %transition;
-        background-color: rgba($blue, 0.8);
-        height: 50px;
-        line-height: 1.619047619;
-        font-size: 21px;
-        padding-left: 12px + 21px + 5px;
-        padding-right: 12px + 21px + 5px;
-        &:focus {
-            background-color: $blueDark;
-        }
-        &::-webkit-input-placeholder {
-           color: $gray2;
-        }
-        &:-moz-placeholder { // Firefox 18-
-           color: $gray2;
-        }
-        &::-moz-placeholder { // Firefox 19+
-           color: $gray2;
-        }
-        &:-ms-input-placeholder {
-           color: $gray2;
-        }
-    }
-
-    > i {
-        display: block;
-        position: absolute;
-        left: 10px;
-        line-height: 50px;
-    }
-}
-
-.mp-search-box-clear-results {
-    position: absolute;
-    z-index: 100;
-    top: 0;
-    right: 10px;
-    color: $gray3;
-    &:hover {
-        color: white;
-        text-decoration: none;
     }
 }
 
