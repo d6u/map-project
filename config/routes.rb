@@ -1,14 +1,14 @@
 MapProject::Application.routes.draw do
 
 
-  root                               'home#index'
-  get  'home'                     => 'home#index'
-  get  'home/project/:project_id' => 'home#index'
+  root                          'home#index'
+  get  'dashboard'           => 'home#index'
+  get  'project/:project_id' => 'home#index'
 
 
-  get  'mobile'                          => 'home#mobile_index'
-  get  'mobile/home'                     => 'home#mobile_index'
-  get  'mobile/home/project/:project_id' => 'home#mobile_index'
+  get  'mobile'                     => 'home#mobile_index'
+  get  'mobile/dashboard'           => 'home#mobile_index'
+  get  'mobile/project/:project_id' => 'home#mobile_index'
 
 
   scope '/users' do

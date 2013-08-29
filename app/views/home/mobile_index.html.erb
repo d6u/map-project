@@ -1,25 +1,19 @@
 <!DOCTYPE html>
-<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
-<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
-<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
+<html class="no-js">
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
   <title>Map Project</title>
   <meta name="description" content="">
-  <meta name="viewport"    content="width=device-width,initial-scale=1.0,minimum-scale=1,maximum-scale=1,user-scalable=no">
+  <meta name="viewport"    content="width=device-width,minimum-scale=1,maximum-scale=1,user-scalable=no">
   <%= stylesheet_link_tag 'mobile', media: 'all' %>
   <script>
-  var paths = {'jquery':['//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min','/js/jquery-2.0.3.min'],'modernizr':'/js/modernizr-2.6.2.min','google.maps':'//maps.googleapis.com/maps/api/js?key=AIzaSyAGJjfEZSf93ey42aqJDIVuOVaLnpUUzWs&libraries=places&sensor=true&callback=initGoogleMaps','facebook':'//connect.facebook.net/en_US/all','ipLocation':['http://www.geoplugin.net/json.gp?jsoncallback=define','<%= javascript_path_without_suffix("location-fallback.js") %>'],'application':['<%= javascript_path_without_suffix("application.js") %>']}
+  var paths = {'jquery':['//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min','/js/jquery-2.0.3.min'],'modernizr':'/js/modernizr-2.6.2.min','google.maps':'//maps.googleapis.com/maps/api/js?key=AIzaSyAGJjfEZSf93ey42aqJDIVuOVaLnpUUzWs&libraries=places&sensor=true&callback=initGoogleMaps','facebook':'//connect.facebook.net/en_US/all','ipLocation':['http://www.geoplugin.net/json.gp?jsoncallback=define','<%= javascript_path_without_suffix("location-fallback.js") %>'],'application':['<%= javascript_path_without_suffix("application-m.js") %>']}
   </script>
-  <script data-main="<%= javascript_path_without_suffix('mobile-requirejs.js') %>" src="/js/require.min.js"></script>
+  <script data-main="<%= javascript_path_without_suffix('main-requirejs-m.js') %>" src="/js/require.min.js"></script>
   <%= csrf_meta_tags %>
 </head>
 <body>
-<!--[if lt IE 7]>
-<p class="chromeframe">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">activate Google Chrome Frame</a> to improve your experience.</p>
-<![endif]-->
 
 <div app-view-segment="0" class="ly-application"></div>
 
