@@ -69,7 +69,9 @@
         "views/_map/map-ctrl-m.coffee",
         "views/_map/marker-info.coffee",
         "views/_map/mp-map-canvas.coffee",
-        "views/_map/md-searchbox-input-m.coffee"
+        "views/_map/md-searchbox-input-m.coffee",
+        "views/_map/placelist-ctrl-m.coffee",
+        "views/_map/md-edit-project-m.coffee"
       ]
     }
   }

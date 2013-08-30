@@ -1,0 +1,45 @@
+[md-edit-project] {
+  position: absolute;
+  height: 100%;
+}
+
+// Container: div.md-modal[md-edit-project]
+.md-edit-project {
+  position: absolute;
+  top     : 0;
+  left    : 0;
+  right   : 0;
+  bottom  : 0;
+
+  background-color: white;
+  overflow-y: scroll;
+  -webkit-overflow-scrolling: touch;
+}
+
+.md-edit-project-close {
+  display: block;
+  height: 45px;
+  background-color: $gray6;
+  color: white;
+  text-align: center;
+  font-size: 20px;
+  line-height: 45px;
+  &:hover {
+    color: white;
+    text-decoration: none;
+    background-color: $gray5;
+  }
+}
+
+.md-edit-project-title {
+  margin: 20px;
+  font-size: 22px;
+}
+
+.md-edit-project-body {
+  margin: 20px;
+  a {
+    display: block;
+    margin-bottom: 20px;
+  }
+}

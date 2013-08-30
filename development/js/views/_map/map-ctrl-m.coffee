@@ -44,13 +44,8 @@ app.controller 'MapCtrl',
           self.infoWindow.open self.googleMap, place.$$marker
   }
 
-  # TODO: bind to mapCtrl
-  if $routeSegment.startsWith('ot')
-    @theProject = new TheProject()
-  else
-    @theProject = new TheProject(Number($routeSegment.$routeParams.project_id))
-
   # Map service
+  @theProject = if $routeSegment.startsWith('ot') then new TheProject() else new TheProject(Number($routeSegment.$routeParams.project_id))
   @autocompleteService  = new google.maps.places.AutocompleteService()
   @placePredictions     = []
   @placesService        = undefined # placeholder
@@ -86,7 +81,7 @@ app.controller 'MapCtrl',
       @placesService.textSearch searchRequest, (placesServiceResults, serviceStatus) ->
         $scope.$apply ->
           helper.cleanPreviousplacesServiceResults()
-          self.placesServiceResults = placesServiceResults[1..5]
+          self.placesServiceResults = placesServiceResults[0..9]
           self.placePredictions = []
           helper.addplacesServiceResultsToMap()
       # close the drop list
@@ -96,6 +91,14 @@ app.controller 'MapCtrl',
   @addPlaceToList = (place) ->
     @placesServiceResults = _.without @placesServiceResults, place
     @theProject.addPlace(place)
+
+  # center map
+  @setMapCenter = (location) ->
+    @googleMap.setCenter(location)
+
+  @setMapBounds = (bounds) ->
+    @googleMap.fitBounds(bounds)
+    @googleMap.setZoom 12 if @theProject.places.length < 3
 
   # Watcher
   # ----------------------------------------

@@ -30,33 +30,36 @@
                 a.md-searchbox-results-item-link(href="", ng-click="mapCtrl.queryPlacesService(prediction.description)") {{prediction.description}}
 
         //- Bottom
-        .ly-workplace-map-bottom.md-placelist
+        .ly-workplace-map-bottom.md-placelist(ng-controller="PlacelistCtrl as placelistCtrl")
           //- Bottom - places
           .ly-workplace-map-placelist
             ol.md-placelist-places
               li.md-placelist-places-item(ng-repeat="place in mapCtrl.theProject.places")
-                a.md-placelist-places-item-image(href="", ng-click="")
+                a.md-placelist-places-item-image(href="", ng-click="placelistCtrl.showPlaceOnMap(place)")
                   img(ng-src="/img/blue-marker-3d.png")
                 .md-placelist-places-item-details
                   .md-placelist-places-item-details-name {{place.name}}
                   address {{place.formatted_address}}
                   p {{place.notes}}
 
-
           //- Bottom - toolbar
           .ly-workplace-map-toolbar.md-placelist-toolbar
             a.md-placelist-toolbar-button(href="", ng-click="outsideViewCtrl.workplaceScrollup = false")
               i.icon-angle-up
               | Back
-            a.md-placelist-toolbar-button(href="")
+            a.md-placelist-toolbar-button(href="", ng-click="placelistCtrl.displayAllMarkers()")
               i.icon-fullscreen
               | Map all
-            a.md-placelist-toolbar-button(href="")
+            a.md-placelist-toolbar-button(href="", ng-click="placelistCtrl.showEditProjectDetailForm()")
               i.icon-pencil
               | Edit project
-            a.md-placelist-toolbar-button(href="")
+            a.md-placelist-toolbar-button(href="", ng-click="placelistCtrl.focusSearchboxInput()")
               i.icon-plus
               | Add place
+
+          //- Bottom - edit project detail modal
+          .md-modal.md-effect-3(md-edit-project="")
+          .md-overlay
 
       //- Chat
       .ly-workplace-chat(ng-class="{'ly-workplace-chat-show': outsideViewCtrl.showChat}")
