@@ -38,16 +38,6 @@ class ProjectsController < ApplicationController
 
   # GET
   def index
-    if params[:title]
-      project = @user.projects.find_by_title params[:title]
-      if project
-        render :json => project and return
-      else
-        head 404 and return
-      end
-    end
-
-
     if params[:include_participated] == 'true'
       user_projects = @user.projects
       participated_projects = @user.participated_projects
@@ -56,7 +46,6 @@ class ProjectsController < ApplicationController
     else
       @projects = @user.projects.order 'updated_at DESC'
     end
-    render :json => @projects, :methods => :places_attrs
   end
 
 
@@ -68,7 +57,8 @@ class ProjectsController < ApplicationController
 
 
   def show
-    project = Project.find_by_id params[:id]
+    project = params[:title] ? @user.projects.find_by_title(params[:title]) : @user.projects.find_by_id(params[:id])
+
     if project
       render :json => project
     else
