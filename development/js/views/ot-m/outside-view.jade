@@ -18,11 +18,16 @@
 
           //- Searchbox
           .ly-workplace-map-searchbox.md-searchbox
+            //- Searchbox - inputgroup
             .md-searchbox-inputgroup
               a.md-searchbox-inputgroup-button(href="", ng-click="outsideViewCtrl.workplaceScrollup = true")
                 i.icon-angle-down
-              input.md-searchbox-inputgroup-input.form-control.cp-input-naked(type="text",placeholder="Search place")
-            .md-searchbox-results
+              input.md-searchbox-inputgroup-input.form-control.cp-input-naked(type="text", placeholder="Search place", ng-model="mapCtrl.searchboxInput", md-searchbox-input-m="", ng-change="mapCtrl.getQueryPredictions()")
+
+            //- Searchbox - result
+            ol.md-searchbox-results
+              li.md-searchbox-results-item(ng-repeat="prediction in mapCtrl.placePredictions")
+                a.md-searchbox-results-item-link(href="", ng-click="mapCtrl.queryPlacesService(prediction.description)") {{prediction.description}}
 
         //- Bottom
         .ly-workplace-map-bottom.md-placelist
@@ -65,6 +70,8 @@
           h4
             | Not any more!&nbsp;
             a.md-homepage-linktoreason(href="") Why is that?
+          .md-homepage-start
+            a.btn.btn-success(ng-click="outsideViewCtrl.hideHomepage = true") Give a try
 
         .md-homepage-intro
           .md-homepage-intro-bg

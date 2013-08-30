@@ -36,4 +36,39 @@
   bottom: 45px;
   left: 0;
   width: 100%;
+  padding: 0;
+  margin: 0;
+
+  background-color: $gray1;
+  list-style: none;
+}
+
+.md-searchbox-results-item {
+  color: $gray6;
+  &:last-child {
+    .md-searchbox-results-item-link {
+      border-bottom: none;
+    }
+  }
+  &:hover {
+    background-color: $blue;
+    color: white;
+    .md-searchbox-results-item-link {
+      border-bottom-color: $blue; // Hide border prevent resize DOM
+    }
+  }
+}
+
+.md-searchbox-results-item-link {
+  display      : block;
+  margin       : 0 10px;
+  padding      : 10px 0;
+  font-size    : 18px;
+  line-height  : 1.2;
+  border-bottom: 1px solid $gray2;
+  color        : inherit;
+  &:hover {
+    color: inherit;
+    text-decoration: none;
+  }
 }

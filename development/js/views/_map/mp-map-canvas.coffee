@@ -7,8 +7,6 @@ app.directive 'mpMapCanvas',
 
   (scope, element, attrs) ->
 
-    scope.TheMap.$$currentScope = scope
-
     # init map
     mapOptions =
       center: new google.maps.LatLng($window.userLocation.latitude, $window.userLocation.longitude)
@@ -16,5 +14,5 @@ app.directive 'mpMapCanvas',
       mapTypeId: google.maps.MapTypeId.ROADMAP
       disableDefaultUI: true
 
-    scope.TheMap.map = new google.maps.Map(element[0], mapOptions)
+    scope.mapCtrl.googleMap = new google.maps.Map(element[0], mapOptions)
 ]

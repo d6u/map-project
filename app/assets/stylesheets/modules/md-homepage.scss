@@ -51,6 +51,11 @@
   }
 }
 
+// Only show on mobile
+.md-homepage-start {
+  margin-top: 20px;
+}
+
 
 // Smaller screen
 $max-width: 433px; // 433px is where homepage h1 becomes three line
