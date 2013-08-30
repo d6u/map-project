@@ -1,6 +1,23 @@
 .md-menu {
+  position: relative;
   height: 100%;
   width: 100%;
+  background-color: $gray6;
+  color: white;
+
   overflow-y: scroll;
   -webkit-overflow-scrolling: touch;
+}
+
+.md-menu-header {
+  margin: 10px;
+  font-size: 18px;
+  text-align: center;
+}
+
+.md-menu-login-prompt {
+  margin: 10px;
+  a {
+    display: block;
+  }
 }
