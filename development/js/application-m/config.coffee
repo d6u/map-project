@@ -36,6 +36,14 @@ app.config(['MpChatboxProvider', '$httpProvider', '$routeSegmentProvider',
     controllerAs: 'outsideViewCtrl'
     resolve:
       MpInitializer: 'MpInitializer'
+      # action filter
+      redirect_to_inside_if_login: ['MpInitializer', 'MpUser', '$location',
+        (MpInitializer, MpUser, $location) ->
+
+          MpInitializer.then ->
+            if MpUser.checkLogin()
+              $location.path('/mobile/dashboard')
+      ]
   })
 
   # in
@@ -45,6 +53,14 @@ app.config(['MpChatboxProvider', '$httpProvider', '$routeSegmentProvider',
     controllerAs: 'insideViewCtrl'
     resolve:
       MpInitializer: 'MpInitializer'
+      # action filter
+      redirect_to_outside_if_not_login: ['MpInitializer', 'MpUser', '$location',
+        (MpInitializer, MpUser, $location) ->
+
+          MpInitializer.then ->
+            if !MpUser.checkLogin()
+              $location.path('/mobile')
+      ]
   })
   .within('in')
 

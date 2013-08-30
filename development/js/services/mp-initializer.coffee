@@ -27,8 +27,6 @@ app.factory 'MpInitializer',
       MpUser.fbLoginCallback response.authResponse, ->
         $timeout ->
           initiation.resolve()
-        if $route.current.$$route.segment == 'ot'
-          return '/dashboard'
         return
     else
       MpUser.notLoggedIn ->
