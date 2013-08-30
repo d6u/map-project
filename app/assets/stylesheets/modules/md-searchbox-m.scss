@@ -5,6 +5,7 @@
 // Input group
 .md-searchbox-inputgroup {
   @include display-flex();
+  position: relative;
 
   .md-searchbox-inputgroup-button {
     display: inline-block;
@@ -27,6 +28,23 @@
     font-size: 20px;
     height: 45px;
     background-color: $gray1;
+    padding-right: 30px;
+  }
+}
+
+.md-searchbox-inputgroup-clearinput {
+  position: absolute;
+  right: 0;
+  top: 0;
+  height: 45px;
+  width: 30px;
+  font-size: 20px;
+  line-height: 45px;
+  text-align: center;
+  color: $gray3;
+  &:hover {
+    text-decoration: none;
+    color: $gray6;
   }
 }
 

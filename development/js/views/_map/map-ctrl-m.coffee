@@ -92,13 +92,18 @@ app.controller 'MapCtrl',
     @placesServiceResults = _.without @placesServiceResults, place
     @theProject.addPlace(place)
 
-  # center map
   @setMapCenter = (location) ->
     @googleMap.setCenter(location)
 
   @setMapBounds = (bounds) ->
     @googleMap.fitBounds(bounds)
     @googleMap.setZoom 12 if @theProject.places.length < 3
+
+  # clear search results, predicitons, search box input
+  @clearSearchResults = ->
+    @searchboxInput = ""
+    @placePredictions = []
+    helper.cleanPreviousplacesServiceResults()
 
   # Watcher
   # ----------------------------------------

@@ -23,6 +23,8 @@
               a.md-searchbox-inputgroup-button(href="", ng-click="outsideViewCtrl.workplaceScrollup = true")
                 i.icon-angle-down
               input.md-searchbox-inputgroup-input.form-control.cp-input-naked(type="text", placeholder="Search place", ng-model="mapCtrl.searchboxInput", md-searchbox-input-m="", ng-change="mapCtrl.getQueryPredictions()")
+              a.md-searchbox-inputgroup-clearinput(href="", ng-show="mapCtrl.searchboxInput.length || mapCtrl.placesServiceResults", ng-click="mapCtrl.clearSearchResults()")
+                i.icon-remove
 
             //- Searchbox - result
             ol.md-searchbox-results
