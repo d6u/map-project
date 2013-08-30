@@ -92,6 +92,44 @@ app.controller 'MapCtrl',
       # close the drop list
       self.placePredictions = []
 
+  # add place to saved place list
+  @addPlaceToList = (place) ->
+    @placesServiceResults = _.without @placesServiceResults, place
+    @theProject.addPlace(place)
+
+  # Watcher
+  # ----------------------------------------
+  # watch for marked places and make marker for them
+  $scope.$watch (=>
+    return _.pluck(@theProject.places, 'id')
+  ), ((newVal, oldVal) =>
+    if newVal
+      # re-render marker for each places
+      _.forEach @theProject.places, (place, idx) =>
+        # $$saved is used to hide infoWindow add place button
+        place.$$saved = true
+        if place.$$marker
+          place.$$marker.setMap null
+          delete place.$$marker
+        if place.geometry
+          latLog = place.geometry.location
+        else
+          coordMatch = /\((.+), (.+)\)/.exec place.coord
+          latLog = new google.maps.LatLng coordMatch[1], coordMatch[2]
+        markerOptions =
+          map:      @googleMap
+          title:    place.name
+          position: latLog
+          icon:
+            url: "/img/blue-marker-3d.png"
+        place.$$marker = new google.maps.Marker markerOptions
+        helper.bindInfoWindow(place)
+
+      # re-render directions if showDirections == true
+      # if @showDirections
+      #   renderDirections()
+  ), true
+
   # Return
   return
 ]

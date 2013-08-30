@@ -31,7 +31,19 @@
 
         //- Bottom
         .ly-workplace-map-bottom.md-placelist
+          //- Bottom - places
           .ly-workplace-map-placelist
+            ol.md-placelist-places
+              li.md-placelist-places-item(ng-repeat="place in mapCtrl.theProject.places")
+                a.md-placelist-places-item-image(href="", ng-click="")
+                  img(ng-src="/img/blue-marker-3d.png")
+                .md-placelist-places-item-details
+                  .md-placelist-places-item-details-name {{place.name}}
+                  address {{place.formatted_address}}
+                  p {{place.notes}}
+
+
+          //- Bottom - toolbar
           .ly-workplace-map-toolbar.md-placelist-toolbar
             a.md-placelist-toolbar-button(href="", ng-click="outsideViewCtrl.workplaceScrollup = false")
               i.icon-angle-up
