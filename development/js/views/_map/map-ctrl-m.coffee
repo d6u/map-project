@@ -97,7 +97,6 @@ app.controller 'MapCtrl',
 
   @setMapBounds = (bounds) ->
     @googleMap.fitBounds(bounds)
-    @googleMap.setZoom 12 if @theProject.places.length < 3
 
   # clear search results, predicitons, search box input
   @clearSearchResults = ->

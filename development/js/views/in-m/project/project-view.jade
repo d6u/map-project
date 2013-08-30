@@ -1,0 +1,64 @@
+//- Container: .ly-workplace(app-view-segment="1")
+.ly-workplace-map(ng-controller="MapCtrl as mapCtrl", ng-class="{'ly-workplace-map-scrollup': projectViewCtrl.workplaceScrollup}")
+  //- Top
+  .ly-workplace-map-top
+    .ly-workplace-map-canvas(mp-map-canvas="")
+
+    //- Searchbox
+    .ly-workplace-map-searchbox.md-searchbox
+      //- Searchbox - inputgroup
+      .md-searchbox-inputgroup
+        a.md-searchbox-inputgroup-button(href="", ng-click="projectViewCtrl.workplaceScrollup = true")
+          i.icon-angle-down
+        input.md-searchbox-inputgroup-input.form-control.cp-input-naked(type="text", placeholder="Search place", ng-model="mapCtrl.searchboxInput", md-searchbox-input-m="", ng-change="mapCtrl.getQueryPredictions()")
+        a.md-searchbox-inputgroup-clearinput(href="", ng-show="mapCtrl.searchboxInput.length || mapCtrl.placesServiceResults", ng-click="mapCtrl.clearSearchResults()")
+          i.icon-remove
+
+      //- Searchbox - result
+      ol.md-searchbox-results
+        li.md-searchbox-results-item(ng-repeat="prediction in mapCtrl.placePredictions")
+          a.md-searchbox-results-item-link(href="", ng-click="mapCtrl.queryPlacesService(prediction.description)") {{prediction.description}}
+
+  //- Bottom
+  .ly-workplace-map-bottom.md-placelist(ng-controller="PlacelistCtrl as placelistCtrl")
+    //- Bottom - places
+    .ly-workplace-map-placelist
+      ol.md-placelist-places
+        li.md-placelist-places-item(ng-repeat="place in mapCtrl.theProject.places")
+          a.md-placelist-places-item-image(href="", ng-click="placelistCtrl.showPlaceOnMap(place)")
+            img(ng-src="/img/blue-marker-3d.png")
+          .md-placelist-places-item-details
+            .md-placelist-places-item-details-name {{place.name}}
+            address {{place.address}}
+            p {{place.notes}}
+
+    //- Bottom - toolbar
+    .ly-workplace-map-toolbar.md-placelist-toolbar
+      a.md-placelist-toolbar-button(href="", ng-click="projectViewCtrl.workplaceScrollup = false")
+        i.icon-angle-up
+        | Back
+      a.md-placelist-toolbar-button(href="", ng-click="placelistCtrl.displayAllMarkers()")
+        i.icon-fullscreen
+        | Map all
+      a.md-placelist-toolbar-button(href="", ng-click="placelistCtrl.showEditProjectDetailForm()")
+        i.icon-pencil
+        | Edit project
+      a.md-placelist-toolbar-button(href="", ng-click="placelistCtrl.focusSearchboxInput()")
+        i.icon-plus
+        | Add place
+
+    //- Bottom - edit project detail modal
+    .md-modal.md-effect-3(md-edit-project="")
+    .md-overlay
+
+//- Chat
+.ly-workplace-chat(ng-class="{'ly-workplace-chat-show': projectViewCtrl.showChat}")
+
+//- Overlay button
+.ly-workplace-buttons
+  .ly-workplace-buttons-left
+    a.cp-input-square-button(href="", ng-click="interface.showUserSection = true")
+      i.icon-reorder
+  .ly-workplace-buttons-right
+    a.cp-input-square-button(href="", ng-click="projectViewCtrl.showChat = !projectViewCtrl.showChat")
+      i.icon-comments-alt
