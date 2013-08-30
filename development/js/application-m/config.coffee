@@ -37,12 +37,16 @@ app.config(['MpChatboxProvider', '$httpProvider', '$routeSegmentProvider',
     resolve:
       MpInitializer: 'MpInitializer'
       # action filter
-      redirect_to_inside_if_login: ['MpInitializer', 'MpUser', '$location',
-        (MpInitializer, MpUser, $location) ->
+      redirect_to_inside_if_login: ['MpInitializer', 'MpUser', '$location', '$q', '$timeout', (MpInitializer, MpUser, $location, $q, $timeout) ->
 
-          MpInitializer.then ->
-            if MpUser.checkLogin()
-              $location.path('/mobile/dashboard')
+        deferred = $q.defer()
+        MpInitializer.then ->
+          if MpUser.checkLogin()
+            $location.path('/mobile/dashboard')
+          # Resolve after redirection
+          $timeout ->
+            deferred.resolve()
+        return deferred.promise
       ]
   })
 
@@ -54,12 +58,16 @@ app.config(['MpChatboxProvider', '$httpProvider', '$routeSegmentProvider',
     resolve:
       MpInitializer: 'MpInitializer'
       # action filter
-      redirect_to_outside_if_not_login: ['MpInitializer', 'MpUser', '$location',
-        (MpInitializer, MpUser, $location) ->
+      redirect_to_outside_if_not_login: ['MpInitializer', 'MpUser', '$location', '$q', '$timeout', (MpInitializer, MpUser, $location, $q, $timeout) ->
 
-          MpInitializer.then ->
-            if !MpUser.checkLogin()
-              $location.path('/mobile')
+        deferred = $q.defer()
+        MpInitializer.then ->
+          if !MpUser.checkLogin()
+            $location.path('/mobile')
+          # Resolve after redirection
+          $timeout ->
+            deferred.resolve()
+        return deferred.promise
       ]
   })
   .within('in')

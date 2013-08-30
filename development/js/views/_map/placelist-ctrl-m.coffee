@@ -24,7 +24,7 @@ app.controller 'PlacelistCtrl',
     ), 400
 
   @showEditProjectDetailForm = ->
-    $('[md-edit-project]').addClass('md-show')
+    $scope.$broadcast('showEditProjectDetailForm')
 
   # Return
   return

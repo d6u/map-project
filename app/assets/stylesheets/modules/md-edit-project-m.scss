@@ -43,3 +43,15 @@
     margin-bottom: 20px;
   }
 }
+
+// Form (inside)
+.md-edit-project-form {
+  padding: 10px;
+  > button {
+    margin-right: 10px;
+  }
+}
+
+.md-edit-project-form-delete {
+  margin-top: 100px;
+}

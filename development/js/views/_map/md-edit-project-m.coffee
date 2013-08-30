@@ -5,24 +5,65 @@ app.directive 'mdEditProject',
   templateUrl: (->
     return if $routeSegment.startsWith('ot') then '/scripts/views/_map/md-edit-project-m-outside.html' else '/scripts/views/_map/md-edit-project-m-inside.html'
   )()
+  scope: true
   controllerAs: 'mdEditProjectCtrl'
-  controller: ['$scope', '$element', ($scope, $element) ->
+  controller: ['$scope', '$element', 'MpProjects', '$location',
+    ($scope, $element, MpProjects, $location) ->
 
-    @loginWithFacebook = ->
-      $element.removeClass('md-show')
-      $scope.MpUser.login('/home')
+      @editProjectForm = {
+        title: ""
+        notes: ""
+        # deleteCheckbox
+      }
 
-    @showSideMenu = ->
-      $scope.interface.showUserSection = true
-      $element.removeClass('md-show')
+      @loginWithFacebook = ->
+        $element.removeClass('md-show')
+        $scope.MpUser.login('/mobile/dashboard')
 
-    @closeEditProjectForm = ->
-      $element.removeClass('md-show')
+      @showSideMenu = ->
+        $scope.interface.showUserSection = true
+        $element.removeClass('md-show')
 
-    return
+      @closeEditProjectForm = ->
+        $element.removeClass('md-show')
+
+      # Editing
+      @revertChanges = ->
+        @editProjectForm.title = $scope.mapCtrl.theProject.project.title
+        @editProjectForm.notes = $scope.mapCtrl.theProject.project.notes
+        @closeEditProjectForm()
+
+      @saveChanges = ->
+        if @editProjectForm.title.length == 0
+          @formMessage = "You must have a title to start with."
+        else
+          @formMessage = ""
+          $scope.mapCtrl.theProject.project.title = @editProjectForm.title
+          $scope.mapCtrl.theProject.project.notes = @editProjectForm.notes
+          $scope.mapCtrl.theProject.project.put()
+          @closeEditProjectForm()
+
+      @deleteProject = ->
+        if @editProjectForm.deleteCheckbox
+          $scope.insideViewCtrl.MpProjects.removeProject($scope.mapCtrl.theProject.project).then ->
+            $location.path('/mobile/dashboard')
+
+      # Return
+      return
   ]
-  link: (scope, element, attrs) ->
+  link: (scope, element, attrs, mdEditProjectCtrl) ->
 
     element.next().on 'click', (event) ->
       element.removeClass('md-show')
+
+    scope.$on 'showEditProjectDetailForm', ->
+      element.addClass('md-show')
+
+    scope.$watch 'mapCtrl.theProject.project.title', (newVal, oldVal) ->
+      if newVal != mdEditProjectCtrl.editProjectForm.title
+        mdEditProjectCtrl.editProjectForm.title = newVal
+
+    scope.$watch 'mapCtrl.theProject.project.notes', (newVal, oldVal) ->
+      if newVal != mdEditProjectCtrl.editProjectForm.notes
+        mdEditProjectCtrl.editProjectForm.notes = newVal
 ]
