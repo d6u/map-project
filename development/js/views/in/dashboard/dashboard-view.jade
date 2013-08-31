@@ -3,13 +3,25 @@ a.shame-show-user-section-button(href="", ng-click="interface.showUserSection = 
 
 //- Projects list
 //- TODO: add masonry support
-.mp-fullscreen
+.ly-fullscreen
   ol.md-projects()
+    //- Add project
     li.md-projects-item.md-projects-create
-      a(href="", ng-click="dashboardViewCtrl.createNewProject()")
+      a(href="", ng-click="insideViewCtrl.createNewProject()")
         i.icon-plus
-    li.md-projects-item(ng-repeat="project in MpProjects.projects")
-      .md-projects-item-minimap(mini-map-cover="mini-map-cover")
-      .md-projects-item-header
-        a(ng-href="/home/project/{{project.id}}") {{project.title}}
-      .md-projects-item-detail {{project.notes}}
+
+    //- Project list
+    li.md-projects-item.md-project(ng-repeat="project in insideViewCtrl.MpProjects.projects")
+      .md-project-cover
+        .md-project-cover-background(mini-map-cover="")
+        .md-project-cover-overlay
+          a(ng-href="/mobile/project/{{project.id}}") {{project.title}}
+      .md-project-owner
+        img.md-project-owner-picture(ng-src="{{project.owner.fb_user_picture}}")
+        span.md-project-owner-name {{project.owner.name}}
+        a.btn.btn-default(ng-href="/mobile/project/{{project.id}}") Open
+      .md-project-notes(ng-show="project.notes && project.notes.length") {{project.notes}}
+      ul.md-project-participants.clearfix(ng-show="project.participated_users.length")
+        li.md-project-participants-item(ng-repeat="user in project.participated_users")
+          img.md-project-participants-item(ng-src="{{user.fb_user_picture}}")
+      .md-project-lastmessage

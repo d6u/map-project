@@ -3,11 +3,17 @@ app.directive 'mdEditProject',
 ['$rootScope', '$location',
 ( $rootScope,   $location) ->
 
-  templateUrl: if $location.path() == '/' then '/scripts/views/_map/md-edit-project-outside.html' else '/scripts/views/_map/md-edit-project-inside.html'
+  templateUrl: ->
+    return if $location.path() == '/' then '/scripts/views/_map/md-edit-project-outside.html' else '/scripts/views/_map/md-edit-project-inside.html'
   scope: true
+  controllerAs: 'editProjectCtrl'
   controller: ['$scope', '$location', ($scope, $location) ->
 
-    @editProjectForm = {}
+    @editProjectForm = {
+      title: ""
+      notes: ""
+      # deleteCheckbox
+    }
 
     @deleteProject = ->
       if @editProjectForm.deleteCheckbox
@@ -31,7 +37,6 @@ app.directive 'mdEditProject',
 
     return
   ]
-  controllerAs: 'editProjectCtrl'
   link: (scope, element, attrs, editProjectCtrl) ->
 
     element.find('#invite-friends-button').on 'click', (event) ->

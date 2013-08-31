@@ -46,7 +46,9 @@
         "views/_pusher-side/mp-tabs.coffee",
         "views/_pusher-side/mp-user-section-tabs.coffee",
         "views/_pusher-side/mp-user-section.coffee",
-        "views/_pusher-side/sidebar-place.coffee"
+        "views/_pusher-side/sidebar-place.coffee",
+
+        "views/_shared/mini-map-cover.coffee"
       ],
 
       "application-m.js": [
@@ -72,7 +74,9 @@
         "views/_map/placelist-ctrl-m.coffee",
         "views/_map/md-edit-project-m.coffee",
 
-        "views/_menu/md-menu-m.coffee"
+        "views/_menu/md-menu-m.coffee",
+
+        "views/_shared/mini-map-cover.coffee"
       ]
     }
   }
