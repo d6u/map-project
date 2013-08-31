@@ -46,3 +46,15 @@
     visibility: visible;
   }
 }
+
+// Mobile Version
+// ----------------------------------------
+.ba-mobile {
+  .ly-pusher-side {
+    width: 80%;
+  }
+
+  .ly-pusher.ly-pusher-pushed {
+    -webkit-transform: translate3d(80%, 0, 0);
+  }
+}

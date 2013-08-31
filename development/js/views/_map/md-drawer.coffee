@@ -1,4 +1,4 @@
-app.directive 'mpMapDrawer',
+app.directive 'mdDrawer',
 ['$rootScope', '$timeout', '$routeSegment',
 ( $rootScope,   $timeout,   $routeSegment) ->
 

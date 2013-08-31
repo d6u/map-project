@@ -1,19 +1,21 @@
 //- Container: .ly-application
 .ly-pusher(ng-class="{'ly-pusher-pushed': interface.showUserSection}")
 
-  section.ly-pusher-side.mp-user-section(mp-user-section="mp-user-section")
+  //- Pusher side
+  section.ly-pusher-side.mp-user-section(mp-user-section="")
 
+  //- Pusher body
   section.ly-pusher-content
 
     .mp-fullscreen(ng-controller="MapCtrl as mapCtrl")
 
-      .md-drawer.clearfix(mp-map-drawer="mp-map-drawer", ng-class="{'md-drawer-maxmize': drawerCtrl.maxmize}")
+      .md-drawer.clearfix(md-drawer="", ng-class="{'md-drawer-maxmize': drawerCtrl.maxmize}")
       .mp-fullscreen(mp-map-canvas="mp-map-canvas")
 
     //- Homepage
-    .md-homepage(ng-class="{'md-homepage-fadeout': !interface.centerSearchBar}")
+    .md-homepage(ng-class="{'md-homepage-fadeout': outsideViewCtrl.hideHomepage}")
       header.md-homepage-header
-        a.btn.btn-primary(href="", ng-click="MpUser.login('/home')") Login with Facebook
+        a.btn.btn-primary(href="", ng-click="outsideViewCtrl.loginWithFacebook()") Login with Facebook
         a(href="", ng-click="interface.showUserSection = true") Login/Register
 
       .container
