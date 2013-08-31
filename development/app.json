@@ -4,7 +4,6 @@
     "targetFolder": "app/assets/javascripts",
     "copy": [
       "main-requirejs.js",
-      "main-requirejs-m.js",
       "location-fallback.js"
     ],
     "concat": {
