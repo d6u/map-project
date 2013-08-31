@@ -7,10 +7,10 @@
   //- Pusher body
   section.ly-pusher-content
 
-    .mp-fullscreen(ng-controller="MapCtrl as mapCtrl")
+    .ly-fullscreen(ng-controller="MapCtrl as mapCtrl")
 
       .md-drawer.clearfix(md-drawer="", ng-class="{'md-drawer-maxmize': drawerCtrl.maxmize}")
-      .mp-fullscreen(mp-map-canvas="mp-map-canvas")
+      .ly-fullscreen(mp-map-canvas="")
 
     //- Homepage
     .md-homepage(ng-class="{'md-homepage-fadeout': outsideViewCtrl.hideHomepage}")
