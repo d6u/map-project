@@ -10,7 +10,7 @@
     .ly-fullscreen(ng-controller="MapCtrl as mapCtrl")
 
       .md-drawer.clearfix(md-drawer="", ng-class="{'md-drawer-maxmize': drawerCtrl.maxmize}")
-      .ly-fullscreen(mp-map-canvas="")
+      .ly-fullscreen-abs(mp-map-canvas="")
 
     //- Homepage
     .md-homepage(ng-class="{'md-homepage-fadeout': outsideViewCtrl.hideHomepage}")
@@ -27,5 +27,9 @@
 
         .md-homepage-intro
           .md-homepage-intro-bg
+
+      .md-homepage-guide
+        h4.md-homepage-guide-title Type a place name to get start
+
 
   .ly-pusher-overlay(ng-click="interface.showUserSection = false")

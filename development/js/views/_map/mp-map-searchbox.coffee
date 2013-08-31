@@ -24,9 +24,8 @@ app.directive 'mpMapSearchbox', [->
         @placePredictions = []
 
     scope.hideHomepage = ->
-      if scope.interface.centerSearchBar
-        scope.interface.centerSearchBar = false
-        # scope.interface.showMapDrawer = true
+      if !scope.outsideViewCtrl.hideHomepage
+        scope.outsideViewCtrl.hideHomepage = true
 
     scope.showSearchResults = ->
       if element.val().length

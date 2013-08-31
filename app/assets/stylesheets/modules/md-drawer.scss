@@ -1,24 +1,21 @@
 // container
 .md-drawer {
   @include transition();
-  position: absolute;
-  z-index: 500;
-  bottom: -450px;
+  position: fixed;
+  z-index: 750;
+  bottom: -397px;
   left: 0;
   width: 100%;
   height: 450px;
-  background-color: white;
+
+  + [mp-map-canvas] {
+    @include transition();
+  }
 
   &.md-drawer-show {
     bottom: 0;
     + [mp-map-canvas] {
-      @include transition();
-      position: absolute;
-      top: 0;
       bottom: 450px;
-      left: 0;
-      width: 100%;
-      height: auto;
     }
   }
 
@@ -67,6 +64,7 @@
   bottom: 0;
   left: 0;
   width: 100%;
+  background-color: white;
 
   .mp-halfscreen-left,
   .mp-halfscreen-right

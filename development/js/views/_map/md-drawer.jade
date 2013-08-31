@@ -1,27 +1,19 @@
-.md-drawer-resize
-  a(href="", ng-click="drawerCtrl.toggleDrawerSize()")
-    i.icon-chevron-down(ng-show="drawerCtrl.maxmize")
-    i.icon-chevron-up(ng-hide="drawerCtrl.maxmize")
-  a(href="", ng-click="drawerCtrl.toggleDrawer()")
-    i.icon-minus
-
-
 //- Toolbar
 .md-drawer-toolbar
 
   //- Searchbar
-  .mp-halfscreen-left
-    .md-searchbar.md-homepage-centered(ng-class="{'md-homepage-centered': interface.centerSearchBar}")
-      button.cp-input-btn.btn.btn-default(ng-hide="interface.centerSearchBar", ng-click="interface.showUserSection = true")
+  .ly-halfscreen-left
+    .md-searchbar(ng-class="{'md-searchbar-normal': outsideViewCtrl.hideHomepage}")
+      button.cp-input-btn.btn.btn-default(ng-click="interface.showUserSection = true", ng-hide="!outsideViewCtrl.hideHomepage")
         i.icon-user
-      button.cp-input-btn.btn.btn-default(ng-click="drawerCtrl.toggleDrawer()", ng-hide="interface.centerSearchBar")
+      button.cp-input-btn.btn.btn-default(ng-click="drawerCtrl.toggleDrawer()", ng-hide="!outsideViewCtrl.hideHomepage")
         | {{drawerCtrl.toggleDrawerButtonText}}
       input.cp-input-naked.form-control(type="text", placeholder="Type a place to start", mp-map-searchbox="", mini-typeahead="typeaheadOptions", mini-typeahead-list="placePredictions", ng-model="searchbox.input", ng-change="hideHomepage(); getAutoComplete()")
       button.cp-input-btn.btn.btn-primary(type="button", ng-click="showSearchResults()")
-        | Try
+        | Search
 
   //- Actions to marked places list
-  .mp-halfscreen-right
+  .ly-halfscreen-right(ng-hide="!outsideViewCtrl.hideHomepage")
     button.cp-input-btn.btn.btn-default(ng-click="mapCtrl.toggleDirections()")
       i.icon-code-fork
       |  Toggle directions
