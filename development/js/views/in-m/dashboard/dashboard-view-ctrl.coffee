@@ -6,9 +6,5 @@ app.controller 'DashboardViewCtrl',
   # TODO: add location error handling
   $scope.userLocation = $window.userLocation
 
-  @createNewProject = ->
-    $scope.insideViewCtrl.MpProjects.createProject().then (project) ->
-      $location.path('/mobile/project/'+project.id)
-
   return
 ]

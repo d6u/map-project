@@ -18,7 +18,7 @@ app.controller 'PlacelistCtrl',
   @focusSearchboxInput = ->
     $scope.projectViewCtrl.workplaceScrollup = false
     $('[md-searchbox-input-m]').focus()
-    # Fix manual focus document not scrollup issue on ios
+    # Fix manual focus, document not scrollup issue on ios
     $timeout (->
       $(window).scrollTop(1000)
     ), 400

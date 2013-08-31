@@ -1,12 +1,16 @@
 app.controller 'OutsideViewCtrl',
-['$scope', 'MpProjects', 'TheMap', 'TheProject', 'MpChatbox',
-( $scope,   MpProjects,   TheMap,   TheProject,   MpChatbox) ->
+['$scope', 'MpChatbox', 'MpUser',
+( $scope,   MpChatbox,   MpUser) ->
+
+  MpChatbox.destroy()
 
   @hideHomepage      = false
   @workplaceScrollup = false
   @showChat          = false
 
-  MpChatbox.destroy()
+  @loginWithFacebook = ->
+    MpUser.login('/mobile/dashboard')
+    $scope.interface.showUserSection = false
 
   return
 ]

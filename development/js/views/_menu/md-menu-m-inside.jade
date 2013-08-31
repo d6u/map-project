@@ -1,0 +1,15 @@
+//- Container: section.ly-pusher-side > .md-menu(md-menu)
+header.md-menu-header
+  img.md-menu-header-user-picture(ng-src="{{MpUser.fb_user_picture()}}")
+  span.md-menu-header-user-name {{MpUser.name()}}
+
+ol.md-menu-actions
+  li.md-menu-actions-item
+    a(href="", ng-click="insideViewCtrl.createNewProject()") Create a new map
+  li.md-menu-actions-item
+    a(href="", ng-click="insideViewCtrl.showDashboard()") All projects
+  li.md-menu-actions-item
+    a(href="", ng-click="insideViewCtrl.logout()") Logout
+
+ol.md-menu-notifications
+  li.md-menu-notifications-item

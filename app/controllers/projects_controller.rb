@@ -49,10 +49,10 @@ class ProjectsController < ApplicationController
   end
 
 
+  # POST
   def create
-    project = Project.new params.require(:project).permit(:title, :notes)
-    @user.projects << project
-    render :json => project
+    @project = Project.new params.require(:project).permit(:title, :notes)
+    @user.projects << @project
   end
 
 
