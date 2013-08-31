@@ -2,6 +2,11 @@
   padding: 20px 80px;
   margin-bottom: 0;
   list-style-type: none;
+  .md-project {
+    &::after {
+      display: none;
+    }
+  }
 }
 
 .md-projects-item {
@@ -12,7 +17,7 @@
 }
 
 .md-projects-create {
-  height: 300px;
+  height: 257px;
   background-color: $cloud;
   position: relative;
   a {
@@ -30,24 +35,5 @@
     left: 50%;
     -webkit-transform: translate(-50%, -50%);
     font-size: 32px;
-  }
-}
-
-.md-projects-item-minimap {
-  height: 200px;
-}
-
-.md-projects-item-header {
-  a {
-    display: block;
-    padding: 7px 10px;
-    line-height: 20px;
-    font-size: 16px;
-    color: white;
-    background-color: $blue;
-    &:hover {
-      background-color: $blueDark;
-      text-decoration: none;
-    }
   }
 }

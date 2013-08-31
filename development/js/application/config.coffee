@@ -41,6 +41,18 @@ app.config(['MpChatboxProvider', '$httpProvider', '$routeSegmentProvider',
     controllerAs: 'outsideViewCtrl'
     resolve:
       MpInitializer: 'MpInitializer'
+      # action filter
+      redirect_to_inside_if_login: ['MpInitializer', 'MpUser', '$location', '$q', '$timeout', (MpInitializer, MpUser, $location, $q, $timeout) ->
+
+        deferred = $q.defer()
+        MpInitializer.then ->
+          if MpUser.checkLogin()
+            $location.path('/dashboard')
+          # Resolve after redirection
+          $timeout ->
+            deferred.resolve()
+        return deferred.promise
+      ]
   })
 
   # in
@@ -50,6 +62,18 @@ app.config(['MpChatboxProvider', '$httpProvider', '$routeSegmentProvider',
     controllerAs: 'insideViewCtrl'
     resolve:
       MpInitializer: 'MpInitializer'
+      # action filter
+      redirect_to_outside_if_not_login: ['MpInitializer', 'MpUser', '$location', '$q', '$timeout', (MpInitializer, MpUser, $location, $q, $timeout) ->
+
+        deferred = $q.defer()
+        MpInitializer.then ->
+          if !MpUser.checkLogin()
+            $location.path('/')
+          # Resolve after redirection
+          $timeout ->
+            deferred.resolve()
+        return deferred.promise
+      ]
   })
   .within('in')
 
