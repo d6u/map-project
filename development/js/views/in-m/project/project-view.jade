@@ -29,7 +29,8 @@
             img(ng-src="/img/blue-marker-3d.png")
           .md-placelist-places-item-details
             .md-placelist-places-item-details-name {{place.name}}
-            address {{place.address}}
+            address
+              a(ng-href="{{mapCtrl.xUrlCallbackLink(place.address)}}") {{place.address}}
             p {{place.notes}}
 
     //- Bottom - toolbar

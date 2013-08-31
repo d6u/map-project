@@ -104,6 +104,11 @@ app.controller 'MapCtrl',
     @placePredictions = []
     helper.cleanPreviousplacesServiceResults()
 
+  # Generate x-url-callback link for rediction to map app in iOS
+  # http://maps.apple.com/?daddr=San+Francisco,+CA&saddr=cupertino
+  @xUrlCallbackLink = (address) ->
+    return "http://maps.apple.com/?q=#{address}"
+
   # Watcher
   # ----------------------------------------
   # watch for marked places and make marker for them
