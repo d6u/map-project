@@ -1,0 +1,25 @@
+.md-dashboard {
+  height: 100%;
+
+  overflow-y: scroll;
+  -webkit-overflow-scrolling: touch;
+}
+
+.md-dashboard-projects {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.md-dashboard-projects-item {
+  &:first-child {
+    margin-top: 45px;
+  }
+}
+
+// Buttons on top
+.md-dashboard-navbar {
+  height: 45px;
+  background-color: $blue;
+  opacity: .8;
+}

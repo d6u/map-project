@@ -23,7 +23,7 @@
 }
 
 .mp-create-account-promot {
-    @extend %transition;
+    @include transition();
     position: absolute;
     top: -200px;
     left: 10px;

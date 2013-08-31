@@ -8,11 +8,6 @@ app = angular.module('mapApp', [
   'restangular',
 
   # Self made modules
-  'angular-perfect-scrollbar',
-  'angular-bootstrap',
-  'angular-jquery-ui',
-  'mini-typeahead',
-  'md-tabset',
 
   # Application modules that have to run before `.config`
   'mp-chatbox-provider'
@@ -30,43 +25,67 @@ app.config(['MpChatboxProvider', '$httpProvider', '$routeSegmentProvider',
   $routeSegmentProvider.options.autoLoadTemplates = true
 
   $routeSegmentProvider
-  .when('/',                    'ot')
-  .when('/dashboard',           'in.dashboard')
-  .when('/project/:project_id', 'in.project')
+  .when('/mobile',                     'ot')
+  .when('/mobile/dashboard',           'in.dashboard')
+  .when('/mobile/project/:project_id', 'in.project')
 
   # ot
   .segment('ot', {
-    templateUrl:  '/scripts/views/ot/outside-view.html'
+    templateUrl:  '/scripts/views/ot-m/outside-view.html'
     controller:   'OutsideViewCtrl'
     controllerAs: 'outsideViewCtrl'
     resolve:
       MpInitializer: 'MpInitializer'
+      # action filter
+      redirect_to_inside_if_login: ['MpInitializer', 'MpUser', '$location', '$q', '$timeout', (MpInitializer, MpUser, $location, $q, $timeout) ->
+
+        deferred = $q.defer()
+        MpInitializer.then ->
+          if MpUser.checkLogin()
+            $location.path('/mobile/dashboard')
+          # Resolve after redirection
+          $timeout ->
+            deferred.resolve()
+        return deferred.promise
+      ]
   })
 
   # in
   .segment('in', {
-    templateUrl:  '/scripts/views/in/inside-view.html'
+    templateUrl:  '/scripts/views/in-m/inside-view.html'
     controller:   'InsideViewCtrl'
     controllerAs: 'insideViewCtrl'
     resolve:
       MpInitializer: 'MpInitializer'
+      # action filter
+      redirect_to_outside_if_not_login: ['MpInitializer', 'MpUser', '$location', '$q', '$timeout', (MpInitializer, MpUser, $location, $q, $timeout) ->
+
+        deferred = $q.defer()
+        MpInitializer.then ->
+          if !MpUser.checkLogin()
+            $location.path('/mobile')
+          # Resolve after redirection
+          $timeout ->
+            deferred.resolve()
+        return deferred.promise
+      ]
   })
   .within('in')
 
     .segment('dashboard', {
-      templateUrl:  '/scripts/views/in/dashboard/dashboard-view.html'
+      templateUrl:  '/scripts/views/in-m/dashboard/dashboard-view.html'
       controller:   'DashboardViewCtrl'
       controllerAs: 'dashboardViewCtrl'
     })
 
     .segment('project', {
-      templateUrl:  '/scripts/views/in/project/project-view.html'
+      templateUrl:  '/scripts/views/in-m/project/project-view.html'
       controller:   'ProjectViewCtrl'
       controllerAs: 'projectViewCtrl'
     })
 
   # otherwise
-  $routeProvider.otherwise({redirectTo: '/'})
+  $routeProvider.otherwise({redirectTo: '/mobile'})
 
   $locationProvider.html5Mode(true)
 

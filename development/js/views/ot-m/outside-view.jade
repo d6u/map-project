@@ -1,0 +1,97 @@
+//- Container: .ly-application
+.ly-pusher(ng-class="{'ly-pusher-pushed': interface.showUserSection}")
+
+  //- Menu
+  section.ly-pusher-side
+    .md-menu(md-menu)
+
+  //- Body
+  section.ly-pusher-content
+
+    //- Workplace
+    .ly-workplace
+
+      .ly-workplace-map(ng-controller="MapCtrl as mapCtrl", ng-class="{'ly-workplace-map-scrollup': outsideViewCtrl.workplaceScrollup}")
+        //- Top
+        .ly-workplace-map-top
+          .ly-workplace-map-canvas(mp-map-canvas="")
+
+          //- Searchbox
+          .ly-workplace-map-searchbox.md-searchbox
+            //- Searchbox - inputgroup
+            .md-searchbox-inputgroup
+              a.md-searchbox-inputgroup-button(href="", ng-click="outsideViewCtrl.workplaceScrollup = true")
+                i.icon-angle-down
+              input.md-searchbox-inputgroup-input.form-control.cp-input-naked(type="text", placeholder="Search place", ng-model="mapCtrl.searchboxInput", md-searchbox-input-m="", ng-change="mapCtrl.getQueryPredictions()")
+              a.md-searchbox-inputgroup-clearinput(href="", ng-show="mapCtrl.searchboxInput.length || mapCtrl.placesServiceResults", ng-click="mapCtrl.clearSearchResults()")
+                i.icon-remove
+
+            //- Searchbox - result
+            ol.md-searchbox-results
+              li.md-searchbox-results-item(ng-repeat="prediction in mapCtrl.placePredictions")
+                a.md-searchbox-results-item-link(href="", ng-click="mapCtrl.queryPlacesService(prediction.description)") {{prediction.description}}
+
+        //- Bottom
+        .ly-workplace-map-bottom.md-placelist(ng-controller="PlacelistCtrl as placelistCtrl")
+          //- Bottom - places
+          .ly-workplace-map-placelist
+            ol.md-placelist-places
+              li.md-placelist-places-item(ng-repeat="place in mapCtrl.theProject.places")
+                a.md-placelist-places-item-image(href="", ng-click="placelistCtrl.showPlaceOnMap(place)")
+                  img(ng-src="/img/blue-marker-3d.png")
+                .md-placelist-places-item-details
+                  .md-placelist-places-item-details-name {{place.name}}
+                  address
+                    a(ng-href="{{mapCtrl.xUrlCallbackLink(place.address)}}") {{place.address}}
+                  p {{place.notes}}
+
+          //- Bottom - toolbar
+          .ly-workplace-map-toolbar.md-placelist-toolbar
+            a.md-placelist-toolbar-button(href="", ng-click="outsideViewCtrl.workplaceScrollup = false")
+              i.icon-angle-up
+              | Back
+            a.md-placelist-toolbar-button(href="", ng-click="placelistCtrl.displayAllMarkers()")
+              i.icon-fullscreen
+              | Map all
+            a.md-placelist-toolbar-button(href="", ng-click="placelistCtrl.showEditProjectDetailForm()")
+              i.icon-pencil
+              | Edit project
+            a.md-placelist-toolbar-button(href="", ng-click="placelistCtrl.focusSearchboxInput()")
+              i.icon-plus
+              | Add place
+
+          //- Bottom - edit project detail modal
+          .md-modal.md-effect-3(md-edit-project="")
+          .md-overlay
+
+      //- Chat
+      .ly-workplace-chat(ng-class="{'ly-workplace-chat-show': outsideViewCtrl.showChat}")
+
+      //- Overlay button
+      .ly-workplace-buttons(ng-show="outsideViewCtrl.hideHomepage")
+        .ly-workplace-buttons-left
+          a.cp-input-square-button(href="", ng-click="interface.showUserSection = true")
+            i.icon-reorder
+        .ly-workplace-buttons-right
+          a.cp-input-square-button(href="", ng-click="outsideViewCtrl.showChat = !outsideViewCtrl.showChat")
+            i.icon-comments-alt
+
+    //- Homepage
+    .md-homepage(ng-hide="outsideViewCtrl.hideHomepage")
+      header.md-homepage-header
+        a.btn.btn-primary(href="", ng-click="MpUser.login('/mobile/dashboard')") Login with Facebook
+        a(href="", ng-click="interface.showUserSection = true") Login/Register
+
+      .container
+        .md-homepage-body
+          h1.md-homepage-h1 Why create a travel plan with friends is so hard?
+          h4
+            | Not any more!&nbsp;
+            a.md-homepage-linktoreason(href="") Why is that?
+          .md-homepage-start
+            a.btn.btn-success(ng-click="outsideViewCtrl.hideHomepage = true") Give a try
+
+        .md-homepage-intro
+          .md-homepage-intro-bg
+
+  .ly-pusher-overlay(ng-click="interface.showUserSection = false")

@@ -1,0 +1,80 @@
+.md-placelist {
+
+}
+
+// Places
+.md-placelist-places {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  height: 100%;
+
+  overflow-y: scroll;
+  -webkit-overflow-scrolling: touch;
+}
+
+.md-placelist-places-item {
+  overflow: hidden;
+  &:first-child {
+    margin-top: 45px;
+  }
+}
+
+.md-placelist-places-item-image {
+  float: left;
+  display: block;
+  height: 50px;
+  width: 50px;
+  text-align: center;
+  img {
+    height: 30px;
+    margin: 10px;
+  }
+}
+
+.md-placelist-places-item-details {
+  overflow: hidden;
+  margin-top: 8px;
+  address {
+    color: $gray4;
+    margin: 0;
+    a {
+      color: inherit;
+      &:hover {
+        text-decoration: none;
+      }
+    }
+  }
+}
+
+.md-placelist-places-item-details-name {
+  font-size: 18px;
+  line-height: 1.1;
+  font-weight: bold;
+}
+
+// Toolbar
+.md-placelist-toolbar {
+  @include display-flex();
+  background-color: $blue;
+}
+
+.md-placelist-toolbar-button {
+  height: 45px;
+  padding-top: 5px;
+  color: white;
+  @include flex-grow(1);
+  display: block;
+  text-align: center;
+  &:hover {
+    color: white;
+    text-decoration: none;
+    background-color: $blueDark;
+  }
+
+  i {
+    font-size: 18px;
+    text-align: center;
+    display: block;
+  }
+}

@@ -1,0 +1,71 @@
+.md-menu {
+  position: relative;
+  height: 100%;
+  width: 100%;
+  background-color: $gray6;
+  color: white;
+
+  overflow-y: scroll;
+  -webkit-overflow-scrolling: touch;
+}
+
+// Header
+.md-menu-header {
+  margin: 10px;
+  font-size: 18px;
+  text-align: center;
+}
+
+.md-menu-header-user-picture {
+  height: 50px;
+  width: 50px;
+  margin: 0 auto;
+  display: block;
+  border-radius: 4px;
+  box-shadow: 0 0 0 2px white;
+  margin-bottom: 10px;
+}
+
+.md-menu-header-user-name {
+}
+
+// Outside
+.md-menu-login-prompt {
+  margin: 10px;
+  a {
+    display: block;
+  }
+}
+
+// Inside
+.md-menu-actions {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  border-top: 1px solid white;
+}
+
+.md-menu-actions-item {
+  border-bottom: 1px solid white;
+  a {
+    height: 45px;
+    line-height: 45px;
+    font-size: 18px;
+    text-indent: 10px;
+    display: block;
+    color: white;
+    background-color: $gray5;
+    &:hover {
+      background-color: $gray4;
+      color: white;
+      text-decoration: none;
+    }
+  }
+}
+
+// Notifications
+.md-menu-notifications {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}

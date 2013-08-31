@@ -1,0 +1,5 @@
+app.controller 'ProjectViewCtrl',
+[->
+
+  return
+]
