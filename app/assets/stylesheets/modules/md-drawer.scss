@@ -66,10 +66,11 @@
   width: 100%;
   background-color: white;
 
-  .mp-halfscreen-left,
-  .mp-halfscreen-right
+  .ly-halfscreen-left,
+  .ly-halfscreen-right
   {
     position: relative;
+    height: 100%;
     overflow: hidden;
   }
 

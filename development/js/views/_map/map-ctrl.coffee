@@ -1,177 +1,132 @@
 app.controller 'MapCtrl',
-['$scope', 'TheProject', 'TheMap', '$routeSegment',
-( $scope,   TheProject,   TheMap,   $routeSegment) ->
+['$scope', 'TheProject', '$routeSegment', 'mpTemplateCache', '$compile',
+( $scope,   TheProject,   $routeSegment,   mpTemplateCache,   $compile) ->
 
-  # TODO: bind to mapCtrl
-  if $routeSegment.startsWith('ot')
-    @theProject = new TheProject()
-  else
-    @theProject = new TheProject(Number($routeSegment.$routeParams.project_id))
+  # Helper methods
+  self   = this # used for deep nested callbacks and inside helper
+  helper = {
+    cleanPreviousplacesServiceResults: ->
+      for result in self.placesServiceResults
+        result.$$marker.setMap null
+      self.placesServiceResults = []
 
-  theProject        = @theProject
-  $scope.TheProject = @theProject
-  $scope.TheMap     = TheMap
+    addplacesServiceResultsToMap: ->
+      if self.placesServiceResults.length
+        places = self.placesServiceResults
+        bounds = new google.maps.LatLngBounds()
+        animation = if places.length == 1 then google.maps.Animation.DROP else null
+        _.forEach places, (place) ->
+          markerOptions =
+            map:       self.googleMap
+            title:     place.name
+            position:  place.geometry.location
+            animation: animation
+          place.$$marker = new google.maps.Marker markerOptions
+          place.notes    = null
+          place.address  = place.formatted_address
+          place.coord    = place.geometry.location.toString()
+          bounds.extend place.$$marker.getPosition()
+          helper.bindInfoWindow(place)
 
+        self.googleMap.fitBounds bounds
+        self.googleMap.setZoom(11) if places.length < 3
 
-  # Callback functions
-  # ----------------------------------------
-  ###
-  Toggle directions between places
-  Google API Doc https://developers.google.com/maps/documentation/javascript/directions#DirectionsRequests
-
-  Request object
-  {
-    origin (required): LatLng | String,
-    destination (required): LatLng | String,
-    travelMode (required): TravelMode,
-      # google.maps.TravelMode.DRIVING
-      # google.maps.TravelMode.BICYCLING
-      # google.maps.TravelMode.TRANSIT
-      # google.maps.TravelMode.WALKING
-    transitOptions: TransitOptions,
-      # Options for TRANSIT travel mode
-    unitSystem: UnitSystem,
-    durationInTraffic: Boolean,
-    waypoints[]: DirectionsWaypoint,
-      # location
-      # stopover (bool)
-    optimizeWaypoints: Boolean,
-    provideRouteAlternatives: Boolean,
-    avoidHighways: Boolean,
-    avoidTolls: Boolean
-    region: String
+    bindInfoWindow: (place) ->
+      google.maps.event.addListener place.$$marker, 'click', ->
+        mpTemplateCache.get('/scripts/views/_map/marker-info.html').then (template) ->
+          newScope = $scope.$new()
+          newScope.place = place
+          compiled = $compile(template)(newScope)
+          self.infoWindow.setContent compiled[0]
+          google.maps.event.clearListeners self.infoWindow, 'closeclick'
+          google.maps.event.addListenerOnce self.infoWindow, 'closeclick', ->
+            newScope.$destroy()
+          self.infoWindow.open self.googleMap, place.$$marker
   }
-  ###
-  renderDirections = ->
-    clearDirections()
-    places = $scope.mapCtrl.theProject.places
-    return if places.length < 2
-    requestObj = {
-      travelMode: google.maps.TravelMode.DRIVING
-      waypoints:  []
-    }
-    for place, idx in places
-      if idx > 0 && idx < (places.length - 1)
-        waypointObj = {
-          location: place.$$marker.getPosition()
-          stopover: true
-        }
-        requestObj.waypoints.push(waypointObj)
-      else if idx == 0
-        requestObj.origin = place.$$marker.getPosition()
-      else
-        requestObj.destination = place.$$marker.getPosition()
-    # Send request
-    TheMap.directionsService.route requestObj, (result, status) =>
-      if status == google.maps.DirectionsStatus.OK
-        ###
-        Renderer options
-        https://developers.google.com/maps/documentation/javascript/reference#DirectionsRendererOptions
-        {
-          directions:             DirectionsResult
-          draggable:              bool
-          hideRouteList:          bool
-          infoWindow:             InfoWindow
-          map:                    Map
-          markerOptions:          MarkerOptions
-          panel:                  DOM Node
-          polylineOptions:        PolylineOptions
-          preserveViewport:       bool (false)
-          routeIndex:             number
-          suppressBicyclingLayer: bool
-          suppressInfoWindows:    bool
-          suppressMarkers:        bool
-          suppressPolylines:      bool
-        }
 
-        PolylineOptions
-        https://developers.google.com/maps/documentation/javascript/reference#PolylineOptions
-        {
-          clickable:     bool
-          draggable:     bool
-          editable:      bool
-          geodesic:      bool
-          icons:         Array <IconSequence>
-          map:           Map
-          path:          coordinates Array
-          strokeColor:   string <CSS Color>
-          strokeOpacity: number
-          strokeWeight:  number
-          visible:       bool
-          zIndex:        number
-        }
-        ###
-        TheMap.directionsRenderer.setMap(TheMap.map) if !TheMap.directionsRenderer.getMap()
-        TheMap.directionsRenderer.setDirections(result)
-        # Map the route leg data to places object, so it can be displayed in places list and infoWindow
-        $scope.$apply =>
-          for leg, idx in result.routes[0].legs
-            $scope.mapCtrl.theProject.places[idx].$$leg = leg
+  # Map service
+  @theProject = if $routeSegment.startsWith('ot') then new TheProject() else new TheProject(Number($routeSegment.$routeParams.project_id))
+  @autocompleteService  = new google.maps.places.AutocompleteService()
+  @placePredictions     = []
+  @placesService        = undefined # placeholder
+  @placesServiceResults = []
+  @infoWindow           = new google.maps.InfoWindow()
+  @directionsService    = new google.maps.DirectionsService()
+  @directionsRenderer   = new google.maps.DirectionsRenderer({
+    polylineOptions:
+      strokeColor: '977ADC'
+      strokeOpacity: 1
+      strokeWeight: 5
+    suppressMarkers: true
+    suppressInfoWindows: true
+  })
 
-
-  clearDirections = ->
-    for place in $scope.mapCtrl.theProject.places
-      delete place.$$leg
-    TheMap.directionsRenderer.setMap(null) if TheMap.directionsRenderer.getMap()
-
-
-  @addPlaceToList = (place) ->
-    $scope.TheMap.searchResults = _.without $scope.TheMap.searchResults, place
-    $scope.TheProject.addPlace(place)
-
-  @showDirections = false
-
-  @toggleDirections = ->
-    @showDirections = !@showDirections
-    if @showDirections
-      renderDirections()
-    else
-      clearDirections()
-
-
-  # Watch places list changes
+  # Map API
   # ----------------------------------------
-  # TheMap.searchResults, add marker for each result
-  $scope.$watch (->
-    return _.pluck TheMap.searchResults, 'id'
-  ), ((newVal, oldVal) ->
-    TheMap.__searchResults.forEach (place) ->
-      place.$$marker.setMap null
-    if newVal.length == 0
-      TheMap.__searchResults = _.clone TheMap.searchResults
-      return
-      # --- END ---
+  # show input predictions
+  @getQueryPredictions = ->
+    if @searchboxInput.length
+      autocompleteServiceRequest = {
+        bounds: self.googleMap.getBounds()
+        input:  @searchboxInput
+      }
+      @autocompleteService.getQueryPredictions autocompleteServiceRequest, (predictions, serviceStatus) ->
+        $scope.$apply ->
+          self.placePredictions = predictions
+    else
+      @placePredictions = []
 
-    # new searchResults entered
-    places = TheMap.searchResults
-    bounds = new google.maps.LatLngBounds()
-    animation = if places.length == 1 then google.maps.Animation.DROP else null
-    _.forEach places, (place) ->
-      markerOptions =
-        map:       TheMap.map
-        title:     place.name
-        position:  place.geometry.location
-        animation: animation
-      place.$$marker = new google.maps.Marker markerOptions
-      place.notes    = null
-      place.address  = place.formatted_address
-      place.coord    = place.geometry.location.toString()
-      bounds.extend place.$$marker.getPosition()
-      TheMap.bindInfoWindow(place, $scope)
+  # search places and pin on map
+  @queryPlacesService = (searchTerm) ->
+    @searchboxInput = searchTerm if searchTerm
+    if @searchboxInput.length
+      # address issue that map init after mapCtrl
+      @placesService = new google.maps.places.PlacesService(@googleMap) if !@placesService
 
-    TheMap.__searchResults = _.clone TheMap.searchResults
-    TheMap.map.fitBounds bounds
-    TheMap.map.setZoom(11) if places.length < 3
-  ), true
+      searchRequest = {
+        bounds: @googleMap.getBounds()
+        query:  @searchboxInput
+      }
+      @placesService.textSearch searchRequest, (placesServiceResults, serviceStatus) ->
+        $scope.$apply ->
+          helper.cleanPreviousplacesServiceResults()
+          self.placesServiceResults = placesServiceResults[0..9]
+          self.placePredictions = []
+          helper.addplacesServiceResultsToMap()
+      # close the drop list
+      self.placePredictions = []
 
+  # add place to saved place list
+  @addPlaceToList = (place) ->
+    @placesServiceResults = _.without @placesServiceResults, place
+    @theProject.addPlace(place)
 
+  @setMapCenter = (location) ->
+    @googleMap.setCenter(location)
+
+  @setMapBounds = (bounds) ->
+    @googleMap.fitBounds(bounds)
+
+  # clear search results, predicitons, search box input
+  @clearSearchResults = ->
+    @searchboxInput = ""
+    @placePredictions = []
+    helper.cleanPreviousplacesServiceResults()
+
+  # Generate x-url-callback link for rediction to map app in iOS
+  # http://maps.apple.com/?daddr=San+Francisco,+CA&saddr=cupertino
+  @xUrlCallbackLink = (address) ->
+    return "http://maps.apple.com/?q=#{address}"
+
+  # Watcher
+  # ----------------------------------------
   # watch for marked places and make marker for them
   $scope.$watch (=>
     return _.pluck(@theProject.places, 'id')
   ), ((newVal, oldVal) =>
     if newVal
       # re-render marker for each places
-      _.forEach @theProject.places, (place, idx) ->
+      _.forEach @theProject.places, (place, idx) =>
         # $$saved is used to hide infoWindow add place button
         place.$$saved = true
         if place.$$marker
@@ -183,19 +138,18 @@ app.controller 'MapCtrl',
           coordMatch = /\((.+), (.+)\)/.exec place.coord
           latLog = new google.maps.LatLng coordMatch[1], coordMatch[2]
         markerOptions =
-          map: TheMap.map
-          title: place.name
+          map:      @googleMap
+          title:    place.name
           position: latLog
           icon:
             url: "/img/blue-marker-3d.png"
         place.$$marker = new google.maps.Marker markerOptions
-        TheMap.bindInfoWindow(place, $scope)
+        helper.bindInfoWindow(place)
 
       # re-render directions if showDirections == true
-      if @showDirections
-        renderDirections()
+      # if @showDirections
+      #   renderDirections()
   ), true
-
 
   # Return
   return

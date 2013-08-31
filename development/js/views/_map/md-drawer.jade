@@ -8,8 +8,8 @@
         i.icon-user
       button.cp-input-btn.btn.btn-default(ng-click="drawerCtrl.toggleDrawer()", ng-hide="!outsideViewCtrl.hideHomepage")
         | {{drawerCtrl.toggleDrawerButtonText}}
-      input.cp-input-naked.form-control(type="text", placeholder="Type a place to start", mp-map-searchbox="", mini-typeahead="typeaheadOptions", mini-typeahead-list="placePredictions", ng-model="searchbox.input", ng-change="hideHomepage(); getAutoComplete()")
-      button.cp-input-btn.btn.btn-primary(type="button", ng-click="showSearchResults()")
+      input.cp-input-naked.form-control(type="text", placeholder="Search place", mp-map-searchbox="", mini-typeahead="mpMapSearchboxCtrl.typeaheadOptions", mini-typeahead-list="mapCtrl.placePredictions", ng-model="mapCtrl.searchboxInput", ng-change="mpMapSearchboxCtrl.hideHomepage(); mapCtrl.getQueryPredictions()")
+      button.cp-input-btn.btn.btn-primary(type="button", ng-click="mapCtrl.queryPlacesService()")
         | Search
 
   //- Actions to marked places list
@@ -17,7 +17,7 @@
     button.cp-input-btn.btn.btn-default(ng-click="mapCtrl.toggleDirections()")
       i.icon-code-fork
       |  Toggle directions
-    button.cp-input-btn.btn.btn-default
+    button.cp-input-btn.btn.btn-default(ng-click="drawerCtrl.displayAllMarkers()")
       i.icon-fullscreen
       |  Display all markers
     button.cp-input-btn.btn.btn-default(ng-click="drawerCtrl.toggleEditProject()")
@@ -28,14 +28,15 @@
 //- Body
 .md-drawer-body
   //- Search
-  .mp-halfscreen-left(perfect-scrollbar="TheMap.searchResults.length")
+  .ly-halfscreen-left(perfect-scrollbar="mapCtrl.placesServiceResults.length")
     .md-drawer-body-subsetion
       header.md-drawer-list-header.lead
         | Showing {{TheMap.searchResults.length}} search results
+
       ul.md-places
-        li.md-places-item.clearfix(ng-repeat="place in TheMap.searchResults")
+        li.md-places-item.clearfix(ng-repeat="place in mapCtrl.placesServiceResults")
           .md-places-item-image
-            a(href="", ng-click="TheMap.centerPlaceInMap(place.$$marker.getPosition())")
+            a(href="", ng-click="drawerCtrl.showPlaceOnMap(place)")
               img(ng-src="{{place.icon}}")
           .md-places-item-actions
             a(href="", ng-click="mapCtrl.addPlaceToList(place)")
@@ -45,19 +46,19 @@
             address {{place.formatted_address}}
 
   //- Project
-  .mp-halfscreen-right(perfect-scrollbar="TheProject.places.length", ng-class="{'md-drawer-show-edit-project-subsection': drawerCtrl.showEditProjectSubsection}")
+  .ly-halfscreen-right(perfect-scrollbar="mapCtrl.theProject.places.length", ng-class="{'md-drawer-show-edit-project-subsection': drawerCtrl.showEditProjectSubsection}")
 
     .md-drawer-body-subsetion#md-drawer-body-subsetion-places
       header.md-drawer-list-header.lead {{drawerCtrl.getProjectTitle()}}
 
       ul.md-places
         //- Item - place
-        li.md-places-item(ng-repeat-start="place in TheProject.places", sidebar-place="sidebar-place")
+        li.md-places-item(ng-repeat-start="place in mapCtrl.theProject.places", sidebar-place="sidebar-place")
           .md-places-item-image
-            a(href="", ng-click="TheMap.centerPlaceInMap(place.$$marker.getPosition())")
+            a(href="", ng-click="drawerCtrl.showPlaceOnMap(place)")
               img(ng-src="/img/blue-marker-3d.png")
           .md-places-item-actions
-            a(href="", ng-click="TheProject.removePlace(place)")
+            a(href="", ng-click="mapCtrl.theProject.removePlace(place)")
               i.icon-remove
           .md-places-item-details
             .md-places-item-name {{place.name}}
