@@ -3,8 +3,8 @@ require 'net/http'
 
 class User < ActiveRecord::Base
 
-  APP_ID       = 580227458695144
-  APP_SECRET   = 'f4977efd531a4f5ebb2ceb678646f0ab'
+  APP_ID       = $api_keys['facebook']['app_id']
+  APP_SECRET   = $api_keys['facebook']['app_secret']
 
 
   has_many :projects,    :foreign_key => 'owner_id'

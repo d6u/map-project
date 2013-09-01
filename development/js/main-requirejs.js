@@ -12,7 +12,7 @@ require.config({
       exports: 'FB',
       init: function() {
         this.FB.init({
-          appId      : '580227458695144',
+          appId      : fbAppId,
           channelUrl : location.origin + '/fb_channel.html',
           status     : true,
           cookie     : true,

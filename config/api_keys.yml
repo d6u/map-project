@@ -1,0 +1,16 @@
+development:
+  facebook:
+    app_id:     580227458695144
+    app_secret: f4977efd531a4f5ebb2ceb678646f0ab
+
+  google:
+    browser_app_key: AIzaSyAGJjfEZSf93ey42aqJDIVuOVaLnpUUzWs
+
+# ----------
+production:
+  facebook:
+    app_id:     153060941567545
+    app_secret: f41e82a1be4342b6154972013e5a543c
+
+  google:
+    browser_app_key: AIzaSyBwzcilVIyUPdNaabtXbIdeqVgAcsxb55o
