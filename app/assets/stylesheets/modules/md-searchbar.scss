@@ -3,6 +3,10 @@
   @include display-flex();
 
   position: relative;
+  left: 50%;
+  &.md-searchbar-normal {
+    left: 0;
+  }
 
   input[type="text"] {
     @include flex-grow(1);
@@ -15,31 +19,11 @@
       color: white;
     }
   }
-
-  &.md-homepage-centered {
-    left: 50%;
-    top: -100px !important;
-  }
 }
-
-.md-drawer {
-  .md-searchbar {
-    top: -54px;
-  }
-
-  &.md-drawer-show {
-    .md-searchbar {
-      top: 0;
-    }
-  }
-}
-
 
 // Smaller screen
 $max-width: 433px; // 433px is where homepage h1 becomes three line
 
 @media screen and (max-width: $max-width) {
-  .md-searchbar.md-homepage-centered {
-    top: -55px !important;
-  }
+
 }

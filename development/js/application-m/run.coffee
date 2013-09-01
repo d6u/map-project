@@ -1,6 +1,5 @@
 # run
-app.run(['$rootScope', '$route',
-($rootScope, $route) ->
+app.run(['$rootScope', ($rootScope) ->
 
   # Values used to assign classes
   $rootScope.interface = {

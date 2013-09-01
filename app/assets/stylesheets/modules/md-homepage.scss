@@ -56,8 +56,23 @@
   margin-top: 20px;
 }
 
+// Only show on desktop
+.md-homepage-guide {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  left: 0;
+  height: 85px;
+  background-color: rgba(0,0,0,.5);
+}
+
+.md-homepage-guide-title {
+  text-align: center;
+}
+
 
 // Smaller screen
+// ----------------------------------------
 $max-width: 433px; // 433px is where homepage h1 becomes three line
 
 @media screen and (max-width: $max-width) {

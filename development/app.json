@@ -4,7 +4,6 @@
     "targetFolder": "app/assets/javascripts",
     "copy": [
       "main-requirejs.js",
-      "main-requirejs-m.js",
       "location-fallback.js"
     ],
     "concat": {
@@ -35,11 +34,11 @@
 
         "views/_map/map-ctrl.coffee",
         "views/_map/marker-info.coffee",
+        "views/_map/md-drawer.coffee",
         "views/_map/md-edit-project.coffee",
         "views/_map/mp-bottom-modalbox.coffee",
         "views/_map/mp-center-user-location.coffee",
         "views/_map/mp-map-canvas.coffee",
-        "views/_map/mp-map-drawer.coffee",
         "views/_map/mp-map-searchbox.coffee",
         "views/_map/marker-info.coffee",
 
@@ -47,7 +46,9 @@
         "views/_pusher-side/mp-tabs.coffee",
         "views/_pusher-side/mp-user-section-tabs.coffee",
         "views/_pusher-side/mp-user-section.coffee",
-        "views/_pusher-side/sidebar-place.coffee"
+        "views/_pusher-side/sidebar-place.coffee",
+
+        "views/_shared/mini-map-cover.coffee"
       ],
 
       "application-m.js": [
@@ -66,14 +67,16 @@
         "views/in-m",
         "views/ot-m",
 
-        "views/_map/map-ctrl-m.coffee",
+        "views/_map/map-ctrl.coffee",
         "views/_map/marker-info.coffee",
         "views/_map/mp-map-canvas.coffee",
         "views/_map/md-searchbox-input-m.coffee",
         "views/_map/placelist-ctrl-m.coffee",
         "views/_map/md-edit-project-m.coffee",
 
-        "views/_menu/md-menu-m.coffee"
+        "views/_menu/md-menu-m.coffee",
+
+        "views/_shared/mini-map-cover.coffee"
       ]
     }
   }

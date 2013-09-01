@@ -1,10 +1,16 @@
 app.controller 'InsideViewCtrl',
-['$scope', 'MpProjects', 'MpChatbox',
-( $scope,   MpProjects,   MpChatbox) ->
+['$scope', 'MpProjects', 'MpChatbox', '$location',
+( $scope,   MpProjects,   MpChatbox,   $location) ->
 
-  $scope.MpProjects = MpProjects
-  $scope.MpChatbox  = MpChatbox
+  @MpProjects = MpProjects
+  @MpChatbox  = MpChatbox
 
-  $scope.loadProjects = MpProjects.getProjects()
+  MpProjects.getProjects()
   MpChatbox.connect()
+
+  @createNewProject = ->
+    MpProjects.createProject().then (project) ->
+      $location.path('/project/' + project.id)
+
+  return
 ]

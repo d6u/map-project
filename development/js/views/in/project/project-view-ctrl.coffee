@@ -1,5 +1,8 @@
 app.controller 'ProjectViewCtrl',
-['$scope', '$location', '$routeParams', 'TheProject', 'Restangular', 'TheMap',
-( $scope,   $location,   $routeParams,   TheProject,   Restangular,   TheMap) ->
+['$scope', ($scope) ->
 
+  # FIXME: auto detect current template
+  $scope.outsideViewCtrl = {hideHomepage: true}
+
+  return
 ]

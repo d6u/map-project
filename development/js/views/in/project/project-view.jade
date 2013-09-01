@@ -1,7 +1,8 @@
-.mp-fullscreen(ng-controller="MapCtrl as mapCtrl")
+//- Container: section.ly-pusher-content(app-view-segment="1")
+.ly-fullscreen(ng-controller="MapCtrl as mapCtrl")
 
-  .md-drawer.clearfix(mp-map-drawer="mp-map-drawer", ng-class="{'md-drawer-maxmize': drawerCtrl.maxmize}")
-  .mp-fullscreen(mp-map-canvas="mp-map-canvas")
+  .md-drawer.clearfix(md-drawer="", ng-class="{'md-drawer-maxmize': drawerCtrl.maxmize}")
+  .ly-fullscreen-abs(mp-map-canvas="mp-map-canvas")
 
   .mp-chatbox-directive(ng-class="", mp-chatbox-directive="mp-chatbox-directive")
 

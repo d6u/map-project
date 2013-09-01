@@ -2,9 +2,8 @@ app.directive 'mdEditProject',
 ['$routeSegment',
 ( $routeSegment)->
 
-  templateUrl: (->
+  templateUrl: ->
     return if $routeSegment.startsWith('ot') then '/scripts/views/_map/md-edit-project-m-outside.html' else '/scripts/views/_map/md-edit-project-m-inside.html'
-  )()
   scope: true
   controllerAs: 'mdEditProjectCtrl'
   controller: ['$scope', '$element', 'MpProjects', '$location',
