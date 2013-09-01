@@ -8,18 +8,18 @@ app.directive 'mpProjectAddFriendsModal', [->
 
     @sendInvitations = ->
       selectedFriends = _.where $scope.MpChatbox.friends, '$$selected'
-      $scope.TheProject.addParticipatedUsers(selectedFriends).then ->
+      $scope.mapCtrl.theProject.addParticipatedUsers(selectedFriends).then ->
         for user in selectedFriends
-          $scope.MpChatbox.sendProjectAddUserNotice($scope.TheProject, user)
+          $scope.MpChatbox.sendProjectAddUserNotice($scope.mapCtrl.theProject, user)
 
     @getNotParticipatedUsers = ->
-      return _.filter $scope.MpChatbox.friends, (friend) ->
-        !_.find($scope.TheProject.participatedUsers, {id: friend.id})
+      return _.filter $scope.insideViewCtrl.MpChatbox.friends, (friend) ->
+        !_.find($scope.mapCtrl.theProject.participatedUsers, {id: friend.id})
 
     @projectRemoveUser = (user) ->
       user.$$selected = false
-      $scope.TheProject.removeParticipatedUser(user).then ->
-        $scope.MpChatbox.sendProjectRemoveUserNotice($scope.TheProject.project, user)
+      $scope.mapCtrl.theProject.removeParticipatedUser(user).then ->
+        $scope.insideViewCtrl.MpChatbox.sendProjectRemoveUserNotice($scope.mapCtrl.theProject.project, user)
 
 
     return
