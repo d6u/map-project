@@ -6,8 +6,7 @@ MpInitializer is in charge of init check of login status and attach REST
 ###
 
 app.factory 'MpInitializer',
-['$rootScope', '$q', 'MpUser', '$window', '$routeSegment', 'MpProjects', 'MpChatbox', '$timeout', '$route',
-( $rootScope,   $q,   MpUser,   $window,   $routeSegment,   MpProjects,   MpChatbox,   $timeout,   $route) ->
+['$rootScope', '$q', 'MpUser', ($rootScope, $q, MpUser) ->
 
   $rootScope.MpUser = MpUser
 
@@ -17,20 +16,26 @@ app.factory 'MpInitializer',
   # ----------------------------------------
   $.when(appPrepare.facebookLoginCheck, appPrepare.ipLocationCheck)
   .then (response, location) ->
-    # TODO: add location error handling
-    $window.userLocation = {
-      latitude:  location.geoplugin_latitude
-      longitude: location.geoplugin_longitude
-    }
 
-    if response.authResponse
-      MpUser.fbLoginCallback response.authResponse, ->
-        $timeout ->
+    $rootScope.$apply ->
+      # user location
+      if location.error
+        $rootScope.userLocation = {
+          latitude:   36.1000
+          longitude: -112.1000
+        }
+      else
+        $rootScope.userLocation = {
+          latitude:  location.geoplugin_latitude
+          longitude: location.geoplugin_longitude
+        }
+
+      # login
+      if response.authResponse
+        MpUser.fbLoginCallback response.authResponse, null, ->
           initiation.resolve()
-        return
-    else
-      MpUser.notLoggedIn ->
-        $timeout ->
+      else
+        MpUser.fbLogoutCallback null, ->
           initiation.resolve()
 
   # Return

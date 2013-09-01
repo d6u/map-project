@@ -3,7 +3,7 @@
 <h1>Map Project <a href=""><small>about this</small></a></h1>
 
 <p>
-  <a href="" class="btn btn-primary" ng-click="mpUserSection.fbLogin()">Login with Facebook</a>
+  <a href="" class="btn btn-primary" ng-click="outsideViewCtrl.loginWithFacebook()">Login with Facebook</a>
   <a href="" class="btn btn-default" ng-click="interface.showUserSection = false">Maybe later</a>
 </p>
 
@@ -20,7 +20,7 @@
       <label for="mp_user_section_input_password">Password</label>
       <input type="password" class="form-control" id="mp_user_section_input_password" placeholder="Password">
     </div>
-    <p class="help-block">Not have an account yet? <a href="" ng-click="fbLogin()">Login with Facebook</a> or <a href="" ng-click="mpUserSection.showEmailRegister()">register</a></p>
+    <p class="help-block">Not have an account yet? <a href="" ng-click="outsideViewCtrl.loginWithFacebook()">Login with Facebook</a> or <a href="" ng-click="mpUserSection.showEmailRegister()">register</a></p>
     <button class="btn btn-success">Login</button>
   </fieldset>
 </form>

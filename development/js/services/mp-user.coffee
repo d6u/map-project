@@ -1,76 +1,100 @@
 ###
-resolver - User
+MpUser
+
+--- API ---
+.login(path[, success][, error])
+  path:    can be a string or function. If function, result will be used in
+           $location.path(). If return value is a promise, then the promise
+           resolve value will be used for redirection
+  success: function will be called before redirection, if path is a function,
+           success will be called before path.
+  error:   called when login failed
+
+  success and error can be null
+
+.logout([path][, success])
+  path:    same as login method, besides, if null will rediction to '/'
+  success: same as login
+
+--- Low level helper ---
+.fbLoginCallback(authResponse, path, callback)
+  login call this method after checking with facebook
+
+  authResponse: same as facebook's authResponse
+  path:         passed from login method
+  callback:     login method pass success function to this method
+
+.fbLogoutCallback(path, callback)
+  logout call this method after logging out FB and server
+
+  path:     passed from logout method
+  callback: logout method pass success function to this method
 ###
-app.factory 'MpUser', ['$q', '$window', '$rootScope', 'Restangular', '$location',
-'$route', '$timeout',
-($q, $window, $rootScope, Restangular, $location, $route, $timeout) ->
+app.factory 'MpUser',
+['$q','$rootScope','Restangular','$location','$route','$timeout',
+( $q,  $rootScope,  Restangular,  $location,  $route,  $timeout) ->
 
   $users = Restangular.all 'users'
 
-  $users.addRestangularMethod 'login', 'post', 'login'
+  $users.addRestangularMethod 'login'   , 'post', 'login'
   $users.addRestangularMethod 'register', 'post', 'register'
-  $users.addRestangularMethod 'logout', 'get', 'logout'
+  $users.addRestangularMethod 'logout'  , 'get' , 'logout'
 
   MpUser = {
-    $$user: null
-    checkLogin: ->
-      return if (@$$user && @$$user.fb_access_token && @$$user.id) then true else false
-    getId: ->
-      return if @$$user then @$$user.id              else undefined
-    name: ->
-      return if @$$user then @$$user.name            else undefined
-    email: ->
-      return if @$$user then @$$user.email           else undefined
-    fb_user_picture: ->
-      return if @$$user then @$$user.fb_user_picture else undefined
-    getUser: ->
-      return {
-        id:              @getId()
-        name:            @name()
-        fb_user_picture: @fb_user_picture()
-      }
+    $$user: {}
+    login: (path, success, error) ->
+      FB.login (response) =>
+        $rootScope.$apply =>
+          if response.authResponse then @fbLoginCallback(response.authResponse, path, success) else @fbLogoutCallback(null, error)
 
-    fbLoginCallback: (authResponse, path) ->
-      MpUser.$$user =
+    logout: (path, success) ->
+      [fbLoggedOut, mpLoggedOut] = [$q.defer(), $q.defer()]
+
+      FB.logout -> $rootScope.$apply -> fbLoggedOut.resolve()
+      path = '/' if !path
+      @fbLogoutCallback path, -> mpLoggedOut.resolve()
+
+      $q.all([fbLoggedOut.promise, mpLoggedOut.promise]).then(success)
+
+    fbLoginCallback: (authResponse, path, callback) ->
+      fbUser = {
         fb_access_token: authResponse.accessToken
         fb_user_id:      authResponse.userID
+      }
 
-      $timeout -> # force $digest, fix Restangular 1.1.3 not auto resolving bug
-        $users.login(MpUser.$$user).then(
-          # login to server success
-          ((user) ->
-            MpUser.$$user = user
-            MpUser.pathHandler(path)
-            # update user in server
-            FB.api '/me', (response) ->
-              $rootScope.$apply ->
-                MpUser.$$user.name  = response.name
-                MpUser.$$user.email = response.email
-              MpUser.$$user.put()
-            FB.api '/me/picture', (response) ->
-              $rootScope.$apply ->
-                MpUser.$$user.fb_user_picture = response.data.url
-              MpUser.$$user.put()
-          ),
-          # login to server faild (401 not found), user authorized FB but not
-          #   existing in server, in which case user will be registed
-          ((response) ->
-            FB.api '/me', (response) ->
-              MpUser.$$user.name  = response.name
-              MpUser.$$user.email = response.email
-              # again, force $digest
-              $timeout ->
-                $users.register(MpUser.$$user).then (user) ->
-                  MpUser.$$user = user
-                  MpUser.pathHandler(path)
-                  # update user in server
-                  FB.api '/me/picture', (response) ->
-                    $rootScope.$apply ->
-                      MpUser.$$user.fb_user_picture = response.data.url
-                    MpUser.$$user.put()
-          )
-        )
+      $users.login(fbUser).then ((user) ->
+        # login to server success
+        MpUser.$$user = user
+        # callbacks
+        callback() if callback
+        MpUser.pathHandler(path) if path
+        # update user in server
+        FB.api '/me?fields=name,email,picture', (response) ->
+          $rootScope.$apply ->
+            MpUser.$$user.name            = response.name
+            MpUser.$$user.email           = response.email
+            MpUser.$$user.fb_user_picture = response.picture.data.url
+            MpUser.$$user.put()
+      ), (response) ->
+        # login to server faild (401 not found), user authorized FB but not
+        #   existing in server, in this case user will registe first
+        FB.api '/me?fields=name,email,picture', (response) ->
+          fbUser.name            = response.name
+          fbUser.email           = response.email
+          fbUser.fb_user_picture = response.picture.data.url
+          # force $digest
+          $rootScope.$apply ->
+            $users.register(fbUser).then (user) ->
+              MpUser.$$user = user
+              callback() if callback
+              MpUser.pathHandler(path) if path
     # --- END fbLoginCallback ---
+
+    fbLogoutCallback: (path, callback) ->
+      MpUser.$$user = {}
+      $users.logout().then ->
+        callback() if callback
+        MpUser.pathHandler(path) if path
 
     ###
     handle path callback in fbLoginCallback method
@@ -80,42 +104,42 @@ app.factory 'MpUser', ['$q', '$window', '$rootScope', 'Restangular', '$location'
       be used
     ###
     pathHandler: (path) ->
-      if path
-        if angular.isFunction(path)
-          result = path()
-          return if !result
-          if angular.isString(result)
-            $location.path(result)
-          else
-            result.then (finalPath) ->
-              $location.path(finalPath)
-        else $location.path(path)
-
-    notLoggedIn: (callback) ->
-      MpUser.$$user = null
-      $timeout -> # again, force $digest
-        $users.logout().then ->
-          $location.path '/'
-          callback() if callback
-
-    ###
-    path    (string|function): a path to redirect to or function return a path
-      or promise which resolve into a path string
-    error   (function)
-    ###
-    login: (path, error) ->
-      FB.login (response) =>
-        if response.authResponse
-          @fbLoginCallback(response.authResponse, path)
+      # path is function
+      if angular.isFunction(path)
+        result = path()
+        throw new Error('path function returns nothing') if !result
+        if angular.isString(result)
+          $location.path(result)
         else
-          @notLoggedIn(error)
+          result.then (finalPath) ->
+            $location.path(finalPath)
+      # path is string
+      else
+        $location.path(path)
 
-    logout: (callback) ->
-      [fbLoggedOut, mpLoggedOut] = [$q.defer(), $q.defer()]
-      @notLoggedIn -> mpLoggedOut.resolve()
-      FB.logout    -> $rootScope.$apply -> fbLoggedOut.resolve()
-      $q.all([fbLoggedOut.promise, mpLoggedOut.promise]).then callback
-  }
 
+    # Getters
+    checkLogin: ->
+      return if (@$$user.fb_access_token && @$$user.id) then true else false
+    getId: ->
+      return @$$user.id
+    name: ->
+      return @$$user.name
+    email: ->
+      return @$$user.email
+    fb_user_picture: ->
+      return @$$user.fb_user_picture
+    getUser: ->
+      if @checkLogin()
+        return {
+          id:              @getId()
+          name:            @name()
+          fb_user_picture: @fb_user_picture()
+        }
+      else
+        return null
+  } # --- END MpUser ---
+
+  # Return
   return MpUser
 ]

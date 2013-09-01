@@ -28,7 +28,6 @@ app.factory 'TheProject',
       # Project retrieve, if no projectId, will use an empty object
       if projectId
         MpProjects.findProjectById(projectId).then ((project) =>
-          console.debug project
           @project  = project
           @$$places = Restangular.one('projects', project.id).all('places')
           @$$users  = Restangular.one('projects', project.id).all('users')
