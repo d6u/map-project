@@ -7,8 +7,8 @@ app.controller 'OutsideViewCtrl',
   @hideHomepage = false
 
   @loginWithFacebook = ->
-    MpUser.login('/mobile/dashboard')
-    $scope.interface.showUserSection = false
+    MpUser.login '/dashboard', ->
+      $scope.interface.showUserSection = false
 
   return
 ]
