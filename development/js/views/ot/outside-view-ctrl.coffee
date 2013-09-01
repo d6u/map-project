@@ -1,8 +1,5 @@
 app.controller 'OutsideViewCtrl',
-['$scope', 'MpChatbox', 'MpUser',
-( $scope,   MpChatbox,   MpUser) ->
-
-  MpChatbox.destroy()
+['$scope', 'MpUser', ($scope, MpUser) ->
 
   @hideHomepage = false
 

@@ -6,30 +6,20 @@ app.factory 'MpProjects',
 ['Restangular', '$rootScope', '$q',
 ( Restangular,   $rootScope,   $q) ->
 
-  # REST /projects/:id
-  # addRestangularMethod (name, operation, path, params, headers, elementToPost)
-  Restangular.addElementTransformer 'projects', true, (projects) ->
-    projects.addRestangularMethod 'find_by_title', 'get', '', {title: 'last unsaved project'}
-    return projects
-
-  Restangular.addElementTransformer 'projects', false, (project) ->
-    return project
-
   $projects = Restangular.all 'projects'
+  $projects.addRestangularMethod 'find_by_title', 'get', '',
+                                 {title: 'last unsaved project'}
 
-  ###
-  properties start with `__` is a shallow clone of related property, this gives
-    $watch the abilities to update the properties (if it's a array) by itself
-  ###
-  MpProjects = {
-    $$projects: $projects
-    projects:   []
 
-    destroy: ->
-      @projects = []
+  return class MpProjects
+
+    constructor: ->
+      @$$projects = $projects
+      @projects   = []
+      @getProjects()
 
     getProjects: (queryParams={include_participated: true}) ->
-      @gettingProjects = MpProjects.$$projects.getList(queryParams).then (projects) =>
+      @gettingProjects = @$$projects.getList(queryParams).then (projects) =>
         @projects = projects
         return projects
 
@@ -37,7 +27,7 @@ app.factory 'MpProjects',
       if !project.title
         project.title = 'last unsaved project'
       return @$$projects.post(project).then (project) =>
-        @projects.push project
+        @projects.unshift project
         return project
 
     # will return a promise which resolve into a project
@@ -53,10 +43,10 @@ app.factory 'MpProjects',
           found.resolve(target)
         # double check on server if no project found on local
         else
-          Restangular.one('projects', _id).get().then ((project) ->
+          Restangular.one('projects', _id).get().then ((project) =>
             # found a project on server means local copies are not complete, local needs to update
             found.resolve(project)
-            MpProjects.projects.push(project)
+            @projects.push(project)
             # TODO: update local
           ), ->
             found.reject()
@@ -73,10 +63,4 @@ app.factory 'MpProjects',
     removeProject: (project) ->
       @projects = _.without @projects, project
       project.remove()
-  }
-
-
-  # return
-  # ----------------------------------------
-  return MpProjects
 ]
