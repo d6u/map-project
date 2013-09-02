@@ -13,13 +13,12 @@ args:
 
 
 app.factory 'TheProject',
-['MpProjects', 'Restangular', 'MpChatbox', 'MpUser',
-( MpProjects,   Restangular,   MpChatbox,   MpUser) ->
+['Restangular', 'MpChatbox', 'MpUser', (Restangular, MpChatbox, MpUser) ->
 
   # Return a class
   return class TheProject
 
-    constructor: (projectId) ->
+    constructor: (scope, projectId) ->
       # Init default properties
       @project           = {}
       @places            = []
@@ -27,7 +26,7 @@ app.factory 'TheProject',
 
       # Project retrieve, if no projectId, will use an empty object
       if projectId
-        MpProjects.findProjectById(projectId).then ((project) =>
+        scope.insideViewCtrl.MpProjects.findProjectById(projectId).then ((project) =>
           @project  = project
           @$$places = Restangular.one('projects', project.id).all('places')
           @$$users  = Restangular.one('projects', project.id).all('users')
