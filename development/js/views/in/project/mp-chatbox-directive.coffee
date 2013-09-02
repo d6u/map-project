@@ -1,9 +1,11 @@
 # mp-chatbox-directive
 # ========================================
-app.directive 'mpChatboxDirective', ['mpTemplateCache', '$compile', '$timeout',
-(mpTemplateCache, $compile, $timeout)->
+app.directive 'mpChatboxDirective',
+['mpTemplateCache','$compile','$timeout',
+( mpTemplateCache,  $compile,  $timeout) ->
 
   templateUrl: '/scripts/views/in/project/md-chatbox.html'
+  controllerAs: 'mdChatboxCtrl'
   controller: ['$element', '$scope', ($element, $scope) ->
 
     @chatboxExpanded = false
@@ -31,9 +33,8 @@ app.directive 'mpChatboxDirective', ['mpTemplateCache', '$compile', '$timeout',
 
     return
   ]
-  controllerAs: 'mdChatboxCtrl'
   link: (scope, element, attrs, mdChatboxCtrl) ->
 
     scope.$on 'enterNewMessage', (event, message) ->
-      scope.MpChatbox.sendChatMessage(message, scope.TheProject)
+      scope.insideViewCtrl.MpChatbox.sendChatMessage(message, scope.mapCtrl.theProject)
 ]
