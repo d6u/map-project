@@ -1,0 +1,27 @@
+//- Container: .ly-workplace(app-view-segment="1")
+.md-dashboard
+  ol.md-dashboard-projects
+    li.md-dashboard-projects-item.md-project(ng-repeat="project in insideViewCtrl.MpProjects.projects")
+      .md-project-cover
+        .md-project-cover-background(mini-map-cover="")
+        .md-project-cover-overlay
+          a(ng-href="/mobile/project/{{project.id}}") {{project.title}}
+      .md-project-owner
+        img.md-project-owner-picture(ng-src="{{project.owner.fb_user_picture}}")
+        span.md-project-owner-name {{project.owner.name}}
+        a.btn.btn-default(ng-href="/mobile/project/{{project.id}}") Open
+      .md-project-notes(ng-show="project.notes && project.notes.length") {{project.notes}}
+      ul.md-project-participants.clearfix(ng-show="project.participated_users.length")
+        li.md-project-participants-item(ng-repeat="user in project.participated_users")
+          img.md-project-participants-item(ng-src="{{user.fb_user_picture}}")
+      .md-project-lastmessage
+
+
+//- Overlay button
+.ly-workplace-buttons.md-dashboard-navbar
+  .ly-workplace-buttons-left
+    a.cp-input-square-button(href="", ng-click="interface.showUserSection = true")
+      i.icon-reorder
+  .ly-workplace-buttons-right
+    a.cp-input-square-button(href="", ng-click="insideViewCtrl.createNewProject()")
+      i.icon-plus

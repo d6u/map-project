@@ -1,0 +1,13 @@
+//- Container: section.ly-pusher-content(app-view-segment="1")
+.ly-fullscreen(ng-controller="MapCtrl as mapCtrl")
+
+  .md-drawer.clearfix(md-drawer="", ng-class="{'md-drawer-maxmize': drawerCtrl.maxmize}")
+  .ly-fullscreen-abs(mp-map-canvas="mp-map-canvas")
+
+  .mp-chatbox-directive(ng-class="", mp-chatbox-directive="mp-chatbox-directive")
+
+  //- Add friends to project modal
+  .md-modal.md-effect-3(mp-project-add-friends-modal="showProjectAddFriendsModal")
+  //- md-modal and md-overlay must be placed next to each other for modal directive to work
+  .md-overlay
+  //- END

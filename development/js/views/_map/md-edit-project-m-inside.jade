@@ -1,0 +1,24 @@
+//- Container: .md-modal.md-effect-3(md-edit-project="")
+.md-edit-project
+
+  a.md-edit-project-close(href="", ng-click="mdEditProjectCtrl.closeEditProjectForm()") Back
+
+  form.md-edit-project-form
+    .form-group
+      label() Project title
+      input.form-control(type="text", placeholder="enter title", ng-model="mdEditProjectCtrl.editProjectForm.title")
+      p.help-block(ng-show="mdEditProjectCtrl.formMessage.length") {{mdEditProjectCtrl.formMessage}}
+
+    .form-group
+      label() Notes
+      textarea.form-control(placeholder="take notes", ng-model="mdEditProjectCtrl.editProjectForm.notes")
+
+    button.btn.btn-primary(ng-click="mdEditProjectCtrl.saveChanges()") Save
+    button.btn.btn-default(ng-click="mdEditProjectCtrl.revertChanges()") Cancel
+
+    .checkbox.md-edit-project-form-delete
+      label
+        input(type="checkbox", ng-model="mdEditProjectCtrl.editProjectForm.deleteCheckbox")
+        | I want to delete this project
+
+    button.btn.btn-danger(ng-click="mdEditProjectCtrl.deleteProject()") Delete

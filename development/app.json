@@ -2,11 +2,15 @@
   "js": {
     "sourceFolder": "development/js",
     "targetFolder": "app/assets/javascripts",
-    "copy": ["main-requirejs.js", "location-fallback.js"],
+    "copy": [
+      "main-requirejs.js",
+      "location-fallback.js"
+    ],
     "concat": {
       "application.js": [
         "_libraries/bootstrap-3.0.0.min.js",
         "_libraries/jquery-ui-1.10.3.custom.min.js",
+        "_libraries/masonry-3.1.2.js",
         "_libraries/perfect-scrollbar-0.4.3.with-mousewheel.min.js",
         "_libraries/lodash-1.3.1.min.js",
         "_libraries/socket.io.min.js",
@@ -16,12 +20,65 @@
         "_libraries/angular-route-1.2.0rc1.min.js",
         "_libraries/angular-route-segment-1.1.0.20130825.min.js",
         "_libraries/restangular-1.1.3.min.js",
-        "_modules",
+
+        "_modules/md-bootstrap.coffee",
+        "_modules/md-jquery-ui.coffee",
+        "_modules/md-perfect-scrollbar.coffee",
+        "_modules/md-tabset.coffee",
+        "_modules/mini-typeahead.coffee",
+        "_modules/md-masonry.coffee",
+
         "application",
-        "directives",
-        "factories",
-        "keepers",
-        "views"
+        "services",
+
+        "views/in",
+        "views/ot",
+
+        "views/_map/map-ctrl.coffee",
+        "views/_map/marker-info.coffee",
+        "views/_map/md-drawer.coffee",
+        "views/_map/md-edit-project.coffee",
+        "views/_map/mp-bottom-modalbox.coffee",
+        "views/_map/mp-center-user-location.coffee",
+        "views/_map/mp-map-canvas.coffee",
+        "views/_map/mp-map-searchbox.coffee",
+        "views/_map/marker-info.coffee",
+
+        "views/_pusher-side/mp-friends-panel.coffee",
+        "views/_pusher-side/mp-tabs.coffee",
+        "views/_pusher-side/mp-user-section-tabs.coffee",
+        "views/_pusher-side/mp-user-section.coffee",
+        "views/_pusher-side/sidebar-place.coffee",
+
+        "views/_shared/mini-map-cover.coffee"
+      ],
+
+      "application-m.js": [
+        "_libraries/lodash-1.3.1.min.js",
+        "_libraries/socket.io.min.js",
+        "_libraries/angular-loader-1.2.0rc1.min.js",
+        "_libraries/angular-1.2.0rc1.min.js",
+        "_libraries/angular-animate-1.2.0rc1.min.js",
+        "_libraries/angular-route-1.2.0rc1.min.js",
+        "_libraries/angular-route-segment-1.1.0.20130825.min.js",
+        "_libraries/restangular-1.1.3.min.js",
+
+        "application-m",
+        "services",
+
+        "views/in-m",
+        "views/ot-m",
+
+        "views/_map/map-ctrl.coffee",
+        "views/_map/marker-info.coffee",
+        "views/_map/mp-map-canvas.coffee",
+        "views/_map/md-searchbox-input-m.coffee",
+        "views/_map/placelist-ctrl-m.coffee",
+        "views/_map/md-edit-project-m.coffee",
+
+        "views/_menu/md-menu-m.coffee",
+
+        "views/_shared/mini-map-cover.coffee"
       ]
     }
   }

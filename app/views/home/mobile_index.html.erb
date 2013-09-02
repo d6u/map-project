@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]>    <html class="no-js iem7"> <![endif]-->
+<!--[if (gt IEMobile 7)|!(IEMobile)]><!--> <html class="no-js"> <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>Map Project</title>
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized"  content="320">
+  <meta http-equiv="cleartype"  content="on">
+  <meta name="description"      content="">
+  <meta name="viewport"         content="width=device-width,minimum-scale=1,maximum-scale=1,user-scalable=no">
+  <link rel="apple-touch-icon-precomposed" sizes="144x144" href="/img/touch/apple-touch-icon-144x144-precomposed.png">
+  <link rel="apple-touch-icon-precomposed" sizes="114x114" href="/img/touch/apple-touch-icon-114x114-precomposed.png">
+  <link rel="apple-touch-icon-precomposed" sizes="72x72"   href="/img/touch/apple-touch-icon-72x72-precomposed.png">
+  <link rel="apple-touch-icon-precomposed"                 href="/img/touch/apple-touch-icon-57x57-precomposed.png">
+  <link rel="shortcut icon"                                href="/img/touch/apple-touch-icon.png">
+
+  <!-- Tile icon for Win8 (144x144 + tile color) -->
+  <meta name="msapplication-TileImage" content="/img/touch/apple-touch-icon-144x144-precomposed.png">
+  <meta name="msapplication-TileColor" content="#222222">
+
+  <!-- For iOS web apps. -->
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="apple-mobile-web-app-title" content="">
+
+  <%= stylesheet_link_tag 'mobile', media: 'all' %>
+  <script>
+  var paths = {'jquery':['//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min','/js/jquery-2.0.3.min'],'modernizr':'/js/modernizr-2.6.2.min','google.maps':'//maps.googleapis.com/maps/api/js?key=<%= $api_keys['google']['browser_app_key'] %>&libraries=places&sensor=true&callback=initGoogleMaps','facebook':'//connect.facebook.net/en_US/all','ipLocation':['http://www.geoplugin.net/json.gp?jsoncallback=define','<%= javascript_path_without_suffix("location-fallback.js") %>'],'application':['<%= javascript_path_without_suffix("application-m.js") %>']}, fbAppId = '<%= $api_keys['facebook']['app_id'] %>';
+  </script>
+  <script data-main="<%= javascript_path_without_suffix('main-requirejs.js') %>" src="/js/require.min.js"></script>
+  <%= csrf_meta_tags %>
+</head>
+<body class="ba-mobile">
+
+<div app-view-segment="0" class="ly-application"></div>
+
+<div id="fb-root"></div>
+<% if Rails.env.production? %>
+<script>
+var _gaq=[['_setAccount','UA-40390313-3'],['_trackPageview']];
+(function(d,t){var g=d.createElement(t),s=d.getElementsByTagName(t)[0];
+g.src='//www.google-analytics.com/ga.js';
+s.parentNode.insertBefore(g,s)}(document,'script'));
+</script>
+<% end %>
+
+</body>
+</html>

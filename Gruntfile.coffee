@@ -6,48 +6,45 @@ module.exports = (grunt) ->
 
   # Helpers to map files
   compileHelper = {
-    getJsFileList: (concatMap, cwd) ->
+    # pathList (array)
+    # fileExt (string): must contain `.`
+    getFileListFromPathList: (wd, pathList, fileExt) ->
+      fileList = []
+      for pt in pathList
+        # file
+        if grunt.file.isFile(wd, pt) && (new RegExp(".+(\\#{fileExt})$")).test(pt)
+          fileList.push(pt)
+        # dir
+        else
+          for subPt in grunt.file.expand({cwd: path.join(wd, pt)}, "**/*#{fileExt}")
+            fileList.push(path.join(pt, subPt))
+      return fileList
+
+
+    getAllJsFileList: (concatMap, cwd) ->
       fileList = []
       for dist, src of concatMap
-        if _.isArray(src)
-          for filePath in src
-            if grunt.file.isFile(cwd, filePath)
-              if /.+(\.js)$/.test(filePath)
-                fileList.push(filePath)
-            else
-              for subPath in grunt.file.expand({cwd: path.join(cwd, filePath)}, '**/*.js')
-                fileList.push(path.join(src, subPath))
-        else
-          fileList.push(src)
-
+        fileList = if _.isArray(src) then fileList.concat(@getFileListFromPathList(cwd, src, '.js')) else fileList.concat(@getFileListFromPathList(cwd, [src], '.js'))
       return fileList
 
     getCoffeeFileList: (pathArray, cwd) ->
       fileList = []
-      for filePath in pathArray
-        if grunt.file.isFile(cwd, filePath)
-          if /.+(\.coffee)$/.test(filePath)
-            fileList.push(path.join(cwd, filePath))
+      for pt in pathArray
+        if grunt.file.isFile(cwd, pt)
+          if /.+(\.coffee)$/.test(pt)
+            fileList.push(path.join(cwd, pt))
         else
-          for subPath in grunt.file.expand({cwd: path.join(cwd, filePath)}, '**/*.coffee')
-            fileList.push(path.join(cwd, filePath, subPath))
+          for subPt in grunt.file.expand({cwd: path.join(cwd, pt)}, '**/*.coffee')
+            fileList.push(path.join(cwd, pt, subPt))
 
       return fileList
 
     getConcatTaskFileList: (pathArray, lastFilePath) ->
       cwd = 'tmp/grunt/js'
       fileList = []
-      for filePath in pathArray
-        # console.log path.join(cwd, filePath), grunt.file.isFile(cwd, filePath)
-        if grunt.file.isFile(cwd, filePath)
-          if /.+(\.js)$/.test(filePath)
-            fileList.push(path.join(cwd, filePath))
-        else if grunt.file.isDir(cwd, filePath)
-          for subPath in grunt.file.expand({cwd: path.join(cwd, filePath)}, '**/*.js')
-            fileList.push(path.join(cwd, filePath, subPath))
-
+      for pt in @getFileListFromPathList(cwd, pathArray, '.js')
+        fileList.push(path.join(cwd, pt))
       fileList.push(path.join(cwd, lastFilePath))
-
       return fileList
   }
 
@@ -57,60 +54,68 @@ module.exports = (grunt) ->
     pkg: grunt.file.readJSON('package.json')
     compileSettings: grunt.file.readJSON('development/app.json')
 
+    # --- Clean ---
     clean:
       development: ["public/scripts", "app/assets/javascripts/**/*", "tmp/grunt"]
 
+    # --- Copy ---
     copy:
       html:
         expand: true
-        cwd: 'development/js'
-        src: '**/*.html'
+        cwd:  '<%= compileSettings.js.sourceFolder %>'
+        src:  '**/*.html'
         dest: 'public/scripts/'
       js:
         expand: true
-        cwd: '<%= compileSettings.js.sourceFolder %>'
-        src: '<%= compileSettings.js.copy %>'
+        cwd:  '<%= compileSettings.js.sourceFolder %>'
+        src:  '<%= compileSettings.js.copy %>'
         dest: '<%= compileSettings.js.targetFolder %>'
+      # tmp task settings will be update dynamically
       tmp:
         expand: true
-        cwd: '<%= compileSettings.js.sourceFolder %>'
-        src: ''
+        cwd:  '<%= compileSettings.js.sourceFolder %>'
+        src:  ''
         dest: 'tmp/grunt/js'
 
+    # --- Jade ---
     jade:
-      options:
-        pretty: true
       development:
         files: [{
           expand: true
-          cwd: 'development/js'
-          src: '**/*.jade'
+          cwd:  '<%= compileSettings.js.sourceFolder %>'
+          src:  '**/*.jade'
           dest: 'public/scripts'
-          ext: '.html'
+          ext:  '.html'
         }]
 
+    # --- Coffee ---
     coffee:
       options:
         join: true
+      # development task settings will be update dynamically
       development:
         files: []
 
+    # --- Concat ---
     concat:
       options:
         separator: ';'
+      # development task settings will be update dynamically
       development:
         files: []
 
+    # --- Watch ---
     watch:
       options:
         spawn: false
         livereload: true
       development:
         files: [
-          'development/js/**/*.html',
-          'development/js/**/*.jade',
-          'development/js/**/*.js',
-          'development/js/**/*.coffee']
+          '<%= compileSettings.js.sourceFolder %>' + '/**/*.html'
+          '<%= compileSettings.js.sourceFolder %>' + '/**/*.jade'
+          '<%= compileSettings.js.sourceFolder %>' + '/**/*.js'
+          '<%= compileSettings.js.sourceFolder %>' + '/**/*.coffee'
+        ]
         tasks: ['default']
   })
 
@@ -123,10 +128,11 @@ module.exports = (grunt) ->
   grunt.loadNpmTasks('grunt-contrib-watch')
 
   # Dynamic task config
-  grunt.registerTask('updateConfig', 'Dymanic update grunt config', ->
+  # ----------------------------------------
+  grunt.registerTask('update-config', 'Dymanic update grunt config', ->
     compileSettings = grunt.config(['compileSettings'])
     # copy:tmp
-    copyList = compileHelper.getJsFileList(compileSettings.js.concat, compileSettings.js.sourceFolder)
+    copyList = compileHelper.getAllJsFileList(compileSettings.js.concat, compileSettings.js.sourceFolder)
     grunt.config(['copy', 'tmp', 'src'], copyList)
     # coffee:development
     filesObj = {}
@@ -135,7 +141,7 @@ module.exports = (grunt) ->
     grunt.config(['coffee', 'development', 'files'], filesObj)
   )
 
-  grunt.registerTask('updateConfigAfterTmpReady', 'Dymanic update grunt config when tmp folder is ready', ->
+  grunt.registerTask('update-config-after-tmp-ready', 'Dymanic update grunt config when tmp folder is ready', ->
     compileSettings = grunt.config(['compileSettings'])
     # concat:development
     filesObj = {}
@@ -144,16 +150,29 @@ module.exports = (grunt) ->
     grunt.config(['concat', 'development', 'files'], filesObj)
   )
 
-  # Default task(s).
+  # Default task - development
   grunt.registerTask('default', [
     'clean:development'
-    'updateConfig'
+    'update-config'
     'copy:html'
     'copy:js'
     'copy:tmp'
     'jade:development'
     'coffee:development'
-    'updateConfigAfterTmpReady'
+    'update-config-after-tmp-ready'
     'concat:development'
     'watch:development'
+  ])
+
+  # Production task
+  grunt.registerTask('production', [
+    'clean:development'
+    'update-config'
+    'copy:html'
+    'copy:js'
+    'copy:tmp'
+    'jade:development'
+    'coffee:development'
+    'update-config-after-tmp-ready'
+    'concat:development'
   ])

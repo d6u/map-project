@@ -1,0 +1,14 @@
+//- Container: .ly-application
+.ly-pusher(ng-class="{'ly-pusher-pushed': interface.showUserSection}")
+
+  //- Menu
+  section.ly-pusher-side
+    .md-menu(md-menu)
+
+  //- Body
+  section.ly-pusher-content
+
+    //- Workplace
+    .ly-workplace(app-view-segment="1")
+
+  .ly-pusher-overlay(ng-click="interface.showUserSection = false")
