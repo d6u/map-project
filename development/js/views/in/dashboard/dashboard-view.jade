@@ -3,7 +3,7 @@
 //- Projects list
 //- TODO: add masonry support
 .ly-fullscreen(md-isotope="", perfect-scrollbar="insideViewCtrl.MpProjects.projects.length", style="overflow: hidden")
-  ol.md-projects.clearfix()
+  ol.md-projects.clearfix(md-masonry="", md-masonry-watch="insideViewCtrl.MpProjects.projects.length", md-masonry-item-selector=".md-projects-item")
     //- Add project
     li.md-projects-item.md-projects-create
       a(href="", ng-click="insideViewCtrl.createNewProject()")

@@ -13,6 +13,7 @@ app = angular.module('mapApp', [
   'angular-jquery-ui',
   'mini-typeahead',
   'md-tabset',
+  'md-masonry',
 
   # Application modules that have to run before `.config`
   'mp-chatbox-provider'
