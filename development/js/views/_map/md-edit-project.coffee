@@ -15,25 +15,26 @@ app.directive 'mdEditProject',
       # deleteCheckbox
     }
 
-    @deleteProject = ->
-      if @editProjectForm.deleteCheckbox
-        $scope.MpProjects.removeProject($scope.TheProject.project).then ->
-          $location.path('/home')
+    # Editing
+    @revertChanges = ->
+      @editProjectForm.title = $scope.mapCtrl.theProject.project.title
+      @editProjectForm.notes = $scope.mapCtrl.theProject.project.notes
+      $scope.drawerCtrl.showEditProjectSubsection = false
 
     @saveChanges = ->
       if @editProjectForm.title.length == 0
         @editProjectForm.errorMessage = "You must have a title to start with."
       else
         @editProjectForm.errorMessage = null
-        $scope.TheProject.project.title = @editProjectForm.title
-        $scope.TheProject.project.notes = @editProjectForm.notes
-        $scope.TheProject.project.put()
+        $scope.mapCtrl.theProject.project.title = @editProjectForm.title
+        $scope.mapCtrl.theProject.project.notes = @editProjectForm.notes
+        $scope.mapCtrl.theProject.project.put()
         $scope.drawerCtrl.showEditProjectSubsection = false
 
-    @revertChanges = ->
-      @editProjectForm.title = $scope.TheProject.project.title
-      @editProjectForm.notes = $scope.TheProject.project.notes
-      $scope.drawerCtrl.showEditProjectSubsection = false
+    @deleteProject = ->
+      if @editProjectForm.deleteCheckbox
+        $scope.insideViewCtrl.MpProjects.removeProject($scope.mapCtrl.theProject.project).then ->
+          $location.path('/home')
 
     return
   ]
@@ -42,11 +43,11 @@ app.directive 'mdEditProject',
     element.find('#invite-friends-button').on 'click', (event) ->
       $rootScope.$broadcast 'showProjectAddFriendsModal'
 
-    scope.$watch 'TheProject.project.title', (newVal, oldVal) ->
+    scope.$watch 'mapCtrl.theProject.project.title', (newVal, oldVal) ->
       if newVal != editProjectCtrl.editProjectForm.title
         editProjectCtrl.editProjectForm.title = newVal
 
-    scope.$watch 'TheProject.project.notes', (newVal, oldVal) ->
+    scope.$watch 'mapCtrl.theProject.project.notes', (newVal, oldVal) ->
       if newVal != editProjectCtrl.editProjectForm.notes
         editProjectCtrl.editProjectForm.notes = newVal
 ]

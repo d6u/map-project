@@ -1,9 +1,12 @@
+//- Container: .md-drawer-body-subsetion#md-drawer-body-subsetion-edit-project(md-edit-project)
+
 header.md-drawer-list-header.lead {{drawerCtrl.getProjectTitle()}}
 form.form-horizontal
   .form-group
     label.control-label.col-lg-2(for="project-title") Title
     div.col-lg-10
       input.form-control#project-title(ng-model="editProjectCtrl.editProjectForm.title", type="text", placeholder="Project title")
+      p.help-block {{editProjectCtrl.editProjectForm.errorMessage}}
   .form-group
     label.control-label.col-lg-2(for="project-notes") Notes
     div.col-lg-10
