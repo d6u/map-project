@@ -1,0 +1,40 @@
+.md-navbar-dashboard {
+  position: fixed;
+  z-index: 500;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 45px;
+  padding: 5px;
+  background-color: rgba(white, .8);
+}
+
+// User block
+.md-navbar-userblock {
+  border: 1px solid $gray6;
+  display: inline-block;
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.md-navbar-userblock-button {
+  height: 34px;
+  border: none;
+  border-right: 1px solid $gray6;
+  border-radius: 0;
+  &:last-child {
+    border-right: none;
+  }
+}
+
+.md-navbar-userblock-detail {
+  padding: 2px;
+  line-height: 30px;
+  img {
+    float: left;
+    height: 30px;
+    width: 30px;
+    margin-right: 5px;
+    border-radius: 2px;
+  }
+}

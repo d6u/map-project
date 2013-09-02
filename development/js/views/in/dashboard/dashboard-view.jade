@@ -1,10 +1,9 @@
-a.shame-show-user-section-button(href="", ng-click="interface.showUserSection = true")
-  i.icon-user
+//- Container: section.ly-pusher-content(app-view-segment="1")
 
 //- Projects list
 //- TODO: add masonry support
 .ly-fullscreen(md-isotope="", perfect-scrollbar="insideViewCtrl.MpProjects.projects.length", style="overflow: hidden")
-  ol.md-projects.clearfix()
+  ol.md-projects.clearfix(md-masonry="", md-masonry-watch="insideViewCtrl.MpProjects.projects.length", md-masonry-item-selector=".md-projects-item")
     //- Add project
     li.md-projects-item.md-projects-create
       a(href="", ng-click="insideViewCtrl.createNewProject()")
@@ -25,3 +24,14 @@ a.shame-show-user-section-button(href="", ng-click="interface.showUserSection = 
         li.md-project-participants-item(ng-repeat="user in project.participated_users")
           img.md-project-participants-item(ng-src="{{user.fb_user_picture}}")
       .md-project-lastmessage
+
+.md-navbar
+.md-navbar-dashboard
+  .md-navbar-userblock
+    a.md-navbar-userblock-button.btn.btn-default(href="", ng-click="interface.showUserSection = true")
+      i.icon-user
+      //- TODO: notification count
+      span.badge {{}}
+    a.md-navbar-userblock-button.md-navbar-userblock-detail.btn.btn-default(href="", ng-click="interface.showUserSection = true")
+      img(ng-src="{{MpUser.fb_user_picture()}}")
+      | {{MpUser.name()}}
