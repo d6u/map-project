@@ -10,7 +10,8 @@
     .ly-fullscreen(ng-controller="MapCtrl as mapCtrl")
 
       .md-drawer.clearfix(md-drawer="", ng-class="{'md-drawer-maxmize': drawerCtrl.maxmize}")
-      .ly-fullscreen-abs(mp-map-canvas="")
+      .md-map-canvas(mp-map-canvas="")
+      div(md-bottom-bar="")
 
     //- Homepage
     .md-homepage(ng-class="{'md-homepage-fadeout': outsideViewCtrl.hideHomepage}")

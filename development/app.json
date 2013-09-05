@@ -36,6 +36,7 @@
 
         "views/_map/map-ctrl.coffee",
         "views/_map/marker-info.coffee",
+        "views/_map/md-bottom-bar.coffee",
         "views/_map/md-drawer.coffee",
         "views/_map/md-edit-project.coffee",
         "views/_map/mp-bottom-modalbox.coffee",

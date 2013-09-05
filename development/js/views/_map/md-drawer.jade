@@ -1,30 +1,3 @@
-//- Toolbar
-.md-drawer-toolbar
-
-  //- Searchbar
-  .ly-halfscreen-left
-    .md-searchbar(ng-class="{'md-searchbar-normal': outsideViewCtrl.hideHomepage}")
-      button.cp-input-btn.btn.btn-default(ng-click="interface.showUserSection = true", ng-hide="!outsideViewCtrl.hideHomepage")
-        i.icon-user
-      button.cp-input-btn.btn.btn-default(ng-click="drawerCtrl.toggleDrawer()", ng-hide="!outsideViewCtrl.hideHomepage")
-        | {{drawerCtrl.toggleDrawerButtonText}}
-      input.cp-input-naked.form-control(type="text", placeholder="Search place", mp-map-searchbox="", mini-typeahead="mpMapSearchboxCtrl.typeaheadOptions", mini-typeahead-list="mapCtrl.placePredictions", ng-model="mapCtrl.searchboxInput", ng-change="mpMapSearchboxCtrl.hideHomepage(); mapCtrl.getQueryPredictions()")
-      button.cp-input-btn.btn.btn-primary(type="button", ng-click="mapCtrl.queryPlacesService()")
-        | Search
-
-  //- Actions to marked places list
-  .ly-halfscreen-right(ng-hide="!outsideViewCtrl.hideHomepage")
-    button.cp-input-btn.btn.btn-default(ng-click="mapCtrl.toggleDirections()")
-      i.icon-code-fork
-      |  Toggle directions
-    button.cp-input-btn.btn.btn-default(ng-click="drawerCtrl.displayAllMarkers()")
-      i.icon-fullscreen
-      |  Display all markers
-    button.cp-input-btn.btn.btn-default(ng-click="drawerCtrl.toggleEditProject()")
-      i.icon-edit-sign
-      |  Edit project details
-
-
 //- Body
 .md-drawer-body
   //- Search
