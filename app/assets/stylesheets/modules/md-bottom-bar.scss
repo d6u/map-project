@@ -40,7 +40,7 @@
   }
 }
 
-// Individual Element
+// --- Individual Elements ---
 // input
 .md-bottom-bar-input {
   @include flex-grow(1);
@@ -49,6 +49,7 @@
   font-size: 18px;
   outline: none;
   background-color: #4b525e;
+  color: white;
   @include transition();
   &:hover {
     background-color: $gray5;

@@ -4,7 +4,7 @@
     //- show side menu
     a.md-bottom-bar-button(href="", ng-click="interface.showUserSection = true")
       i.icon-reorder
-    input.md-bottom-bar-input(type="text", placeholder="Search place name")
+    input.md-bottom-bar-input(type="text", placeholder="Search place name", mp-map-searchbox="", mini-typeahead="mpMapSearchboxCtrl.typeaheadOptions", mini-typeahead-list="mapCtrl.placePredictions", ng-model="mapCtrl.searchboxInput", ng-change="mpMapSearchboxCtrl.hideHomepage(); mapCtrl.getQueryPredictions()")
 
   .md-bottom-bar-button-group-center
     //- show drawer
@@ -24,13 +24,13 @@
     .md-bottom-bar-button-padding
 
     //- edit project detail
-    a.md-bottom-bar-button(href="", ng-click="drawerCtrl.toggleEditProject()")
+    a.md-bottom-bar-button(href="", ng-click="mdProjectModalCtrl.bodyContent = 'editDetail'; mdProjectModalCtrl.showModal = true")
       i.icon-edit-sign
     //- management participants
-    a.md-bottom-bar-button(href="")
+    a.md-bottom-bar-button(href="", ng-click="mdProjectModalCtrl.bodyContent = 'manageFriends'; mdProjectModalCtrl.showModal = true")
       i.icon-group
     //- add user to this project
-    a.md-bottom-bar-button(href="")
+    a.md-bottom-bar-button(href="", ng-click="mdProjectModalCtrl.addFriendsSection = 'all'; mdProjectModalCtrl.bodyContent = 'inviteFriends'; mdProjectModalCtrl.showModal = true")
       i.icon-plus
     //- share
     a.md-bottom-bar-button(href="")
