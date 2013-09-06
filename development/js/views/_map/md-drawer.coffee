@@ -3,7 +3,6 @@ app.directive 'mdDrawer',
 ( $rootScope,   $timeout,   $routeSegment) ->
 
   templateUrl: '/scripts/views/_map/md-drawer.html'
-  scope: true
   controllerAs: 'drawerCtrl'
   controller: ['$scope', '$element', ($scope, $element) ->
 

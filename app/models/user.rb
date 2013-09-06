@@ -1,4 +1,4 @@
-require 'net/http'
+require 'net/https'
 
 
 class User < ActiveRecord::Base
