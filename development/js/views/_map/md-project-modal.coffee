@@ -35,24 +35,21 @@ app.directive 'mdProjectModal',
         $scope.insideViewCtrl.MpProjects.removeProject($scope.mapCtrl.theProject.project).then ->
           $location.path('/home')
 
-    $scope.$watch 'mapCtrl.theProject.project.title', (newVal, oldVal) =>
-      if newVal != @_projectAttrs.title
-        @_projectAttrs.title = newVal
-
-    $scope.$watch 'mapCtrl.theProject.project.notes', (newVal, oldVal) =>
-      if newVal != @_projectAttrs.notes
-        @_projectAttrs.notes = newVal
-
     # reset deleteCheckbox when interface changes
     $scope.$watch (=>
       return [@showModal, @bodyContent, @addFriendsSection]
     ), (=>
-      console.debug 'change'
       @_projectAttrs.deleteCheckbox = false
     ), true
 
-    resetDeleteCheckbox = =>
-      @_projectAttrs.checkbox = false
+    # copy project attrs when open edit project tab
+    $scope.$watch (=>
+      return [@showModal, @bodyContent]
+    ), (=>
+      if @showModal == true && @bodyContent == 'editDetail'
+        @_projectAttrs.title = $scope.mapCtrl.theProject.project.title
+        @_projectAttrs.notes = $scope.mapCtrl.theProject.project.notes
+    ), true
 
     # --- Manage participants ---
 
