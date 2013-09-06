@@ -46,11 +46,7 @@
         "views/_map/marker-info.coffee",
         "views/_map/md-project-modal.coffee",
 
-        "views/_pusher-side/mp-friends-panel.coffee",
-        "views/_pusher-side/mp-tabs.coffee",
-        "views/_pusher-side/mp-user-section-tabs.coffee",
-        "views/_pusher-side/mp-user-section.coffee",
-        "views/_pusher-side/sidebar-place.coffee",
+        "views/_pusher-side/md-side-menu.coffee",
 
         "views/_shared/mini-map-cover.coffee"
       ],
