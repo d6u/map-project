@@ -4,11 +4,7 @@ development:
   database: map-project_development
   pool: 5
   username: map-project
-  password:
-  #host: localhost
-  #port: 5432
-  #schema_search_path: myapp,sharedapp,public
-  #min_messages: notice
+  password: 1234
 
 test:
   adapter: postgresql
@@ -16,7 +12,7 @@ test:
   database: map-project_test
   pool: 5
   username: map-project
-  password:
+  password: 1234
 
 production:
   adapter: postgresql

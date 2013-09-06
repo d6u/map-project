@@ -48,3 +48,4 @@ node_modules
 ########################################
 # Project specific settings
 app/assets/javascripts/*
+.DS_Store

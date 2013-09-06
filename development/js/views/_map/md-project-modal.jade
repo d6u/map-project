@@ -20,22 +20,22 @@
         .form-group
           label.col-lg-2.control-label(for="") Title
           .col-lg-10
-            input.form-control(type="text", placeholder="Enter project title")
+            input.form-control(type="text", placeholder="Enter project title", ng-model="mdProjectModalCtrl._projectAttrs.title")
         .form-group
           label.col-lg-2.control-label(for="") Notes
           .col-lg-10
-            textarea.form-control(type="text", placeholder="Enter project notes")
+            textarea.form-control(type="text", placeholder="Enter project notes", ng-model="mdProjectModalCtrl._projectAttrs.notes")
         .form-group
           .col-lg-offset-2.col-lg-10
             .checkbox
               label
-                input(type="checkbox")
+                input(type="checkbox", ng-model="mdProjectModalCtrl._projectAttrs.deleteCheckbox")
                 |  I want to delete this project
         .form-group.md-project-modal-body-form-actions
           .col-lg-offset-2.col-lg-10
-            button.btn.btn-default Cancel
-            button.btn.btn-primary Save
-            button.btn.btn-danger Delete
+            button.btn.btn-default(ng-click="mdProjectModalCtrl.revertChanges()") Cancel
+            button.btn.btn-primary(ng-click="mdProjectModalCtrl.saveChanges()") Save
+            button.btn.btn-danger(ng-click="mdProjectModalCtrl.deleteProject()") Delete
 
     div(ng-switch-when="manageFriends")
       ul.md-project-modal-body-manage-friends.md-user-list
