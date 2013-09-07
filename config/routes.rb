@@ -6,7 +6,9 @@ MapProject::Application.routes.draw do
 
   get  'dashboard'           => 'home#index'
   get  'project/:project_id' => 'home#index'
+  get  'friends'             => 'home#index'
   get  'search'              => 'home#index'
+  get  'settings'            => 'home#index'
 
 
   get  'mobile'                     => 'home#mobile_index'

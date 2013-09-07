@@ -12,6 +12,10 @@ app.controller 'SearchViewCtrl',
           @lastSearchInput = @searchInput
           @showNoResults = true
 
+  @addUserAsFriend = (user) ->
+    user.addFriend()
+    # TODO: send notification
+
 
   # --- Init ---
   @showNoResults = false
