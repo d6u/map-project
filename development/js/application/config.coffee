@@ -22,9 +22,9 @@ app = angular.module('mapApp', [
 
 # config
 app.config(['MpChatboxProvider', '$httpProvider', '$routeSegmentProvider',
-'$locationProvider', '$routeProvider',
+'$locationProvider', '$routeProvider', 'RestangularProvider',
 (MpChatboxProvider, $httpProvider, $routeSegmentProvider, $locationProvider,
- $routeProvider) ->
+ $routeProvider, RestangularProvider) ->
 
   # Segment Route
   # ----------------------------------------
@@ -34,6 +34,8 @@ app.config(['MpChatboxProvider', '$httpProvider', '$routeSegmentProvider',
   .when('/',                    'ot')
   .when('/dashboard',           'in.dashboard')
   .when('/project/:project_id', 'in.project')
+  .when('/friends',             'in.friends')
+  .when('/search',              'in.search')
 
   # ot
   .segment('ot', {
@@ -90,6 +92,18 @@ app.config(['MpChatboxProvider', '$httpProvider', '$routeSegmentProvider',
       controllerAs: 'projectViewCtrl'
     })
 
+    .segment('friends', {
+      templateUrl:  '/scripts/views/in/friends/friends-view.html'
+      controller:   'FriendsViewCtrl'
+      controllerAs: 'friendsViewCtrl'
+    })
+
+    .segment('search', {
+      templateUrl:  '/scripts/views/in/search/search-view.html'
+      controller:   'SearchViewCtrl'
+      controllerAs: 'searchViewCtrl'
+    })
+
   # otherwise
   $routeProvider.otherwise({redirectTo: '/'})
 
@@ -107,4 +121,7 @@ app.config(['MpChatboxProvider', '$httpProvider', '$routeSegmentProvider',
   # socket.io
   # ----------------------------------------
   MpChatboxProvider.setSocketServer(location.protocol + '//' + location.hostname + ':4000')
+
+  # --- Restangular ---
+  RestangularProvider.setBaseUrl('/api')
 ])

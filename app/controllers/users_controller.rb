@@ -88,9 +88,11 @@ class UsersController < ApplicationController
 
     # search users by name
     if params[:name]
-      name  = "%#{params[:name]}%"
-      users = User.where('lower(name) LIKE lower(?) AND id <> ?', name, @user.id)
-      render :json => users, :only => [:id, :name, :fb_user_picture] and return
+      name   = "%#{params[:name]}%"
+      @users = User.where('lower(name) LIKE lower(?) AND id <> ?', name, @user.id)
+      @added_friends_id   = @user.friendships.pluck(:friend_id)
+      @pending_friends_id = @user.friendships.where('status = 0').pluck(:friend_id)
+      render 'query_user' and return
     end
 
     head 401
