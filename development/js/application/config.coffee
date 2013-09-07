@@ -22,9 +22,9 @@ app = angular.module('mapApp', [
 
 # config
 app.config(['MpChatboxProvider', '$httpProvider', '$routeSegmentProvider',
-'$locationProvider', '$routeProvider',
+'$locationProvider', '$routeProvider', 'RestangularProvider',
 (MpChatboxProvider, $httpProvider, $routeSegmentProvider, $locationProvider,
- $routeProvider) ->
+ $routeProvider, RestangularProvider) ->
 
   # Segment Route
   # ----------------------------------------
@@ -107,4 +107,7 @@ app.config(['MpChatboxProvider', '$httpProvider', '$routeSegmentProvider',
   # socket.io
   # ----------------------------------------
   MpChatboxProvider.setSocketServer(location.protocol + '//' + location.hostname + ':4000')
+
+  # --- Restangular ---
+  RestangularProvider.setBaseUrl('/api')
 ])
