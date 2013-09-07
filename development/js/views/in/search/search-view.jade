@@ -10,8 +10,8 @@
         .md-user-list-item-detail
           a.md-user-list-item-detail-name(href="") {{user.name}}
         .md-user-list-item-actions
-          a.btn.btn-success(href="", ng-click="user.addFriend()", ng-disabled="user.$$added")
-            | {{user.$$added ? "Added" : "Add friend"}}
+          a.btn(href="", ng-click="user.addFriend()", ng-disabled="user.added", ng-class="{'btn-primary': user.added && !user.pending, 'btn-success': !(user.added && !user.pending)}")
+            | {{user | searchFriendsStatusFilter}}
 
     p.lead(ng-show="searchViewCtrl.showNoResults") Sorry, we cannot find user with name "{{searchViewCtrl.lastSearchInput}}" that is not your friend
 

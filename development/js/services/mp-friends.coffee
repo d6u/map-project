@@ -12,7 +12,8 @@ app.factory 'MpFriends',
   Restangular.addElementTransformer 'users', false, (user) ->
     user.addFriend = ->
       $friendships.post({friend_id: @id})
-      @$$added = true
+      @added   = true
+      @pending = true
     return user
 
   $userQuery = Restangular.all 'users'
