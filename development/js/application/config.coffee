@@ -34,6 +34,7 @@ app.config(['MpChatboxProvider', '$httpProvider', '$routeSegmentProvider',
   .when('/',                    'ot')
   .when('/dashboard',           'in.dashboard')
   .when('/project/:project_id', 'in.project')
+  .when('/search',              'in.search')
 
   # ot
   .segment('ot', {
@@ -88,6 +89,12 @@ app.config(['MpChatboxProvider', '$httpProvider', '$routeSegmentProvider',
       templateUrl:  '/scripts/views/in/project/project-view.html'
       controller:   'ProjectViewCtrl'
       controllerAs: 'projectViewCtrl'
+    })
+
+    .segment('search', {
+      templateUrl:  '/scripts/views/in/search/search-view.html'
+      controller:   'SearchViewCtrl'
+      controllerAs: 'searchViewCtrl'
     })
 
   # otherwise

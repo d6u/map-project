@@ -2,8 +2,11 @@ MapProject::Application.routes.draw do
 
 
   root 'home#index'
+
+
   get  'dashboard'           => 'home#index'
   get  'project/:project_id' => 'home#index'
+  get  'search'              => 'home#index'
 
 
   get  'mobile'                     => 'home#mobile_index'

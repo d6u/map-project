@@ -4,21 +4,54 @@
   margin: 0;
 }
 
+// --- Item ---
 .md-user-list-item {
-  display: inline-block;
-  width: 93px;
-  height: 93px;
-  text-align: center;
-  line-height: 28px;
-  img {
-    display: block;
-    width: 44px;
-    height: 44px;
-    border-radius: 4px;
-    margin: 13px auto 8px;
-    @include transition();
+  width: 170px;
+  height: 300px;
+  background-color: white;
+  position: relative;
+  &:hover {
+    .md-user-list-item-detail-name {
+      color: $blueDark;
+    }
   }
-  &.mp-active {
-    img { box-shadow: 0 0 0 3px $blue; }
+}
+
+// top
+.md-user-list-item-picture {
+  display: block;
+  width: 100%;
+  height: 170px;
+  overflow: hidden;
+  img {
+    min-width: 100%;
+    min-height: 100%;
+  }
+}
+
+// middle
+.md-user-list-item-detail {
+  padding: 10px;
+}
+
+.md-user-list-item-detail-name {
+  font-size: 18px;
+  font-weight: bold;
+  color: $gray6;
+  &:hover {
+    color: $blue !important;
+    text-decoration: none;
+  }
+}
+
+// bottom
+.md-user-list-item-actions {
+  padding: 0 10px 10px;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  .btn {
+    display: block;
   }
 }
