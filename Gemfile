@@ -47,10 +47,15 @@ end
 # gem 'debugger', group: [:development, :test]
 
 
-
-# gem 'puma', group: :production
+# --- Core modules ---
 gem 'redis'
-gem 'awesome_print', group: :development
 gem 'oj'
+gem 'mongo'
+gem 'mongoid', git: 'git://github.com/mongoid/mongoid.git'
+gem 'bson_ext'
+# gem 'puma'         , group: :production
 # gem 'newrelic_rpm'
+
+# --- Development ---
+gem 'awesome_print'     , group: :development
 gem 'autoprefixer-rails', group: :production

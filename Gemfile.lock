@@ -1,3 +1,13 @@
+GIT
+  remote: git://github.com/mongoid/mongoid.git
+  revision: 38de2e96edc8f64fbe3cdbe062f1d91e9feb388d
+  specs:
+    mongoid (4.0.0)
+      activemodel (~> 4.0.0)
+      moped (~> 1.5)
+      origin (~> 1.0)
+      tzinfo (~> 0.3.37)
+
 GEM
   remote: https://rubygems.org/
   specs:
@@ -30,6 +40,9 @@ GEM
     autoprefixer-rails (0.8.20130906)
       execjs
     awesome_print (1.1.0)
+    bson (1.9.2)
+    bson_ext (1.9.2)
+      bson (~> 1.9.2)
     builder (3.1.4)
     coffee-rails (4.0.0)
       coffee-script (>= 2.2.0)
@@ -54,8 +67,12 @@ GEM
       treetop (~> 1.4.8)
     mime-types (1.25)
     minitest (4.7.5)
+    mongo (1.9.2)
+      bson (~> 1.9.2)
+    moped (1.5.1)
     multi_json (1.7.9)
     oj (2.1.4)
+    origin (1.1.0)
     pg (0.16.0)
     polyglot (0.3.3)
     rack (1.5.2)
@@ -113,9 +130,12 @@ PLATFORMS
 DEPENDENCIES
   autoprefixer-rails
   awesome_print
+  bson_ext
   coffee-rails (~> 4.0.0)
   jbuilder (~> 1.2)
   jquery-rails
+  mongo
+  mongoid!
   oj
   pg
   rails (= 4.0.0)
