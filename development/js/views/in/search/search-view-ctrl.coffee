@@ -14,7 +14,6 @@ app.controller 'SearchViewCtrl',
 
   @addUserAsFriend = (user) ->
     user.addFriend()
-    # TODO: send notification
 
 
   # --- Init ---

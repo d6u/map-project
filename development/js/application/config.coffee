@@ -14,16 +14,16 @@ app = angular.module('mapApp', [
   'mini-typeahead',
   'md-tabset',
   'md-masonry',
+  'md-socket-io',
 
   # Application modules that have to run before `.config`
-  'mp-chatbox-provider'
 ])
 
 
 # config
-app.config(['MpChatboxProvider', '$httpProvider', '$routeSegmentProvider',
+app.config(['socketProvider', '$httpProvider', '$routeSegmentProvider',
 '$locationProvider', '$routeProvider', 'RestangularProvider',
-(MpChatboxProvider, $httpProvider, $routeSegmentProvider, $locationProvider,
+(socketProvider, $httpProvider, $routeSegmentProvider, $locationProvider,
  $routeProvider, RestangularProvider) ->
 
   # Segment Route
@@ -120,7 +120,7 @@ app.config(['MpChatboxProvider', '$httpProvider', '$routeSegmentProvider',
 
   # socket.io
   # ----------------------------------------
-  MpChatboxProvider.setSocketServer(location.protocol + '//' + location.hostname + ':4000')
+  socketProvider.setSocketServer(location.protocol + '//' + location.hostname + ':4000')
 
   # --- Restangular ---
   RestangularProvider.setBaseUrl('/api')
