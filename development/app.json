@@ -27,6 +27,7 @@
         "_modules/md-tabset.coffee",
         "_modules/mini-typeahead.coffee",
         "_modules/md-masonry.coffee",
+        "_modules/md-socket-io.coffee",
 
         "application",
         "services",

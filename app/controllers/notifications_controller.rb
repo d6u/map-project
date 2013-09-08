@@ -11,9 +11,10 @@ class NotificationsController < ApplicationController
 
 
   def index
-    @notifications = []
-    friend_requests = @user.followships.where('status = 0')
-    @notifications += friend_requests
+    notifications         = Notice.where({receiver: @user.id})
+    projectIds            = @user.projects.pluck :id
+    project_notifications = Notice.in(:project => projectIds)
+    render json: (notifications + project_notifications)
   end
 
 end
