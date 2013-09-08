@@ -1,0 +1,34 @@
+.md-notice {
+  padding: 15px;
+}
+
+// Image
+.md-notice-image {
+  float: left;
+  margin-right: 15px;
+  img {
+    width: 50px;
+    height: 50px;
+  }
+}
+
+// Body
+.md-notice-body {
+  overflow: hidden;
+}
+
+.md-notice-body-header {
+  .md-notice-body-header-user-name-link {
+    color: black;
+    &:hover {
+      color: black;
+    }
+  }
+}
+
+.md-notice-body-actions {
+  margin-top: 10px;
+  .btn {
+    margin-right: 10px;
+  }
+}

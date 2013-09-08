@@ -17,3 +17,5 @@ Organized by error area.
 001: Friend request has already sent
 
 002: You are already friends
+
+003: Requested friendship is not a pending request, friendship status is #{friendship.status}

@@ -6,7 +6,21 @@ app.factory 'MpNotification',
 ['$rootScope','$timeout','$q','Restangular','$route','socket',
 ( $rootScope,  $timeout,  $q,  Restangular,  $route,  socket) ->
 
+  # --- Instance transform ---
+  Restangular.addElementTransformer 'notifications', true, (notifications) ->
+    for notice in notifications
+      notice.id = notice._id.$oid
+    return notifications
+
+  Restangular.addElementTransformer 'notifications', false, (notice) ->
+    switch notice.type
+      when 'addFriendRequest'
+        notice.addRestangularMethod 'ignoreFriendRequest', 'remove', 'ignore_friend_request'
+    return notice
+
+  # --- Init ---
   $notifications = Restangular.all 'notifications'
+  $notifications
 
   return MpNotification = {
     $online: false
@@ -32,7 +46,15 @@ app.factory 'MpNotification',
       @$online = false
 
 
-    # --- Helper ---
+    # --- Callbacks ---
+    processServerData: (data) ->
+      console.debug '--> serverData received: ', data
+      switch data.type
+        when 'addFriendRequest'
+          @notifications.push data
+
+
+    # --- Notices ---
     updateNotifications: ->
       $notifications.getList().then (notifications) =>
         if @notifications.length
@@ -42,14 +64,11 @@ app.factory 'MpNotification',
           @notifications = notifications
 
 
-    processServerData: (data) ->
-      console.debug '--> serverData received: ', data
-      switch data.type
-        when 'addFriendRequest'
-          @notifications.push data
+    removeNotice: (notice) ->
+      @notifications = _.without(@notifications, notice)
 
 
-    # send data helper
+    # --- General helper ---
     sendClientData: (data) ->
       socket.emit 'clientData', data
   }
