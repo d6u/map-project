@@ -27,4 +27,14 @@ class User < ActiveRecord::Base
     return user_data['id'].to_s === fb_user_id.to_s
   end
 
+
+  # Return a Hash contains only :id, :name, :fb_user_picture
+  #   this can be used in various situations, e.g. chat message needs to
+  #   send some sender information alone with the message
+  def public_info
+    {:id              => self.id,
+     :name            => self.name,
+     :fb_user_picture => self.fb_user_picture}
+  end
+
 end
