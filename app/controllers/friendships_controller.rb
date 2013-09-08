@@ -75,25 +75,7 @@ class FriendshipsController < ApplicationController
 
   # PUT
   def update
-    friendship = Friendship.find_by_id params[:id]
-    if friendship
-      friendship.attributes = params.require(:friendship).permit(:status, :comments)
-      friendship.save if friendship.changed?
-      if friendship.status > 0
-        reverse_friendship = @user.friendships.find_by_friend_id friendship.user_id
-        if reverse_friendship
-          render :json => {:error   => true,
-                           :message => 'You are already friends'},
-                 :status => 409
-        else
-          reverse_friendship = friendship.reverse_friendship
-          @user.friendships << reverse_friendship
-          render :json => reverse_friendship.friend
-        end
-      end
-    else
-      head 404
-    end
+
   end
 
 
@@ -101,6 +83,38 @@ class FriendshipsController < ApplicationController
   def destroy
     Friendship.destroy_all :id => params[:id]
     head 200
+  end
+
+
+  # POST /api/friendships/:id/accept_friend_request
+  # ----------------------------------------
+  def accept_friend_request
+    Notice.destroy_all({:id => params[:notice_id]})
+    friendship = Friendship.find_by_id(params[:id])
+    if !friendship
+      head 404
+    elsif friendship.status != 0
+      render :json => {:error      => true,
+                       :message    => "Requested friendship is not a pending request, friendship status is #{friendship.status}",
+                       :error_code => 'FS003'},
+             :status => 400
+    else
+      # friendship exist and is a pending request
+      friendship.update({status: 1})
+      reverse_friendship = friendship.reverse_friendship
+      @user.friendships << reverse_friendship
+
+      # Create notice object and send to Node.js server
+      add_friend_request_accepted = Notice.create({
+        :type     => 'addFriendRequestAccepted',
+        :sender   => @user.public_info,
+        :receiver => friendship.friend_id,
+        :body     => { friendship_id: friendship.id }
+      })
+
+      $redis.publish 'notice_channel', add_friend_request_accepted.to_json
+      render :json => reverse_friendship
+    end
   end
 
 end

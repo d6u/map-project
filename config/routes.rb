@@ -37,13 +37,16 @@ MapProject::Application.routes.draw do
     end
 
     resources :friends,       :only => [:index, :show]
+
     resources :friendships,   :only => [:index, :create, :show, :update, :destroy]
-    resources :notifications, :only => [:index]
+    scope    '/friendships/:id' do
+      post   'accept_friend_request' => 'friendships#accept_friend_request'
+    end
 
-
-    post "invitation/generate"
-    get  "invitation/join/:code" => 'invitation#join'
-    post "invitation/join/:code" => 'invitation#joined'
+    resources :notifications, :only => [:index, :destroy]
+    scope    '/notifications/:id' do
+      delete 'ignore_friend_request' => 'notifications#ignore_friend_request'
+    end
 
   end
 
