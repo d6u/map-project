@@ -6,7 +6,8 @@
     "redis": "0.8.x",
     "socket.io": "0.9.x",
     "q": "*",
-    "lodash": "*"
+    "lodash": "*",
+    "pg": "~2.6.0"
   },
   "devDependencies": {
     "grunt": "~0.4.1",
