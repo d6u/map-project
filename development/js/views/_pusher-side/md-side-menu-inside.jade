@@ -44,4 +44,4 @@ section.ly-pusher-side.md-side-menu
 
   //- Notification
   ol.md-side-menu-notifications()
-    li.md-side-menu-notifications-item()
+    li.md-side-menu-notifications-item.md-notice(ng-repeat="notice in insideViewCtrl.MpNotification.notifications", md-notification-item="")

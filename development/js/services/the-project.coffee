@@ -13,7 +13,7 @@ args:
 
 
 app.factory 'TheProject',
-['Restangular', 'MpChatbox', 'MpUser', (Restangular, MpChatbox, MpUser) ->
+['Restangular', 'MpFriends', 'MpUser', (Restangular, MpFriends, MpUser) ->
 
   # Return a class
   return class TheProject
@@ -93,7 +93,7 @@ app.factory 'TheProject',
     organizeParticipatedUsers: (users) ->
       @participatedUsers = []
       for user, index in users
-        friend = _.find MpChatbox.friends, {id: user.id}
+        friend = _.find MpFriends.friends, {id: user.id}
         if friend
           @participatedUsers.push friend
         else if user.id != MpUser.getId()
