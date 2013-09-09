@@ -55,3 +55,42 @@
     display: block;
   }
 }
+
+// --- Mini item ---
+.md-user-list-item-mini {
+  height: 100px;
+  width: 240px;
+  background-color: white;
+  &.active {
+    background-color: $blue;
+    color: white;
+    .md-user-list-item-detail-name {
+      color: white;
+    }
+    &:hover {
+      .md-user-list-item-detail-name {
+        color: $gray3 !important;
+      }
+    }
+  }
+
+  .md-user-list-item-picture {
+    height: 100%;
+    width: 100px;
+    float: left;
+  }
+
+  .md-user-list-item-detail {
+    margin-left: 100px;
+  }
+
+  .md-user-list-item-detail-name {
+    font-size: 14px;
+  }
+
+  &:hover {
+    .md-user-list-item-detail-name {
+      color: $blueDark;
+    }
+  }
+}

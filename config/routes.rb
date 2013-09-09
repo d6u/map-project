@@ -32,7 +32,7 @@ MapProject::Application.routes.draw do
       resources :users,  :only => [:index]
     end
     scope '/projects/:project_id' do
-      post   'users'     => 'projects#add_user'
+      post   'add_user'  => 'projects#add_user'
       delete 'users/:id' => 'projects#remove_user'
     end
 

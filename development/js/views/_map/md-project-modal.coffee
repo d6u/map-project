@@ -37,15 +37,9 @@ app.directive 'mdProjectModal',
 
     # reset deleteCheckbox when interface changes
     $scope.$watch (=>
-      return [@showModal, @bodyContent, @addFriendsSection]
-    ), (=>
-      @_projectAttrs.deleteCheckbox = false
-    ), true
-
-    # copy project attrs when open edit project tab
-    $scope.$watch (=>
       return [@showModal, @bodyContent]
-    ), (=>
+    ), ((newVal) =>
+      @_projectAttrs.deleteCheckbox = false
       if @showModal == true && @bodyContent == 'editDetail'
         @_projectAttrs.title = $scope.mapCtrl.theProject.project.title
         @_projectAttrs.notes = $scope.mapCtrl.theProject.project.notes
@@ -55,8 +49,24 @@ app.directive 'mdProjectModal',
 
 
     # --- Add user ---
-    @getNotParticipatingFriends = ->
-      return []
+    $scope.$watch (=>
+      return [@showModal, @bodyContent]
+    ), ((newVal) =>
+      if @showModal == true && @bodyContent == 'inviteFriends'
+        participatedUserIds = _.pluck($scope.mapCtrl.theProject.participatedUsers, 'id')
+        @_notParticipatingFriends = []
+        for friend in $scope.insideViewCtrl.mpFriends.friends
+          if _.find(participatedUserIds, friend.id)
+            @_notParticipatingFriends.push _.cloneDeep(friend)
+    ), true
+
+    @getSelectedNotParticipatingUsers = ->
+      return _.filter(@_notParticipatingFriends, '$selected')
+
+    @sendInvitationToSelectedUsers = ->
+      selectedUsers = _.filter(@_notParticipatingFriends, '$selected')
+      if selectedUsers.length
+        $scope.mapCtrl.theProject.addParticipatedUsers selectedUsers
 
     # --- Return ---
     return

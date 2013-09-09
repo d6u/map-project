@@ -29,15 +29,17 @@ app.factory 'MpNotification',
 
     # --- Connect to server ---
     connect: (callback) ->
-      socket.connect().then =>
-        @updateNotifications()
-        # onlineFriendsList event is an indicator of server ready
-        socket.on 'onlineFriendsList', (onlineFriendsList) =>
-          @$online = true
-          $rootScope.$broadcast 'onlineFriendsListUpdated', onlineFriendsList
-          socket.on 'serverData', (data) =>
-            @processServerData(data)
-          callback() if callback
+      @updateNotifications()
+
+      # onlineFriendsList event is an indicator of server ready
+      socket.on 'onlineFriendsList', (onlineFriendsList) =>
+        @$online = true
+        $rootScope.$broadcast 'onlineFriendsListUpdated', onlineFriendsList
+        socket.on 'serverData', (data) =>
+          @processServerData(data)
+        callback() if callback
+
+      socket.connect()
 
 
     # --- Close connection and remove data ---

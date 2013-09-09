@@ -10,7 +10,7 @@ class ProjectsController < ApplicationController
   #              DELETE /projects/:id(.:format)      projects#destroy
 
 
-  # POST /projects/:project_id/users
+  # POST /projects/:project_id/add_user
   def add_user
     user_ids = params[:user_ids].split(',')
     project  = Project.find_by_id params[:project_id]

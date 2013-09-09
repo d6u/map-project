@@ -85,8 +85,8 @@ app.factory 'TheProject',
     # users is an array contains user object, each object must have `id`
     addParticipatedUsers: (users) ->
       ids = _.pluck(users, 'id')
-      $users = @project.all('users')
-      $users.post({user_ids: ids.join(',')}).then (users) =>
+      @project.customOperation('post', 'add_user', {user_ids: ids.join(',')})
+      .then (users) =>
         @organizeParticipatedUsers(users)
 
     # organize server returned participated users
