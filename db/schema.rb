@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20130806040145) do
+ActiveRecord::Schema.define(version: 20130909160522) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -30,18 +30,6 @@ ActiveRecord::Schema.define(version: 20130806040145) do
   add_index "friendships", ["status"], name: "index_friendships_on_status", using: :btree
   add_index "friendships", ["user_id"], name: "index_friendships_on_user_id", using: :btree
 
-  create_table "invitations", force: true do |t|
-    t.string   "code"
-    t.integer  "user_id"
-    t.integer  "project_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
-  add_index "invitations", ["code"], name: "index_invitations_on_code", using: :btree
-  add_index "invitations", ["project_id"], name: "index_invitations_on_project_id", using: :btree
-  add_index "invitations", ["user_id"], name: "index_invitations_on_user_id", using: :btree
-
   create_table "places", force: true do |t|
     t.text     "notes"
     t.string   "name"
@@ -55,14 +43,17 @@ ActiveRecord::Schema.define(version: 20130806040145) do
 
   add_index "places", ["project_id"], name: "index_places_on_project_id", using: :btree
 
-  create_table "project_user", force: true do |t|
-    t.integer "project_id"
-    t.integer "user_id"
+  create_table "project_participations", force: true do |t|
+    t.integer  "project_id"
+    t.integer  "user_id"
+    t.integer  "status"
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
-  add_index "project_user", ["project_id", "user_id"], name: "index_project_user_on_project_id_and_user_id", unique: true, using: :btree
-  add_index "project_user", ["project_id"], name: "index_project_user_on_project_id", using: :btree
-  add_index "project_user", ["user_id"], name: "index_project_user_on_user_id", using: :btree
+  add_index "project_participations", ["project_id", "user_id"], name: "index_project_participations_on_project_id_and_user_id", unique: true, using: :btree
+  add_index "project_participations", ["project_id"], name: "index_project_participations_on_project_id", using: :btree
+  add_index "project_participations", ["user_id"], name: "index_project_participations_on_user_id", using: :btree
 
   create_table "projects", force: true do |t|
     t.string   "title"
