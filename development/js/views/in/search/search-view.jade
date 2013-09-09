@@ -22,6 +22,7 @@
       //- show side menu
       a.md-bottom-bar-button(href="", ng-click="interface.showUserSection = true")
         i.icon-reorder
+        .md-bottom-bar-notification-count(ng-show="insideViewCtrl.MpNotification.notifications.length", ng-cloak="") {{insideViewCtrl.MpNotification.notifications.length}}
       input.md-bottom-bar-input(type="text", placeholder="Enter name to search", ng-model="searchViewCtrl.searchInput", md-search-view-searchinput="")
 
     .md-bottom-bar-button-group-center.md-bottom-bar-text
