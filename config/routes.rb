@@ -19,6 +19,7 @@ MapProject::Application.routes.draw do
   # JSON API point
   scope '/api' do
 
+    # --- User ---
     scope '/users' do
       post 'login'    => 'users#login'
       get  'logout'   => 'users#logout'
@@ -26,15 +27,14 @@ MapProject::Application.routes.draw do
     end
     resources :users, :only => [:index, :update]
 
-
+    # --- Project ---
     resources :projects, :only => [:index, :create, :show, :update, :destroy] do
       resources :places, :only => [:index, :create, :show, :update, :destroy]
-      resources :users,  :only => [:index]
+      get    'participating_users' => 'projects#participating_users'
+      post   'add_users'           => 'projects#add_users'
+      delete 'remove_users'        => 'projects#remove_users'
     end
-    scope '/projects/:project_id' do
-      post   'add_user'  => 'projects#add_user'
-      delete 'users/:id' => 'projects#remove_user'
-    end
+
 
     resources :friends,       :only => [:index, :show]
 

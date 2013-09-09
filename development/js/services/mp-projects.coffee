@@ -18,7 +18,7 @@ app.factory 'MpProjects',
       @projects   = []
       @getProjects()
 
-    getProjects: (queryParams={include_participated: true}) ->
+    getProjects: (queryParams={include_participating: true}) ->
       @gettingProjects = @$$projects.getList(queryParams).then (projects) =>
         @projects = projects
         return projects

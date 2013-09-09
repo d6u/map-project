@@ -29,7 +29,6 @@ app.factory 'TheProject',
         scope.insideViewCtrl.MpProjects.findProjectById(projectId).then ((project) =>
           @project  = project
           @$$places = Restangular.one('projects', project.id).all('places')
-          @$$users  = Restangular.one('projects', project.id).all('users')
           @getPlaces()
           @getParticipatedUsers()
         ), =>
@@ -79,15 +78,14 @@ app.factory 'TheProject',
     participatedUsers: []
 
     getParticipatedUsers: ->
-      @$$users.getList().then (users) =>
+      Restangular.one('projects', @project.id).customGETLIST('participating_users')
+      .then (users) =>
         @organizeParticipatedUsers(users)
 
     # users is an array contains user object, each object must have `id`
     addParticipatedUsers: (users) ->
       ids = _.pluck(users, 'id')
-      @project.customOperation('post', 'add_user', {user_ids: ids.join(',')})
-      .then (users) =>
-        @organizeParticipatedUsers(users)
+      Restangular.one('projects', @project.id).customPOST('add_users', {user_ids: ids.join(',')})
 
     # organize server returned participated users
     organizeParticipatedUsers: (users) ->

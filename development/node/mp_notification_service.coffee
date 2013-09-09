@@ -24,12 +24,10 @@ class MpNotificationService
       console.log '--> Redis receive message: ', message
       if channel == 'notice_channel'
         data = JSON.parse(message)
-        switch data.type
-          when 'addFriendRequest'
-            receiverClient = @onlineClients[data.receiver]
-            if receiverClient
-              for socket in receiverClient.sockets
-                socket.emit 'serverData', data
+        receiverClient = @onlineClients[data.receiver]
+        if receiverClient
+          for socket in receiverClient.sockets
+            socket.emit 'serverData', data
 
 
     # --- Socket.io connection ---
