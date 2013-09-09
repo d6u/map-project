@@ -2,6 +2,7 @@ q = require('q')
 _ = require('lodash')
 
 
+# --- Module ---
 class MpNotificationService
 
   constructor: (redis, socketIo, pg) ->
@@ -35,21 +36,19 @@ class MpNotificationService
     @sockets.on 'connection', (socket) =>
       # connection
       console.log "--> User #{socket.handshake.user.id} connected"
-      @queryPg('SELECT * FROM users WHERE id = $1;', [socket.handshake.user.id])
-      .then (results) =>
-        user = results[0]
-        @addToOnlineClient(user, socket).then (clientData) =>
-          # onlineFriendsList event also serve as server ready indicator
-          socket.clientData = clientData
-          socket.emit 'onlineFriendsList', clientData.getOnlineFriends()
+      @addToOnlineClient(socket).then (clientData) =>
+        console.log @onlineClients
+        # onlineFriendsList event also serve as server ready indicator
+        socket.emit 'onlineFriendsList', @getOnlineFriends(clientData)
 
       # request online friends list
-      socket.on 'requestOnlineFriendsList', (data, done) ->
-        done(socket.clientData.getOnlineFriends())
+      socket.on 'requestOnlineFriendsList', (data, done) =>
+        done(@getOnlineFriends(@getClientData(socket)))
 
-
-
-
+      # disconnect
+      socket.on 'disconnect', =>
+        console.log "--> User #{socket.handshake.user.id} disconnected"
+        @removeClientFromOnlineList(socket)
 
 
   # --- Pg interface ---
@@ -82,34 +81,44 @@ class MpNotificationService
 
 
   # --- Oneline Client Management ---
-  addToOnlineClient: (user, socket) ->
+  addToOnlineClient: (socket) ->
     userFetched = q.defer()
-    clientData = @onlineClients[user.id]
+    user        = socket.handshake.user
+    clientData  = @getClientData(socket)
     if clientData
       clientData.sockets.push socket
       userFetched.resolve(clientData)
     else
-      that = this
       clientData = {
         user:         user
         sockets:     [socket]
         friendsList: []
-        getOnlineFriends: ->
-          _.filter @friendsList, (value, index) ->
-            that.onlineClients[value]
       }
+      @onlineClients[user.id] = clientData
       @queryPg('SELECT * FROM friendships WHERE user_id = $1', [user.id])
       .then (friendships) ->
         clientData.friendsList = _.pluck(friendships, 'friend_id')
         userFetched.resolve(clientData)
-      @onlineClients[user.id] = clientData
 
     return userFetched.promise
 
 
+  removeClientFromOnlineList: (socket) ->
+    clientData = @getClientData(socket)
+    if clientData
+      clientData.sockets = _.without clientData.sockets, socket
+      if !clientData.sockets.length
+       delete @onlineClients[socket.handshake.user.id]
+    console.log @onlineClients
 
 
+  getClientData: (socket) ->
+    @onlineClients[socket.handshake.user.id]
 
+
+  getOnlineFriends: (clientData) ->
+    _.filter clientData.friendsList, (friend_id) =>
+      @onlineClients[friend_id]
 
 
 # Export module

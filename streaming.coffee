@@ -58,10 +58,11 @@ socketIo.set 'authorization', (handshakeData, callback) ->
       #   when generate sender data, completely rely on server, prevent id
       #   theft, update when user attrs changes
       user_data = data.split(':')
-      handshakeData.user =
-        id: Number(user_data[0])
-        name: user_data[1]
-      callback(null, true)
+      user_id = Number(user_data[0])
+      mpNotificationService.queryPg('SELECT * FROM users WHERE id = $1;', [user_id])
+      .then (results) ->
+        handshakeData.user = results[0]
+        callback(null, true)
     else
       callback(null, false)
 
@@ -71,64 +72,6 @@ socketIo.set 'authorization', (handshakeData, callback) ->
 MpNotificationService = require('./development/node/mp_notification_service')
 mpNotificationService = new MpNotificationService(redis, socketIo, pg)
 
-
-
-#   # store clients
-#   # ----------------------------------------
-#   clientSockets = clientsList[socket.handshake.user.id]
-#   if clientSockets
-#     clientSockets.push socket.id if _.findIndex(clientSockets, socket.id) == -1
-#   else
-#     clientsList[socket.handshake.user.id] = [socket.id]
-
-#   # get online list
-#   # ----------------------------------------
-#   socket.on 'getOnlineFriendsList', (friendsIds, callback) ->
-#     # save friends list on client's sockets list
-#     console.log 'getOnlineFriendsList', friendsIds
-#     clientsList[socket.handshake.user.id].friendsList = friendsIds
-
-#     onlineFriendsIds = []
-#     for id in friendsIds
-#       # check if online
-#       if clientsList[id] && clientsList[id].length > 0
-#         onlineFriendsIds.push id
-#         # notify friend that I'm online
-#         for socketId in clientsList[id]
-#           io.sockets.socket(socketId).emit 'userConnected', socket.handshake.user.id
-#     callback(onlineFriendsIds)
-#     console.log clientsList
-
-#   # remove on disconnection
-#   # ----------------------------------------
-#   socket.on 'disconnect', ->
-#     console.log 'User disconnect', socket.handshake.user
-#     friendsList = clientsList[socket.handshake.user.id].friendsList
-#     clientsList[socket.handshake.user.id] = _.without(clientsList[socket.handshake.user.id], socket.id)
-#     clientsList[socket.handshake.user.id].friendsList = friendsList
-#     if clientsList[socket.handshake.user.id] && clientsList[socket.handshake.user.id].length == 0
-#       # notice friends if no socket remains online
-#       if friendsList
-#         for id in friendsList
-#           if clientsList[id] && clientsList[id].length > 0
-#             for socketId in clientsList[id]
-#               io.sockets.socket(socketId).emit 'userDisconnected', socket.handshake.user.id
-#       # remove the socket
-#       delete clientsList[socket.handshake.user.id]
-#     console.log clientsList
-
-#   # client message
-#   # ----------------------------------------
-#   socket.on 'clientData', (data) ->
-#     console.log 'receive clientMessage', data
-#     _.forEach data.receivers_ids, (id) ->
-#       if clientsList[id] && clientsList[id].length > 0
-#         _.forEach clientsList[id], (socketId) ->
-#           io.sockets.socket(socketId).emit 'serverData', data
-
-
-
-# Run
-# ========================================
+# node.js server
 httpServer.listen(4000)
 console.log "==> Node server running on port 4000"
