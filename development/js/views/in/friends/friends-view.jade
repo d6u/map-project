@@ -19,7 +19,7 @@
   .md-bottom-bar
     .md-bottom-bar-button-group
       //- show side menu
-      a.md-bottom-bar-button(href="", ng-click="interface.showUserSection = true")
+      a.md-bottom-bar-button.md-bottom-bar-notification-button(href="", ng-click="interface.showUserSection = true")
         i.icon-reorder
         .md-bottom-bar-notification-count(ng-show="insideViewCtrl.MpNotification.notifications.length", ng-cloak="") {{insideViewCtrl.MpNotification.notifications.length}}
       input.md-bottom-bar-input(type="text", placeholder="Find your friends", ng-model="friendsViewCtrl.searchInput")
