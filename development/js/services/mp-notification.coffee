@@ -33,7 +33,7 @@ app.factory 'MpNotification',
         @updateNotifications()
         # onlineFriendsList event is an indicator of server ready
         socket.on 'onlineFriendsList', (onlineFriendsList) =>
-          @$$online = true
+          @$online = true
           $rootScope.$broadcast 'onlineFriendsListUpdated', onlineFriendsList
           socket.on 'serverData', (data) =>
             @processServerData(data)

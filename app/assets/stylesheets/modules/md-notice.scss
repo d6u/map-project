@@ -32,3 +32,63 @@
     margin-right: 10px;
   }
 }
+
+// Pop box
+.md-notice-pop-container {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  position: absolute;
+  z-index: 900;
+  left: 10px;
+  bottom: 50px;
+  width: 300px;
+}
+
+.md-notice-pop {
+  padding: 7px;
+  background-color: white;
+  margin-top: 10px;
+  border: 1px solid $gray3;
+  border-left: none;
+  box-shadow: -4px 0 0 $aqua;
+
+  .md-notice-image {
+    margin-right: 7px;
+    img {
+      width: 35px;
+      height: 35px;
+      border-radius: 2px;
+    }
+  }
+
+  // ngAnimate
+  &.ng-enter,
+  &.ng-leave,
+  &.ng-move, {
+    @include transition();
+  }
+
+  &.ng-enter {
+    opacity: 0;
+    &.ng-enter-active {
+      opacity: 1;
+    }
+  }
+
+  &.ng-leave {
+    opacity: 1;
+    &.ng-leave-active {
+      opacity: 0;
+    }
+  }
+}
+
+.md-notice-pop-click {
+  display: block;
+  color: inherit;
+  &:hover {
+    text-decoration: inherit;
+    color: inherit;
+  }
+}
