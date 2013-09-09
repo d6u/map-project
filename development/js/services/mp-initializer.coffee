@@ -6,7 +6,7 @@ MpInitializer is in charge of init check of login status and attach REST
 ###
 
 app.factory 'MpInitializer',
-['$rootScope', '$q', 'MpUser', ($rootScope, $q, MpUser) ->
+['$rootScope', '$q', 'MpUser', '$timeout', ($rootScope, $q, MpUser, $timeout) ->
 
   $rootScope.MpUser = MpUser
 
@@ -17,7 +17,7 @@ app.factory 'MpInitializer',
   $.when(appPrepare.facebookLoginCheck, appPrepare.ipLocationCheck)
   .then (response, location) ->
 
-    $rootScope.$apply ->
+    $timeout ->
       # user location
       if location.error
         $rootScope.userLocation = {

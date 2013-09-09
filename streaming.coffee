@@ -33,7 +33,11 @@ socketIo.set 'store', new RedisStore({
   redisSub:    socketRedisSub
   redisClient: socketRedisClient
 })
-socketIo.set('log level', 2)
+socketIo.set('log level', 3)
+
+MpNotificationService = require('./development/node/mp_notification_service')
+mpNotificationService = new MpNotificationService(redis, socketIo, pg)
+
 socketIo.set 'authorization', (handshakeData, callback) ->
   ###
   {
@@ -68,10 +72,6 @@ socketIo.set 'authorization', (handshakeData, callback) ->
 
 
 # --- Run ---
-# notification service
-MpNotificationService = require('./development/node/mp_notification_service')
-mpNotificationService = new MpNotificationService(redis, socketIo, pg)
-
 # node.js server
 httpServer.listen(4000)
 console.log "==> Node server running on port 4000"

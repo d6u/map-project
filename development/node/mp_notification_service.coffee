@@ -9,7 +9,7 @@ class MpNotificationService
     @redisClient   = redis.createClient()
     @subscriber    = redis.createClient()
     @sockets       = socketIo.sockets
-    @pgConnectionString = "pg://map-project@localhost/map-project_development"
+    @pgConnectionString = "postgres://map-project:1234@localhost/map-project_development"
     @pg            = pg
     @onlineClients = {}
 
@@ -37,7 +37,6 @@ class MpNotificationService
       # connection
       console.log "--> User #{socket.handshake.user.id} connected"
       @addToOnlineClient(socket).then (clientData) =>
-        console.log @onlineClients
         # onlineFriendsList event also serve as server ready indicator
         socket.emit 'onlineFriendsList', @getOnlineFriends(clientData)
 
@@ -68,6 +67,7 @@ class MpNotificationService
               done()
             else
               queryFinished.resolve(results.rows)
+              done()
         else
           client.query sqlQuery, (error, results) ->
             if error
@@ -76,6 +76,7 @@ class MpNotificationService
               done()
             else
               queryFinished.resolve(results.rows)
+              done()
 
     return queryFinished.promise
 
@@ -109,7 +110,6 @@ class MpNotificationService
       clientData.sockets = _.without clientData.sockets, socket
       if !clientData.sockets.length
        delete @onlineClients[socket.handshake.user.id]
-    console.log @onlineClients
 
 
   getClientData: (socket) ->

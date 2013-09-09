@@ -20,12 +20,12 @@ angular.module('md-socket-io', [])
 
 
     # --- Socket.io ---
-    return {
+    return socket = {
       $$socket: io.connect(socketServer, socketOptions)
 
       on: (eventName, callback) ->
-        @$$socket.on eventName, (args...) ->
-          $timeout ->
+        @$$socket.on eventName, (args...) =>
+          $timeout =>
             callback.apply(@$$socket, args)
 
       emit: (eventName, data, callback) ->
@@ -35,9 +35,12 @@ angular.module('md-socket-io', [])
 
       connect: ->
         socketConnected = $q.defer()
-        @$$socket.socket.connect()
-        @on 'connect', =>
+        that = this
+        callback = ->
           socketConnected.resolve()
+          that.$$socket.removeListener('connect', callback)
+        @on 'connect', callback
+        @$$socket.socket.connect()
         return socketConnected.promise
 
       disconnect: ->
