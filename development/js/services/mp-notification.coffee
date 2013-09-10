@@ -2,86 +2,71 @@
 MpNotification
 ###
 
-app.factory 'MpNotification',
-['$rootScope','$timeout','$q','Restangular','$route','socket',
-( $rootScope,  $timeout,  $q,  Restangular,  $route,  socket) ->
+app.service 'MpNotification',
+['$rootScope', '$timeout', '$q', 'Restangular', '$route', 'socket', class MpNotification
 
-  # --- Instance transform ---
-  Restangular.addElementTransformer 'notifications', true, (notifications) ->
-    for notice in notifications
-      notice.id = notice._id.$oid
-    return notifications
+  constructor: ($rootScope, $timeout, $q, Restangular, $route, socket) ->
+    @notifications = []
 
-  Restangular.addElementTransformer 'notifications', false, (notice) ->
-    switch notice.type
-      when 'addFriendRequest'
-        notice.addRestangularMethod 'ignoreFriendRequest', 'remove', 'ignore_friend_request'
-    return notice
+    # --- Resouces ---
+    @$$notifications = Restangular.all 'notifications'
 
-  # --- Init ---
-  $notifications = Restangular.all 'notifications'
+    Restangular.addElementTransformer 'notifications', true, (notifications) ->
+      for notice in notifications
+        notice.id = notice._id.$oid
+      return notifications
 
-  return MpNotification = {
-    $online: false
-    notifications: []
+    Restangular.addElementTransformer 'notifications', false, (notice) ->
+      switch notice.type
+        when 'addFriendRequest'
+          notice.addRestangularMethod 'ignoreFriendRequest', 'remove', 'ignore_friend_request'
+      return notice
 
-
-    # --- Connect to server ---
-    connect: (callback) ->
-      @updateNotifications()
-
-      # onlineFriendsList event is an indicator of server ready
-      socket.on 'onlineFriendsList', (onlineFriendsList) =>
-        @$online = true
-        $rootScope.$broadcast 'onlineFriendsListUpdated', onlineFriendsList
-        socket.on 'serverData', (data) =>
-          @processServerData(data)
-        callback() if callback
-
-      socket.connect()
+    # --- Socket.io ---
+    socket.on 'serverData', (serverData) =>
+      @processServerData(serverData)
 
 
-    # --- Close connection and remove data ---
-    destroy: ->
-      socket.disconnect()
-      @$online = false
+  # --- Login/out process management ---
+  initialize: (scope) ->
+    @getNotifications()
+
+  destroy: ->
+    @notifications = []
 
 
-    # --- Callbacks ---
-    # directNotificationNames holds notice type that will be added to
-    #   @notifications array directive when arrives from server
-    directNotificationNames: [
-      'addFriendRequest'
-      'addFriendRequestAccepted'
-      'projectInvitation'
-      'projectInvitationAccepted'
-      'projectInvitationRejected'
-      'youAreRemovedFromProject'
-      'projectDeleted'
-    ]
-    processServerData: (data) ->
-      console.debug '--> serverData received: ', data
-      if _.find(@directNotificationNames, data.type)
-        @notifications.push data
-      # else
+  # --- Incoming server notices management ---
+
+  # directNotificationNames holds notice type that will be added to
+  #   @notifications array directive when arrives from server
+  directNotificationNames: [
+    'addFriendRequest'
+    'addFriendRequestAccepted'
+    'projectInvitation'
+    'projectInvitationAccepted'
+    'projectInvitationRejected'
+    'youAreRemovedFromProject'
+    'projectDeleted'
+  ]
+
+  processServerData: (data) ->
+    console.debug '--> serverData received: ', data
+    if _.find(@directNotificationNames, data.type)
+      @notifications.push data
 
 
-    # --- Notices ---
-    updateNotifications: ->
-      $notifications.getList().then (notifications) =>
-        if @notifications.length
-          # TODO: organize new and existing notifications
-          @notifications = notifications
-        else
-          @notifications = notifications
+  # --- Notification interface ---
+  getNotifications: ->
+    @$$notifications.getList().then (notifications) =>
+      if @notifications.length
+        # TODO: organize new and existing notifications
+        @notifications = notifications
+      else
+        @notifications = notifications
 
+  removeNotice: (notice) ->
+    @notifications = _.without(@notifications, notice)
 
-    removeNotice: (notice) ->
-      @notifications = _.without(@notifications, notice)
-
-
-    # --- General helper ---
-    sendClientData: (data) ->
-      socket.emit 'clientData', data
-  }
+  sendClientData: (data) ->
+    socket.emit 'clientData', data
 ]
