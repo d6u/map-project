@@ -19,7 +19,12 @@ app.directive 'mdNotificationItem',
 
     switch scope.notice.type
       when 'addFriendRequest'
-        mpTemplateCache.get('/scripts/views/_shared/notice-templates/add-friend-request.html')
-        .then (template) ->
-          element.html($compile(template)(scope))
+        templateUrl = '/scripts/views/_shared/notice-templates/add-friend-request.html'
+      when 'addFriendRequestAccepted'
+        templateUrl = '/scripts/views/_shared/notice-templates/add-friend-request-accepted.html'
+      when 'projectInvitation'
+        templateUrl = '/scripts/views/_shared/notice-templates/project-invitation.html'
+
+    mpTemplateCache.get(templateUrl).then (template) ->
+      element.html($compile(template)(scope))
 ]

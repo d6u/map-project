@@ -20,7 +20,6 @@ app.factory 'MpNotification',
 
   # --- Init ---
   $notifications = Restangular.all 'notifications'
-  $notifications
 
   return MpNotification = {
     $online: false
@@ -49,11 +48,22 @@ app.factory 'MpNotification',
 
 
     # --- Callbacks ---
+    # directNotificationNames holds notice type that will be added to
+    #   @notifications array directive when arrives from server
+    directNotificationNames: [
+      'addFriendRequest'
+      'addFriendRequestAccepted'
+      'projectInvitation'
+      'projectInvitationAccepted'
+      'projectInvitationRejected'
+      'youAreRemovedFromProject'
+      'projectDeleted'
+    ]
     processServerData: (data) ->
       console.debug '--> serverData received: ', data
-      switch data.type
-        when 'addFriendRequest'
-          @notifications.push data
+      if _.find(@directNotificationNames, data.type)
+        @notifications.push data
+      # else
 
 
     # --- Notices ---
