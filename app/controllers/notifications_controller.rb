@@ -1,16 +1,12 @@
 class NotificationsController < ApplicationController
 
-  #     notifications GET    /notifications(.:format)           #index
-  #                   POST   /notifications(.:format)           #create
-  #  new_notification GET    /notifications/new(.:format)       #new
-  # edit_notification GET    /notifications/:id/edit(.:format)  #edit
-  #      notification GET    /notifications/:id(.:format)       #show
-  #                   PATCH  /notifications/:id(.:format)       #update
-  #                   PUT    /notifications/:id(.:format)       #update
-  #                   DELETE /notifications/:id(.:format)       #destroy
+  # GET     /api/notifications                            #index
+  # DELETE  /api/notifications/:id                        #destroy
+  # POST    /api/notifications/:id/accept_friend_request  #accept_friend_request
+  # DELETE  /api/notifications/:id/ignore_friend_request  #ignore_friend_request
 
 
-  # GET
+  # GET     /api/notifications
   # ----------------------------------------
   def index
     notifications         = Notice.where({receiver: @user.id})
@@ -20,7 +16,7 @@ class NotificationsController < ApplicationController
   end
 
 
-  # DELETE /api/notifications/:id
+  # DELETE  /api/notifications/:id
   # ----------------------------------------
   def destroy
     Notice.find(params[:id]).destroy
@@ -28,17 +24,44 @@ class NotificationsController < ApplicationController
   end
 
 
-  # DELETE /api/notifications/:id/ignore_friend_request
+  # POST    /api/notifications/:id/accept_friend_request
+  # ----------------------------------------
+  def accept_friend_request
+    Notice.destroy_all(:id => params[:id])
+    friendship = Friendship.find_by_id(params[:friendship_id])
+    if !friendship
+      head 404
+    elsif friendship.status != 0
+      render :json => {:error      => true,
+                       :message    => "Requested friendship is not a pending request, friendship status is #{friendship.status}",
+                       :error_code => 'FS003'},
+             :status => 400
+    else
+      # friendship exist and is a pending request
+      friendship.update({status: 1})
+      reverse_friendship = friendship.reverse_friendship
+      @user.friendships << reverse_friendship
+
+      # Create notice object and send to Node.js server
+      add_friend_request_accepted = Notice.create({
+        :type     => 'addFriendRequestAccepted',
+        :sender   => @user.public_info,
+        :receiver => reverse_friendship.friend_id,
+        :body     => { friendship_id: friendship.id }
+      })
+
+      $redis.publish 'notice_channel', add_friend_request_accepted.to_json
+      render :json => reverse_friendship
+    end
+  end
+
+
+  # DELETE  /api/notifications/:id/ignore_friend_request
   # ----------------------------------------
   def ignore_friend_request
-    notice = Notice.find(params[:id])
-    if notice
-      Friendship.destroy_all(:id => notice['body']['friendship_id'])
-      notice.destroy
-      head 200
-    else
-      head 404
-    end
+    Notice.destroy_all(:id => params[:id])
+    Friendship.destroy_all(:id => params['friendship_id'])
+    head 200
   end
 
 end

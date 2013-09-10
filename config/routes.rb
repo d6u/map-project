@@ -39,12 +39,10 @@ MapProject::Application.routes.draw do
     resources :friends,       :only => [:index, :show]
 
     resources :friendships,   :only => [:index, :create, :show, :update, :destroy]
-    scope    '/friendships/:id' do
-      post   'accept_friend_request' => 'friendships#accept_friend_request'
-    end
 
     resources :notifications, :only => [:index, :destroy]
     scope    '/notifications/:id' do
+      post   'accept_friend_request' => 'notifications#accept_friend_request'
       delete 'ignore_friend_request' => 'notifications#ignore_friend_request'
     end
 

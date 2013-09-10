@@ -5,22 +5,11 @@ MpNotification
 app.service 'MpNotification',
 ['$rootScope', '$timeout', '$q', 'Restangular', '$route', 'socket', class MpNotification
 
-  constructor: ($rootScope, $timeout, $q, Restangular, $route, socket) ->
+  constructor: ($rootScope, $timeout, $q, @Restangular, $route, socket) ->
     @notifications = []
 
     # --- Resouces ---
     @$$notifications = Restangular.all 'notifications'
-
-    Restangular.addElementTransformer 'notifications', true, (notifications) ->
-      for notice in notifications
-        notice.id = notice._id.$oid
-      return notifications
-
-    Restangular.addElementTransformer 'notifications', false, (notice) ->
-      switch notice.type
-        when 'addFriendRequest'
-          notice.addRestangularMethod 'ignoreFriendRequest', 'remove', 'ignore_friend_request'
-      return notice
 
     # --- Socket.io ---
     socket.on 'serverData', (serverData) =>
@@ -50,9 +39,10 @@ app.service 'MpNotification',
   ]
 
   processServerData: (data) ->
-    console.debug '--> serverData received: ', data
-    if _.find(@directNotificationNames, data.type)
-      @notifications.push data
+    if _.indexOf(@directNotificationNames, data.type) >= 0
+      newNotice = @Restangular.one('notifications', data.id)
+      angular.extend(newNotice, data)
+      @notifications.push newNotice
 
 
   # --- Notification interface ---
@@ -67,6 +57,18 @@ app.service 'MpNotification',
   removeNotice: (notice) ->
     @notifications = _.without(@notifications, notice)
 
+  # --- Special notice management ---
+  # friend request
+  acceptFriendRequest: (request) ->
+    request.customPOST({}, 'accept_friend_request', {friendship_id: request.body.friendship_id})
+    @removeNotice(request)
+
+  ignoreFriendRequest: (request) ->
+    request.customDELETE('ignore_friend_request', {friendship_id: request.body.friendship_id})
+    @removeNotice(request)
+
+
+  # --- Helpers ---
   sendClientData: (data) ->
     socket.emit 'clientData', data
 ]

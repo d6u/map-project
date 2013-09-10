@@ -14,19 +14,6 @@ app.service 'MpFriends',
     @$$friendships = Restangular.all 'friendships'
     @$$userQuery   = Restangular.all 'users'
 
-    # friendships
-    Restangular.addElementTransformer 'friendships', false, (friendship) ->
-      friendship.addRestangularMethod 'acceptFriendRequest', 'post', 'accept_friend_request'
-      return friendship
-
-    # users
-    Restangular.addElementTransformer 'users', false, (user) ->
-      user.addFriend = ->
-        @added   = true
-        @pending = true
-        return $friendships.post({friend_id: @id})
-      return user
-
     # --- Socket.io ---
     socket.on 'connect', =>
       socket.emit 'requestOnlineFriendsList', undefined, (ids) =>
@@ -63,20 +50,20 @@ app.service 'MpFriends',
     @$$friends.getList().then (friends) =>
       @friends = friends
 
-
-  acceptFriendRequest: (friendship_id, notice_id) ->
-    friendship = Restangular.one('friendships', friendship_id)
-    extraParams = if notice_id then {notice_id: notice_id} else {}
-    friendship.acceptFriendRequest(extraParams)
-
-
   refreshFriendsOnlineStatus: (onlineFriendsList) ->
     for friend in @friends
       if _.find(onlineFriendsList, friend.id)
         friend.$online = true
 
 
+  # --- Friendship interface ---
+  addUserAsFriend: (user) ->
+    user.added   = true
+    user.pending = true
+    @$$friendships.post({friend_id: user.id})
+
+
   # --- Search user interface ---
   findUserByName: (name) ->
-    $userQuery.getList({name: name})
+    @$$userQuery.getList({name: name})
 ]
