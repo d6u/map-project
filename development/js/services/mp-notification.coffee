@@ -3,9 +3,9 @@ MpNotification
 ###
 
 app.service 'MpNotification',
-['$rootScope', '$timeout', '$q', 'Restangular', '$route', 'socket', class MpNotification
+['$rootScope', '$timeout', '$q', 'Restangular', '$route', 'socket', 'MpFriends', class MpNotification
 
-  constructor: ($rootScope, $timeout, $q, @Restangular, $route, socket) ->
+  constructor: ($rootScope, $timeout, $q, @Restangular, $route, socket, @MpFriends) ->
     @notifications = []
 
     # --- Resouces ---
@@ -44,6 +44,11 @@ app.service 'MpNotification',
       angular.extend(newNotice, data)
       @notifications.push newNotice
 
+    # specific actions
+    switch data.type
+      when 'addFriendRequestAccepted'
+        @MpFriends.addUserToFriendsList(data.sender)
+
 
   # --- Notification interface ---
   getNotifications: ->
@@ -62,6 +67,7 @@ app.service 'MpNotification',
   acceptFriendRequest: (request) ->
     request.customPOST({}, 'accept_friend_request', {friendship_id: request.body.friendship_id})
     @removeNotice(request)
+    @MpFriends.addUserToFriendsList(request.sender)
 
   ignoreFriendRequest: (request) ->
     request.customDELETE('ignore_friend_request', {friendship_id: request.body.friendship_id})

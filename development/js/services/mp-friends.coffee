@@ -3,9 +3,9 @@ MpFriends handles user/friends query/add/show/remove
 ###
 
 app.service 'MpFriends',
-['Restangular', 'socket', class MpFriends
+['Restangular', 'socket', '$q', class MpFriends
 
-  constructor: (Restangular, socket) ->
+  constructor: (@Restangular, @socket, @$q) ->
     @friends          = []
     @onlineFriendsIds = []
 
@@ -16,8 +16,7 @@ app.service 'MpFriends',
 
     # --- Socket.io ---
     socket.on 'connect', =>
-      socket.emit 'requestOnlineFriendsList', undefined, (ids) =>
-        @onlineFriendsIds = ids
+      @syncFriendsOnlineStatus()
 
 
   # --- Login/out process management ---
@@ -50,10 +49,15 @@ app.service 'MpFriends',
     @$$friends.getList().then (friends) =>
       @friends = friends
 
-  refreshFriendsOnlineStatus: (onlineFriendsList) ->
-    for friend in @friends
-      if _.find(onlineFriendsList, friend.id)
-        friend.$online = true
+  syncFriendsOnlineStatus: (onlineFriendsList) ->
+    @socket.emit 'requestOnlineFriendsList', undefined, (ids) =>
+      @onlineFriendsIds = ids
+
+  addUserToFriendsList: (user) ->
+    newFriend = @Restangular.one('friends', user.id)
+    angular.extend(newFriend, user)
+    @friends.push newFriend
+    @syncFriendsOnlineStatus()
 
 
   # --- Friendship interface ---
