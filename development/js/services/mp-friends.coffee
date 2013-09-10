@@ -15,8 +15,9 @@ app.service 'MpFriends',
     @$$userQuery   = Restangular.all 'users'
 
     # --- Socket.io ---
-    socket.on 'connect', =>
-      @syncFriendsOnlineStatus()
+    # push sync
+    socket.on 'onlineFriendsList', (ids) =>
+      @onlineFriendsIds = ids
 
 
   # --- Login/out process management ---
@@ -25,7 +26,7 @@ app.service 'MpFriends',
   initialize: (scope) ->
     refreshFriendsOnlineStatus = =>
       for friend in @friends
-        friend.$online = if _.find(@onlineFriendsIds, friend.id) then true else false
+        friend.$online = if _.indexOf(@onlineFriendsIds, friend.id) >= 0 then true else false
     # watch friends changes
     @watcherDeregistrators.push scope.$watch (=>
       _.pluck(@friends, 'id').sort()
@@ -57,7 +58,6 @@ app.service 'MpFriends',
     newFriend = @Restangular.one('friends', user.id)
     angular.extend(newFriend, user)
     @friends.push newFriend
-    @syncFriendsOnlineStatus()
 
 
   # --- Friendship interface ---
