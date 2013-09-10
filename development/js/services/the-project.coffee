@@ -13,19 +13,17 @@ args:
 
 
 app.factory 'TheProject',
-['Restangular', 'MpFriends', 'MpUser', (Restangular, MpFriends, MpUser) ->
+['Restangular', 'MpFriends', 'MpUser', 'MpProjects', (Restangular, MpFriends, MpUser, MpProjects) ->
 
   # Return a class
   return class TheProject
 
     constructor: (scope, projectId) ->
-      # Init default properties
       @project           = {}
       @places            = []
       @participatedUsers = []
 
-      # Project retrieve, if no projectId, will use an empty object
-      if projectId
+      loadCurrentProject = =>
         scope.insideViewCtrl.MpProjects.findProjectById(projectId).then ((project) =>
           @project  = project
           @$$places = Restangular.one('projects', project.id).all('places')
@@ -33,6 +31,14 @@ app.factory 'TheProject',
           @getParticipatedUsers()
         ), =>
           # TODO: handle error, e.g. project is not authorized to view
+
+      # Project retrieve, if no projectId, will use an empty object
+      if projectId
+        if MpProjects.$initializing?
+          MpProjects.$initializing.then loadCurrentProject
+        else
+          loadCurrentProject()
+
 
     # Places
     # ----------------------------------------
