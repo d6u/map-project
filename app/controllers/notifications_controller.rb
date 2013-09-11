@@ -71,6 +71,21 @@ class NotificationsController < ApplicationController
   # ----------------------------------------
   def accept_project_invitation
     pp = ProjectParticipation.find_by_id params[:project_participation_id]
+
+    # send current participating users notice
+    pp.project.participating_users.each do |pu|
+      new_user_added = Notice.create({
+        type:     'newUserAdded',
+        sender:   @user.public_info,
+        receiver: pu.id,
+        body: {
+          project_id: pp.project.id,
+          user: @user.public_info
+        }
+      })
+      $redis.publish 'notice_channel', new_user_added.to_json
+    end
+
     pp.update(status: 1)
     pi = Notice.find(params[:id])
     pia = Notice.create({
@@ -85,6 +100,7 @@ class NotificationsController < ApplicationController
     })
     pi.destroy
     $redis.publish 'notice_channel', pia.to_json
+
     head 200
   end
 

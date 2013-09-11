@@ -13,7 +13,8 @@ args:
 
 
 app.factory 'TheProject',
-['Restangular', 'MpFriends', 'MpUser', 'MpProjects', (Restangular, MpFriends, MpUser, MpProjects) ->
+['Restangular','MpFriends','MpUser','MpProjects','socket',
+( Restangular,  MpFriends,  MpUser,  MpProjects,  socket) ->
 
   # Return a class
   return class TheProject
@@ -38,6 +39,18 @@ app.factory 'TheProject',
           MpProjects.$initializing.then loadCurrentProject
         else
           loadCurrentProject()
+
+      # invited user added to project
+      socket.on 'serverData', (notice) =>
+        if notice.type == 'projectInvitationAccepted' && notice.body.project.id == @project.id
+          newUser = Restangular.one('projects', notice.body.project.id).one('users', notice.sender.id)
+          angular.extend newUser, notice.sender
+          @participatedUsers.push newUser
+        else if notice.type == 'newUserAdded' && notice.body.project_id == @project.id
+          newUser = Restangular.one('projects', notice.body.project.id).one('users', notice.sender.id)
+          angular.extend newUser, notice.sender
+          @participatedUsers.push newUser
+    # --- END constructor ---
 
 
     # Places
