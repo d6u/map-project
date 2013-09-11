@@ -1,5 +1,6 @@
 # mp-chatbox-input
-app.directive 'mpChatboxInput', ['$route', ($route) ->
+app.directive 'mdChatboxInput',
+[->
   (scope, element, attrs) ->
 
     element.on 'keydown', (event) ->
