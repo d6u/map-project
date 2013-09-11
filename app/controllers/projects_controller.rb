@@ -42,7 +42,7 @@ class ProjectsController < ApplicationController
         sender:   @user.public_info,
         receiver: participation.user_id,
         body: {
-          project_participation_id: participation.id
+          project_participation_id: participation.id,
           project: {
             id:    project.id,
             title: project.title,

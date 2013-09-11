@@ -4,6 +4,8 @@ class NotificationsController < ApplicationController
   # DELETE  /api/notifications/:id                        #destroy
   # POST    /api/notifications/:id/accept_friend_request  #accept_friend_request
   # DELETE  /api/notifications/:id/ignore_friend_request  #ignore_friend_request
+  # POST    /api/notifications/:id/accept_project_invitation  #accept_project_invitation
+  # DELETE  /api/notifications/:id/reject_project_invitation  #reject_project_invitation
 
 
   # GET     /api/notifications
@@ -61,6 +63,49 @@ class NotificationsController < ApplicationController
   def ignore_friend_request
     Notice.destroy_all(:id => params[:id])
     Friendship.destroy_all(:id => params['friendship_id'])
+    head 200
+  end
+
+
+  # POST    /api/notifications/:id/accept_project_invitation
+  # ----------------------------------------
+  def accept_project_invitation
+    pp = ProjectParticipation.find_by_id params[:project_participation_id]
+    pp.update(status: 1)
+    pi = Notice.find(params[:id])
+    pia = Notice.create({
+      type:     'projectInvitationAccepted',
+      sender:   @user.public_info,
+      receiver: pi['sender']['id'],
+      body: {
+        project: {
+          id: pi['body']['project']['id']
+        }
+      }
+    })
+    pi.destroy
+    $redis.publish 'notice_channel', pia.to_json
+    head 200
+  end
+
+
+  # DELETE  /api/notifications/:id/reject_project_invitation
+  # ----------------------------------------
+  def reject_project_invitation
+    ProjectParticipation.destroy_all(id: params['project_participation_id'])
+    project_invitation = Notice.find(params[:id])
+    project_invitation_rejected = Notice.create({
+      :type     => 'projectInvitationRejected',
+      :sender   => @user.public_info,
+      :receiver => project_invitation['sender']['id'],
+      :body     => {
+        :project => {
+          :id => project_invitation['body']['project']['id']
+        }
+      }
+    })
+    project_invitation.destroy
+    $redis.publish 'notice_channel', project_invitation_rejected.to_json
     head 200
   end
 

@@ -44,6 +44,8 @@ MapProject::Application.routes.draw do
     scope    '/notifications/:id' do
       post   'accept_friend_request' => 'notifications#accept_friend_request'
       delete 'ignore_friend_request' => 'notifications#ignore_friend_request'
+      post   'accept_project_invitation' => 'notifications#accept_project_invitation'
+      delete 'reject_project_invitation' => 'notifications#reject_project_invitation'
     end
 
   end
