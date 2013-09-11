@@ -33,6 +33,8 @@ app.directive 'mdNotificationItem',
         templateUrl = '/scripts/views/_shared/notice-templates/project-invitation-accepted.html'
       when 'projectInvitationRejected'
         templateUrl = '/scripts/views/_shared/notice-templates/project-invitation-rejected.html'
+      when 'newUserAdded'
+        templateUrl = '/scripts/views/_shared/notice-templates/new-user-added.html'
 
 
     mpTemplateCache.get(templateUrl).then (template) ->
