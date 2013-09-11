@@ -2,51 +2,72 @@
 MpFriends handles user/friends query/add/show/remove
 ###
 
-app.factory 'MpFriends',
-['Restangular',
-( Restangular) ->
+app.service 'MpFriends',
+['Restangular', 'socket', '$q', class MpFriends
 
-  # friends
-  $friends     = Restangular.all 'friends'
+  constructor: (@Restangular, @socket, @$q) ->
+    @friends          = []
+    @onlineFriendsIds = []
 
-  # friendships
-  Restangular.addElementTransformer 'friendships', false, (friendship) ->
-    friendship.addRestangularMethod 'acceptFriendRequest', 'post', 'accept_friend_request'
-    return friendship
+    # --- Resouces ---
+    @$$friends     = Restangular.all 'friends'
+    @$$friendships = Restangular.all 'friendships'
+    @$$userQuery   = Restangular.all 'users'
 
-  $friendships = Restangular.all 'friendships'
-
-  # users
-  Restangular.addElementTransformer 'users', false, (user) ->
-    user.addFriend = ->
-      @added   = true
-      @pending = true
-      return $friendships.post({friend_id: @id})
-    return user
-
-  $userQuery = Restangular.all 'users'
+    # --- Socket.io ---
+    # push sync
+    socket.on 'onlineFriendsList', (ids) =>
+      @onlineFriendsIds = ids
 
 
-  return class MpFriends
+  # --- Login/out process management ---
+  watcherDeregistrators: []
 
-    constructor: ->
-      @friends = []
-      @getFriends()
+  initialize: (scope) ->
+    refreshFriendsOnlineStatus = =>
+      for friend in @friends
+        friend.$online = if _.indexOf(@onlineFriendsIds, friend.id) >= 0 then true else false
+    # watch friends changes
+    @watcherDeregistrators.push scope.$watch (=>
+      _.pluck(@friends, 'id').sort()
+    ), refreshFriendsOnlineStatus, true
+    # watch onlineFriendsIds changes
+    @watcherDeregistrators.push scope.$watch (=>
+      @onlineFriendsIds.sort()
+    ), refreshFriendsOnlineStatus, true
+
+    @getFriends()
+
+  destroy: ->
+    for deregistrator in @watcherDeregistrators
+      deregistrator()
+    @friends          = []
+    @onlineFriendsIds = []
 
 
-    # --- Friend interface ---
-    getFriends: ->
-      $friends.getList().then (friends) =>
-        @friends = friends
+  # --- Friend interface ---
+  getFriends: ->
+    @$$friends.getList().then (friends) =>
+      @friends = friends
+
+  syncFriendsOnlineStatus: (onlineFriendsList) ->
+    @socket.emit 'requestOnlineFriendsList', undefined, (ids) =>
+      @onlineFriendsIds = ids
+
+  addUserToFriendsList: (user) ->
+    newFriend = @Restangular.one('friends', user.id)
+    angular.extend(newFriend, user)
+    @friends.push newFriend
 
 
-    acceptFriendRequest: (friendship_id, notice_id) ->
-      friendship = Restangular.one('friendships', friendship_id)
-      extraParams = if notice_id then {notice_id: notice_id} else {}
-      friendship.acceptFriendRequest(extraParams)
+  # --- Friendship interface ---
+  addUserAsFriend: (user) ->
+    user.added   = true
+    user.pending = true
+    @$$friendships.post({friend_id: user.id})
 
 
-    # --- Search user interface ---
-    findUserByName: (name) ->
-      $userQuery.getList({name: name})
+  # --- Search user interface ---
+  findUserByName: (name) ->
+    @$$userQuery.getList({name: name})
 ]

@@ -13,27 +13,45 @@ args:
 
 
 app.factory 'TheProject',
-['Restangular', 'MpFriends', 'MpUser', (Restangular, MpFriends, MpUser) ->
+['Restangular','MpFriends','MpUser','MpProjects','socket',
+( Restangular,  MpFriends,  MpUser,  MpProjects,  socket) ->
 
   # Return a class
   return class TheProject
 
     constructor: (scope, projectId) ->
-      # Init default properties
       @project           = {}
       @places            = []
       @participatedUsers = []
 
-      # Project retrieve, if no projectId, will use an empty object
-      if projectId
+      loadCurrentProject = =>
         scope.insideViewCtrl.MpProjects.findProjectById(projectId).then ((project) =>
           @project  = project
           @$$places = Restangular.one('projects', project.id).all('places')
-          @$$users  = Restangular.one('projects', project.id).all('users')
           @getPlaces()
           @getParticipatedUsers()
         ), =>
           # TODO: handle error, e.g. project is not authorized to view
+
+      # Project retrieve, if no projectId, will use an empty object
+      if projectId
+        if MpProjects.$initializing?
+          MpProjects.$initializing.then loadCurrentProject
+        else
+          loadCurrentProject()
+
+      # invited user added to project
+      socket.on 'serverData', (notice) =>
+        if notice.type == 'projectInvitationAccepted' && notice.body.project.id == @project.id
+          newUser = Restangular.one('projects', notice.body.project.id).one('users', notice.sender.id)
+          angular.extend newUser, notice.sender
+          @participatedUsers.push newUser
+        else if notice.type == 'newUserAdded' && notice.body.project_id == @project.id
+          newUser = Restangular.one('projects', notice.body.project.id).one('users', notice.sender.id)
+          angular.extend newUser, notice.sender
+          @participatedUsers.push newUser
+    # --- END constructor ---
+
 
     # Places
     # ----------------------------------------
@@ -79,15 +97,14 @@ app.factory 'TheProject',
     participatedUsers: []
 
     getParticipatedUsers: ->
-      @$$users.getList().then (users) =>
+      Restangular.one('projects', @project.id).customGETLIST('participating_users')
+      .then (users) =>
         @organizeParticipatedUsers(users)
 
     # users is an array contains user object, each object must have `id`
     addParticipatedUsers: (users) ->
       ids = _.pluck(users, 'id')
-      $users = @project.all('users')
-      $users.post({user_ids: ids.join(',')}).then (users) =>
-        @organizeParticipatedUsers(users)
+      Restangular.one('projects', @project.id).customPOST({}, 'add_users', {user_ids: ids.join(',')})
 
     # organize server returned participated users
     organizeParticipatedUsers: (users) ->

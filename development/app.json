@@ -50,7 +50,8 @@
         "views/_pusher-side/md-side-menu.coffee",
 
         "views/_shared/mini-map-cover.coffee",
-        "views/_shared/md-notification-item.coffee"
+        "views/_shared/md-notification-item.coffee",
+        "views/_shared/md-notice-pop-item.coffee"
       ],
 
       "application-m.js": [

@@ -57,6 +57,7 @@
   width: 100%;
   bottom: 0;
   overflow-y: auto;
+  background-color: $gray1;
 }
 
 .md-project-modal-body-form {
@@ -68,9 +69,23 @@
   margin-right: 20px;
 }
 
-.md-project-modal-body-manage-friends {}
+.md-project-modal-body-confirm-button {
+  position: absolute;
+  left: 10px;
+  bottom: 10px;
+}
 
-// add friends
+// --- Manage Friends ---
+.md-project-modal-body-manage-friends {
+  padding: 20px;
+  .md-user-list-item {
+    float: left;
+    margin-right: 20px;
+    margin-bottom: 20px;
+  }
+}
+
+// --- Add friends ---
 .md-project-modal-body-add-friends-menu {
   list-style: none;
   padding: 0;
@@ -93,6 +108,12 @@
   }
 }
 
+// user container
 .md-project-modal-body-add-friends {
+  margin-left: 200px;
+  padding: 20px;
+}
 
+.md-project-modal-body-add-friends-list-item {
+  float: left;
 }

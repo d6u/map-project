@@ -19,6 +19,7 @@ MapProject::Application.routes.draw do
   # JSON API point
   scope '/api' do
 
+    # --- User ---
     scope '/users' do
       post 'login'    => 'users#login'
       get  'logout'   => 'users#logout'
@@ -26,26 +27,25 @@ MapProject::Application.routes.draw do
     end
     resources :users, :only => [:index, :update]
 
-
+    # --- Project ---
     resources :projects, :only => [:index, :create, :show, :update, :destroy] do
       resources :places, :only => [:index, :create, :show, :update, :destroy]
-      resources :users,  :only => [:index]
+      get    'participating_users' => 'projects#participating_users'
+      post   'add_users'           => 'projects#add_users'
+      delete 'remove_users'        => 'projects#remove_users'
     end
-    scope '/projects/:project_id' do
-      post   'users'     => 'projects#add_user'
-      delete 'users/:id' => 'projects#remove_user'
-    end
+
 
     resources :friends,       :only => [:index, :show]
 
     resources :friendships,   :only => [:index, :create, :show, :update, :destroy]
-    scope    '/friendships/:id' do
-      post   'accept_friend_request' => 'friendships#accept_friend_request'
-    end
 
     resources :notifications, :only => [:index, :destroy]
     scope    '/notifications/:id' do
+      post   'accept_friend_request' => 'notifications#accept_friend_request'
       delete 'ignore_friend_request' => 'notifications#ignore_friend_request'
+      post   'accept_project_invitation' => 'notifications#accept_project_invitation'
+      delete 'reject_project_invitation' => 'notifications#reject_project_invitation'
     end
 
   end

@@ -22,5 +22,8 @@ module MapProject
 
     Mongoid.logger.level = Logger::DEBUG
     Moped.logger.level   = Logger::DEBUG
+
+    # Revoke Mongoid overriding default active record generator
+    config.generators.orm :active_record
   end
 end

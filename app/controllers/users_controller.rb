@@ -80,7 +80,7 @@ class UsersController < ApplicationController
       project = Project.find_by_id(params[:project_id])
       if project
         users = project.participated_users
-        render :json => (users + [project.owner]), :only => [:id, :name, :fb_user_picture] and return
+        render :json => users, :only => [:id, :name, :fb_user_picture] and return
       else
         head 404 and return
       end

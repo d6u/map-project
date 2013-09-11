@@ -2,74 +2,88 @@
 MpNotification
 ###
 
-app.factory 'MpNotification',
-['$rootScope','$timeout','$q','Restangular','$route','socket',
-( $rootScope,  $timeout,  $q,  Restangular,  $route,  socket) ->
+app.service 'MpNotification',
+['$rootScope', '$timeout', '$q', 'Restangular', '$route', 'socket', 'MpFriends', class MpNotification
 
-  # --- Instance transform ---
-  Restangular.addElementTransformer 'notifications', true, (notifications) ->
-    for notice in notifications
-      notice.id = notice._id.$oid
-    return notifications
+  constructor: ($rootScope, $timeout, $q, @Restangular, $route, socket, @MpFriends) ->
+    @notifications = []
 
-  Restangular.addElementTransformer 'notifications', false, (notice) ->
-    switch notice.type
-      when 'addFriendRequest'
-        notice.addRestangularMethod 'ignoreFriendRequest', 'remove', 'ignore_friend_request'
-    return notice
+    # --- Resouces ---
+    @$$notifications = Restangular.all 'notifications'
 
-  # --- Init ---
-  $notifications = Restangular.all 'notifications'
-  $notifications
-
-  return MpNotification = {
-    $online: false
-    notifications: []
+    # --- Socket.io ---
+    socket.on 'serverData', (serverData) =>
+      @processServerData(serverData)
 
 
-    # --- Connect to server ---
-    connect: (callback) ->
-      socket.connect().then =>
-        @updateNotifications()
-        # onlineFriendsList event is an indicator of server ready
-        socket.on 'onlineFriendsList', (onlineFriendsList) =>
-          @$online = true
-          $rootScope.$broadcast 'onlineFriendsListUpdated', onlineFriendsList
-          socket.on 'serverData', (data) =>
-            @processServerData(data)
-          callback() if callback
+  # --- Login/out process management ---
+  initialize: (scope) ->
+    @getNotifications()
+
+  destroy: ->
+    @notifications = []
 
 
-    # --- Close connection and remove data ---
-    destroy: ->
-      socket.disconnect()
-      @$online = false
+  # --- Incoming server notices management ---
+
+  # directNotificationNames holds notice type that will be added to
+  #   @notifications array directive when arrives from server
+  directNotificationNames: [
+    'addFriendRequest'
+    'addFriendRequestAccepted'
+    'projectInvitation'
+    'projectInvitationAccepted'
+    'projectInvitationRejected'
+    'youAreRemovedFromProject'
+    'projectDeleted'
+  ]
+
+  processServerData: (data) ->
+    if _.indexOf(@directNotificationNames, data.type) >= 0
+      newNotice = @Restangular.one('notifications', data.id)
+      angular.extend(newNotice, data)
+      @notifications.push newNotice
+
+    # specific actions
+    switch data.type
+      when 'addFriendRequestAccepted'
+        @MpFriends.addUserToFriendsList(data.sender)
 
 
-    # --- Callbacks ---
-    processServerData: (data) ->
-      console.debug '--> serverData received: ', data
-      switch data.type
-        when 'addFriendRequest'
-          @notifications.push data
+  # --- Notification interface ---
+  getNotifications: ->
+    @$$notifications.getList().then (notifications) =>
+      if @notifications.length
+        # TODO: organize new and existing notifications
+        @notifications = notifications
+      else
+        @notifications = notifications
+
+  removeNotice: (notice) ->
+    @notifications = _.without(@notifications, notice)
+
+  # --- Special notice management ---
+  # friend request
+  acceptFriendRequest: (request) ->
+    request.customPOST({}, 'accept_friend_request', {friendship_id: request.body.friendship_id})
+    @removeNotice(request)
+    @MpFriends.addUserToFriendsList(request.sender)
+
+  ignoreFriendRequest: (request) ->
+    request.customDELETE('ignore_friend_request', {friendship_id: request.body.friendship_id})
+    @removeNotice(request)
+
+  # project invitation
+  acceptProjectInvitation: (invitation) ->
+    invitation.customPOST({}, 'accept_project_invitation', {project_participation_id: invitation.body.project_participation_id})
+    @removeNotice(invitation)
+
+  rejectProjectInvitation: (invitation) ->
+    invitation.customDELETE('reject_project_invitation', {project_participation_id: invitation.body.project_participation_id})
+    @removeNotice(invitation)
 
 
-    # --- Notices ---
-    updateNotifications: ->
-      $notifications.getList().then (notifications) =>
-        if @notifications.length
-          # TODO: organize new and existing notifications
-          @notifications = notifications
-        else
-          @notifications = notifications
-
-
-    removeNotice: (notice) ->
-      @notifications = _.without(@notifications, notice)
-
-
-    # --- General helper ---
-    sendClientData: (data) ->
-      socket.emit 'clientData', data
-  }
+  # --- Helpers ---
+  sendClientData: (data) ->
+    socket.emit 'clientData', data
 ]

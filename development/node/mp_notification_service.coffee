@@ -2,6 +2,16 @@ q = require('q')
 _ = require('lodash')
 
 
+###
+onlineClients = [clientData...]
+
+clientData = {
+  user:         user
+  sockets:     [socket]
+  friendsList: []
+}
+###
+
 # --- Module ---
 class MpNotificationService
 
@@ -24,12 +34,18 @@ class MpNotificationService
       console.log '--> Redis receive message: ', message
       if channel == 'notice_channel'
         data = JSON.parse(message)
-        switch data.type
-          when 'addFriendRequest'
-            receiverClient = @onlineClients[data.receiver]
-            if receiverClient
-              for socket in receiverClient.sockets
-                socket.emit 'serverData', data
+        clientData = @onlineClients[data.receiver]
+        if clientData
+          for socket in clientData.sockets
+            socket.emit 'serverData', data
+          # specific actions
+          switch data.type
+            when 'addFriendRequestAccepted'
+              @pushOnlineFriendsDataToClient(clientData)
+              senderClientData = @onlineClients[data.sender.id]
+              if senderClientData
+                @pushOnlineFriendsDataToClient(senderClientData)
+
 
 
     # --- Socket.io connection ---
@@ -48,6 +64,7 @@ class MpNotificationService
       socket.on 'disconnect', =>
         console.log "--> User #{socket.handshake.user.id} disconnected"
         @removeClientFromOnlineList(socket)
+  # --- END constructor ---
 
 
   # --- Pg interface ---
@@ -96,7 +113,7 @@ class MpNotificationService
         friendsList: []
       }
       @onlineClients[user.id] = clientData
-      @queryPg('SELECT * FROM friendships WHERE user_id = $1', [user.id])
+      @queryPg('SELECT * FROM friendships WHERE user_id = $1 AND status > 0', [user.id])
       .then (friendships) ->
         clientData.friendsList = _.pluck(friendships, 'friend_id')
         userFetched.resolve(clientData)
@@ -119,6 +136,14 @@ class MpNotificationService
   getOnlineFriends: (clientData) ->
     _.filter clientData.friendsList, (friend_id) =>
       @onlineClients[friend_id]
+
+
+  pushOnlineFriendsDataToClient: (clientData) ->
+    @queryPg('SELECT * FROM friendships WHERE user_id = $1 AND status > 0', [clientData.user.id])
+    .then (friendships) ->
+      clientData.friendsList = _.pluck(friendships, 'friend_id')
+      for socket in clientData.sockets
+        socket.emit 'onlineFriendsList', clientData.friendsList
 
 
 # Export module

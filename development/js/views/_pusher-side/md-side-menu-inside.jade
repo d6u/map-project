@@ -1,5 +1,5 @@
 //- replace: true
-section.ly-pusher-side.md-side-menu
+section.ly-pusher-side.md-side-menu(perfect-scrollbar="insideViewCtrl.MpNotification.notifications.length")
 
   //- User
   .md-side-menu-user
@@ -44,4 +44,4 @@ section.ly-pusher-side.md-side-menu
 
   //- Notification
   ol.md-side-menu-notifications()
-    li.md-side-menu-notifications-item.md-notice(ng-repeat="notice in insideViewCtrl.MpNotification.notifications", md-notification-item="")
+    li.md-side-menu-notifications-item.md-notice.clearfix(ng-repeat="notice in insideViewCtrl.MpNotification.notifications", md-notification-item="")

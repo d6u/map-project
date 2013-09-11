@@ -4,13 +4,13 @@
   //- Body
   .container
     ol.md-friends-list.md-user-list.clearfix
-      li.md-friends-list-item.md-user-list-item(ng-repeat="friend in insideViewCtrl.mpFriends.friends")
+      li.md-friends-list-item.md-user-list-item(ng-repeat="friend in insideViewCtrl.MpFriends.friends")
         a.md-user-list-item-picture(href="")
           img(ng-src="{{friend.fb_user_picture}}")
         .md-user-list-item-detail
           a.md-user-list-item-detail-name(href="") {{friend.name}}
 
-    p.lead(ng-hide="insideViewCtrl.mpFriends.friends.length")
+    p.lead(ng-hide="insideViewCtrl.MpFriends.friends.length")
       | You don't have any friend yet.&nbsp;
       a(href="/search") Add someone here.
 
@@ -19,13 +19,13 @@
   .md-bottom-bar
     .md-bottom-bar-button-group
       //- show side menu
-      a.md-bottom-bar-button(href="", ng-click="interface.showUserSection = true")
+      a.md-bottom-bar-button.md-bottom-bar-notification-button(href="", ng-click="interface.showUserSection = true")
         i.icon-reorder
         .md-bottom-bar-notification-count(ng-show="insideViewCtrl.MpNotification.notifications.length", ng-cloak="") {{insideViewCtrl.MpNotification.notifications.length}}
       input.md-bottom-bar-input(type="text", placeholder="Find your friends", ng-model="friendsViewCtrl.searchInput")
 
     .md-bottom-bar-button-group-center.md-bottom-bar-text
-      {{insideViewCtrl.mpFriends.friends.length}} friends
+      {{insideViewCtrl.MpFriends.friends.length}} friends
 
     .md-bottom-bar-button-group
       //- placeholder: to push .md-bottom-bar-button-group-center to center

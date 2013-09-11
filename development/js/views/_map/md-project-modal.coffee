@@ -2,7 +2,7 @@ app.directive 'mdProjectModal',
 [->
   templateUrl: '/scripts/views/_map/md-project-modal.html'
   controllerAs: 'mdProjectModalCtrl'
-  controller: ['$scope', '$location', ($scope, $location) ->
+  controller: ['$scope', '$location', 'MpFriends', ($scope, $location, MpFriends) ->
 
     @showModal         = false
     @bodyContent       = 'editDetail'
@@ -37,15 +37,9 @@ app.directive 'mdProjectModal',
 
     # reset deleteCheckbox when interface changes
     $scope.$watch (=>
-      return [@showModal, @bodyContent, @addFriendsSection]
-    ), (=>
-      @_projectAttrs.deleteCheckbox = false
-    ), true
-
-    # copy project attrs when open edit project tab
-    $scope.$watch (=>
       return [@showModal, @bodyContent]
-    ), (=>
+    ), ((newVal) =>
+      @_projectAttrs.deleteCheckbox = false
       if @showModal == true && @bodyContent == 'editDetail'
         @_projectAttrs.title = $scope.mapCtrl.theProject.project.title
         @_projectAttrs.notes = $scope.mapCtrl.theProject.project.notes
@@ -55,8 +49,26 @@ app.directive 'mdProjectModal',
 
 
     # --- Add user ---
-    @getNotParticipatingFriends = ->
-      return []
+    # generate an array of not participating friends, each element is a deep of
+    #   friends objects in MpFriends service
+    $scope.$watch (=>
+      return [@showModal, @bodyContent]
+    ), ((newVal) =>
+      if @showModal == true && @bodyContent == 'inviteFriends'
+        participatedUserIds = _.pluck($scope.mapCtrl.theProject.participatedUsers, 'id')
+        @_notParticipatingFriends = []
+        for friend in MpFriends.friends
+          if _.indexOf(participatedUserIds, friend.id) < 0
+            @_notParticipatingFriends.push _.cloneDeep(friend)
+    ), true
+
+    @getSelectedNotParticipatingUsers = ->
+      return _.filter(@_notParticipatingFriends, '$selected')
+
+    @sendInvitationToSelectedUsers = ->
+      selectedUsers = _.filter(@_notParticipatingFriends, '$selected')
+      if selectedUsers.length
+        $scope.mapCtrl.theProject.addParticipatedUsers selectedUsers
 
     # --- Return ---
     return

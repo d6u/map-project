@@ -1,10 +1,10 @@
 app.controller 'SearchViewCtrl',
-['$scope', '$location', ($scope, $location) ->
+['$scope', '$location', 'MpFriends', ($scope, $location, MpFriends) ->
 
   @searchUser = ->
     if @searchInput
       $location.search('name', @searchInput)
-      $scope.insideViewCtrl.mpFriends.findUserByName(@searchInput).then (users) =>
+      $scope.insideViewCtrl.MpFriends.findUserByName(@searchInput).then (users) =>
         @searchResults = users
         if users.length
           @showNoResults = false
@@ -13,7 +13,7 @@ app.controller 'SearchViewCtrl',
           @showNoResults = true
 
   @addUserAsFriend = (user) ->
-    user.addFriend()
+    MpFriends.addUserAsFriend(user)
 
 
   # --- Init ---

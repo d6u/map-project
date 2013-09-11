@@ -36,15 +36,14 @@ angular.module('md-socket-io', [])
       connect: ->
         socketConnected = $q.defer()
         that = this
-        callback = ->
+        connectCallback = ->
+          that.$$socket.removeListener('connect', connectCallback)
           socketConnected.resolve()
-          that.$$socket.removeListener('connect', callback)
-        @on 'connect', callback
+        @on 'connect', connectCallback
         @$$socket.socket.connect()
         return socketConnected.promise
 
       disconnect: ->
-        @$$socket.removeAllListeners()
         @$$socket.disconnect()
     }
   ]

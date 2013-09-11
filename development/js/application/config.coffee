@@ -45,12 +45,16 @@ app.config(['socketProvider', '$httpProvider', '$routeSegmentProvider',
     resolve:
       MpInitializer: 'MpInitializer'
       # action filter
-      redirect_to_inside_if_login: ['MpInitializer', 'MpUser', '$location', '$q', '$timeout', (MpInitializer, MpUser, $location, $q, $timeout) ->
+      redirect_to_inside_if_login: ['MpInitializer', 'MpUser', '$location', '$q', '$timeout', 'MpFriends', 'MpNotification', (MpInitializer, MpUser, $location, $q, $timeout, MpFriends, MpNotification) ->
 
         deferred = $q.defer()
         MpInitializer.then ->
           if MpUser.checkLogin()
             $location.path('/dashboard')
+          else
+            # clean up user's data after logout
+            MpFriends.destroy()
+            MpNotification.destroy()
           # Resolve after redirection
           $timeout ->
             deferred.resolve()

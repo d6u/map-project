@@ -2,15 +2,20 @@ app.directive 'mdNotificationItem',
 ['mpTemplateCache', '$compile', (mpTemplateCache, $compile) ->
 
   controllerAs: 'mdNotificationItemCtrl'
-  controller: ['$scope', 'MpNotification', ($scope, MpNotification) ->
+  controller: ['$scope', 'MpNotification', 'MpFriends', ($scope, MpNotification, MpFriends) ->
 
     @ignoreFriendRequest = ->
-      $scope.notice.ignoreFriendRequest()
-      MpNotification.removeNotice($scope.notice)
+      MpNotification.ignoreFriendRequest($scope.notice)
 
     @acceptFriendRequest = ->
-      $scope.insideViewCtrl.mpFriends.acceptFriendRequest($scope.notice.body.friendship_id, $scope.notice.id)
-      MpNotification.removeNotice($scope.notice)
+      MpNotification.acceptFriendRequest($scope.notice)
+
+    @rejectProjectInvitation = ->
+      MpNotification.rejectProjectInvitation($scope.notice)
+
+    @acceptProjectInvitation = ->
+      MpNotification.acceptProjectInvitation($scope.notice)
+
 
     return
   ]
@@ -19,7 +24,19 @@ app.directive 'mdNotificationItem',
 
     switch scope.notice.type
       when 'addFriendRequest'
-        mpTemplateCache.get('/scripts/views/_shared/notice-templates/add-friend-request.html')
-        .then (template) ->
-          element.html($compile(template)(scope))
+        templateUrl = '/scripts/views/_shared/notice-templates/add-friend-request.html'
+      when 'addFriendRequestAccepted'
+        templateUrl = '/scripts/views/_shared/notice-templates/add-friend-request-accepted.html'
+      when 'projectInvitation'
+        templateUrl = '/scripts/views/_shared/notice-templates/project-invitation.html'
+      when 'projectInvitationAccepted'
+        templateUrl = '/scripts/views/_shared/notice-templates/project-invitation-accepted.html'
+      when 'projectInvitationRejected'
+        templateUrl = '/scripts/views/_shared/notice-templates/project-invitation-rejected.html'
+      when 'newUserAdded'
+        templateUrl = '/scripts/views/_shared/notice-templates/new-user-added.html'
+
+
+    mpTemplateCache.get(templateUrl).then (template) ->
+      element.html($compile(template)(scope))
 ]

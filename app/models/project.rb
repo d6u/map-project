@@ -2,8 +2,15 @@ class Project < ActiveRecord::Base
 
   belongs_to :owner,  :class_name => "User", :foreign_key => "owner_id"
   has_many   :places, :dependent => :destroy
-  has_many   :invitations
-  has_and_belongs_to_many :participated_users, :join_table => "project_user", :foreign_key => "project_id", :class_name => 'User'
+
+  # participations
+  has_many :project_participations, :dependent => :destroy
+  has_many :participating_users, -> { where 'project_participations.status > 0' },
+                                 :through => :project_participations,
+                                 :source  => :user
+  has_many :pending_user_invitations, -> { where 'project_participations.status = 0' },
+                                      :through => :project_participations,
+                                      :source  => :user
 
 
   def places_attrs

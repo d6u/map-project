@@ -37,29 +37,41 @@
             button.btn.btn-primary(ng-click="mdProjectModalCtrl.saveChanges()") Save
             button.btn.btn-danger(ng-click="mdProjectModalCtrl.deleteProject()") Delete
 
-    div(ng-switch-when="manageFriends")
-      ul.md-project-modal-body-manage-friends.md-user-list
-        li.md-user-list-item(ng-repeat="user in mdProjectModalCtrl.participatedUsers")
-          a(href="", ng-click="")
+    //- Manage Friends
+    .md-project-modal-body-manage-friends(ng-switch-when="manageFriends")
+      ul.md-user-list.clearfix
+        li.md-user-list-item(ng-repeat="user in mapCtrl.theProject.participatedUsers")
+          a.md-user-list-item-picture(href="")
             img(ng-src="{{user.fb_user_picture}}")
-            | {{user.name}}
+          .md-user-list-item-detail
+            a.md-user-list-item-detail-name(href="") {{user.name}}
 
-    //- invite friends
+
+    //- Invite friends
     div(ng-switch-when="inviteFriends")
+
       ul.md-project-modal-body-add-friends-menu
         li.md-project-modal-body-add-friends-menu-item
           a(href="", ng-class="{active: mdProjectModalCtrl.addFriendsSection == 'selected'}", ng-click="mdProjectModalCtrl.addFriendsSection = 'selected'") Selected
         li.md-project-modal-body-add-friends-menu-item
           a(href="", ng-class="{active: mdProjectModalCtrl.addFriendsSection == 'all'}", ng-click="mdProjectModalCtrl.addFriendsSection = 'all'") All
 
+
       .md-project-modal-body-add-friends(ng-switch="", on="mdProjectModalCtrl.addFriendsSection")
-        ul.md-user-list(ng-switch-when="selected")
-          li.md-user-list-item(ng-repeat="user in mdProjectModalCtrl.getNotParticipatingFriends()")
-            a(href="", ng-click="")
+
+        ul.md-user-list.clearfix(ng-switch-when="selected")
+          li.md-user-list-item-mini.md-project-modal-body-add-friends-list-item(ng-repeat="user in mdProjectModalCtrl.getSelectedNotParticipatingUsers()", ng-class="{active: user.$selected}", ng-click="user.$selected = false")
+            a.md-user-list-item-picture(href="")
               img(ng-src="{{user.fb_user_picture}}")
-              | {{user.name}}
-        ul.md-user-list(ng-switch-when="all")
-          li.md-user-list-item(ng-repeat="user in mdProjectModalCtrl.getNotParticipatingFriends()")
-            a(href="", ng-click="")
+            .md-user-list-item-detail
+              a.md-user-list-item-detail-name(href="") {{user.name}}
+
+        ul.md-user-list.clearfix(ng-switch-when="all")
+          li.md-user-list-item-mini.md-project-modal-body-add-friends-list-item(ng-repeat="user in mdProjectModalCtrl._notParticipatingFriends", ng-click="user.$selected = !user.$selected", ng-class="{active: user.$selected}")
+            a.md-user-list-item-picture(href="")
               img(ng-src="{{user.fb_user_picture}}")
-              | {{user.name}}
+            .md-user-list-item-detail
+              a.md-user-list-item-detail-name(href="") {{user.name}}
+
+        //- confirm button
+        a.md-project-modal-body-confirm-button.btn.btn-success(href="", ng-click="mdProjectModalCtrl.sendInvitationToSelectedUsers()") Add Selected
