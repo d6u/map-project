@@ -9,15 +9,7 @@
 
   //- Pop notice
   ol.md-notice-pop-container(md-notice-pop="")
-    li.md-notice-pop.clearfix(ng-repeat="notice in mdNoticePop.notices")
-      a.md-notice-pop-click.clearfix(href="", ng-click="interface.showUserSection = true")
-        .md-notice-image
-          img(ng-src="{{notice.sender.fb_user_picture}}")
-        .md-notice-body
-          header.md-notice-body-header
-            b {{notice.sender.name}}
-            |  wants to add you as friend
-
+    li.md-notice-pop.clearfix(ng-repeat="notice in mdNoticePop.notices", md-notice-pop-item="")
 
   //- Overlay
   .ly-pusher-overlay(ng-click="interface.showUserSection = false")
