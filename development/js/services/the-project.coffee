@@ -91,7 +91,7 @@ app.factory 'TheProject',
     # users is an array contains user object, each object must have `id`
     addParticipatedUsers: (users) ->
       ids = _.pluck(users, 'id')
-      Restangular.one('projects', @project.id).customPOST('add_users', {user_ids: ids.join(',')})
+      Restangular.one('projects', @project.id).customPOST({}, 'add_users', {user_ids: ids.join(',')})
 
     # organize server returned participated users
     organizeParticipatedUsers: (users) ->

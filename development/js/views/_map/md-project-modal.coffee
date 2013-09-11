@@ -2,7 +2,7 @@ app.directive 'mdProjectModal',
 [->
   templateUrl: '/scripts/views/_map/md-project-modal.html'
   controllerAs: 'mdProjectModalCtrl'
-  controller: ['$scope', '$location', ($scope, $location) ->
+  controller: ['$scope', '$location', 'MpFriends', ($scope, $location, MpFriends) ->
 
     @showModal         = false
     @bodyContent       = 'editDetail'
@@ -49,14 +49,16 @@ app.directive 'mdProjectModal',
 
 
     # --- Add user ---
+    # generate an array of not participating friends, each element is a deep of
+    #   friends objects in MpFriends service
     $scope.$watch (=>
       return [@showModal, @bodyContent]
     ), ((newVal) =>
       if @showModal == true && @bodyContent == 'inviteFriends'
         participatedUserIds = _.pluck($scope.mapCtrl.theProject.participatedUsers, 'id')
         @_notParticipatingFriends = []
-        for friend in $scope.insideViewCtrl.mpFriends.friends
-          if _.find(participatedUserIds, friend.id)
+        for friend in MpFriends.friends
+          if _.indexOf(participatedUserIds, friend.id) < 0
             @_notParticipatingFriends.push _.cloneDeep(friend)
     ), true
 

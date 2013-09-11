@@ -19,27 +19,30 @@ class ProjectsController < ApplicationController
 
 
   # POST    /api/projects/:project_id/add_users
+  # ----------------------------------------
   def add_users
     user_ids = params[:user_ids].split(',')
     project  = Project.find_by_id params[:project_id]
+    head 404 and return if !project
     project_participations = user_ids.map do |id|
       {:project_id => project.id,
        :user_id    => id,
        :status     => 0}
     end
     begin
-      ProjectParticipation.create(project_participations)
+      participations = ProjectParticipation.create(project_participations)
     rescue ActiveRecord::RecordNotUnique
       head 409 and return
     end
 
     # send notice to each user
-    user_ids.each do |id|
+    participations.each do |participation|
       project_invitation = Notice.create({
         type:     'projectInvitation',
         sender:   @user.public_info,
-        receiver: id,
+        receiver: participation.user_id,
         body: {
+          project_participation_id: participation.id
           project: {
             id:    project.id,
             title: project.title,

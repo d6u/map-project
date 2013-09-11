@@ -73,6 +73,15 @@ app.service 'MpNotification',
     request.customDELETE('ignore_friend_request', {friendship_id: request.body.friendship_id})
     @removeNotice(request)
 
+  # project invitation
+  acceptProjectInvitation: (invitation) ->
+    invitation.customPOST({}, 'accept_project_invitation', {project_participation_id: invitation.body.project_participation_id})
+    @removeNotice(invitation)
+
+  rejectProjectInvitation: (invitation) ->
+    invitation.customDELETE('reject_project_invitation', {project_participation_id: invitation.body.project_participation_id})
+    @removeNotice(invitation)
+
 
   # --- Helpers ---
   sendClientData: (data) ->

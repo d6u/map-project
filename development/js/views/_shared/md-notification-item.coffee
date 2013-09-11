@@ -10,6 +10,13 @@ app.directive 'mdNotificationItem',
     @acceptFriendRequest = ->
       MpNotification.acceptFriendRequest($scope.notice)
 
+    @rejectProjectInvitation = ->
+      MpNotification.rejectProjectInvitation($scope.notice)
+
+    @acceptProjectInvitation = ->
+      MpNotification.acceptProjectInvitation($scope.notice)
+
+
     return
   ]
 
