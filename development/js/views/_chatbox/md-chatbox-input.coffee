@@ -1,8 +1,6 @@
 # mp-chatbox-input
-app.directive 'mdChatboxInput',
-[->
+app.directive 'mdChatboxInput', [->
   (scope, element, attrs) ->
-
     element.on 'keydown', (event) ->
       if event.keyCode == 13
         if element.val() != ''
