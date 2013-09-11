@@ -29,6 +29,11 @@ app.directive 'mdNotificationItem',
         templateUrl = '/scripts/views/_shared/notice-templates/add-friend-request-accepted.html'
       when 'projectInvitation'
         templateUrl = '/scripts/views/_shared/notice-templates/project-invitation.html'
+      when 'projectInvitationAccepted'
+        templateUrl = '/scripts/views/_shared/notice-templates/project-invitation-accepted.html'
+      when 'projectInvitationRejected'
+        templateUrl = '/scripts/views/_shared/notice-templates/project-invitation-rejected.html'
+
 
     mpTemplateCache.get(templateUrl).then (template) ->
       element.html($compile(template)(scope))
