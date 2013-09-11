@@ -21,17 +21,17 @@ _*: between project and receiver, at least one must be specified_
 #### Detailed Explanation of Notice Type
 
 1. _addFriendRequest_
-       
+
         receiver: user_id,
         body: {
-	      friendship_id: Integar
+	      friendship_id: Integer
 	    }
-   
+
 2. _addFriendRequestAccepted_
 
         receiver: user_id,
         body: {
-          friendship_id: Integar
+          friendship_id: Integer
         }
 
 3. _newChatMessage_
@@ -39,15 +39,16 @@ _*: between project and receiver, at least one must be specified_
         project: project_id,
         body: {
           sample_message_content: String,
-          unread_count: Integar
+          unread_count: Integer
         }
 
 4. _projectInvitation_
 
         receiver: user_id,
         body: {
+          project_participation_id: Integer,
           project: {
-            id: Integar,
+            id: Integer,
             title: String,
             notes: String
           }
@@ -58,7 +59,7 @@ _*: between project and receiver, at least one must be specified_
         receiver: user_id,
         body: {
           project: {
-            id: Integar
+            id: Integer
           }
         }
 
@@ -67,7 +68,7 @@ _*: between project and receiver, at least one must be specified_
         receiver: user_id,
         body: {
           project: {
-            id: Integar
+            id: Integer
           }
         }
 
@@ -87,7 +88,7 @@ _*: between project and receiver, at least one must be specified_
         project: project_id,
         body: {
           user: {
-            id: Integar,
+            id: Integer,
             name: String,
             fb_user_picture: String
           }
@@ -120,7 +121,7 @@ _*: between project and receiver, at least one must be specified_
             notes: String
           }
         }
-        
+
 12. _youAreRemovedFromProject_
 
         receiver: user_id,
