@@ -5,16 +5,6 @@ pgQuery    = require('./pg_query_helper')
 MpUserNode = require('./mp_user_node')
 
 
-###
-onlineClients = [clientData...]
-
-clientData = {
-  user:         user
-  sockets:     [socket]
-  friendsList: []
-}
-###
-
 # --- Module ---
 class MpNotificationService
 
@@ -36,18 +26,11 @@ class MpNotificationService
       console.log '--> Redis receive message: ', message
       if channel == 'notice_channel'
         data = JSON.parse(message)
-        clientData = @onlineClients[data.receiver]
-        if clientData
-          for socket in clientData.sockets
-            socket.emit 'serverData', data
-          # specific actions
+        MpUserNode.pushMessageToUserId data.receiver_id, 'serverData', data,
+        (socket, eventName, data) ->
           switch data.type
             when 'addFriendRequestAccepted'
-              @pushOnlineFriendsDataToClient(clientData)
-              senderClientData = @onlineClients[data.sender.id]
-              if senderClientData
-                @pushOnlineFriendsDataToClient(senderClientData)
-
+              MpUserNode.pushOnlineFriendIds(socket)
 
 
     # --- Socket.io connection ---

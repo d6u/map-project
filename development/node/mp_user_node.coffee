@@ -9,10 +9,11 @@ _       = require('lodash')
 redis   = require('redis')
 rClient = redis.createClient()
 pgQuery = require('./pg_query_helper')
+logger  = require('tracer').colorConsole();
 
 
-rClient.on "error", (err) ->
-  console.log "Error " + err
+rClient.on 'error', (err) ->
+  logger.warn "Redis error " + err
 
 
 # --- Modules ---
@@ -31,9 +32,14 @@ module.exports = {
   removeSocketFromUserNode: (socket) ->
     userId = socket.handshake.user.id
     rClient.srem "user:#{userId}:socket_ids", socket.id
-    rClient.smembers "user:#{userId}:socket_ids", (err, ids) ->
-      if !ids.length
-        rClient.del "user:#{userId}:socket_ids"
+    @getUserSocketIds(userId).then undefined, ->
+      rClient.del "user:#{userId}:socket_ids"
+
+  getUserSocketIds: (userId) ->
+    findIds = q.defer()
+    rClient.smembers "user:#{userId}:socket_ids", (err, socketIds) =>
+      if socketIds.length then findIds.resolve(socketIds) else findIds.reject()
+    return findIds.promise
 
 
   # --- user data management ---
@@ -44,11 +50,13 @@ module.exports = {
       # create promises array
       allFriendsChecked = []
       # check online status for each friend
-      friendships.forEach (friendship) ->
+      friendships.forEach (friendship) =>
         friendChecked = q.defer()
         allFriendsChecked.push friendChecked.promise
-        rClient.smembers "user:#{friendship.friend_id}:socket_ids", (err, socketIds) ->
-          friendChecked.resolve(if socketIds.length then friendship.friend_id else null)
+        @getUserSocketIds(friendship.friend_id).then ((socketIds) ->
+          friendChecked.resolve(friendship.friend_id)
+        ), ->
+          friendChecked.resolve(null)
       # wain for all friend checked
       #   friendIds contains null value if related friend is not online
       q.all(allFriendsChecked).then (friendIds) ->
@@ -59,4 +67,11 @@ module.exports = {
   pushOnlineFriendIds: (socket) ->
     @getOnlineFriendIds(socket).then (onlineFriendIds) =>
       socket.emit 'onlineFriendsList', onlineFriendIds
+
+  pushMessageToUserId: (userId, eventName, data, eachCallback) ->
+    @getUserSocketIds(userId).then (socketIds) =>
+      for socketId in socketIds
+        socket = @findSocketById(socketId)
+        socket.emit eventName, data
+        eachCallback(socket, eventName, data, userId) if eachCallback
 }

@@ -22,8 +22,6 @@ MpNotificationService = require('./development/node/mp_notification_service')
 # --- Configuration ----
 # redis
 redisClient = redis.createClient()
-redisClient.on 'ready', ->
-  console.log '==> Redis ready'
 
 # socket.io
 socketIo          = SocketIo.listen(httpServer)
@@ -73,6 +71,11 @@ socketIo.set 'authorization', (handshakeData, callback) ->
 # --- Run ---
 mpNotificationService = new MpNotificationService(socketIo)
 
-# node.js server
-httpServer.listen(4000)
-console.log "==> Node server running on port 4000"
+redisClient.on 'ready', ->
+  # reset redis db
+  redisClient.keys 'user:*:socket_ids', (err, keys) ->
+    redisClient.del keys, (err, data) ->
+      console.log '==> Redis ready'
+      # node.js server
+      httpServer.listen(4000)
+      console.log "==> Node server running on port 4000"

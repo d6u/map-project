@@ -7,7 +7,8 @@
     "socket.io": "0.9.x",
     "q": "*",
     "lodash": "*",
-    "pg": "~2.6.0"
+    "pg": "~2.6.0",
+    "tracer": "~0.5.1"
   },
   "devDependencies": {
     "grunt": "~0.4.1",
