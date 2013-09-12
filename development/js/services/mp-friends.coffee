@@ -19,6 +19,10 @@ app.service 'MpFriends',
     socket.on 'onlineFriendsList', (ids) =>
       @onlineFriendsIds = ids
 
+    socket.on 'serverData', (data) =>
+      if data.type == 'addFriendRequestAccepted'
+        @addUserToFriendsList(data.sender)
+
 
   # --- Login/out process management ---
   watcherDeregistrators: []

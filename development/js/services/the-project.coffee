@@ -40,16 +40,11 @@ app.factory 'TheProject',
         else
           loadCurrentProject()
 
-      # invited user added to project
+      # update project participating users when user list changed
       socket.on 'serverData', (notice) =>
-        if notice.type == 'projectInvitationAccepted' && notice.body.project.id == @project.id
-          newUser = Restangular.one('projects', notice.body.project.id).one('users', notice.sender.id)
-          angular.extend newUser, notice.sender
-          @participatedUsers.push newUser
-        else if notice.type == 'newUserAdded' && notice.body.project_id == @project.id
-          newUser = Restangular.one('projects', notice.body.project.id).one('users', notice.sender.id)
-          angular.extend newUser, notice.sender
-          @participatedUsers.push newUser
+        if notice.type in ['projectInvitationAccepted', 'newUserAdded'] &&
+        notice.body.project.id == @project.id
+          @getParticipatedUsers()
     # --- END constructor ---
 
 
