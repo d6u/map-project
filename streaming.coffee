@@ -9,11 +9,14 @@ httpServer = require('http').createServer()
 SocketIo   = require('socket.io')
 RedisStore = require('socket.io/lib/stores/redis')
 redis      = require('redis')
-pg         = require('pg')
 
 # helper modules
 q          = require('q')
 _          = require('lodash')
+
+# custom modules
+pgQuery    = require('./development/node/pg_query_helper')
+MpNotificationService = require('./development/node/mp_notification_service')
 
 
 # --- Configuration ----
@@ -34,9 +37,6 @@ socketIo.set 'store', new RedisStore({
   redisClient: socketRedisClient
 })
 socketIo.set('log level', 3)
-
-MpNotificationService = require('./development/node/mp_notification_service')
-mpNotificationService = new MpNotificationService(redis, socketIo, pg)
 
 socketIo.set 'authorization', (handshakeData, callback) ->
   ###
@@ -63,8 +63,7 @@ socketIo.set 'authorization', (handshakeData, callback) ->
       #   theft, update when user attrs changes
       user_data = data.split(':')
       user_id = Number(user_data[0])
-      mpNotificationService.queryPg('SELECT * FROM users WHERE id = $1;', [user_id])
-      .then (results) ->
+      pgQuery('SELECT * FROM users WHERE id = $1;', [user_id]).then (results) ->
         handshakeData.user = results[0]
         callback(null, true)
     else
@@ -72,6 +71,8 @@ socketIo.set 'authorization', (handshakeData, callback) ->
 
 
 # --- Run ---
+mpNotificationService = new MpNotificationService(socketIo)
+
 # node.js server
 httpServer.listen(4000)
 console.log "==> Node server running on port 4000"
