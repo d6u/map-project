@@ -49,6 +49,10 @@ class MpNotificationService
       socket.on 'disconnect', ->
         console.log "--> User #{socket.handshake.user.id} disconnected"
         MpUserNode.removeSocketFromUserNode socket
+
+      # chating
+      socket.on 'chatMessage', (chatMessage) ->
+        MpUserNode.broadcastMessageOfProject(chatMessage.project_id, chatMessage, socket)
   # --- END constructor ---
 
 
