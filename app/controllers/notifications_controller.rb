@@ -11,10 +11,7 @@ class NotificationsController < ApplicationController
   # GET     /api/notifications
   # ----------------------------------------
   def index
-    notifications         = Notice.where({receiver: @user.id})
-    projectIds            = @user.projects.pluck :id
-    project_notifications = Notice.in(:project => projectIds)
-    render json: (notifications + project_notifications)
+    render json: Notice.where({receiver_id: @user.id})
   end
 
 
@@ -46,10 +43,10 @@ class NotificationsController < ApplicationController
 
       # Create notice object and send to Node.js server
       add_friend_request_accepted = Notice.create({
-        :type     => 'addFriendRequestAccepted',
-        :sender   => @user.public_info,
-        :receiver => reverse_friendship.friend_id,
-        :body     => { friendship_id: friendship.id }
+        :type        => 'addFriendRequestAccepted',
+        :sender      => @user.public_info,
+        :receiver_id => reverse_friendship.friend_id,
+        :body        => { friendship_id: friendship.id }
       })
 
       $redis.publish 'notice_channel', add_friend_request_accepted.to_json
@@ -70,35 +67,41 @@ class NotificationsController < ApplicationController
   # POST    /api/notifications/:id/accept_project_invitation
   # ----------------------------------------
   def accept_project_invitation
-    pp = ProjectParticipation.find_by_id params[:project_participation_id]
-
+    pp      = ProjectParticipation.find_by_id params[:project_participation_id]
+    project = pp.project
     # send current participating users notice
-    pp.project.participating_users.each do |pu|
+    project.participating_users.each do |pu|
       new_user_added = Notice.create({
-        type:     'newUserAdded',
-        sender:   @user.public_info,
-        receiver: pu.id,
+        type:        'newUserAdded',
+        sender:      @user.public_info,
+        receiver_id: pu.id,
         body: {
-          project_id: pp.project.id,
-          user: @user.public_info
+          new_user: @user.public_info,
+          project: {
+            id:    project.id,
+            title: project.title,
+            notes: project.notes
+          }
         }
       })
       $redis.publish 'notice_channel', new_user_added.to_json
     end
 
     pp.update(status: 1)
-    pi = Notice.find(params[:id])
     pia = Notice.create({
-      type:     'projectInvitationAccepted',
-      sender:   @user.public_info,
-      receiver: pi['sender']['id'],
+      type:        'projectInvitationAccepted',
+      sender:      @user.public_info,
+      receiver_id: project.owner_id,
       body: {
+        project_participation_id: pp.id,
         project: {
-          id: pi['body']['project']['id']
+          id:    project.id,
+          title: project.title,
+          notes: project.notes
         }
       }
     })
-    pi.destroy
+    Notice.find(params[:id]).destroy
     $redis.publish 'notice_channel', pia.to_json
 
     head 200
@@ -108,15 +111,17 @@ class NotificationsController < ApplicationController
   # DELETE  /api/notifications/:id/reject_project_invitation
   # ----------------------------------------
   def reject_project_invitation
-    ProjectParticipation.destroy_all(id: params['project_participation_id'])
+    ProjectParticipation.destroy_all(id: params[:project_participation_id])
     project_invitation = Notice.find(params[:id])
     project_invitation_rejected = Notice.create({
-      :type     => 'projectInvitationRejected',
-      :sender   => @user.public_info,
-      :receiver => project_invitation['sender']['id'],
-      :body     => {
-        :project => {
-          :id => project_invitation['body']['project']['id']
+      type:        'projectInvitationRejected',
+      sender:      @user.public_info,
+      receiver_id: project_invitation['sender']['id'],
+      body: {
+        project: {
+          id:    project_invitation['body']['project']['id'],
+          title: project_invitation['body']['project']['title'],
+          notes: project_invitation['body']['project']['notes']
         }
       }
     })

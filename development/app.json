@@ -51,7 +51,9 @@
 
         "views/_shared/mini-map-cover.coffee",
         "views/_shared/md-notification-item.coffee",
-        "views/_shared/md-notice-pop-item.coffee"
+        "views/_shared/md-notice-pop-item.coffee",
+
+        "views/_chatbox"
       ],
 
       "application-m.js": [

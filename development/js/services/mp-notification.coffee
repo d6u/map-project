@@ -3,9 +3,9 @@ MpNotification
 ###
 
 app.service 'MpNotification',
-['$rootScope', '$timeout', '$q', 'Restangular', '$route', 'socket', 'MpFriends', class MpNotification
+['$rootScope', '$timeout', '$q', 'Restangular', '$route', 'socket', 'MpFriends', 'MpProjects', class MpNotification
 
-  constructor: ($rootScope, $timeout, $q, @Restangular, $route, socket, @MpFriends) ->
+  constructor: ($rootScope, $timeout, $q, @Restangular, $route, socket, @MpFriends, @MpProjects) ->
     @notifications = []
 
     # --- Resouces ---
@@ -34,8 +34,8 @@ app.service 'MpNotification',
     'projectInvitation'
     'projectInvitationAccepted'
     'projectInvitationRejected'
-    'youAreRemovedFromProject'
-    'projectDeleted'
+    # 'youAreRemovedFromProject'
+    # 'projectDeleted'
   ]
 
   processServerData: (data) ->
@@ -43,11 +43,6 @@ app.service 'MpNotification',
       newNotice = @Restangular.one('notifications', data.id)
       angular.extend(newNotice, data)
       @notifications.push newNotice
-
-    # specific actions
-    switch data.type
-      when 'addFriendRequestAccepted'
-        @MpFriends.addUserToFriendsList(data.sender)
 
 
   # --- Notification interface ---
@@ -75,7 +70,8 @@ app.service 'MpNotification',
 
   # project invitation
   acceptProjectInvitation: (invitation) ->
-    invitation.customPOST({}, 'accept_project_invitation', {project_participation_id: invitation.body.project_participation_id})
+    invitation.customPOST({}, 'accept_project_invitation', {project_participation_id: invitation.body.project_participation_id}).then =>
+      @MpProjects.getProjects()
     @removeNotice(invitation)
 
   rejectProjectInvitation: (invitation) ->

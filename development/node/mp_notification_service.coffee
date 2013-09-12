@@ -1,27 +1,19 @@
-q = require('q')
-_ = require('lodash')
+q          = require('q')
+_          = require('lodash')
+redis      = require('redis')
+pgQuery    = require('./pg_query_helper')
+MpUserNode = require('./mp_user_node')
 
-
-###
-onlineClients = [clientData...]
-
-clientData = {
-  user:         user
-  sockets:     [socket]
-  friendsList: []
-}
-###
 
 # --- Module ---
 class MpNotificationService
 
-  constructor: (redis, socketIo, pg) ->
+  constructor: (socketIo) ->
     @redisClient   = redis.createClient()
     @subscriber    = redis.createClient()
     @sockets       = socketIo.sockets
-    @pgConnectionString = "postgres://map-project:1234@localhost/map-project_development"
-    @pg            = pg
     @onlineClients = {}
+    MpUserNode.setSockets(@sockets)
 
 
     # --- Redis pub/sub ---
@@ -34,116 +26,30 @@ class MpNotificationService
       console.log '--> Redis receive message: ', message
       if channel == 'notice_channel'
         data = JSON.parse(message)
-        clientData = @onlineClients[data.receiver]
-        if clientData
-          for socket in clientData.sockets
-            socket.emit 'serverData', data
-          # specific actions
+        MpUserNode.pushMessageToUserId data.receiver_id, 'serverData', data,
+        (socket, eventName, data) ->
           switch data.type
             when 'addFriendRequestAccepted'
-              @pushOnlineFriendsDataToClient(clientData)
-              senderClientData = @onlineClients[data.sender.id]
-              if senderClientData
-                @pushOnlineFriendsDataToClient(senderClientData)
-
+              MpUserNode.pushOnlineFriendIds(socket)
 
 
     # --- Socket.io connection ---
     @sockets.on 'connection', (socket) =>
       # connection
       console.log "--> User #{socket.handshake.user.id} connected"
-      @addToOnlineClient(socket).then (clientData) =>
-        # onlineFriendsList event also serve as server ready indicator
-        socket.emit 'onlineFriendsList', @getOnlineFriends(clientData)
+      MpUserNode.addSocketToUserNode socket
+      MpUserNode.pushOnlineFriendIds socket
 
       # request online friends list
-      socket.on 'requestOnlineFriendsList', (data, done) =>
-        done(@getOnlineFriends(@getClientData(socket)))
+      socket.on 'requestOnlineFriendsList', (data, done) ->
+        MpUserNode.getOnlineFriendIds(socket).then (ids) ->
+          done(ids)
 
       # disconnect
-      socket.on 'disconnect', =>
+      socket.on 'disconnect', ->
         console.log "--> User #{socket.handshake.user.id} disconnected"
-        @removeClientFromOnlineList(socket)
+        MpUserNode.removeSocketFromUserNode socket
   # --- END constructor ---
-
-
-  # --- Pg interface ---
-  queryPg: (sqlQuery, params) ->
-    queryFinished = q.defer()
-    @pg.connect @pgConnectionString, (error, client, done) ->
-      if error
-        console.log('--> Postgre connection error: ', error)
-        queryFinished.reject()
-        done()
-      else
-        if params
-          client.query sqlQuery, params, (error, results) ->
-            if error
-              console.log('--> Postgre query error: ', error)
-              queryFinished.reject()
-              done()
-            else
-              queryFinished.resolve(results.rows)
-              done()
-        else
-          client.query sqlQuery, (error, results) ->
-            if error
-              console.log('--> Postgre query error: ', error)
-              queryFinished.reject()
-              done()
-            else
-              queryFinished.resolve(results.rows)
-              done()
-
-    return queryFinished.promise
-
-
-  # --- Oneline Client Management ---
-  addToOnlineClient: (socket) ->
-    userFetched = q.defer()
-    user        = socket.handshake.user
-    clientData  = @getClientData(socket)
-    if clientData
-      clientData.sockets.push socket
-      userFetched.resolve(clientData)
-    else
-      clientData = {
-        user:         user
-        sockets:     [socket]
-        friendsList: []
-      }
-      @onlineClients[user.id] = clientData
-      @queryPg('SELECT * FROM friendships WHERE user_id = $1 AND status > 0', [user.id])
-      .then (friendships) ->
-        clientData.friendsList = _.pluck(friendships, 'friend_id')
-        userFetched.resolve(clientData)
-
-    return userFetched.promise
-
-
-  removeClientFromOnlineList: (socket) ->
-    clientData = @getClientData(socket)
-    if clientData
-      clientData.sockets = _.without clientData.sockets, socket
-      if !clientData.sockets.length
-       delete @onlineClients[socket.handshake.user.id]
-
-
-  getClientData: (socket) ->
-    @onlineClients[socket.handshake.user.id]
-
-
-  getOnlineFriends: (clientData) ->
-    _.filter clientData.friendsList, (friend_id) =>
-      @onlineClients[friend_id]
-
-
-  pushOnlineFriendsDataToClient: (clientData) ->
-    @queryPg('SELECT * FROM friendships WHERE user_id = $1 AND status > 0', [clientData.user.id])
-    .then (friendships) ->
-      clientData.friendsList = _.pluck(friendships, 'friend_id')
-      for socket in clientData.sockets
-        socket.emit 'onlineFriendsList', clientData.friendsList
 
 
 # Export module
