@@ -38,9 +38,9 @@ class ProjectsController < ApplicationController
     # send notice to each user
     participations.each do |participation|
       project_invitation = Notice.create({
-        type:     'projectInvitation',
-        sender:   @user.public_info,
-        receiver: participation.user_id,
+        type:        'projectInvitation',
+        sender:      @user.public_info,
+        receiver_id: participation.user_id,
         body: {
           project_participation_id: participation.id,
           project: {

@@ -6,45 +6,76 @@
 
 ### Notice - collection
 
-Fields    | Type    | Description
-------    | ----    | -----------
-_id       |         | MongoDB default ID field
-type      | String  | Specify type of the notification valid type include __`addFriendRequest`, `addFriendRequestAccepted`, `newChatMessage`, `projectInvitation`, `projectInvitationAccepted`, `projectInvitationRejected`, `newPlaceAdded`, `newUserAdded`, `projectPlaceListUpdated`,`projectUserListUpdated`, `projectAttributesUpdated`, `youAreRemovedFromProject`, `projectDeleted`__. A detail explanation of each notice type can be found after this section
-sender    | Hash    | Store basic sender(user) information: __id, name, fb_user_picture__
-receiver* | Integer | Receiver's id, if specified, this notice will be send to specified user
-project*  | Integer | Project's id, if specified, this notice will be send to all users in specific project
-body      | Hash    | Dynamic notice object, contents varies by notice type (see more in explanation of notice type)
+#### Intro
 
-_*: between project and receiver, at least one must be specified_
+Notices will first be stored in MongoDB then pushed to related sockets through Node.js server.
+
+#### Brief
+
+Fields       | Type    | Description
+------       | ----    | -----------
+id           | String  | MongoDB default ID field, note id is string extracted from MongoDB id object
+type         | String  | Specify type of a notice*
+sender       | Hash    | Store basic sender(user) information: __id, name, fb_user_picture__
+receiver_id  | Integer | Receiver's id, if specified, this notice will be send to specified user
+body         | Hash    | Dynamic notice object, contents varies by notice type (see more in explanation of notice type)
+
+_*: valid type include:_
+
+* `addFriendRequest`
+* `addFriendRequestAccepted`
+* `newChatMessage`
+* `projectInvitation`
+* `projectInvitationAccepted`
+* `projectInvitationRejected`
+* `newPlaceAdded`
+* `newUserAdded`
+* `projectPlaceListUpdated`
+* `projectUserListUpdated`
+* `projectAttributesUpdated`
+* `youAreRemovedFromProject`
+* `projectDeleted`
+
+_A detail explanation of each notice type can be found following this section_
 
 
 #### Detailed Explanation of Notice Type
 
+_*: "Rails" field marked methods generate specific notice (notices will be sent to Node.js server and distributed to clients)_
+
 1. _addFriendRequest_
 
-        receiver: user_id,
+   Rails: __FriendshipsController#create__
+
         body: {
 	      friendship_id: Integer
 	    }
 
-2. _addFriendRequestAccepted_
+1. _addFriendRequestAccepted_
 
-        receiver: user_id,
+   Rails: __NotificationsController#accept_friend_request__
+
         body: {
           friendship_id: Integer
         }
+        
+1. _projectInvitation_
 
-3. _newChatMessage_
+   Rails: __ProjectsController#add_users__
 
-        project: project_id,
         body: {
-          sample_message_content: String,
-          unread_count: Integer
+          project_participation_id: Integer,
+          project: {
+            id: Integer,
+            title: String,
+            notes: String
+          }
         }
+        
+1. _projectInvitationAccepted_
 
-4. _projectInvitation_
+   Rails: __NotificationsController#accept_project_invitation__
 
-        receiver: user_id,
         body: {
           project_participation_id: Integer,
           project: {
@@ -54,25 +85,51 @@ _*: between project and receiver, at least one must be specified_
           }
         }
 
-5. _projectInvitationAccepted_
+1. _projectInvitationRejected_
 
-        receiver: user_id,
+   Rails: __NotificationsController#reject_project_invitation__
+
         body: {
           project: {
-            id: Integer
+            id: Integer,
+            title: String,
+            notes: String
+          }
+        }
+        
+1. _newUserAdded_
+
+   Rails: __NotificationsController#accept_project_invitation__
+
+        body: {
+          new_user: {
+            id: Integer,
+            name: String,
+            fb_user_picture: String
+          },
+          project: {
+            id: Integer,
+            title: String,
+            notes: String
           }
         }
 
-6. _projectInvitationRejected_
+---
 
-        receiver: user_id,
+##### TODO: the following needs to be updated
+
+1. _newChatMessage_
+
+        project: project_id,
         body: {
-          project: {
-            id: Integer
-          }
+          sample_message_content: String,
+          unread_count: Integer
         }
 
-7. _newPlaceAdded_
+
+
+
+1. _newPlaceAdded_
 
         project: project_id,
         body: {
@@ -83,18 +140,7 @@ _*: between project and receiver, at least one must be specified_
           }
         }
 
-8. _newUserAdded_
-
-        project: project_id,
-        body: {
-          user: {
-            id: Integer,
-            name: String,
-            fb_user_picture: String
-          }
-        }
-
-9. _projectPlaceListUpdated_
+1. _projectPlaceListUpdated_
 
         project: project_id,
         body: {
@@ -103,7 +149,7 @@ _*: between project and receiver, at least one must be specified_
           }
         }
 
-10. _projectUserListUpdated_
+1. _projectUserListUpdated_
 
         project: project_id,
         body: {
@@ -112,7 +158,7 @@ _*: between project and receiver, at least one must be specified_
           }
         }
 
-11. _projectAttributesUpdated_
+1. _projectAttributesUpdated_
 
         project: project_id,
         body: {
@@ -122,7 +168,7 @@ _*: between project and receiver, at least one must be specified_
           }
         }
 
-12. _youAreRemovedFromProject_
+1. _youAreRemovedFromProject_
 
         receiver: user_id,
         body: {
@@ -131,7 +177,7 @@ _*: between project and receiver, at least one must be specified_
           }
         }
 
-13. _projectDeleted_
+1. _projectDeleted_
 
         receiver: user_id,
         body: {

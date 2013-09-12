@@ -50,10 +50,10 @@ class FriendshipsController < ApplicationController
 
       # Create notice object and send to Node.js server
       add_friend_request = Notice.create({
-        :type     => 'addFriendRequest',
-        :sender   => @user.public_info,
-        :receiver => friendship.friend_id,
-        :body     => { friendship_id: friendship.id }
+        :type        => 'addFriendRequest',
+        :sender      => @user.public_info,
+        :receiver_id => friendship.friend_id,
+        :body        => { friendship_id: friendship.id }
       })
 
       $redis.publish 'notice_channel', add_friend_request.to_json
