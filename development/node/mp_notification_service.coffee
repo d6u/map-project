@@ -39,7 +39,8 @@ class MpNotificationService
       # connection
       console.log "--> User #{socket.handshake.user.id} connected"
       MpUserNode.addSocketToUserNode socket
-      MpUserNode.pushOnlineFriendIds socket
+      MpUserNode.pushOnlineFriendIds(socket).then ->
+        MpUserNode.pushOnlineStatusToFriends socket
 
       # request online friends list
       socket.on 'requestOnlineFriendsList', (data, done) ->
@@ -50,6 +51,7 @@ class MpNotificationService
       socket.on 'disconnect', ->
         console.log "--> User #{socket.handshake.user.id} disconnected"
         MpUserNode.removeSocketFromUserNode socket
+        MpUserNode.pushOfflineStatusToFriends socket
 
       # chating
       socket.on 'chatMessage', (chatMessage) ->

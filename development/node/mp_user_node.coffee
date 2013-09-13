@@ -47,6 +47,8 @@ module.exports = {
     # query friends
     pgQuery('SELECT friend_id FROM friendships WHERE user_id = $1 AND status > 0',
     [socket.handshake.user.id]).then (friendships) =>
+      # cache friend ids in redis
+      @cacheFriendsIds(_.pluck(friendships, 'friend_id'), socket)
       # create promises array
       allFriendsChecked = []
       # check online status for each friend
@@ -62,6 +64,9 @@ module.exports = {
       q.all(allFriendsChecked).then (friendIds) ->
         _.filter friendIds, (id) -> _.isNumber(id)
 
+  cacheFriendsIds: (friendIds, socket) ->
+    rClient.sadd "user:#{socket.handshake.user.id}:friend_ids", friendIds
+
 
   # --- send data to client ---
   pushOnlineFriendIds: (socket) ->
@@ -74,6 +79,21 @@ module.exports = {
         socket = @findSocketById(socketId)
         socket.emit eventName, data
         eachCallback(socket, eventName, data, userId) if eachCallback
+
+
+  # --- broadcast online/offline status to friends ---
+  pushOnlineStatusToFriends: (socket) ->
+    sender_id = socket.handshake.user.id
+    @getOnlineFriendIds(socket).then (ids) =>
+      for id in ids
+        @pushMessageToUserId(id, 'friendGoOnline', sender_id)
+
+  pushOfflineStatusToFriends: (socket) ->
+    sender_id = socket.handshake.user.id
+    pseudoSocket = {handshake: {user: {id: socket.handshake.user.id}}}
+    @getOnlineFriendIds(pseudoSocket).then (ids) =>
+      for id in ids
+        @pushMessageToUserId(id, 'friendGoOffline', sender_id)
 
 
   # --- Inside project broadcast ---
