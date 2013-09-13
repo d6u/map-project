@@ -1,6 +1,6 @@
 app.directive 'mdChatbox',
-['mpTemplateCache','$compile','$timeout',
-( mpTemplateCache,  $compile,  $timeout) ->
+['mpTemplateCache','$compile','$timeout','MpChat',
+( mpTemplateCache,  $compile,  $timeout,  MpChat) ->
 
   templateUrl: '/scripts/views/_chatbox/md-chatbox.html'
   replace: true
@@ -8,6 +8,9 @@ app.directive 'mdChatbox',
   controller: ['$element', '$scope', ($element, $scope) ->
 
     @sidemode = false
+    @MpChat   = MpChat
+
+    MpChat.initialize($scope)
 
     return
   ]
@@ -27,7 +30,7 @@ app.directive 'mdChatbox',
             )
         ), 300
 
-
+    # Send message to server
     scope.$on 'enterNewMessage', (event, message) ->
-      console.debug message
+      MpChat.sendChatMessage(message)
 ]

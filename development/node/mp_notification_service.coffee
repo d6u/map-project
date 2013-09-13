@@ -3,6 +3,7 @@ _          = require('lodash')
 redis      = require('redis')
 pgQuery    = require('./pg_query_helper')
 MpUserNode = require('./mp_user_node')
+filterUser = require('./filter_user')
 
 
 # --- Module ---
@@ -49,6 +50,15 @@ class MpNotificationService
       socket.on 'disconnect', ->
         console.log "--> User #{socket.handshake.user.id} disconnected"
         MpUserNode.removeSocketFromUserNode socket
+
+      # chating
+      socket.on 'chatMessage', (chatMessage) ->
+        messageData = {
+          type:    'chatMessage'
+          sender:  filterUser(socket.handshake.user)
+          message: chatMessage.message
+        }
+        MpUserNode.broadcastMessageOfProject(chatMessage.project_id, messageData, socket)
   # --- END constructor ---
 
 

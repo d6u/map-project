@@ -45,7 +45,8 @@ app.controller 'MapCtrl',
   }
 
   # Map service
-  @theProject = if $routeSegment.startsWith('ot') then new TheProject($scope) else new TheProject($scope, Number($routeSegment.$routeParams.project_id))
+  if $routeSegment.startsWith('ot') then TheProject.initialize($scope) else TheProject.initialize($scope, Number($routeSegment.$routeParams.project_id))
+  @theProject           = TheProject
   @autocompleteService  = new google.maps.places.AutocompleteService()
   @placePredictions     = []
   @placesService        = undefined # placeholder

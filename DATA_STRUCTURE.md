@@ -116,18 +116,34 @@ _*: "Rails" field marked methods generate specific notice (notices will be sent 
 
 ---
 
-##### TODO: the following needs to be updated
+##### Inside project notice/message
+
+Notice in this category have two phases, __message__ and __notice__. In message phase, data will broadcasted to all online clients within a project, expect the sender.
+
+Then notice will be transformed and saved in database as `chat history` (TODO: save chat history).
+
+Last, notice will be saved into Notice collection (MongoDB) if no notice of the same type, of the same receiver, in the same project, exists in the collection. This record will be used to notice users of unread project related messages when they are not online. This is notice will also be sent to receiver through socket in case they are not the project view currently.
 
 1. _newChatMessage_
 
-        project: project_id,
+   message: socket event: `chatMessage`
+   
+        project_id: Integer,
+        message: String
+   
+   notice:
+        
         body: {
-          sample_message_content: String,
-          unread_count: Integer
+          project: {
+            id: Integer,
+            title: String,
+            notes: String
+          }
         }
+   
+---
 
-
-
+##### TODO: the following needs to be updated
 
 1. _newPlaceAdded_
 

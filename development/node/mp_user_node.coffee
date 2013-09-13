@@ -74,4 +74,17 @@ module.exports = {
         socket = @findSocketById(socketId)
         socket.emit eventName, data
         eachCallback(socket, eventName, data, userId) if eachCallback
+
+
+  # --- Inside project broadcast ---
+  broadcastMessageOfProject: (projectId, messageData, senderSocket) ->
+    rClient.smembers "project:#{projectId}:user_ids", (err, userIds) =>
+      if !userIds.length
+        pgQuery('SELECT u.id FROM users u INNER JOIN project_participations pp ON pp.user_id = u.id WHERE pp.project_id = $1 UNION SELECT u.id FROM users u INNER JOIN projects p ON p.owner_id = u.id WHERE p.id = $1;', [projectId]).then (users) =>
+
+          # got users
+          for user in users
+            if user.id != senderSocket.handshake.user.id
+              @pushMessageToUserId(user.id, 'chatMessage', messageData)
+      # TODO: else
 }
