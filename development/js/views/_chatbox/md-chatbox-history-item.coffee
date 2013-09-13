@@ -16,6 +16,6 @@ app.directive 'mdChatboxHistoryItem',
 
     mpTemplateCache.get(chooseTemplate(scope.chatItem.type)).then (template) ->
       element.html $compile(template)(scope)
-      if scope.chatItem.self
+      if scope.chatItem.$self
         element.addClass 'mp-chat-history-self'
 ]

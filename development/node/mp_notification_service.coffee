@@ -3,6 +3,7 @@ _          = require('lodash')
 redis      = require('redis')
 pgQuery    = require('./pg_query_helper')
 MpUserNode = require('./mp_user_node')
+filterUser = require('./filter_user')
 
 
 # --- Module ---
@@ -52,7 +53,12 @@ class MpNotificationService
 
       # chating
       socket.on 'chatMessage', (chatMessage) ->
-        MpUserNode.broadcastMessageOfProject(chatMessage.project_id, chatMessage, socket)
+        messageData = {
+          type:    'chatMessage'
+          sender:  filterUser(socket.handshake.user)
+          message: chatMessage.message
+        }
+        MpUserNode.broadcastMessageOfProject(chatMessage.project_id, messageData, socket)
   # --- END constructor ---
 
 

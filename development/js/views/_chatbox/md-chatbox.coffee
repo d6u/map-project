@@ -7,8 +7,10 @@ app.directive 'mdChatbox',
   controllerAs: 'mdChatboxCtrl'
   controller: ['$element', '$scope', ($element, $scope) ->
 
-    MpChat.initialize($scope)
     @sidemode = false
+    @MpChat   = MpChat
+
+    MpChat.initialize($scope)
 
     return
   ]

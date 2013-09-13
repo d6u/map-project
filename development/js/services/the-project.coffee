@@ -49,9 +49,8 @@ app.service 'TheProject',
       else
         loadCurrentProject()
 
-    scope.$on '$routeChangeSuccess', (event) =>
-      if !@$routeSegment.contains('project')
-        @destroy()
+    scope.$on '$destroy', (event) =>
+      @destroy()
 
 
   destroy: ->
