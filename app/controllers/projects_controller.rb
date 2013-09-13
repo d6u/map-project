@@ -14,7 +14,17 @@ class ProjectsController < ApplicationController
   # GET     /api/projects/:project_id/participating_users
   def participating_users
     project = Project.find_by_id(params[:project_id])
-    project ? render(:json => project.participating_users, :only => [:id, :name, :fb_user_picture]) : head(404)
+    if project
+      if @user == project.owner
+        render(json: project.participating_users,
+               only: [:id, :name, :fb_user_picture])
+      else
+        render(json: (project.participating_users - [@user] + [project.owner]),
+               only: [:id, :name, :fb_user_picture])
+      end
+    else
+      head(404)
+    end
   end
 
 

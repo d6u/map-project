@@ -19,32 +19,37 @@ app.service 'MpFriends',
     socket.on 'onlineFriendsList', (ids) =>
       @onlineFriendsIds = ids
 
+    socket.on 'friendGoOnline', (id) =>
+      @onlineFriendsIds = _.union(@onlineFriendsIds, [id])
+
+    socket.on 'friendGoOffline', (id) =>
+      @onlineFriendsIds = _.without(@onlineFriendsIds, id)
+
     socket.on 'serverData', (data) =>
       if data.type == 'addFriendRequestAccepted'
         @addUserToFriendsList(data.sender)
 
 
   # --- Login/out process management ---
-  watcherDeregistrators: []
-
   initialize: (scope) ->
     refreshFriendsOnlineStatus = =>
       for friend in @friends
         friend.$online = if _.indexOf(@onlineFriendsIds, friend.id) >= 0 then true else false
     # watch friends changes
-    @watcherDeregistrators.push scope.$watch (=>
+    scope.$watch (=>
       _.pluck(@friends, 'id').sort()
     ), refreshFriendsOnlineStatus, true
     # watch onlineFriendsIds changes
-    @watcherDeregistrators.push scope.$watch (=>
+    scope.$watch (=>
       @onlineFriendsIds.sort()
     ), refreshFriendsOnlineStatus, true
 
     @getFriends()
 
+    scope.$on '$destroy', =>
+      @destroy()
+
   destroy: ->
-    for deregistrator in @watcherDeregistrators
-      deregistrator()
     @friends          = []
     @onlineFriendsIds = []
 

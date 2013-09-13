@@ -23,6 +23,18 @@ class PlacesController < ApplicationController
       place = Place.new params.require(:place).permit(:notse, :name, :address, :coord, :order)
       project.places << place
       render :json => place
+
+      # send placeAdded event to Node server
+      (project.participating_users + [project.owner]).each do |user|
+        place_added = {
+          type:        'placeAdded',
+          sender:      @user.public_info,
+          receiver_id: user.id,
+          place:       place
+        }
+        $redis.publish 'notice_channel', MultiJson.dump(place_added)
+      end
+
     end
   end
 

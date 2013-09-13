@@ -8,7 +8,7 @@ app.directive 'mdChatboxHistoryItem',
         return '/scripts/views/_chatbox/item-templates/mp-chat-history-message.html'
       when 'userBehavior'
         return '/scripts/views/_chatbox/item-templates/mp-chat-history-user-behavior.html'
-      when 'addPlaceToList'
+      when 'placeAdded'
         return '/scripts/views/_chatbox/item-templates/mp-chat-history-place.html'
 
 
