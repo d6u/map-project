@@ -15,6 +15,10 @@ app.service 'MpChat',
     @socket.on 'chatMessage', (data) =>
       @chatHistory.push data
 
+    @socket.on 'serverData', (data) =>
+      if data.type == 'placeAdded'
+        @chatHistory.push data
+
     scope.$watch (=>
       _.map @TheProject.participatedUsers.sort(), (friend) =>
         {id: friend.id, online: !!friend.$online}

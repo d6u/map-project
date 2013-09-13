@@ -26,6 +26,11 @@ app.service 'TheProject',
       notice.body.project.id == @project.id
         @getParticipatedUsers()
 
+      else if notice.type == 'placeAdded' && notice.sender.id != MpUser.getId()
+        newPlace = Restangular.one('projects', @project.id).one('places', notice.place.id)
+        angular.extend newPlace, notice.place
+        @places.push newPlace
+
 
   # --- Enter/leave project view management ---
   initialize: (scope, projectId) ->
