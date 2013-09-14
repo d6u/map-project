@@ -85,25 +85,25 @@ app.config(['socketProvider', '$httpProvider', '$routeSegmentProvider',
   .within('in')
 
     .segment('dashboard', {
-      templateUrl:  '/scripts/views/in/dashboard/dashboard-view.html'
+      templateUrl:  '/scripts/views/dashboard/dashboard-view.html'
       controller:   'DashboardViewCtrl'
       controllerAs: 'dashboardViewCtrl'
     })
 
     .segment('project', {
-      templateUrl:  '/scripts/views/in/project/project-view.html'
+      templateUrl:  '/scripts/views/project/project-view.html'
       controller:   'ProjectViewCtrl'
       controllerAs: 'projectViewCtrl'
     })
 
     .segment('friends', {
-      templateUrl:  '/scripts/views/in/friends/friends-view.html'
+      templateUrl:  '/scripts/views/friends/friends-view.html'
       controller:   'FriendsViewCtrl'
       controllerAs: 'friendsViewCtrl'
     })
 
     .segment('search', {
-      templateUrl:  '/scripts/views/in/search/search-view.html'
+      templateUrl:  '/scripts/views/search/search-view.html'
       controller:   'SearchViewCtrl'
       controllerAs: 'searchViewCtrl'
     })

@@ -1,6 +1,6 @@
 app.directive 'mdBottomBar',
 [->
-  templateUrl: '/scripts/views/_map/md-bottom-bar.html'
+  templateUrl: '/scripts/components/bottom-bar/md-bottom-bar.html'
   replace: true
   controllerAs: 'mdBottomBarCtrl'
   controller: ['$scope', ($scope) ->

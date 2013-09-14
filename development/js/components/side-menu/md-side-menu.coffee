@@ -2,7 +2,7 @@ app.directive 'mdSideMenu',
 ['$routeSegment', ($routeSegment) ->
 
   templateUrl: ->
-    if $routeSegment.startsWith('ot') then '/scripts/views/_pusher-side/md-side-menu-outside.html' else '/scripts/views/_pusher-side/md-side-menu-inside.html'
+    if $routeSegment.startsWith('ot') then '/scripts/components/side-menu/md-side-menu-outside.html' else '/scripts/components/side-menu/md-side-menu-inside.html'
   replace: true
   controllerAs: 'mdSideMenuCtrl'
   controller: ['$scope', ($scope) ->
