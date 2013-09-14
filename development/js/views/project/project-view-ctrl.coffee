@@ -1,10 +1,11 @@
 app.controller 'ProjectViewCtrl',
-['$scope', ($scope) ->
+['$scope', class ProjectViewCtrl
 
-  @showChatbox = false
+  constructor: ($scope) ->
+    # drawer
+    @showDrawer    = false
+    @activeSection = 'searchResults'
 
-  # FIXME: auto detect current template
-  $scope.outsideViewCtrl = {hideHomepage: true}
-
-  return
+    # FIXME: auto detect current template
+    $scope.outsideViewCtrl = {hideHomepage: true}
 ]

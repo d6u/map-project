@@ -1,6 +1,7 @@
+// --- Container ---
 .md-chatbox {
-  position: absolute;
-  z-index: 100;
+  position: fixed;
+  z-index: 1000;
   bottom: 40px;
   right: 10px;
   height: 400px;
@@ -8,15 +9,13 @@
   background-color: white;
 
   &.md-chatbox-sidemode {
+    position: fixed;
     top: 0;
-    bottom: 0;
+    bottom: 40px;
     right: 0;
-    height: 100%;
-    + div {
-      margin-right: 300px;
-      .md-bottom-bar-button-chatbox {
-        margin-right: 0;
-      }
+    height: auto;
+    ~ .md-map {
+      right: 300px;
     }
   }
 }
@@ -72,10 +71,6 @@
     margin: 1px;
   }
 }
-
-
-
-
 
 
 // --- History ---

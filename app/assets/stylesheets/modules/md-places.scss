@@ -32,6 +32,11 @@
       color: $green;
       text-decoration: none;
     }
+    &.md-places-item-actions-remove {
+      &:hover {
+        color: $red;
+      }
+    }
   }
 }
 
@@ -40,14 +45,21 @@
   margin-right: 40px;
 }
 
+.md-places-item-name {
+  font-weight: bold;
+}
+
+.md-places-item-address {
+  margin-bottom: 0;
+  color: $gray5;
+}
+
 // Route
 .md-places-item-route {
   cursor: pointer;
   text-indent: 35px;
-  font-size: 18px;
-  font-weight: bold;
-  margin-bottom: 20px;
-  color: $blueDark;
+  font-size: 14px;
+  color: $greenDark;
   span {
     // margin-right: 20px;
   }

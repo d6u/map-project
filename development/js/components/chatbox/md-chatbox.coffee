@@ -5,14 +5,17 @@ app.directive 'mdChatbox',
   templateUrl: '/scripts/components/chatbox/md-chatbox.html'
   replace: true
   controllerAs: 'mdChatboxCtrl'
-  controller: ['$element', '$scope', ($element, $scope) ->
+  controller: ['$element', '$scope', 'TheProject', class MdChatboxCtrl
 
-    @sidemode = false
-    @MpChat   = MpChat
+    contructor: ($element, $scope, TheProject) ->
 
-    MpChat.initialize($scope)
+      @sidemode = false
+      @MpChat   = MpChat
 
-    return
+      MpChat.initialize($scope)
+
+      @showPlaceOnMap = (place) ->
+        $scope.drawerCtrl.showPlaceOnMap(_.find(TheProject.places, {id: place.id}))
   ]
   link: (scope, element, attrs, mdChatboxCtrl) ->
 

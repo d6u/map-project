@@ -2,33 +2,11 @@ app.directive 'mdDrawer',
 ['$rootScope', '$timeout', '$routeSegment',
 ( $rootScope,   $timeout,   $routeSegment) ->
 
-  templateUrl: '/scripts/components/map/md-drawer.html'
+  templateUrl: '/scripts/components/drawer/md-drawer.html'
   controllerAs: 'drawerCtrl'
   controller: ['$scope', '$element', ($scope, $element) ->
 
     # Interface
-    @maxmize = false
-    @showDrawer = false
-    @toggleDrawerButtonText = 'Show drawer'
-    @showEditProjectSubsection = false
-
-    # Actions
-    @getProjectTitle = ->
-      if $scope.TheProject
-        if $scope.TheProject.project
-          return $scope.TheProject.project.title
-        else
-          return $scope.TheProject.places.length + ' marked places'
-      else
-        return
-
-    @toggleDrawer = ->
-      $element.toggleClass 'md-drawer-show'
-      $element.find('.cp-typeahead').toggleClass 'cp-typeahead-dropup'
-      $timeout (-> google.maps.event.trigger($scope.mapCtrl.googleMap, 'resize')), 200
-      @showDrawer = !@showDrawer
-      @toggleDrawerButtonText = if @showDrawer then 'Hide drawer' else 'Show drawer'
-
     @toggleDrawerSize = ->
       @maxmize = !@maxmize
 

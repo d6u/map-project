@@ -2,11 +2,12 @@
 
 .ly-fullscreen(ng-controller="MapCtrl as mapCtrl")
 
-  .md-drawer.clearfix(md-drawer="", ng-class="{'md-drawer-maxmize': drawerCtrl.maxmize}")
-  .md-map-canvas(mp-map-canvas="")
+  .md-chatbox(md-chatbox="")
 
-  //- Edit project, manage participants, add friends to project modal
-  .md-modal.md-effect-3(md-project-modal="", ng-class="{'md-modal-show': mdProjectModalCtrl.showModal}")
-  .md-modal-overlay
+  div(md-bottom-bar="")
 
-div(md-bottom-bar="")
+  .md-map
+    .md-map-canvas(mp-map-canvas="")
+    .md-drawer.clearfix(md-drawer="", ng-class="{'md-drawer-double-size': projectViewCtrl.activeSection == 'both', 'md-drawer-show': projectViewCtrl.showDrawer}")
+    .md-modal.md-effect-3.md-map-modal(md-project-modal="", ng-class="{'md-modal-show': mdProjectModalCtrl.showModal}")
+    .md-modal-overlay.md-map-modal-overlay

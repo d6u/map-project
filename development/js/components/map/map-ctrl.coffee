@@ -42,6 +42,40 @@ app.controller 'MapCtrl',
           google.maps.event.addListenerOnce self.infoWindow, 'closeclick', ->
             newScope.$destroy()
           self.infoWindow.open self.googleMap, place.$$marker
+
+    renderDirections: ->
+      @clearDirections()
+      places = TheProject.places
+      return if places.length < 2
+      requestObj = {
+        travelMode: google.maps.TravelMode.DRIVING
+        waypoints:  []
+      }
+      for place, idx in places
+        if idx > 0 && idx < (places.length - 1)
+          waypointObj = {
+            location: place.$$marker.getPosition()
+            stopover: true
+          }
+          requestObj.waypoints.push(waypointObj)
+        else if idx == 0
+          requestObj.origin = place.$$marker.getPosition()
+        else
+          requestObj.destination = place.$$marker.getPosition()
+      # Send request
+      self.directionsService.route requestObj, (result, status) =>
+        if status == google.maps.DirectionsStatus.OK
+          self.directionsRenderer.setMap(self.googleMap) if !self.directionsRenderer.getMap()
+          self.directionsRenderer.setDirections(result)
+          # Map the route leg data to places object, so it can be displayed in places list and infoWindow
+          $scope.$apply =>
+            for leg, idx in result.routes[0].legs
+              TheProject.places[idx].$$leg = leg
+
+    clearDirections: ->
+      for place in $scope.mapCtrl.theProject.places
+        delete place.$$leg
+      self.directionsRenderer.setMap(null) if self.directionsRenderer.getMap()
   }
 
   # Map service
@@ -61,6 +95,11 @@ app.controller 'MapCtrl',
     suppressMarkers: true
     suppressInfoWindows: true
   })
+
+
+  # --- Status ---
+  @showDirections = false
+
 
   # Map API
   # ----------------------------------------
@@ -113,6 +152,14 @@ app.controller 'MapCtrl',
     @searchboxInput = ""
     @placePredictions = []
     helper.cleanPreviousplacesServiceResults()
+
+  # directions
+  @toggleDirections = ->
+    @showDirections = !@showDirections
+    if @showDirections
+      helper.renderDirections()
+    else
+      helper.clearDirections()
 
   # Generate x-url-callback link for rediction to map app in iOS
   # http://maps.apple.com/?daddr=San+Francisco,+CA&saddr=cupertino

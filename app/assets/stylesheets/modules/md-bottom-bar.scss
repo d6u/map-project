@@ -1,3 +1,4 @@
+// --- Container ---
 .md-bottom-bar {
   position: absolute;
   bottom: 0;
@@ -7,7 +8,12 @@
   background-color: $gray6;
   z-index: 800;
   @include display-flex();
+
+  + .md-map {
+    bottom: 40px;
+  }
 }
+
 
 // Button Group
 .md-bottom-bar-button-group {

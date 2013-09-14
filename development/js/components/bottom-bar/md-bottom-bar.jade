@@ -1,15 +1,19 @@
 //- replace: true
+
+
 .md-bottom-bar
   .md-bottom-bar-button-group
     //- show side menu
     a.md-bottom-bar-button.md-bottom-bar-notification-button(href="", ng-click="interface.showUserSection = true")
       i.icon-reorder
       .md-bottom-bar-notification-count(ng-show="insideViewCtrl.MpNotification.notifications.length", ng-cloak="") {{insideViewCtrl.MpNotification.notifications.length}}
+
+    //- search input
     input.md-bottom-bar-input(type="text", placeholder="Search place name", mp-map-searchbox="", mini-typeahead="mpMapSearchboxCtrl.typeaheadOptions", mini-typeahead-list="mapCtrl.placePredictions", ng-model="mapCtrl.searchboxInput", ng-change="mpMapSearchboxCtrl.hideHomepage(); mapCtrl.getQueryPredictions()")
 
   .md-bottom-bar-button-group-center
     //- show drawer
-    a.md-bottom-bar-button(href="", ng-click="drawerCtrl.toggleDrawer()")
+    a.md-bottom-bar-button(href="", ng-click="projectViewCtrl.showDrawer = !projectViewCtrl.showDrawer")
       i.icon-caret-up
 
   .md-bottom-bar-button-group
@@ -42,5 +46,3 @@
     //- show chatbox
     a.md-bottom-bar-button.md-bottom-bar-button-chatbox(href="", ng-click="projectViewCtrl.showChatbox = !projectViewCtrl.showChatbox", ng-class="{'md-bottom-bar-button-highlight': projectViewCtrl.showChatbox}")
       i.icon-comments
-
-    .md-chatbox(md-chatbox="")

@@ -35,8 +35,8 @@
 
         "components/bottom-bar",
         "components/chatbox",
-        "components/side-menu",
-        "components/notice",
+        "components/drawer",
+        "components/edit-project-modal/md-project-modal.coffee",
 
         "components/map/map-ctrl.coffee",
         "components/map/marker-info.coffee",
@@ -50,8 +50,9 @@
         "components/map/marker-info.coffee",
         "components/map/md-project-modal.coffee",
 
-        "components/misc/mini-map-cover.coffee",
-        "components/edit-project-modal/md-project-modal.coffee"
+        "components/notice",
+        "components/side-menu",
+        "components/misc/mini-map-cover.coffee"
       ],
 
       "application-m.js": [
