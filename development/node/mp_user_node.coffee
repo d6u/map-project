@@ -65,7 +65,8 @@ module.exports = {
         _.filter friendIds, (id) -> _.isNumber(id)
 
   cacheFriendsIds: (friendIds, socket) ->
-    rClient.sadd "user:#{socket.handshake.user.id}:friend_ids", friendIds
+    if friendIds.length
+      rClient.sadd "user:#{socket.handshake.user.id}:friend_ids", friendIds
 
 
   # --- send data to client ---
