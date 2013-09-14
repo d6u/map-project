@@ -31,7 +31,7 @@
             i.icon-ok
         .md-places-item-details
           .md-places-item-name {{place.name}}
-          address {{place.formatted_address}}
+          address.md-places-item-address {{place.formatted_address}}
 
   //- --- Places ---
   .md-drawer-body-section(ng-show="projectViewCtrl.activeSection == 'places' || projectViewCtrl.activeSection == 'both'")
@@ -45,7 +45,7 @@
             i.icon-remove
         .md-places-item-details
           .md-places-item-name {{place.name}}
-          address {{place.formatted_address}}
+          address.md-places-item-address {{place.formatted_address || place.address}}
           p {{place.notes}}
 
       //- Item - direction info

@@ -45,6 +45,15 @@
   margin-right: 40px;
 }
 
+.md-places-item-name {
+  font-weight: bold;
+}
+
+.md-places-item-address {
+  margin-bottom: 0;
+  color: $gray5;
+}
+
 // Route
 .md-places-item-route {
   cursor: pointer;
