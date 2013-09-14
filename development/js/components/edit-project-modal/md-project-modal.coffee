@@ -1,6 +1,6 @@
 app.directive 'mdProjectModal',
 [->
-  templateUrl: '/scripts/views/_map/md-project-modal.html'
+  templateUrl: '/scripts/components/edit-project-modal/md-project-modal.html'
   controllerAs: 'mdProjectModalCtrl'
   controller: ['$scope', '$location', 'MpFriends', ($scope, $location, MpFriends) ->
 

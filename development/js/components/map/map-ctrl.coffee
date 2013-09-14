@@ -33,7 +33,7 @@ app.controller 'MapCtrl',
 
     bindInfoWindow: (place) ->
       google.maps.event.addListener place.$$marker, 'click', ->
-        mpTemplateCache.get('/scripts/views/_map/marker-info.html').then (template) ->
+        mpTemplateCache.get('/scripts/components/map/marker-info.html').then (template) ->
           newScope = $scope.$new()
           newScope.place = place
           compiled = $compile(template)(newScope)

@@ -14,11 +14,11 @@
         "_libraries/perfect-scrollbar-0.4.3.with-mousewheel.min.js",
         "_libraries/lodash-1.3.1.min.js",
         "_libraries/socket.io.min.js",
-        "_libraries/angular-loader-1.2.0rc1.min.js",
-        "_libraries/angular-1.2.0rc1.min.js",
-        "_libraries/angular-animate-1.2.0rc1.min.js",
-        "_libraries/angular-route-1.2.0rc1.min.js",
-        "_libraries/angular-route-segment-1.1.0.20130825.min.js",
+        "_libraries/angular-loader-1.2.0rc2.min.js",
+        "_libraries/angular-1.2.0rc2.min.js",
+        "_libraries/angular-animate-1.2.0rc2.min.js",
+        "_libraries/angular-route-1.2.0rc2.min.js",
+        "_libraries/angular-route-segment-1.2.0.min.js",
         "_libraries/restangular-1.1.3.min.js",
 
         "_modules/md-bootstrap.coffee",
@@ -31,29 +31,27 @@
 
         "application",
         "services",
+        "views",
 
-        "views/in",
-        "views/ot",
+        "components/bottom-bar",
+        "components/chatbox",
+        "components/side-menu",
+        "components/notice",
 
-        "views/_map/map-ctrl.coffee",
-        "views/_map/marker-info.coffee",
-        "views/_map/md-bottom-bar.coffee",
-        "views/_map/md-drawer.coffee",
-        "views/_map/md-edit-project.coffee",
-        "views/_map/mp-bottom-modalbox.coffee",
-        "views/_map/mp-center-user-location.coffee",
-        "views/_map/mp-map-canvas.coffee",
-        "views/_map/mp-map-searchbox.coffee",
-        "views/_map/marker-info.coffee",
-        "views/_map/md-project-modal.coffee",
+        "components/map/map-ctrl.coffee",
+        "components/map/marker-info.coffee",
+        "components/map/md-bottom-bar.coffee",
+        "components/map/md-drawer.coffee",
+        "components/map/md-edit-project.coffee",
+        "components/map/mp-bottom-modalbox.coffee",
+        "components/map/mp-center-user-location.coffee",
+        "components/map/mp-map-canvas.coffee",
+        "components/map/mp-map-searchbox.coffee",
+        "components/map/marker-info.coffee",
+        "components/map/md-project-modal.coffee",
 
-        "views/_pusher-side/md-side-menu.coffee",
-
-        "views/_shared/mini-map-cover.coffee",
-        "views/_shared/md-notification-item.coffee",
-        "views/_shared/md-notice-pop-item.coffee",
-
-        "views/_chatbox"
+        "components/misc/mini-map-cover.coffee",
+        "components/edit-project-modal/md-project-modal.coffee"
       ],
 
       "application-m.js": [
