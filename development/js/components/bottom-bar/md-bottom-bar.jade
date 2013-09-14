@@ -1,7 +1,7 @@
 //- replace: true
 
 
-.md-bottom-bar
+.md-bottom-bar(ng-class="{'md-homepage-show-bottom-bar': !outsideViewCtrl.hideHomepage}")
   .md-bottom-bar-button-group
     //- show side menu
     a.md-bottom-bar-button.md-bottom-bar-notification-button(href="", ng-click="interface.showUserSection = true")

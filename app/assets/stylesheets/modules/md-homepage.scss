@@ -1,7 +1,7 @@
 // Main
 .md-homepage {
   position: absolute; // keep on top of map canvas
-  z-index : 500;
+  z-index : 750;
   top     : 0;
   left    : 0;
   width   : 100%;
@@ -9,7 +9,7 @@
 
   visibility                : visible; // hide it afterwards
   opacity                   : 1;
-  overflow-y                : scroll; // display multiple multi-page info
+  overflow-y                : auto; // display multiple multi-page info
   -webkit-overflow-scrolling: touch;
 
   color           : white;
@@ -71,6 +71,39 @@
 }
 
 
+// --- Bottom bar style when homepage is visible ---
+.md-bottom-bar {
+  // &.md-homepage-show-bottom-bar-add
+  &.md-homepage-show-bottom-bar-remove {
+    @include transition();
+  }
+
+  &.md-homepage-show-bottom-bar,
+  &.md-homepage-show-bottom-bar-remove,
+  &.md-homepage-show-bottom-bar-add.md-homepage-show-bottom-bar-add-active {
+    bottom: -40px;
+    .md-bottom-bar-input {
+      position: relative;
+      top: -45px;
+      left: 50%;
+      background-color: $gray1;
+      &:hover {
+        background-color: white;
+      }
+    }
+  }
+
+  &.md-homepage-show-bottom-bar-add,
+  &.md-homepage-show-bottom-bar-remove.md-homepage-show-bottom-bar-remove-active {
+    bottom: 0;
+    .md-bottom-bar-input {
+      top: 0;
+      left: 0;
+    }
+  }
+}
+
+
 // Smaller screen
 // ----------------------------------------
 $max-width: 433px; // 433px is where homepage h1 becomes three line
@@ -87,3 +120,4 @@ $max-width: 433px; // 433px is where homepage h1 becomes three line
     font-size: 16px;
   }
 }
+
