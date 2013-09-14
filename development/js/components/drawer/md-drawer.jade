@@ -41,7 +41,7 @@
           a(href="", ng-click="drawerCtrl.showPlaceOnMap(place)")
             img(ng-src="/img/blue-marker-3d.png")
         .md-places-item-actions
-          a(href="", ng-click="mapCtrl.theProject.removePlace(place)")
+          a.md-places-item-actions-remove(href="", ng-click="mapCtrl.theProject.removePlace(place)")
             i.icon-remove
         .md-places-item-details
           .md-places-item-name {{place.name}}

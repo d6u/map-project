@@ -32,6 +32,11 @@
       color: $green;
       text-decoration: none;
     }
+    &.md-places-item-actions-remove {
+      &:hover {
+        color: $red;
+      }
+    }
   }
 }
 
@@ -44,10 +49,8 @@
 .md-places-item-route {
   cursor: pointer;
   text-indent: 35px;
-  font-size: 18px;
-  font-weight: bold;
-  margin-bottom: 20px;
-  color: $blueDark;
+  font-size: 14px;
+  color: $greenDark;
   span {
     // margin-right: 20px;
   }
