@@ -1,116 +1,68 @@
 // container
 .md-drawer {
   @include transition();
-  position: fixed;
-  z-index: 750;
-  bottom: -397px;
-  left: 0;
-  width: 100%;
-  height: 450px;
-
-  + [mp-map-canvas] {
-    @include transition();
-  }
-
-  &.md-drawer-show {
-    bottom: 0;
-    + [mp-map-canvas] {
-      bottom: 450px;
-    }
-  }
-
-  &.md-drawer-maxmize.md-drawer-show {
-    height: 100%;
-  }
-}
-
-// Resize button group
-.md-drawer-resize {
   position: absolute;
   z-index: 100;
-  right: 10px;
-  top: 10px;
-  a {
-    margin-left: 5px;
-    display: inline-block;
-    font-size: 18px;
-    line-height: 1;
-    width: 18px;
-    color: $gray3;
-    text-align: center;
-    &:hover {
-      text-decoration: none;
-      color: $gray6;
-    }
+  left: 20px;
+  top: 20px;
+  bottom: 20px;
+  width: 350px;
+  visibility: hidden;
+  opacity: 0;
+  background-color: white;
+
+  &.md-drawer-show {
+    visibility: visible;
+    opacity: 1;
+  }
+
+  &.md-drawer-double-size {
+    width: 700px;
   }
 }
 
-// Toolbar
-// ----------------------------------------
-.md-drawer-toolbar {
-  height: 54px;
-  border-bottom: 1px solid rgba(0,0,0,.1);
+// --- Top ---
+.md-drawer-topbar {
+  height: 40px;
+  @include display-flex();
+}
 
-  > div {
-    padding: 10px;
+.md-drawer-topbar-button {
+  @include flex-basis(40px);
+  line-height: 40px;
+  text-align: center;
+  font-size: 16px;
+  background-color: $gray1;
+
+  color: $gray6;
+  &:hover {
+    color: $blue;
+    text-decoration: none;
+  }
+
+  &.active {
+    background-color: white;
+    color: $blue;
   }
 }
 
-// Body
-// ----------------------------------------
+.md-drawer-topbar-button-fill {
+  @include flex-grow(1);
+}
+
+// --- Body ---
 .md-drawer-body {
   position: absolute;
-  top: 54px;
+  top: 40px;
   bottom: 0;
   left: 0;
   width: 100%;
-  background-color: white;
-
-  .ly-halfscreen-left,
-  .ly-halfscreen-right
-  {
-    position: relative;
-    height: 100%;
-    overflow: hidden;
-  }
-
-  .md-drawer-body-subsetion {
-    @include transition();
-    opacity: 1;
-    visibility: visible;
-    padding: 10px;
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    .form-group {
-      margin-left: 0;
-      margin-right: 0;
-    }
-  }
-
-  .mp-halfscreen-right {
-    box-shadow: -1px 0 0 rgba(0,0,0,.1);
-  }
 }
 
-.md-drawer-list-header {
-  text-indent: 20px;
-}
-
-// Project subsection
-#md-drawer-body-subsetion-edit-project {
-  opacity: 0;
-  visibility: hidden;
-}
-
-.md-drawer-show-edit-project-subsection {
-  #md-drawer-body-subsetion-places {
-    opacity: 0;
-    visibility: hidden;
-  }
-  #md-drawer-body-subsetion-edit-project {
-    opacity: 1;
-    visibility: visible;
-  }
+.md-drawer-body-section {
+  display: inline-block;
+  width: 350px;
+  height: 100%;
+  overflow-y: auto;
+  vertical-align: top;
 }

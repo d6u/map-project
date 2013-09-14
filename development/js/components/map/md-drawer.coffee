@@ -7,20 +7,8 @@ app.directive 'mdDrawer',
   controller: ['$scope', '$element', ($scope, $element) ->
 
     # Interface
-    @maxmize = false
     @showDrawer = false
-    @toggleDrawerButtonText = 'Show drawer'
-    @showEditProjectSubsection = false
-
-    # Actions
-    @getProjectTitle = ->
-      if $scope.TheProject
-        if $scope.TheProject.project
-          return $scope.TheProject.project.title
-        else
-          return $scope.TheProject.places.length + ' marked places'
-      else
-        return
+    @activeSection = 'searchResults'
 
     @toggleDrawer = ->
       $element.toggleClass 'md-drawer-show'
