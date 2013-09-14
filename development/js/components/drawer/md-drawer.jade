@@ -8,18 +8,18 @@
 
 //- --- Top ---
 .md-drawer-topbar
-  a.md-drawer-topbar-button.md-drawer-topbar-button-fill(href="", ng-class="{active: drawerCtrl.activeSection == 'searchResults'}", ng-click="drawerCtrl.activeSection = 'searchResults'") Search Results
-  a.md-drawer-topbar-button(href="", ng-class="{active: drawerCtrl.activeSection == 'both'}", ng-click="drawerCtrl.activeSection = 'both'")
+  a.md-drawer-topbar-button.md-drawer-topbar-button-fill(href="", ng-class="{active: projectViewCtrl.activeSection == 'searchResults'}", ng-click="projectViewCtrl.activeSection = 'searchResults'") Search Results
+  a.md-drawer-topbar-button(href="", ng-class="{active: projectViewCtrl.activeSection == 'both'}", ng-click="projectViewCtrl.activeSection = 'both'")
     i.icon-columns
-  a.md-drawer-topbar-button.md-drawer-topbar-button-fill(href="", ng-class="{active: drawerCtrl.activeSection == 'places'}", ng-click="drawerCtrl.activeSection = 'places'") Places
-  a.md-drawer-topbar-button(href="", ng-click="")
+  a.md-drawer-topbar-button.md-drawer-topbar-button-fill(href="", ng-class="{active: projectViewCtrl.activeSection == 'places'}", ng-click="projectViewCtrl.activeSection = 'places'") Places
+  a.md-drawer-topbar-button(href="", ng-click="projectViewCtrl.showDrawer = false")
     i.icon-remove
 
 
 //- --- Body ---
 .md-drawer-body
   //- --- Search results ---
-  .md-drawer-body-section(ng-show="drawerCtrl.activeSection == 'searchResults' || drawerCtrl.activeSection == 'both'")
+  .md-drawer-body-section(ng-show="projectViewCtrl.activeSection == 'searchResults' || projectViewCtrl.activeSection == 'both'")
     header.md-drawer-list-header.lead Showing {{mapCtrl.placesServiceResults.length}} search results
     ul.md-places
       li.md-places-item.clearfix(ng-repeat="place in mapCtrl.placesServiceResults")
@@ -34,7 +34,7 @@
           address {{place.formatted_address}}
 
   //- --- Places ---
-  .md-drawer-body-section(ng-show="drawerCtrl.activeSection == 'places' || drawerCtrl.activeSection == 'both'")
+  .md-drawer-body-section(ng-show="projectViewCtrl.activeSection == 'places' || projectViewCtrl.activeSection == 'both'")
     ul.md-places
       li.md-places-item(ng-repeat-start="place in mapCtrl.theProject.places", sidebar-place="sidebar-place")
         .md-places-item-image
