@@ -7,6 +7,10 @@
   background-color: $gray6;
   z-index: 800;
   @include display-flex();
+
+  + .md-map {
+    bottom: 40px;
+  }
 }
 
 // Button Group
