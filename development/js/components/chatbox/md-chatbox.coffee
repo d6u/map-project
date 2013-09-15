@@ -7,7 +7,7 @@ app.directive 'mdChatbox',
   controllerAs: 'mdChatboxCtrl'
   controller: ['$element', '$scope', 'TheProject', class MdChatboxCtrl
 
-    contructor: ($element, $scope, TheProject) ->
+    constructor: ($element, $scope, TheProject) ->
 
       @sidemode = false
       @MpChat   = MpChat
