@@ -20,6 +20,10 @@ app.service 'MpNotification',
   initialize: (scope) ->
     @getNotifications()
 
+    scope.$on '$destroy', =>
+      @destroy()
+
+
   destroy: ->
     @notifications = []
 

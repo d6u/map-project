@@ -22,9 +22,10 @@ app = angular.module('mapApp', [
 
 # config
 app.config(['socketProvider', '$httpProvider', '$routeSegmentProvider',
-'$locationProvider', '$routeProvider', 'RestangularProvider',
+'$locationProvider', '$routeProvider', 'RestangularProvider', 'mpResolverOt',
+'mpResolverIn',
 (socketProvider, $httpProvider, $routeSegmentProvider, $locationProvider,
- $routeProvider, RestangularProvider) ->
+ $routeProvider, RestangularProvider, mpResolverOt, mpResolverIn) ->
 
   # Segment Route
   # ----------------------------------------
@@ -43,23 +44,8 @@ app.config(['socketProvider', '$httpProvider', '$routeSegmentProvider',
     controller:   'OutsideViewCtrl'
     controllerAs: 'outsideViewCtrl'
     resolve:
-      MpInitializer: 'MpInitializer'
-      # action filter
-      redirect_to_inside_if_login: ['MpInitializer', 'MpUser', '$location', '$q', '$timeout', 'MpFriends', 'MpNotification', (MpInitializer, MpUser, $location, $q, $timeout, MpFriends, MpNotification) ->
-
-        deferred = $q.defer()
-        MpInitializer.then ->
-          if MpUser.checkLogin()
-            $location.path('/dashboard')
-          else
-            # clean up user's data after logout
-            MpFriends.destroy()
-            MpNotification.destroy()
-          # Resolve after redirection
-          $timeout ->
-            deferred.resolve()
-        return deferred.promise
-      ]
+      MpInitializer:          'MpInitializer'
+      redirectToInsideIfLogin: mpResolverOt
   })
 
   # in
@@ -68,19 +54,8 @@ app.config(['socketProvider', '$httpProvider', '$routeSegmentProvider',
     controller:   'InsideViewCtrl'
     controllerAs: 'insideViewCtrl'
     resolve:
-      MpInitializer: 'MpInitializer'
-      # action filter
-      redirect_to_outside_if_not_login: ['MpInitializer', 'MpUser', '$location', '$q', '$timeout', (MpInitializer, MpUser, $location, $q, $timeout) ->
-
-        deferred = $q.defer()
-        MpInitializer.then ->
-          if !MpUser.checkLogin()
-            $location.path('/')
-          # Resolve after redirection
-          $timeout ->
-            deferred.resolve()
-        return deferred.promise
-      ]
+      MpInitializer:              'MpInitializer'
+      redirectToOutsideIfNotLogin: mpResolverIn
   })
   .within('in')
 
@@ -124,7 +99,7 @@ app.config(['socketProvider', '$httpProvider', '$routeSegmentProvider',
 
   # socket.io
   # ----------------------------------------
-  socketProvider.setSocketServer(location.protocol + '//' + location.hostname + ':4000')
+  socketProvider.setSocketServer("#{location.protocol}//#{location.hostname}:4000")
 
   # --- Restangular ---
   RestangularProvider.setBaseUrl('/api')
