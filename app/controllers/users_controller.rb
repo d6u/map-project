@@ -17,7 +17,8 @@ class UsersController < ApplicationController
   # Login in with fb user data
   # ----------------------------------------
   def login
-    unless user = User.find_by_fb_user_id(params[:user][:fb_user_id])
+    user = User.find_by_fb_user_id(params[:user][:fb_user_id])
+    if !user
       # user not found
       head 404 and return
     end

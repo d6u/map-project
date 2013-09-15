@@ -138,4 +138,13 @@ app.service 'TheProject',
   updateProject: (project) ->
     angular.extend @project, project
     @project.put()
+
+
+  # --- Outside View Places Saving ---
+  savePlacesOfProject: (places, project) ->
+    $places = project.all('places')
+    allPlacesSaved = []
+    for place in places
+      allPlacesSaved.push $places.post(place)
+    return allPlacesSaved
 ]
