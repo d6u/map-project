@@ -7,34 +7,36 @@
   //- Pusher body
   section.ly-pusher-content
 
-    .ly-fullscreen(ng-controller="MapCtrl as mapCtrl")
-
-      .md-drawer.clearfix(md-drawer="", ng-class="{'md-drawer-maxmize': drawerCtrl.maxmize}")
-      .md-map-canvas(mp-map-canvas="")
-      div(md-bottom-bar="")
-
-      //- Edit project, manage participants, add friends to project modal
-      .md-modal.md-effect-3(md-project-modal="", ng-class="{'md-modal-show': mdProjectModalCtrl.showModal}")
-      .md-modal-overlay
-
-    //- Homepage
+    //- --- Homepage ---
     .md-homepage(ng-class="{'md-homepage-fadeout': outsideViewCtrl.hideHomepage}")
-      header.md-homepage-header
-        a.btn.btn-primary(href="", ng-click="outsideViewCtrl.loginWithFacebook()") Login with Facebook
-        a(href="", ng-click="interface.showUserSection = true") Login/Register
+      .md-homepage-content
+        header.md-homepage-header
+          a.btn.btn-primary(href="", ng-click="outsideViewCtrl.loginWithFacebook()") Login with Facebook
+          a(href="", ng-click="interface.showUserSection = true") Login/Register
 
-      .container
-        .md-homepage-body
-          h1.md-homepage-h1 Why create a travel plan with friends is so hard?
-          h4
-            | Not any more!&nbsp;
-            a.md-homepage-linktoreason(href="") Why is that?
-
-        .md-homepage-intro
-          .md-homepage-intro-bg
+        .container
+          .md-homepage-body
+            h1.md-homepage-h1 Why create a travel plan with friends is so hard?
+            h4
+              | Not any more!&nbsp;
+              a.md-homepage-linktoreason(href="", ng-click="outsideViewCtrl.showScreenShot()") Why is that?
+          .md-homepage-intro
+            .md-homepage-intro-bg
+              img(src="/img/screenshot_1.png")
 
       .md-homepage-guide
         h4.md-homepage-guide-title Type a place name to get start
 
 
+    //- --- Map ---
+    .ly-fullscreen(ng-controller="MapCtrl as mapCtrl")
+      div(md-bottom-bar="")
+      .md-map
+        .md-map-canvas(mp-map-canvas="")
+        .md-drawer.clearfix(md-drawer="", ng-class="{'md-drawer-double-size': projectViewCtrl.activeSection == 'both', 'md-drawer-show': projectViewCtrl.showDrawer}")
+        .md-modal.md-effect-3.md-map-modal(md-project-modal="", ng-class="{'md-modal-show': mdProjectModalCtrl.showModal}")
+        .md-modal-overlay.md-map-modal-overlay
+
+
+  //- --- Pusher overlay ---
   .ly-pusher-overlay(ng-click="interface.showUserSection = false")

@@ -8,7 +8,6 @@
   background-color: $gray6;
   z-index: 800;
   @include display-flex();
-
   + .md-map {
     bottom: 40px;
   }
@@ -76,9 +75,11 @@
   background-color: #4b525e;
   color: white;
   @include transition();
+
   &:hover {
     background-color: $gray5;
   }
+
   &:focus {
     background-color: white;
     color: $gray6;

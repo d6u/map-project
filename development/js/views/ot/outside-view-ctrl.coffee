@@ -1,11 +1,14 @@
 app.controller 'OutsideViewCtrl',
-['$scope', 'MpUser', ($scope, MpUser) ->
+['$scope', 'MpUser', class OutsideViewCtrl
 
-  @hideHomepage = false
+  constructor: ($scope, MpUser) ->
+    @hideHomepage = false
 
-  @loginWithFacebook = ->
-    MpUser.login '/dashboard', ->
-      $scope.interface.showUserSection = false
+    @showScreenShot = ->
+      # TODO: move out of controller
+      $('.md-homepage-content').animate({scrollTop: $('.md-homepage-intro-bg').offset().top}, 200)
 
-  return
+    @loginWithFacebook = ->
+      MpUser.login '/dashboard', ->
+        $scope.interface.showUserSection = false
 ]
