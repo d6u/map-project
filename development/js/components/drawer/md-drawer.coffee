@@ -27,13 +27,6 @@ app.directive 'mdDrawer',
   ]
   link: (scope, element, attrs, drawerCtrl) ->
 
-    # Interface
-    if $routeSegment.name == 'ot'
-      scope.interface.centerSearchBar = true
-    else
-      scope.interface.centerSearchBar = false
-      element.find('.md-homepage-centered').removeClass 'md-homepage-centered'
-
     # Actions
     scope.clearInput = (control) ->
       scope.searchbox.input = ''
