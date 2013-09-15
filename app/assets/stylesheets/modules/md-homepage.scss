@@ -87,6 +87,9 @@
       top: -45px;
       left: 50%;
       background-color: $gray1;
+      &::-moz-placeholder {
+        color: $gray4;
+      }
       &:hover {
         background-color: white;
       }
