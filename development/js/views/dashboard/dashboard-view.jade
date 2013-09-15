@@ -9,7 +9,7 @@
         i.icon-plus
 
     //- Project list
-    li.md-projects-item.md-project(ng-repeat="project in insideViewCtrl.MpProjects.projects")
+    li.md-projects-item.md-project(ng-repeat="project in insideViewCtrl.MpProjects.projects | orderBy:'updated_at':true")
       .md-project-cover
         .md-project-cover-background(mini-map-cover="")
         .md-project-cover-overlay
