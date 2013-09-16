@@ -85,6 +85,38 @@
   }
 }
 
+.md-project-modal-body-manage-friends-remove-button {
+  width: 22px;
+  height: 22px;
+  background-color: black;
+  border-radius: 11px;
+  position: absolute;
+  right: -11px;
+  top: -11px;
+  color: white;
+  text-align: center;
+  line-height: 22px;
+  box-shadow: 0 0 0 3px white;
+  @include transition();
+  opacity: 0;
+  visibility: hidden;
+  &:hover {
+    color: white;
+    background-color: $red;
+    text-decoration: none;
+  }
+}
+
+.md-user-list-item {
+  &:hover {
+    .md-project-modal-body-manage-friends-remove-button {
+      opacity: 1;
+      visibility: visible;
+    }
+  }
+}
+
+
 // --- Add friends ---
 .md-project-modal-body-add-friends-menu {
   list-style: none;
