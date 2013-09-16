@@ -6,7 +6,7 @@
     //- show side menu
     a.md-bottom-bar-button.md-bottom-bar-notification-button(href="", ng-click="interface.showUserSection = true")
       i.icon-reorder
-      .md-bottom-bar-notification-count(ng-show="insideViewCtrl.MpNotification.notifications.length", ng-cloak="") {{insideViewCtrl.MpNotification.notifications.length}}
+      .md-bottom-bar-notification-count(ng-show="mdNoticePop.unreadNotice", ng-cloak="") {{mdNoticePop.unreadNotice}}
 
     //- search input
     input.md-bottom-bar-input(type="text", placeholder="Search place name", mp-map-searchbox="", mini-typeahead="mpMapSearchboxCtrl.typeaheadOptions", mini-typeahead-list="mapCtrl.placePredictions", ng-model="mapCtrl.searchboxInput", ng-change="mpMapSearchboxCtrl.hideHomepage(); mapCtrl.getQueryPredictions()")
