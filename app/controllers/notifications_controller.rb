@@ -18,8 +18,13 @@ class NotificationsController < ApplicationController
   # DELETE  /api/notifications/:id
   # ----------------------------------------
   def destroy
-    Notice.find(params[:id]).destroy
-    head 200
+    notice = Notice.find(params[:id])
+    if notice
+      notice.destroy
+      head 200
+    else
+      head 404
+    end
   end
 
 
