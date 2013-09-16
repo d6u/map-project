@@ -35,7 +35,10 @@ app.directive 'mdNotificationItem',
         templateUrl = '/scripts/components/notice/notice-templates/project-invitation-rejected.html'
       when 'newUserAdded'
         templateUrl = '/scripts/components/notice/notice-templates/new-user-added.html'
-
+      when 'youAreRemovedFromProject'
+        templateUrl = '/scripts/components/notice/notice-templates/you-are-removed-from-project.html'
+      when 'projectUserListUpated'
+        templateUrl = '/scripts/components/notice/notice-templates/project-user-list-updated.html'
 
     mpTemplateCache.get(templateUrl).then (template) ->
       element.html($compile(template)(scope))

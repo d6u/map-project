@@ -38,8 +38,9 @@ app.service 'MpNotification',
     'projectInvitation'
     'projectInvitationAccepted'
     'projectInvitationRejected'
-    # 'youAreRemovedFromProject'
-    # 'projectDeleted'
+    'newUserAdded'
+    'youAreRemovedFromProject'
+    'projectUserListUpated'
   ]
 
   processServerData: (data) ->
