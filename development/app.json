@@ -21,6 +21,7 @@
         "_libraries/angular-route-segment-1.2.0.min.js",
         "_libraries/restangular-1.1.3.min.js",
 
+        "_modules/date-iso8601.coffee",
         "_modules/md-bootstrap.coffee",
         "_modules/md-jquery-ui.coffee",
         "_modules/md-perfect-scrollbar.coffee",
