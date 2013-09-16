@@ -1,4 +1,4 @@
-# rails
+# --- Rails ---
 *.rbc
 *.sassc
 .sass-cache
@@ -18,16 +18,8 @@ capybara-*.html
 rerun.txt
 pickle-email-*.html
 .project
-public/assets
-public/scripts
 
-# redis
-dump.rdb
-
-# postgreSQL
-logfile
-
-# nodejs
+# --- Node.js ---
 lib-cov
 *.seed
 *.log
@@ -42,9 +34,19 @@ results
 npm-debug.log
 node_modules
 
-# foreman
-.env
+# --- Redis ---
+dump.rdb
 
-########################################
-# Project specific settings
+# --- PostgreSQL ---
+logfile
+
+# --- Miscellaneous ---
+# foreman environment config
+.env
+# OS X folder settings
+.DS_Store
+
+# --- Customized project files ---
+public/scripts
+public/assets
 app/assets/javascripts/*

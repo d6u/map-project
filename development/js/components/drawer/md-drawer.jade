@@ -1,0 +1,56 @@
+//- Container:
+//- div
+//- .md-drawer
+//- .clearfix
+//- md-drawer=""
+//- ng-class="{'md-drawer-double-size': drawerCtrl.activeSection == 'both'}"
+
+
+//- --- Top ---
+.md-drawer-topbar
+  a.md-drawer-topbar-button.md-drawer-topbar-button-fill(href="", ng-class="{active: projectViewCtrl.activeSection == 'searchResults'}", ng-click="projectViewCtrl.activeSection = 'searchResults'") Search Results
+  a.md-drawer-topbar-button(href="", ng-class="{active: projectViewCtrl.activeSection == 'both'}", ng-click="projectViewCtrl.activeSection = 'both'")
+    i.icon-columns
+  a.md-drawer-topbar-button.md-drawer-topbar-button-fill(href="", ng-class="{active: projectViewCtrl.activeSection == 'places'}", ng-click="projectViewCtrl.activeSection = 'places'") Places
+  a.md-drawer-topbar-button(href="", ng-click="projectViewCtrl.showDrawer = false")
+    i.icon-remove
+
+
+//- --- Body ---
+.md-drawer-body
+  //- --- Search results ---
+  .md-drawer-body-section(ng-show="projectViewCtrl.activeSection == 'searchResults' || projectViewCtrl.activeSection == 'both'")
+    header.md-drawer-list-header.lead Showing {{mapCtrl.placesServiceResults.length}} search results
+    ul.md-places
+      li.md-places-item.clearfix(ng-repeat="place in mapCtrl.placesServiceResults")
+        .md-places-item-image
+          a(href="", ng-click="drawerCtrl.showPlaceOnMap(place)")
+            img(ng-src="{{place.icon}}")
+        .md-places-item-actions
+          a(href="", ng-click="mapCtrl.addPlaceToList(place)")
+            i.icon-ok
+        .md-places-item-details
+          .md-places-item-name {{place.name}}
+          address.md-places-item-address {{place.formatted_address}}
+
+  //- --- Places ---
+  .md-drawer-body-section(ng-show="projectViewCtrl.activeSection == 'places' || projectViewCtrl.activeSection == 'both'")
+    ul.md-places
+      li.md-places-item(ng-repeat-start="place in mapCtrl.theProject.places", sidebar-place="sidebar-place")
+        .md-places-item-image
+          a(href="", ng-click="drawerCtrl.showPlaceOnMap(place)")
+            img(ng-src="/img/blue-marker-3d.png")
+        .md-places-item-actions
+          a.md-places-item-actions-remove(href="", ng-click="mapCtrl.theProject.removePlace(place)")
+            i.icon-remove
+        .md-places-item-details
+          .md-places-item-name {{place.name}}
+          address.md-places-item-address {{place.formatted_address || place.address}}
+          p {{place.notes}}
+
+      //- Item - direction info
+      li.md-places-item.md-places-item-route(ng-repeat-end="", ng-show="place.$$leg")
+        span.md-places-item-route-duration {{place.$$leg.duration.text}}
+        | ,&nbsp;
+        span.md-places-item-route-distance {{place.$$leg.distance.text}}
+        |  to next place

@@ -17,22 +17,46 @@ class FriendshipsController < ApplicationController
 
 
   # POST
+  # ----------------------------------------
   def create
     friendship = @user.friendships.find_by_friend_id params[:friendship][:friend_id]
+
+    # --- Friendship record already exist ---
     if friendship
-      # including blocked situation
-      if friendship.status <= 0
-        render :json => {:error   => true,
-                         :message => 'Friend request has already sent.'},
+      # user blocked friend
+      if friendship.status < 0
+        render :json => {:error      => true,
+                         :message    => 'You have blocked this user.',
+                         :error_code => 'FS000'},
                :status => 409
-      elsif friendship.status > 0
-        render :json => {:error   => true,
-                         :message => 'You are already friends'},
+      # request already sent
+      elsif friendship.status == 0
+        render :json => {:error      => true,
+                         :message    => 'Friend request has already sent.',
+                         :error_code => 'FS001'},
+               :status => 409
+      # already friends
+      else
+        render :json => {:error      => true,
+                         :message    => 'You are already friends',
+                         :error_code => 'FS002'},
                :status => 409
       end
+
+    # --- Brand new friendship ---
     else
-      friendship = Friendship.new params.require(:friendship).permit(:friend_id, :status, :comments)
+      friendship = Friendship.new params.require(:friendship).permit(:friend_id, :comments)
       @user.friendships << friendship
+
+      # Create notice object and send to Node.js server
+      add_friend_request = Notice.create({
+        :type        => 'addFriendRequest',
+        :sender      => @user.public_info,
+        :receiver_id => friendship.friend_id,
+        :body        => { friendship_id: friendship.id }
+      })
+
+      $redis.publish 'notice_channel', add_friend_request.to_json
       render :json => friendship
     end
   end
@@ -51,25 +75,7 @@ class FriendshipsController < ApplicationController
 
   # PUT
   def update
-    friendship = Friendship.find_by_id params[:id]
-    if friendship
-      friendship.attributes = params.require(:friendship).permit(:status, :comments)
-      friendship.save if friendship.changed?
-      if friendship.status > 0
-        reverse_friendship = @user.friendships.find_by_friend_id friendship.user_id
-        if reverse_friendship
-          render :json => {:error   => true,
-                           :message => 'You are already friends'},
-                 :status => 409
-        else
-          reverse_friendship = friendship.reverse_friendship
-          @user.friendships << reverse_friendship
-          render :json => reverse_friendship.friend
-        end
-      end
-    else
-      head 404
-    end
+
   end
 
 

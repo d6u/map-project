@@ -1,4 +1,4 @@
-require 'net/http'
+require 'net/https'
 
 
 class User < ActiveRecord::Base
@@ -7,15 +7,24 @@ class User < ActiveRecord::Base
   APP_SECRET   = $api_keys['facebook']['app_secret']
 
 
-  has_many :projects,    :foreign_key => 'owner_id'
+  has_many :projects, :foreign_key => 'owner_id'
+
+  # friends
   has_many :friendships
   has_many :followships, :class_name => "Friendship",
                          :foreign_key => "friend_id"
-  has_many :friends,      -> { where 'friendships.status > 0' },
-                         :through => :friendships
-  has_many :followers,   :through => :followships, :source => :user
-  has_many :invitations
-  has_and_belongs_to_many :participated_projects, :join_table => "project_user", :foreign_key => "user_id", :class_name => 'Project'
+  has_many :friends, -> { where 'friendships.status > 0' },
+                     :through => :friendships
+  has_many :followers, :through => :followships, :source => :user
+
+  # projects participations
+  has_many :project_participations, :dependent => :destroy
+  has_many :participating_projects, -> { where 'project_participations.status > 0' },
+                                    :through => :project_participations,
+                                    :source  => :project
+  has_many :pending_project_invitations, -> { where 'project_participations.status = 0' },
+                                         :through => :project_participations,
+                                         :source  => :project
 
 
   def validate_with_facebook
@@ -25,6 +34,16 @@ class User < ActiveRecord::Base
     user_data = MultiJson.load(Net::HTTP.get(URI("https://graph.facebook.com/me?access_token=#{fb_access_token}")))
     return false if !user_data || user_data['error']
     return user_data['id'].to_s === fb_user_id.to_s
+  end
+
+
+  # Return a Hash contains only :id, :name, :fb_user_picture
+  #   this can be used in various situations, e.g. chat message needs to
+  #   send some sender information alone with the message
+  def public_info
+    {:id              => self.id,
+     :name            => self.name,
+     :fb_user_picture => self.fb_user_picture}
   end
 
 end

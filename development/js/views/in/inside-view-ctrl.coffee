@@ -1,15 +1,23 @@
 app.controller 'InsideViewCtrl',
-['$scope', 'MpProjects', 'MpChatbox', '$location',
-( $scope,   MpProjects,   MpChatbox,   $location) ->
+['$scope','MpProjects','MpNotification','$location','MpFriends','socket',
+( $scope,  MpProjects,  MpNotification,  $location,  MpFriends,  socket) ->
 
-  @MpProjects = new MpProjects()
-  @MpChatbox  = MpChatbox
+  @MpProjects     = MpProjects
+  @MpNotification = MpNotification
+  @MpFriends      = MpFriends
 
-  MpChatbox.connect()
+  MpProjects.initialize     $scope
+  MpFriends.initialize      $scope
+  MpNotification.initialize $scope
 
+  socket.connect()
+
+  # --- View's methods ---
   @createNewProject = ->
     @MpProjects.createProject().then (project) ->
       $location.path('/project/' + project.id)
 
+
+  # --- Return ---
   return
 ]

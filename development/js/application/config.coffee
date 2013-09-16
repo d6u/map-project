@@ -14,17 +14,18 @@ app = angular.module('mapApp', [
   'mini-typeahead',
   'md-tabset',
   'md-masonry',
+  'md-socket-io',
 
   # Application modules that have to run before `.config`
-  'mp-chatbox-provider'
 ])
 
 
 # config
-app.config(['MpChatboxProvider', '$httpProvider', '$routeSegmentProvider',
-'$locationProvider', '$routeProvider',
-(MpChatboxProvider, $httpProvider, $routeSegmentProvider, $locationProvider,
- $routeProvider) ->
+app.config(['socketProvider', '$httpProvider', '$routeSegmentProvider',
+'$locationProvider', '$routeProvider', 'RestangularProvider', 'mpResolverOt',
+'mpResolverIn',
+(socketProvider, $httpProvider, $routeSegmentProvider, $locationProvider,
+ $routeProvider, RestangularProvider, mpResolverOt, mpResolverIn) ->
 
   # Segment Route
   # ----------------------------------------
@@ -34,6 +35,8 @@ app.config(['MpChatboxProvider', '$httpProvider', '$routeSegmentProvider',
   .when('/',                    'ot')
   .when('/dashboard',           'in.dashboard')
   .when('/project/:project_id', 'in.project')
+  .when('/friends',             'in.friends')
+  .when('/search',              'in.search')
 
   # ot
   .segment('ot', {
@@ -41,19 +44,8 @@ app.config(['MpChatboxProvider', '$httpProvider', '$routeSegmentProvider',
     controller:   'OutsideViewCtrl'
     controllerAs: 'outsideViewCtrl'
     resolve:
-      MpInitializer: 'MpInitializer'
-      # action filter
-      redirect_to_inside_if_login: ['MpInitializer', 'MpUser', '$location', '$q', '$timeout', (MpInitializer, MpUser, $location, $q, $timeout) ->
-
-        deferred = $q.defer()
-        MpInitializer.then ->
-          if MpUser.checkLogin()
-            $location.path('/dashboard')
-          # Resolve after redirection
-          $timeout ->
-            deferred.resolve()
-        return deferred.promise
-      ]
+      MpInitializer:          'MpInitializer'
+      redirectToInsideIfLogin: mpResolverOt
   })
 
   # in
@@ -62,32 +54,33 @@ app.config(['MpChatboxProvider', '$httpProvider', '$routeSegmentProvider',
     controller:   'InsideViewCtrl'
     controllerAs: 'insideViewCtrl'
     resolve:
-      MpInitializer: 'MpInitializer'
-      # action filter
-      redirect_to_outside_if_not_login: ['MpInitializer', 'MpUser', '$location', '$q', '$timeout', (MpInitializer, MpUser, $location, $q, $timeout) ->
-
-        deferred = $q.defer()
-        MpInitializer.then ->
-          if !MpUser.checkLogin()
-            $location.path('/')
-          # Resolve after redirection
-          $timeout ->
-            deferred.resolve()
-        return deferred.promise
-      ]
+      MpInitializer:              'MpInitializer'
+      redirectToOutsideIfNotLogin: mpResolverIn
   })
   .within('in')
 
     .segment('dashboard', {
-      templateUrl:  '/scripts/views/in/dashboard/dashboard-view.html'
+      templateUrl:  '/scripts/views/dashboard/dashboard-view.html'
       controller:   'DashboardViewCtrl'
       controllerAs: 'dashboardViewCtrl'
     })
 
     .segment('project', {
-      templateUrl:  '/scripts/views/in/project/project-view.html'
+      templateUrl:  '/scripts/views/project/project-view.html'
       controller:   'ProjectViewCtrl'
       controllerAs: 'projectViewCtrl'
+    })
+
+    .segment('friends', {
+      templateUrl:  '/scripts/views/friends/friends-view.html'
+      controller:   'FriendsViewCtrl'
+      controllerAs: 'friendsViewCtrl'
+    })
+
+    .segment('search', {
+      templateUrl:  '/scripts/views/search/search-view.html'
+      controller:   'SearchViewCtrl'
+      controllerAs: 'searchViewCtrl'
     })
 
   # otherwise
@@ -106,5 +99,22 @@ app.config(['MpChatboxProvider', '$httpProvider', '$routeSegmentProvider',
 
   # socket.io
   # ----------------------------------------
-  MpChatboxProvider.setSocketServer(location.protocol + '//' + location.hostname + ':4000')
+  socketProvider.setSocketServer("#{location.protocol}//#{location.hostname}:4000")
+
+
+  # --- Restangular ---
+  convertTimestampToUnix = (element) ->
+    if element.created_at
+      element.created_at = (new Date).setISO8601(element.created_at)
+    if element.updated_at
+      element.updated_at = (new Date).setISO8601(element.updated_at)
+
+  RestangularProvider.setBaseUrl('/api')
+  RestangularProvider.setResponseInterceptor (data) ->
+    if data.length
+      for element in data
+        convertTimestampToUnix(element)
+    else
+      convertTimestampToUnix(data)
+    return data
 ])

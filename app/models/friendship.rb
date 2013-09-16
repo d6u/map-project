@@ -11,11 +11,19 @@ class Friendship < ActiveRecord::Base
     friendship object will not be saved.
   DOC
   def reverse_friendship
-    return Friendship.new({
-      friend_id: self.user_id,
-      status:    self.status,
-      user_id:   self.friend_id
-    })
+    friendship = Friendship.where({
+      :user_id   => self.friend_id,
+      :friend_id => self.user_id
+    })[0]
+    if friendship
+      return friendships
+    else
+      return Friendship.new({
+        user_id:   self.friend_id,
+        friend_id: self.user_id,
+        status:    self.status
+      })
+    end
   end
 
 end

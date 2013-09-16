@@ -1,0 +1,151 @@
+.md-project-modal {
+  height: 100%;
+  width: 100%;
+  background-color: white;
+  position: relative;
+}
+
+.md-project-modal-close {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 40px;
+  height: 40px;
+  text-align: center;
+  line-height: 40px;
+  font-size: 16px;
+  color: $gray4;
+  &:hover {
+    text-decoration: none;
+    color: black;
+  }
+}
+
+// Navbar
+.md-project-modal-navbar {
+  height: 40px;
+  background-color: $gray2;
+}
+
+.md-project-modal-navbar-inner {
+  display: table;
+  line-height: 40px;
+  margin: 0 auto;
+}
+
+.md-project-modal-navbar-buttons {
+  color: $gray4;
+  margin: 0 20px;
+  padding: 0 3px;
+  display: inline-block;
+  height: 40px;
+  &.active {
+    border-bottom: 4px solid $blue;
+    color: black;
+  }
+  &:hover {
+    color: black;
+    text-decoration: none;
+  }
+}
+
+// Body
+.md-project-modal-body {
+  position: absolute;
+  top: 40px;
+  left: 0;
+  width: 100%;
+  bottom: 0;
+  overflow-y: auto;
+  background-color: $gray1;
+}
+
+.md-project-modal-body-form {
+  margin: 20px auto 0;
+  max-width: 600px;
+}
+
+.md-project-modal-body-form-actions .btn {
+  margin-right: 20px;
+}
+
+.md-project-modal-body-confirm-button {
+  position: absolute;
+  left: 10px;
+  bottom: 10px;
+}
+
+// --- Manage Friends ---
+.md-project-modal-body-manage-friends {
+  padding: 20px;
+  .md-user-list-item {
+    float: left;
+    margin-right: 20px;
+    margin-bottom: 20px;
+  }
+}
+
+.md-project-modal-body-manage-friends-remove-button {
+  width: 22px;
+  height: 22px;
+  background-color: black;
+  border-radius: 11px;
+  position: absolute;
+  right: -11px;
+  top: -11px;
+  color: white;
+  text-align: center;
+  line-height: 22px;
+  box-shadow: 0 0 0 3px white;
+  @include transition();
+  opacity: 0;
+  visibility: hidden;
+  &:hover {
+    color: white;
+    background-color: $red;
+    text-decoration: none;
+  }
+}
+
+.md-user-list-item {
+  &:hover {
+    .md-project-modal-body-manage-friends-remove-button {
+      opacity: 1;
+      visibility: visible;
+    }
+  }
+}
+
+
+// --- Add friends ---
+.md-project-modal-body-add-friends-menu {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  float: left;
+  width: 200px;
+}
+
+.md-project-modal-body-add-friends-menu-item {
+  a {
+    padding: 0 20px;
+    display: block;
+    line-height: 35px;
+    height: 35px;
+    &.active, &:hover {
+      background-color: $blue;
+      color: white;
+      text-decoration: none;
+    }
+  }
+}
+
+// user container
+.md-project-modal-body-add-friends {
+  margin-left: 200px;
+  padding: 20px;
+}
+
+.md-project-modal-body-add-friends-list-item {
+  float: left;
+}

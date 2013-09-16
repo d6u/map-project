@@ -17,7 +17,8 @@ class UsersController < ApplicationController
   # Login in with fb user data
   # ----------------------------------------
   def login
-    unless user = User.find_by_fb_user_id(params[:user][:fb_user_id])
+    user = User.find_by_fb_user_id(params[:user][:fb_user_id])
+    if !user
       # user not found
       head 404 and return
     end
@@ -80,7 +81,7 @@ class UsersController < ApplicationController
       project = Project.find_by_id(params[:project_id])
       if project
         users = project.participated_users
-        render :json => (users + [project.owner]), :only => [:id, :name, :fb_user_picture] and return
+        render :json => users, :only => [:id, :name, :fb_user_picture] and return
       else
         head 404 and return
       end
@@ -88,9 +89,11 @@ class UsersController < ApplicationController
 
     # search users by name
     if params[:name]
-      name  = "%#{params[:name]}%"
-      users = User.where('lower(name) LIKE lower(?) AND id <> ?', name, @user.id)
-      render :json => users, :only => [:id, :name, :fb_user_picture] and return
+      name   = "%#{params[:name]}%"
+      @users = User.where('lower(name) LIKE lower(?) AND id <> ?', name, @user.id)
+      @added_friends_id   = @user.friendships.pluck(:friend_id)
+      @pending_friends_id = @user.friendships.where('status = 0').pluck(:friend_id)
+      render 'query_user' and return
     end
 
     head 401
