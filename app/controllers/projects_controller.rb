@@ -67,6 +67,47 @@ class ProjectsController < ApplicationController
   end
 
 
+  # DELETE  /api/projects/:project_id/remove_users
+  # ----------------------------------------
+  def remove_users
+    project  = Project.find_by_id params[:project_id]
+    head 404 and return if !project
+
+    removing_ids = params[:user_ids].split(',')
+    project.project_participations.each do |pp|
+      if removing_ids.include? pp.user_id
+        pp.destroy
+        you_are_removed_from_project = Notice.create({
+          type:       'youAreRemovedFromProject',
+          sender:      @user.public_info,
+          receiver_id: pp.user_id,
+          body: {
+            project: {
+              title: project.title
+            }
+          }
+        })
+        $redis.publish 'notice_channel', you_are_removed_from_project.to_json
+      else
+        project_user_list_updated = Notice.create({
+          type:       'projectUserListUpated',
+          sender:      @user.public_info,
+          receiver_id: pp.user_id,
+          body: {
+            project: {
+              id:    project.id,
+              title: project.title
+            }
+          }
+        })
+        $redis.publish 'notice_channel', project_user_list_updated.to_json
+      end
+    end
+
+    head 200
+  end
+
+
   # GET     /api/projects
   def index
     @projects = params[:include_participating] == 'true' ? @user.projects + @user.participating_projects : @user.projects

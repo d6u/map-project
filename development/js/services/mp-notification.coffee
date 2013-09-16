@@ -20,6 +20,10 @@ app.service 'MpNotification',
   initialize: (scope) ->
     @getNotifications()
 
+    scope.$on '$destroy', =>
+      @destroy()
+
+
   destroy: ->
     @notifications = []
 
@@ -34,25 +38,28 @@ app.service 'MpNotification',
     'projectInvitation'
     'projectInvitationAccepted'
     'projectInvitationRejected'
-    # 'youAreRemovedFromProject'
-    # 'projectDeleted'
+    'newUserAdded'
+    'youAreRemovedFromProject'
+    'projectUserListUpated'
   ]
 
   processServerData: (data) ->
     if _.indexOf(@directNotificationNames, data.type) >= 0
       newNotice = @Restangular.one('notifications', data.id)
       angular.extend(newNotice, data)
-      @notifications.push newNotice
+      @notifications.unshift newNotice
 
 
   # --- Notification interface ---
   getNotifications: ->
     @$$notifications.getList().then (notifications) =>
       if @notifications.length
-        # TODO: organize new and existing notifications
-        @notifications = notifications
+        unqi = _.unqi(_.union(@notifications, notifications), 'id')
+        @notifications = @Restangular.restangularizeCollection(undefined, unqi, 'notifications')
       else
         @notifications = notifications
+      @notifications.sort (a, b) -> b.created_at - a.created_at
+
 
   removeNotice: (notice) ->
     @notifications = _.without(@notifications, notice)

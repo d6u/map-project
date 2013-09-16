@@ -2,7 +2,7 @@ app.directive 'mdProjectModal',
 [->
   templateUrl: '/scripts/components/edit-project-modal/md-project-modal.html'
   controllerAs: 'mdProjectModalCtrl'
-  controller: ['$scope', '$location', 'MpFriends', ($scope, $location, MpFriends) ->
+  controller: ['$scope', '$location', 'MpFriends', 'TheProject', ($scope, $location, MpFriends, TheProject) ->
 
     @showModal         = false
     @bodyContent       = 'editDetail'
@@ -46,6 +46,8 @@ app.directive 'mdProjectModal',
     ), true
 
     # --- Manage participants ---
+    @removeUserFromProject = (user) ->
+      TheProject.removeParticipatingUser(user)
 
 
     # --- Add user ---

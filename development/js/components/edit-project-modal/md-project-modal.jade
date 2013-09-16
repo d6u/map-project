@@ -45,6 +45,8 @@
             img(ng-src="{{user.fb_user_picture}}")
           .md-user-list-item-detail
             a.md-user-list-item-detail-name(href="") {{user.name}}
+          a.md-project-modal-body-manage-friends-remove-button(href="", ng-click="mdProjectModalCtrl.removeUserFromProject(user)")
+            i.icon-remove
 
 
     //- Invite friends

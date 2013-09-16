@@ -9,7 +9,7 @@
         i.icon-plus
 
     //- Project list
-    li.md-projects-item.md-project(ng-repeat="project in insideViewCtrl.MpProjects.projects")
+    li.md-projects-item.md-project(ng-repeat="project in insideViewCtrl.MpProjects.projects | orderBy:'updated_at':true")
       .md-project-cover
         .md-project-cover-background(mini-map-cover="")
         .md-project-cover-overlay
@@ -19,8 +19,8 @@
         span.md-project-owner-name {{project.owner.name}}
         a.btn.btn-default(ng-href="/project/{{project.id}}") Open
       .md-project-notes(ng-show="project.notes && project.notes.length") {{project.notes}}
-      ul.md-project-participants.clearfix(ng-show="project.participated_users.length")
-        li.md-project-participants-item(ng-repeat="user in project.participated_users")
+      ul.md-project-participants.clearfix(ng-show="project.participating_users.length")
+        li.md-project-participants-item(ng-repeat="user in project.participating_users")
           img.md-project-participants-item(ng-src="{{user.fb_user_picture}}")
       .md-project-lastmessage
 
@@ -31,7 +31,7 @@
     //- show side menu
     a.md-bottom-bar-button.md-bottom-bar-notification-button(href="", ng-click="interface.showUserSection = true")
       i.icon-reorder
-      .md-bottom-bar-notification-count(ng-show="insideViewCtrl.MpNotification.notifications.length", ng-cloak="") {{insideViewCtrl.MpNotification.notifications.length}}
+      .md-bottom-bar-notification-count(ng-show="mdNoticePop.unreadNotice", ng-cloak="") {{mdNoticePop.unreadNotice}}
 
   .md-bottom-bar-button-group-center.md-bottom-bar-text Dashboard
 

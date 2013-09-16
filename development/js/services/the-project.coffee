@@ -115,7 +115,8 @@ app.service 'TheProject',
   # users is an array contains user object, each object must have `id`
   addParticipatedUsers: (users) ->
     ids = _.pluck(users, 'id')
-    @Restangular.one('projects', @project.id).customPOST({}, 'add_users', {user_ids: ids.join(',')})
+    @Restangular.one('projects', @project.id)
+    .customPOST({}, 'add_users', {user_ids: ids.join(',')})
 
   # organize server returned participated users
   organizeParticipatedUsers: (users) ->
@@ -127,10 +128,11 @@ app.service 'TheProject',
       else if user.id != @MpUser.getId()
         @participatedUsers.push user
 
-  removeParticipatedUser: (user) ->
-    @Restangular.one('projects', @project.id).one('users', user.id)
-    .remove().then =>
-      @participatedUsers = _.without @participatedUsers, user
+  removeParticipatingUser: (user) ->
+    @Restangular.one('projects', @project.id)
+    .customDELETE('remove_users', {user_ids: user.id})
+    @participatedUsers = _.without(@participatedUsers, user)
+
 
   # Project
   # ----------------------------------------
@@ -138,4 +140,13 @@ app.service 'TheProject',
   updateProject: (project) ->
     angular.extend @project, project
     @project.put()
+
+
+  # --- Outside View Places Saving ---
+  savePlacesOfProject: (places, project) ->
+    $places = project.all('places')
+    allPlacesSaved = []
+    for place in places
+      allPlacesSaved.push $places.post(place)
+    return allPlacesSaved
 ]
