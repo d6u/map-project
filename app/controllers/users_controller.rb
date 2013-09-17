@@ -29,7 +29,6 @@ class UsersController < ApplicationController
     if user.validate_with_facebook
       user.save if user.changed?
       session[:user_id] = user.id
-      authenticate_socket_io_handshake(user)
       render :json => user, :status => 200
     else
       head 401
@@ -63,7 +62,6 @@ class UsersController < ApplicationController
     if user.validate_with_facebook
       user.save
       session[:user_id] = user.id
-      authenticate_socket_io_handshake(user)
       render :json => user
     else
       head 406

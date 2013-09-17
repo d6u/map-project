@@ -8,7 +8,8 @@
     "q": "*",
     "lodash": "*",
     "pg": "~2.6.0",
-    "tracer": "~0.5.1"
+    "tracer": "~0.5.1",
+    "cookie": "~0.1.0"
   },
   "devDependencies": {
     "grunt": "~0.4.1",

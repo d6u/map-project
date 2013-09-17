@@ -2,19 +2,10 @@ source 'https://rubygems.org'
 
 ruby '2.0.0'
 
-# Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '4.0.0'
-
-# Use postgresql as the database for Active Record
 gem 'pg'
-
-# Use SCSS for stylesheets
 gem 'sass-rails', '~> 4.0.0'
-
-# Use Uglifier as compressor for JavaScript assets
 gem 'uglifier', '>= 1.3.0'
-
-# Use CoffeeScript for .js.coffee assets and views
 gem 'coffee-rails', '~> 4.0.0'
 
 # See https://github.com/sstephenson/execjs#readme for more supported runtimes
@@ -49,6 +40,8 @@ end
 
 # --- Core modules ---
 gem 'redis'
+gem 'redis-store', git: 'git@github.com:daiweilu/redis-store.git'
+gem 'redis-rails', '~> 4.0.0'
 gem 'oj'
 gem 'mongo'
 gem 'mongoid', git: 'git://github.com/mongoid/mongoid.git'

@@ -13,6 +13,7 @@ redis      = require('redis')
 # helper modules
 q          = require('q')
 _          = require('lodash')
+cookie     = require('cookie')
 
 # custom modules
 pgQuery    = require('./development/node/pg_query_helper')
@@ -37,35 +38,19 @@ socketIo.set 'store', new RedisStore({
 socketIo.set('log level', 3)
 
 socketIo.set 'authorization', (handshakeData, callback) ->
-  ###
-  {
-     headers: req.headers       // <Object> the headers of the request
-   , time: (new Date) +''       // <String> date time of the connection
-   , address: socket.address()  // <Object> remoteAddress and remotePort object
-   , xdomain: !!headers.origin  // <Boolean> was it a cross domain request?
-   , secure: socket.secure      // <Boolean> https connection
-   , issued: +date              // <Number> EPOCH of when the handshake was created
-   , url: request.url           // <String> the entrance path of the request
-   , query: data.query          // <Object> the result of url.parse().query or a empty object
-  }
-  ###
-  cookies = handshakeData.headers.cookie.split('; ')
-  user_identifier
-  for pair in cookies
-    if /user_identifier/.test(pair)
-      user_identifier = pair.replace('user_identifier=', '')
-  redisClient.get user_identifier, (err, data) ->
-    if data
-      # TODO: attach user data with more detail
-      #   when generate sender data, completely rely on server, prevent id
-      #   theft, update when user attrs changes
-      user_data = data.split(':')
-      user_id = Number(user_data[0])
-      pgQuery('SELECT * FROM users WHERE id = $1;', [user_id]).then (results) ->
-        handshakeData.user = results[0]
-        callback(null, true)
-    else
-      callback(null, false)
+  cookies = cookie.parse(handshakeData.headers.cookie)
+  if !cookies._session_id
+    callback('_session_id is not defined in cookies', false)
+    return
+  else
+    redisClient.get cookies._session_id, (err, data) ->
+      if data
+        session = JSON.parse(data)
+        pgQuery('SELECT * FROM users WHERE id = $1;', [session.user_id]).then (results) ->
+          handshakeData.user = results[0]
+          callback(undefined, true)
+      else
+        callback('Could not find related session in Reids', false)
 
 
 # --- Run ---

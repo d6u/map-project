@@ -3,7 +3,10 @@ pg = require('pg')
 
 
 # --- Config ---
-pgConnectionString = "postgres://map-project:1234@localhost/map-project_development"
+if process.env.NODE_ENV == 'production'
+  pgConnectionString = "postgres://map-project:1234@localhost/map-project_production"
+else
+  pgConnectionString = "postgres://map-project:1234@localhost/map-project_development"
 
 
 # --- Exports ---
