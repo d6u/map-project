@@ -50,7 +50,7 @@ socketIo.set 'authorization', (handshakeData, callback) ->
           handshakeData.user = results[0]
           callback(undefined, true)
       else
-        callback('Could not find related session in Reids', false)
+        callback('Could not find related session in Redis', false)
 
 
 # --- Run ---
