@@ -1,37 +1,79 @@
 class UsersController < ApplicationController
 
-  #     users GET    /users(.:format)          users#index
-  #           POST   /users(.:format)          users#create
-  #  new_user GET    /users/new(.:format)      users#new
-  # edit_user GET    /users/:id/edit(.:format) users#edit
-  #      user GET    /users/:id(.:format)      users#show
-  #           PATCH  /users/:id(.:format)      users#update
-  #           PUT    /users/:id(.:format)      users#update
-  #           DELETE /users/:id(.:format)      users#destroy
+  # POST   /api/users/fb_login        fb_login
+  # POST   /api/users/fb_register     fb_register
+  # POST   /api/users/email_login     email_login
+  # POST   /api/users/email_register  email_register
+  # GET    /api/users/logout          logout
+  # GET    /api/users                 index
+  # PATCH  /api/users/:id             update
+  # PUT    /api/users/:id             update
 
 
-  skip_before_action :check_login_status, :only => [:login, :logout, :create]
+  skip_before_action :check_login_status,
+                     :only => [:fb_login, :fb_register, :email_login,
+                               :email_register]
 
 
-  ##
-  # Login in with fb user data
+  # POST   /api/users/fb_login        fb_login
   # ----------------------------------------
-  def login
+  def fb_login
     user = User.find_by_fb_user_id(params[:user][:fb_user_id])
-    if !user
-      # user not found
-      head 404 and return
-    end
+    head 404 and return if !user
 
-    # TODO: fix always update access_token
-    user.fb_access_token = params[:user][:fb_access_token]
+    user.fb_access_token = params[:user][:fb_access_token] if user.fb_access_token.to_s === params[:user][:fb_access_token]
 
     if user.validate_with_facebook
       user.save if user.changed?
       session[:user_id] = user.id
-      render :json => user, :status => 200
+      render :json => user
     else
       head 401
+    end
+  end
+
+
+  # POST   /api/users/fb_register     fb_register
+  # ----------------------------------------
+  def fb_register
+    user = User.new params.require(:user).permit(:fb_access_token, :fb_user_id, :name, :email, :profile_picture)
+
+    if user.validate_with_facebook
+      user.save
+      session[:user_id] = user.id
+      render :json => user
+    else
+      head 406
+    end
+  end
+
+
+  # POST   /api/users/email_login     email_login
+  # ----------------------------------------
+  def email_login
+    user = User.authorize_with_email(params[:user])
+    if user
+      session[:user_id] = user.id
+      render json: user,
+             except: [:password_salt, :password_hash, :fb_access_token]
+    else
+      head 401
+    end
+  end
+
+
+  # POST   /api/users/email_register  email_register
+  # ----------------------------------------
+  def email_register
+    if params[:user][:password] != params[:user][:password_confirmation]
+      render json: {error:    true,
+                    message: 'Password and password confirmation does not match.',
+                    error_code: 'US000'},
+             status: 406
+    else
+      user = User.create params.require(:user).permit(:name, :email, :password)
+      render json: user,
+             except: [:password_salt, :password_hash, :fb_access_token]
     end
   end
 
@@ -49,22 +91,6 @@ class UsersController < ApplicationController
       # return empty JSON array to fix restangular .addRestangularMethod no
       #   method error
       render :json => [], :status => 200
-    end
-  end
-
-
-  ##
-  # POST /register
-  # ----------------------------------------
-  def create
-    user = User.new params.require(:user).permit(:fb_access_token, :fb_user_id, :name, :email, :fb_user_picture)
-
-    if user.validate_with_facebook
-      user.save
-      session[:user_id] = user.id
-      render :json => user
-    else
-      head 406
     end
   end
 

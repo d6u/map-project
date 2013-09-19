@@ -21,9 +21,11 @@ MapProject::Application.routes.draw do
 
     # --- User ---
     scope '/users' do
-      post 'login'    => 'users#login'
-      get  'logout'   => 'users#logout'
-      post 'register' => 'users#create'
+      post 'fb_login'       => 'users#fb_login'
+      post 'fb_register'    => 'users#fb_register'
+      post 'email_login'    => 'users#email_login'
+      post 'email_register' => 'users#email_register'
+      get  'logout'         => 'users#logout'
     end
     resources :users, :only => [:index, :update]
 
