@@ -52,3 +52,6 @@ gem 'bson_ext'
 # --- Development ---
 gem 'awesome_print'     , group: :development
 gem 'autoprefixer-rails', group: :production
+
+# --- Test ---
+gem 'awesome_print'     , group: :test
