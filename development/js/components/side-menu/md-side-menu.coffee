@@ -8,6 +8,10 @@ app.directive 'mdSideMenu',
   controller: ['$scope', class MdSideMenuCtrl
 
     constructor: ($scope) ->
+      # --- Outside Animation ---
+      @outsideActiveSection = 'register'
+
+
       # --- Remove No Action Required Notice when Side Menu is Open ---
       noActionRequiredNotice = [
         'addFriendRequestAccepted'
