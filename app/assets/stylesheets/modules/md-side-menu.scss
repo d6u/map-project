@@ -79,17 +79,43 @@
 .md-side-menu-login {}
 
 // animation
+.md-side-menu-outside-section-collapsed-add,
+.md-side-menu-outside-section-collapsed-remove {
+  @include transition();
+}
+
+.md-side-menu-outside-section-collapsed-add {
+  height: 386px;
+  overflow: hidden;
+  &.md-side-menu-outside-section-collapsed-add-active {
+    height: 66px;
+  }
+}
+
+.md-side-menu-outside-section-collapsed-remove {
+  height: 66px;
+  overflow: hidden;
+  &.md-side-menu-outside-section-collapsed-remove-active {
+    height: 386px;
+    .md-side-menu-outside-section-head {
+      &:hover {
+        cursor: default;
+        background-color: white;
+        color: inherit;
+      }
+    }
+  }
+}
+
 .md-side-menu-outside-section-collapsed {
+  height: 66px;
+  overflow: hidden;
   .md-side-menu-outside-section-head {
     &:hover {
       cursor: pointer;
       background-color: $blue;
       color: white;
     }
-  }
-
-  .md-side-menu-outside-section-body {
-    height: 0;
   }
 }
 
