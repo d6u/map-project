@@ -10,9 +10,12 @@
 2. fbRegister - alias of fbLogin
 3. emailLogin(user[, success])
 
-    user (object): must contain name, email and password properties
+    user: (object) must contain name and password properties
 
-4. emailRegister
+4. emailRegister(user[, success])
+
+    user: (object) must contain name, email and password properties
+
 5. logout([success])
 6. getUser (null or User object with id, name, profile picture)
 7. getId

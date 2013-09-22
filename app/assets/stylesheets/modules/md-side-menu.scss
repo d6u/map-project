@@ -76,7 +76,11 @@
 }
 
 // login section
-.md-side-menu-login {}
+.md-side-menu-login {
+  .checkbox {
+    margin-bottom: 10px;
+  }
+}
 
 // animation
 .md-side-menu-outside-section-collapsed-add,

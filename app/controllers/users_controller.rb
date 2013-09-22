@@ -66,10 +66,11 @@ class UsersController < ApplicationController
   # POST   /api/users/email_login     email_login
   # ----------------------------------------
   def email_login
-    user = User.authorize_with_email(params[:user])
-    if user
-      session[:user_id] = user.id
-      render json: user,
+    @user = User.authorize_with_email(params[:email], params[:password])
+    if @user
+      session[:user_id] = @user.id
+      remember_user_on_this_computer if params[:remember_me]
+      render json: @user,
              except: [:password_salt, :password_hash, :fb_access_token]
     else
       head 401
@@ -80,14 +81,16 @@ class UsersController < ApplicationController
   # POST   /api/users/email_register  email_register
   # ----------------------------------------
   def email_register
-    if params[:user][:password] != params[:user][:password_confirmation]
+    if params[:password] != params[:password_confirmation]
       render json: {error:    true,
                     message: 'Password and password confirmation does not match.',
                     error_code: 'US000'},
              status: 406
     else
-      user = User.create params.require(:user).permit(:name, :email, :password)
-      render json: user,
+      @user = User.create params.permit(:name, :email, :password)
+      session[:user_id] = @user.id
+      remember_user_on_this_computer
+      render json: @user,
              except: [:password_salt, :password_hash, :fb_access_token]
     end
   end

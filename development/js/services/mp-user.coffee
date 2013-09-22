@@ -62,9 +62,15 @@ app.factory 'MpUser',
 
 
     # --- Email ---
-    emailLogin: ->
-    emailRegister: ->
+    emailLogin: (user, success) ->
+      $users.email_login(user).then (user) =>
+        @$$user = user
+        success() if success
 
+    emailRegister: (user, success) ->
+      $users.email_register(user).then (user) =>
+        @$$user = user
+        success() if success
 
     # --- Logout ---
     logout: (success) ->
