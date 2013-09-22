@@ -1,0 +1,50 @@
+// --- Modal ---
+.md-invitation-modal {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  bottom: auto;
+  right: auto;
+  z-index: 1500;
+  @include transform(translateX(-50%) translateY(-50%));
+}
+
+.md-invitation-modal-inner {
+  background-color: white;
+  width: 700px;
+  height: 430px;
+}
+
+// --- Modal Content
+.md-invitation-modal-body {
+  padding: 20px;
+  textarea {
+    resize: none;
+    margin-bottom: 10px;
+  }
+  select {
+    margin-bottom: 10px;
+  }
+  div {
+    text-align: center;
+  }
+}
+
+.md-invitation-modal-more-options {
+  padding: 20px;
+  border-top: 1px solid $blue;
+  h5 {
+    margin-top: 0;
+    margin-bottom: 15px;
+  }
+}
+
+.md-invitation-modal-more-options-social-network {
+  margin-bottom: 15px;
+  a {
+    width: 660px / 2 - 10px;
+    &:first-child {
+      margin-right: 20px;
+    }
+  }
+}

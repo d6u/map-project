@@ -23,6 +23,8 @@ app.controller 'InsideViewCtrl',
     MpUser.logout ->
       $location.path '/'
 
+  @showInvitationDialog = false
+
 
   # --- Return ---
   return

@@ -13,3 +13,29 @@
 
   //- Overlay
   .ly-pusher-overlay(ng-click="interface.showUserSection = false")
+
+
+  //- --- Invitation Window ---
+  .md-modal.md-effect-3.md-invitation-modal(ng-class="{'md-modal-show': insideViewCtrl.showInvitationDialog}")
+    .md-content.md-invitation-modal-inner
+
+      form.md-invitation-modal-body
+        textarea.form-control(placeholder="Friends' email address")
+        textarea.form-control(placeholder="Some message")
+        p.help-block Invite your friends into one of your project?
+        select.form-control
+          option None
+        div
+          button.btn.btn-success Send Invitation
+
+      .md-invitation-modal-more-options
+        h5 More ways to invite friends
+        .md-invitation-modal-more-options-social-network
+          a.btn.btn-primary Post on Facebook
+          a.btn.btn-info Post on Twitter
+        .input-group
+          span.input-group-btn
+            button.btn.btn-default Generate a Invitation Link
+          input.form-control(type="text", placeholder="<-  Click button to get a link")
+
+  .md-modal-overlay(ng-click="insideViewCtrl.showInvitationDialog = false")
