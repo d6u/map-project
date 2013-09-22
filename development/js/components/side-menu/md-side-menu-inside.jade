@@ -4,9 +4,9 @@ section.ly-pusher-side.md-side-menu(perfect-scrollbar="insideViewCtrl.MpNotifica
   //- User
   .md-side-menu-user
     div
-      img.md-side-menu-user-picture(ng-src="{{MpUser.fb_user_picture()}}")
+      img.md-side-menu-user-picture(ng-src="{{insideViewCtrl.MpUser.getProfilePicture()}}")
     p.lead.md-side-menu-user-name
-      {{MpUser.name()}}
+      {{insideViewCtrl.MpUser.getName()}}
 
   //- Menu
   ul.md-side-menu-actions.clearfix

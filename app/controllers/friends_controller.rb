@@ -11,14 +11,14 @@ class FriendsController < ApplicationController
 
 
   def index
-    render :json => @user.friends, :only => [:id, :name, :fb_user_picture]
+    render :json => @user.friends, :only => [:id, :name, :profile_picture]
   end
 
 
   def show
     friend = @user.friends.find_by_id params[:id]
     if friend
-      render :json => friend, :only => [:id, :name, :fb_user_picture]
+      render :json => friend, :only => [:id, :name, :profile_picture]
     else
       head 404
     end

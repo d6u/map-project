@@ -5,6 +5,7 @@ app.controller 'InsideViewCtrl',
   @MpProjects     = MpProjects
   @MpNotification = MpNotification
   @MpFriends      = MpFriends
+  @MpUser         = MpUser
 
   MpProjects.initialize     $scope
   MpFriends.initialize      $scope

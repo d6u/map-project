@@ -1,11 +1,14 @@
 # mini-map-cover
-app.directive 'miniMapCover', [ ->
+app.directive 'miniMapCover', ['MpLocation', (MpLocation) ->
+
   scope: true
   link: (scope, element, attrs) ->
 
+    userLocation = MpLocation.getLocation()
+
     # TODO: user location error fall back
     mapOptions =
-      center: new google.maps.LatLng(scope.userLocation.latitude, scope.userLocation.longitude)
+      center: new google.maps.LatLng(userLocation.latitude, userLocation.longitude)
       zoom: 12
       mapTypeId: google.maps.MapTypeId.ROADMAP
       disableDefaultUI: true

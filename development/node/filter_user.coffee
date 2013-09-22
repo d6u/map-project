@@ -4,5 +4,5 @@ module.exports = (user) ->
   return {
     id:   user.id
     name: user.name
-    fb_user_picture: user.fb_user_picture
+    profile_picture: user.profile_picture
   }

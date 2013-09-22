@@ -15,13 +15,13 @@
         .md-project-cover-overlay
           a(ng-href="/project/{{project.id}}") {{project.title}}
       .md-project-owner
-        img.md-project-owner-picture(ng-src="{{project.owner.fb_user_picture}}")
+        img.md-project-owner-picture(ng-src="{{project.owner.profile_picture}}")
         span.md-project-owner-name {{project.owner.name}}
         a.btn.btn-default(ng-href="/project/{{project.id}}") Open
       .md-project-notes(ng-show="project.notes && project.notes.length") {{project.notes}}
       ul.md-project-participants.clearfix(ng-show="project.participating_users.length")
         li.md-project-participants-item(ng-repeat="user in project.participating_users")
-          img.md-project-participants-item(ng-src="{{user.fb_user_picture}}")
+          img.md-project-participants-item(ng-src="{{user.profile_picture}}")
       .md-project-lastmessage
 
 

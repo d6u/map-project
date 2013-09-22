@@ -125,7 +125,7 @@ class UsersController < ApplicationController
       project = Project.find_by_id(params[:project_id])
       if project
         users = project.participated_users
-        render :json => users, :only => [:id, :name, :fb_user_picture] and return
+        render :json => users, :only => [:id, :name, :profile_picture] and return
       else
         head 404 and return
       end
@@ -147,7 +147,7 @@ class UsersController < ApplicationController
   # PUT & PATCH /users/:id
   def update
     if @user.id == params[:user][:id]
-      @user.attributes = params.require(:user).permit(:fb_access_token, :fb_user_id, :name, :email, :fb_user_picture)
+      @user.attributes = params.require(:user).permit(:fb_access_token, :fb_user_id, :name, :email, :profile_picture)
       @user.save if @user.changed?
       render :json => @user
     else

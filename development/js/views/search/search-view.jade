@@ -6,7 +6,7 @@
     ol.md-search-view-list.md-user-list.clearfix
       li.md-search-view-list-item.md-user-list-item(ng-repeat="user in searchViewCtrl.searchResults")
         a.md-user-list-item-picture(href="")
-          img(ng-src="{{user.fb_user_picture}}")
+          img(ng-src="{{user.profile_picture}}")
         .md-user-list-item-detail
           a.md-user-list-item-detail-name(href="") {{user.name}}
         .md-user-list-item-actions

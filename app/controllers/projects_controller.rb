@@ -17,10 +17,10 @@ class ProjectsController < ApplicationController
     if project
       if @user == project.owner
         render(json: project.participating_users,
-               only: [:id, :name, :fb_user_picture])
+               only: [:id, :name, :profile_picture])
       else
         render(json: (project.participating_users - [@user] + [project.owner]),
-               only: [:id, :name, :fb_user_picture])
+               only: [:id, :name, :profile_picture])
       end
     else
       head(404)
