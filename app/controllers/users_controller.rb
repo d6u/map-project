@@ -1,5 +1,6 @@
 class UsersController < ApplicationController
 
+  # GET    /api/users/login_status    login_status
   # POST   /api/users/fb_login        fb_login
   # POST   /api/users/fb_register     fb_register
   # POST   /api/users/email_login     email_login
@@ -10,23 +11,36 @@ class UsersController < ApplicationController
   # PUT    /api/users/:id             update
 
 
-  skip_before_action :check_login_status,
-                     :only => [:fb_login, :fb_register, :email_login,
-                               :email_register]
+  skip_before_action :check_login_status, :only => [:login_status, :fb_login, :fb_register, :email_login, :email_register, :logout]
+
+
+  # GET    /api/users/login_status    login_status
+  # ----------------------------------------
+  def login_status
+    if @user
+      if @user.password_hash || @user.validate_with_facebook
+        render json: @user, only: [:id, :name, :profile_picture, :email]
+        return
+      end
+    end
+
+    head 401
+  end
 
 
   # POST   /api/users/fb_login        fb_login
   # ----------------------------------------
   def fb_login
-    user = User.find_by_fb_user_id(params[:user][:fb_user_id])
-    head 404 and return if !user
+    @user = User.find_by_fb_user_id(params[:user][:fb_user_id])
+    head 404 and return if !@user
 
-    user.fb_access_token = params[:user][:fb_access_token] if user.fb_access_token.to_s === params[:user][:fb_access_token]
+    @user.fb_access_token = params[:user][:fb_access_token] if @user.fb_access_token.to_s === params[:user][:fb_access_token]
 
-    if user.validate_with_facebook
-      user.save if user.changed?
-      session[:user_id] = user.id
-      render :json => user
+    if @user.validate_with_facebook
+      @user.save if @user.changed?
+      session[:user_id] = @user.id
+      remember_user_on_this_computer
+      render :json => @user, only: [:id, :name, :profile_picture, :email]
     else
       head 401
     end
@@ -36,12 +50,13 @@ class UsersController < ApplicationController
   # POST   /api/users/fb_register     fb_register
   # ----------------------------------------
   def fb_register
-    user = User.new params.require(:user).permit(:fb_access_token, :fb_user_id, :name, :email, :profile_picture)
+    @user = User.new params.require(:user).permit(:fb_access_token, :fb_user_id, :name, :email, :profile_picture)
 
-    if user.validate_with_facebook
-      user.save
-      session[:user_id] = user.id
-      render :json => user
+    if @user.validate_with_facebook
+      @user.save
+      session[:user_id] = @user.id
+      remember_user_on_this_computer
+      render :json => @user, only: [:id, :name, :profile_picture, :email]
     else
       head 406
     end
@@ -78,20 +93,22 @@ class UsersController < ApplicationController
   end
 
 
-  ##
-  # Logout
+  # GET    /api/users/logout          logout
   # ----------------------------------------
   def logout
-    if session[:user_id]
+    if @user
+      if cookies[:user_token]
+        RememberLogin.destroy_all({
+          user_id:        @user.id,
+          remember_token: cookies[:user_token]
+        })
+      end
+
       session[:user_id] = nil
-      # return empty JSON array to fix restangular .addRestangularMethod no
-      #   method error
-      render :json => [], :status => 202
-    else
-      # return empty JSON array to fix restangular .addRestangularMethod no
-      #   method error
-      render :json => [], :status => 200
+      cookies.delete :user_token, :domain => :all
+      cookies.delete :user_id   , :domain => :all
     end
+    head 200
   end
 
 

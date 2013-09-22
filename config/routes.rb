@@ -21,6 +21,7 @@ MapProject::Application.routes.draw do
 
     # --- User ---
     scope '/users' do
+      get  'login_status'   => 'users#login_status'
       post 'fb_login'       => 'users#fb_login'
       post 'fb_register'    => 'users#fb_register'
       post 'email_login'    => 'users#email_login'

@@ -84,8 +84,10 @@ class User < ActiveRecord::Base
 
   private
   def generate_password_salt_and_hash
-    self.password_salt = generate_password_salt
-    self.password_hash = generate_password_hash
+    if @password
+      self.password_salt = generate_password_salt
+      self.password_hash = generate_password_hash
+    end
   end
 
   def generate_password_salt
