@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20130909160522) do
+ActiveRecord::Schema.define(version: 20130918161052) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -66,14 +66,36 @@ ActiveRecord::Schema.define(version: 20130909160522) do
   add_index "projects", ["owner_id"], name: "index_projects_on_owner_id", using: :btree
   add_index "projects", ["title"], name: "index_projects_on_title", using: :btree
 
+  create_table "remember_logins", force: true do |t|
+    t.string   "remember_token"
+    t.integer  "user_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "remember_logins", ["remember_token"], name: "index_remember_logins_on_remember_token", using: :btree
+  add_index "remember_logins", ["user_id"], name: "index_remember_logins_on_user_id", using: :btree
+
+  create_table "reset_password_tokens", force: true do |t|
+    t.string   "reset_token"
+    t.integer  "user_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "reset_password_tokens", ["reset_token"], name: "index_reset_password_tokens_on_reset_token", using: :btree
+  add_index "reset_password_tokens", ["user_id"], name: "index_reset_password_tokens_on_user_id", using: :btree
+
   create_table "users", force: true do |t|
     t.string   "name"
     t.string   "email"
     t.text     "fb_access_token"
     t.string   "fb_user_id"
-    t.string   "fb_user_picture"
+    t.string   "profile_picture"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.string   "password_hash"
+    t.string   "password_salt"
   end
 
   add_index "users", ["email"], name: "index_users_on_email", using: :btree

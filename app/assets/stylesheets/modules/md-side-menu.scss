@@ -5,30 +5,121 @@
 }
 
 // --- Outside ---
-.md-side-menu-promote {
-  margin: 20px;
+.md-side-menu-outside-inner {
+  overflow-y: auto;
+  height: 100%;
 }
 
-.md-side-menu-promote-text-group {
-  margin-bottom: 20px;
-  .lead {
+.md-side-menu-header {
+  padding: 20px;
+  border-bottom: 1px solid $gray3;
+  h1 {
     margin: 0;
   }
 }
 
-.md-side-menu-promote-button-group {
-  text-align: center;
+.md-side-menu-register {
+  border-bottom: 1px solid $gray3;
+  form {
+    margin-bottom: 20px;
+  }
 }
 
-.md-side-menu-intro {
-  margin: 80px 20px 20px;
-  .lead {
-    font-weight: bold;
+.md-side-menu-outside-section-head {
+  padding: 20px;
+  display: block;
+  color: inherit;
+  cursor: default;
+  &:hover {
+    text-decoration: none;
+    color: inherit;
+  }
+}
+
+.md-side-menu-outside-section-body {
+  padding-left: 20px;
+  padding-right: 20px;
+  overflow: hidden;
+}
+
+.md-side-menu-sub-header {
+  margin: 0;
+}
+
+.md-side-menu-outside-block-button {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  width: 250px;
+}
+
+.md-side-menu-or-separator {
+  font-size: 18px;
+  font-style: italic;
+  border-bottom: 1px solid $gray3;
+  text-align: center;
+  $height: 26px;
+  $margin-top: 15px;
+  margin-top: $margin-top;
+  margin-bottom: $margin-top + $height / 2;
+  height: $height / 2;
+  color: $gray6;
+  div {
+    display: inline-block;
+    width: 30px;
+    background-color: white;
+  }
+}
+
+.md-side-menu-outside-input {
+  margin-bottom: 10px;
+}
+
+// login section
+.md-side-menu-login {
+  .checkbox {
     margin-bottom: 10px;
   }
-  ul {
-    padding-left: 20px;
-    font-size: 16px;
+}
+
+// animation
+.md-side-menu-outside-section-collapsed-add,
+.md-side-menu-outside-section-collapsed-remove {
+  @include transition();
+}
+
+.md-side-menu-outside-section-collapsed-add {
+  height: 386px;
+  overflow: hidden;
+  &.md-side-menu-outside-section-collapsed-add-active {
+    height: 66px;
+  }
+}
+
+.md-side-menu-outside-section-collapsed-remove {
+  height: 66px;
+  overflow: hidden;
+  &.md-side-menu-outside-section-collapsed-remove-active {
+    height: 386px;
+    .md-side-menu-outside-section-head {
+      &:hover {
+        cursor: default;
+        background-color: white;
+        color: inherit;
+      }
+    }
+  }
+}
+
+.md-side-menu-outside-section-collapsed {
+  height: 66px;
+  overflow: hidden;
+  .md-side-menu-outside-section-head {
+    &:hover {
+      cursor: pointer;
+      background-color: $blue;
+      color: white;
+    }
   }
 }
 

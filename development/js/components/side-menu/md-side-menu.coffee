@@ -5,9 +5,37 @@ app.directive 'mdSideMenu',
     if $routeSegment.startsWith('ot') then '/scripts/components/side-menu/md-side-menu-outside.html' else '/scripts/components/side-menu/md-side-menu-inside.html'
   replace: true
   controllerAs: 'MdSideMenuCtrl'
-  controller: ['$scope', class MdSideMenuCtrl
+  controller: ['$scope', 'MpUser', '$location', class MdSideMenuCtrl
 
-    constructor: ($scope) ->
+    constructor: ($scope, MpUser, $location) ->
+      # --- Outside ---
+      @outsideActiveSection = 'register'
+      @registerFormData = {}
+      @registerUser = ->
+        valid = true
+
+        if @registerFormData.password.length < 8
+          @registerForm.passwordError = 'Password has to be ast 8 characters.'
+          valid = false
+        else
+          @registerForm.passwordError = ''
+
+        if @registerFormData.password != @registerFormData.password_confirmation
+          @registerForm.passwordConfirmationError = 'Password confirmation does not match password.'
+          valid = false
+        else
+          @registerForm.passwordConfirmationError = ''
+
+        if valid && @registerForm.$valid
+          MpUser.emailRegister @registerFormData, ->
+            $location.path '/dashboard'
+
+      @loginUser = ->
+        if @loginForm.$valid
+          MpUser.emailLogin @loginFormData, ->
+            $location.path '/dashboard'
+
+
       # --- Remove No Action Required Notice when Side Menu is Open ---
       noActionRequiredNotice = [
         'addFriendRequestAccepted'

@@ -3,7 +3,7 @@ require.config({
   enforceDefine: true,
   waitSeconds: 5,
   baseUrl: '/assets',
-  paths: paths, // paths is defined in index_async.html.erb file
+  paths: paths, // paths is defined in index.html.erb file
   map: {},
   shim: {
     'modernizr': {exports: 'Modernizr'},
@@ -35,28 +35,30 @@ function initGoogleMaps() {}
 
 
 // --- Require ---
-// create deferred object for facebook login check and ip location
-define('appPrepare', ['jquery'], function($) {
-  this.appPrepare = {
-    facebookLoginCheck: $.Deferred(),
-    ipLocationCheck:    $.Deferred()
-  }
-  return this.appPrepare
-})
+// create deferred object for ip location
+define('ipLocationChecked', ['jquery'], function($) {
+  this.ipLocationChecked = $.Deferred();
+  return this.ipLocationChecked;
+});
+
+define('facebookLoginChecked', ['jquery'], function($) {
+  this.facebookLoginChecked = $.Deferred();
+  return this.facebookLoginChecked;
+});
 
 // facebook login check
-require(['appPrepare', 'facebook'], function(appPrepare, FB) {
+require(['facebookLoginChecked', 'facebook'], function(deferred, FB) {
   FB.getLoginStatus(function(response) {
-    appPrepare.facebookLoginCheck.resolve(response)
-  })
-})
+    deferred.resolve(response);
+  });
+});
 
 // resolve location from ip address
-require(['appPrepare', 'ipLocation'], function(appPrepare, ipLocation) {
-  appPrepare.ipLocationCheck.resolve(ipLocation)
-})
+require(['ipLocationChecked', 'ipLocation'], function(deferred, ipLocation) {
+  deferred.resolve(ipLocation);
+});
 
 // init, bootstrap angularjs
-define(['appPrepare', 'application', 'facebook', 'modernizr', 'google.maps'], function(appPrepare) {
+define(['ipLocationChecked', 'application', 'modernizr', 'google.maps'], function() {
   angular.bootstrap(document, ['mapApp']);
-})
+});

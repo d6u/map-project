@@ -1,6 +1,6 @@
 app.controller 'InsideViewCtrl',
-['$scope','MpProjects','MpNotification','$location','MpFriends','socket',
-( $scope,  MpProjects,  MpNotification,  $location,  MpFriends,  socket) ->
+['$scope','MpProjects','MpNotification','$location','MpFriends','socket','MpUser',
+( $scope,  MpProjects,  MpNotification,  $location,  MpFriends,  socket,  MpUser) ->
 
   @MpProjects     = MpProjects
   @MpNotification = MpNotification
@@ -16,6 +16,11 @@ app.controller 'InsideViewCtrl',
   @createNewProject = ->
     @MpProjects.createProject().then (project) ->
       $location.path('/project/' + project.id)
+
+  @logout = ->
+    socket.disconnect()
+    MpUser.logout ->
+      $location.path '/'
 
 
   # --- Return ---

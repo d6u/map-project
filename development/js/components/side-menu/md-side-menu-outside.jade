@@ -1,17 +1,39 @@
 //- replace: true
 section.ly-pusher-side.md-side-menu
+  .md-side-menu-outside-inner
+    .md-side-menu-header
+      h1 Map Project
 
-  .md-side-menu-promote
-    .md-side-menu-promote-text-group
-      p.lead Sign up with Facebook* to plan your next trip with friends
-      p *More sign in options in the near future
-    .md-side-menu-promote-button-group
-      a.btn.btn-primary.btn-lg(href="", ng-click="outsideViewCtrl.loginWithFacebook()") Sign up with Facebook
-      p this could also help you sign in
+    .md-side-menu-register(ng-class="{'md-side-menu-outside-section-collapsed': MdSideMenuCtrl.outsideActiveSection != 'register'}", ng-click="MdSideMenuCtrl.outsideActiveSection = 'register'")
+      a.md-side-menu-outside-section-head(href="")
+        h3.md-side-menu-sub-header Register
+      .md-side-menu-outside-section-body
+        a.btn.btn-primary.md-side-menu-outside-block-button(href="", ng-click="outsideViewCtrl.loginWithFacebook()") Sign up with Facebook
+        .md-side-menu-or-separator
+          div Or
+        form.form-horizontal(name="MdSideMenuCtrl.registerForm", ng-submit="MdSideMenuCtrl.registerUser()")
+          input.form-control.md-side-menu-outside-input(type="text", placeholder="Your name", ng-model="MdSideMenuCtrl.registerFormData.name", required)
+          input.form-control.md-side-menu-outside-input(type="email", name="email", placeholder="Email", ng-model="MdSideMenuCtrl.registerFormData.email", required)
+          input.form-control.md-side-menu-outside-input(type="password", name="password", placeholder="Password, at least 8 characters", ng-model="MdSideMenuCtrl.registerFormData.password", required)
+          p.help-block {{MdSideMenuCtrl.registerForm.passwordError}}
+          input.form-control.md-side-menu-outside-input(type="password", placeholder="Confirm your password", ng-model="MdSideMenuCtrl.registerFormData.password_confirmation", required)
+          p.help-block {{MdSideMenuCtrl.registerForm.passwordConfirmationError}}
+          button.btn.btn-success.md-side-menu-outside-block-button Register
 
-  .md-side-menu-intro
-    p.lead What you can get by signing up
-    ul
-      li Save your maps
-      li Plan trips with friends on internet in real time
-      li Access your maps from any device (coming)
+    .md-side-menu-login(ng-class="{'md-side-menu-outside-section-collapsed': MdSideMenuCtrl.outsideActiveSection != 'login'}", ng-click="MdSideMenuCtrl.outsideActiveSection = 'login'")
+      a.md-side-menu-outside-section-head(href="")
+        h3.md-side-menu-sub-header Login
+      .md-side-menu-outside-section-body
+        a.btn.btn-primary.md-side-menu-outside-block-button(href="", ng-click="outsideViewCtrl.loginWithFacebook()") Login with Facebook
+        .md-side-menu-or-separator
+          div Or
+        form.form-horizontal(name="MdSideMenuCtrl.loginForm", ng-submit="MdSideMenuCtrl.loginUser()")
+          input.form-control.md-side-menu-outside-input(type="email", name="email", placeholder="Email", ng-model="MdSideMenuCtrl.loginFormData.email", required)
+          input.form-control.md-side-menu-outside-input(type="password", name="password", placeholder="Password", ng-model="MdSideMenuCtrl.loginFormData.password", required)
+          .checkbox
+            label
+              input(type="checkbox", ng-model="MdSideMenuCtrl.loginFormData.remember_me")
+              |  Remember me on this computer
+          button.btn.btn-success.md-side-menu-outside-block-button Login
+          p.help-block
+            a(href="") Forget your password?

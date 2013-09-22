@@ -19,3 +19,7 @@ Organized by error area.
 002: You are already friends
 
 003: Requested friendship is not a pending request, friendship status is #{friendship.status}
+
+### US: user errors
+
+000: Password and password comfirmation does not match. (406)
