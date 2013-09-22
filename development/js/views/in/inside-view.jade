@@ -23,10 +23,8 @@
         textarea.form-control(placeholder="Friends' email address")
         textarea.form-control(placeholder="Some message", ng-model="MdInvitationModalCtrl.invitationForm.message")
         p.help-block Invite your friends into one of your project?
-        select.form-control(ng-model="MdInvitationModalCtrl.invitationForm.project_id")
-          option(value="null") None
-          option(ng-repeat="project in insideViewCtrl.MpProjects.projects", value="project.id}}")
-            {{project.title}}
+        select.form-control(ng-model="MdInvitationModalCtrl.invitationForm.project_id", ng-options="p.id as p.title for p in insideViewCtrl.MpProjects.projects")
+          option(value="") None
         div
           button.btn.btn-success Send Invitation
 
@@ -34,10 +32,10 @@
         h5 More ways to invite friends (your friends will be invited into selected project from above)
         .md-invitation-modal-more-options-social-network
           a.btn.btn-primary(href="", ng-click="MdInvitationModalCtrl.postOnFacebook()") Post on Facebook
-          a.btn.btn-info Post on Twitter
+          a.btn.btn-info(href="", ng-click="MdInvitationModalCtrl.postOnTwitter()") Post on Twitter
         .input-group
           span.input-group-btn
-            button.btn.btn-default Generate a Invitation Link
-          input.form-control(type="text", placeholder="<-  Click button to get a link")
+            button.btn.btn-default(ng-click="MdInvitationModalCtrl.generateInvitationLink()") Generate a Invitation Link
+          input.form-control(type="text", placeholder="<-  Click button to get a link", ng-model="MdInvitationModalCtrl.invitationLink")
 
   .md-modal-overlay(ng-click="insideViewCtrl.showInvitationDialog = false")

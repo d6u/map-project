@@ -36,6 +36,8 @@ ActiveRecord::Schema.define(version: 20130922172558) do
     t.string   "code"
     t.string   "email"
     t.text     "message"
+    t.integer  "invitation_type"
+    t.integer  "status",          default: 0
     t.datetime "created_at"
     t.datetime "updated_at"
   end

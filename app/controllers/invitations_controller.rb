@@ -19,10 +19,7 @@ class InvitationsController < ApplicationController
   # POST   /api/invitations      create
   # ----------------------------------------
   def create
-    invitation = Invitation.new params.require(:invitation).permit(:email, :message)
-    if params[:invitation][:project_id] != 'null'
-      invitation.project_id = params[:invitation][:project_id]
-    end
+    invitation = Invitation.new params.require(:invitation).permit(:project_id, :email, :message, :invitation_type)
     @user.invitations << invitation
     render json: invitation
   end

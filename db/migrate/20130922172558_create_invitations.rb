@@ -6,6 +6,9 @@ class CreateInvitations < ActiveRecord::Migration
       t.string     :code
       t.string     :email
       t.text       :message
+      t.integer    :invitation_type
+      # type: 0 link, 1 email, 2 facebook, 3 twitter
+      t.integer    :status, default: 0
 
       t.timestamps
     end
