@@ -14,16 +14,17 @@ class User < ActiveRecord::Base
 
 
   # login, remember logins, forget password
-  has_many :remember_logins
-  has_many :reset_password_tokens
+  has_many :remember_logins, dependent: :destroy
+  has_many :reset_password_tokens, dependent: :destroy
 
   # project
-  has_many :projects, :foreign_key => 'owner_id'
+  has_many :projects, :foreign_key => 'owner_id', dependent: :destroy
 
   # friends
-  has_many :friendships
+  has_many :friendships, dependent: :destroy
   has_many :followships, :class_name => 'Friendship',
-                         :foreign_key => 'friend_id'
+                         :foreign_key => 'friend_id',
+                         dependent: :destroy
   has_many :friends, -> { where 'friendships.status > 0' },
                      :through => :friendships
   has_many :followers, :through => :followships, :source => :user

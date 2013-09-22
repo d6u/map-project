@@ -18,6 +18,7 @@ app.controller 'InsideViewCtrl',
       $location.path('/project/' + project.id)
 
   @logout = ->
+    socket.disconnect()
     MpUser.logout ->
       $location.path '/'
 
