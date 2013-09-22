@@ -1,7 +1,7 @@
 app.controller 'OutsideViewCtrl',
-['$scope', 'MpUser', 'TheProject', 'MpProjects', '$q', class OutsideViewCtrl
+['$scope', 'MpUser', 'TheProject', 'MpProjects', '$q', '$location', class OutsideViewCtrl
 
-  constructor: ($scope, MpUser, TheProject, MpProjects, $q) ->
+  constructor: ($scope, MpUser, TheProject, MpProjects, $q, $location) ->
     @hideHomepage = false
 
     @showScreenShot = ->
@@ -11,13 +11,13 @@ app.controller 'OutsideViewCtrl',
     @loginWithFacebook = ->
       # if has unsaved places
       if TheProject.places.length
-        MpUser.login (->
+        MpUser.fbLogin ->
           MpProjects.createProject(TheProject.project).then (project) ->
-            $q.all(TheProject.savePlacesOfProject(TheProject.places, project))
-            .then ->
-              "/project/#{project.id}"
-        )
+            $q.all(TheProject.savePlacesOfProject(TheProject.places, project)).then ->
+              $location.path "/project/#{project.id}"
+              $scope.interface.showUserSection = false
       else
-        MpUser.login '/dashboard'
-      $scope.interface.showUserSection = false
+        MpUser.fbLogin ->
+          $location.path '/dashboard'
+          $scope.interface.showUserSection = false
 ]

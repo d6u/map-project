@@ -20,7 +20,7 @@ class ApplicationController < ActionController::Base
       remember_login = RememberLogin.where({
         remember_token: cookies[:user_token],
         user_id:        cookies[:user_id]
-      })
+      }).first
       if remember_login
         @user = remember_login.user
         session[:user_id] = @user.id

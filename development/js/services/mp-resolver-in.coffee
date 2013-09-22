@@ -5,7 +5,7 @@ app.constant 'mpResolverIn',
   deferred = $q.defer()
 
   MpInitializer.then ->
-    $location.path('/') if !MpUser.checkLogin()
+    $location.path('/') if !MpUser.getUser()
     # Resolve after redirection
     $timeout -> deferred.resolve()
 
