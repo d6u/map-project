@@ -38,6 +38,7 @@
         "components/chatbox",
         "components/drawer",
         "components/edit-project-modal/md-project-modal.coffee",
+        "components/invitation-modal",
 
         "components/map/map-ctrl.coffee",
         "components/map/marker-info.coffee",

@@ -1,6 +1,8 @@
 app.controller 'InsideViewCtrl',
-['$scope','MpProjects','MpNotification','$location','MpFriends','socket','MpUser',
-( $scope,  MpProjects,  MpNotification,  $location,  MpFriends,  socket,  MpUser) ->
+['$scope','MpProjects','MpNotification','$location','MpFriends','socket',
+ 'MpUser','MpInvitation',
+( $scope,  MpProjects,  MpNotification,  $location,  MpFriends,  socket,
+  MpUser,  MpInvitation) ->
 
   @MpProjects     = MpProjects
   @MpNotification = MpNotification
