@@ -46,6 +46,12 @@ define('facebookLoginChecked', ['jquery'], function($) {
   return this.facebookLoginChecked;
 });
 
+// Progress bar on top
+require(['nprogress'], function(NProgress) {
+  this.NProgress = NProgress;
+  NProgress.start();
+});
+
 // facebook login check
 require(['facebookLoginChecked', 'facebook'], function(deferred, FB) {
   FB.getLoginStatus(function(response) {
@@ -59,6 +65,7 @@ require(['ipLocationChecked', 'ipLocation'], function(deferred, ipLocation) {
 });
 
 // init, bootstrap angularjs
-define(['ipLocationChecked', 'application', 'modernizr', 'google.maps'], function() {
+define(['nprogress', 'ipLocationChecked', 'application', 'modernizr', 'google.maps'], function(NProgress) {
+  NProgress.inc();
   angular.bootstrap(document, ['mapApp']);
 });

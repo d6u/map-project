@@ -11,7 +11,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <%= stylesheet_link_tag 'desktop', media: 'all' %>
   <script>
-  var paths = {'jquery':['//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min','/js/jquery-2.0.3.min'],'modernizr':'/js/modernizr-2.6.2.min','google.maps':'//maps.googleapis.com/maps/api/js?key=<%= $api_keys['google']['browser_app_key'] %>&libraries=places&sensor=true&callback=initGoogleMaps','facebook':'//connect.facebook.net/en_US/all','ipLocation':['http://www.geoplugin.net/json.gp?jsoncallback=define','<%= javascript_path_without_suffix("location-fallback.js") %>'],'application':['<%= javascript_path_without_suffix("application.js") %>']}, fbAppId = '<%= $api_keys['facebook']['app_id'] %>';
+  var paths = {'jquery':['//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min','/js/jquery-2.0.3.min'],'modernizr':'/js/modernizr-2.6.2.min','google.maps':'//maps.googleapis.com/maps/api/js?key=<%= $api_keys['google']['browser_app_key'] %>&libraries=places&sensor=true&callback=initGoogleMaps','facebook':'//connect.facebook.net/en_US/all','ipLocation':['http://www.geoplugin.net/json.gp?jsoncallback=define','<%= javascript_path_without_suffix("location-fallback.js") %>'],'application':['<%= javascript_path_without_suffix("application.js") %>'],'nprogress':'/js/nprogress-0.1.2.min'}, fbAppId = '<%= $api_keys['facebook']['app_id'] %>';
   </script>
   <script data-main="<%= javascript_path_without_suffix('main-requirejs.js') %>" src="/js/require.min.js"></script>
   <%= csrf_meta_tags %>

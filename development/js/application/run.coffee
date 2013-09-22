@@ -5,4 +5,14 @@ app.run(['$rootScope', ($rootScope) ->
   $rootScope.interface = {
     showUserSection: false
   }
+
+  firstTime = $rootScope.$on '$routeChangeSuccess', ->
+    NProgress.done()
+    firstTime()
+
+    $rootScope.$on '$routeChangeStart', ->
+      NProgress.start()
+
+    $rootScope.$on '$routeChangeSuccess', ->
+      NProgress.done()
 ])
