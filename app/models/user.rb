@@ -18,14 +18,14 @@ class User < ActiveRecord::Base
   has_many :reset_password_tokens, dependent: :destroy
 
   # project
-  has_many :projects              , dependent: :destroy
-                                  , :foreign_key => 'owner_id'
+  has_many :projects             , dependent: :destroy,
+                                   foreign_key: 'owner_id'
 
   # friends
-  has_many :friendships           , dependent:   :destroy
-  has_many :followships           , dependent:   :destroy
-                                  , class_name:  'Friendship'
-                                  , foreign_key: 'friend_id'
+  has_many :friendships          , dependent:   :destroy
+  has_many :followships          , dependent:   :destroy,
+                                   class_name:  'Friendship',
+                                   foreign_key: 'friend_id'
 
   has_many :friends, -> { where 'friendships.status > 0' },
                      :through => :friendships
@@ -33,14 +33,14 @@ class User < ActiveRecord::Base
 
   # projects participations
   has_many :project_participations, :dependent => :destroy
-  has_many :participating_projects
-    , -> { where 'project_participations.status > 0' }
-    , :through => :project_participations
-    , :source  => :project
-  has_many :pending_project_invitations
-    , -> { where 'project_participations.status = 0' }
-    , :through => :project_participations
-    , :source  => :project
+  has_many :participating_projects,
+    -> { where 'project_participations.status > 0' },
+    :through => :project_participations,
+    :source  => :project
+  has_many :pending_project_invitations,
+    -> { where 'project_participations.status = 0' },
+    :through => :project_participations,
+    :source  => :project
 
   # invitation
   has_many :invitations, dependent: :destroy
@@ -109,9 +109,8 @@ class User < ActiveRecord::Base
     # TODO
   end
 
-  private :generate_password_salt_and_hash
-    , :generate_password_salt
-    , :generate_password_hash
-    , :generate_password_salt_and_hash_if_changed_password
+  private :generate_password_salt_and_hash, :generate_password_salt,
+          :generate_password_hash,
+          :generate_password_salt_and_hash_if_changed_password
 
 end
