@@ -35,7 +35,10 @@
           a.btn.btn-info(href="", ng-click="MdInvitationModalCtrl.postOnTwitter()") Post on Twitter
         .input-group
           span.input-group-btn
-            button.btn.btn-default(ng-click="MdInvitationModalCtrl.generateInvitationLink()") Generate a Invitation Link
-          input.form-control(type="text", placeholder="<-  Click button to get a link", ng-model="MdInvitationModalCtrl.invitationLink")
+            button.btn.btn-default(ng-click="MdInvitationModalCtrl.generateInvitationLink()") Get a Invitation Link
+          input.form-control(type="text", placeholder="<-  Click button to get a link", ng-model="MdInvitationModalCtrl.invitationLink", disabled="")
+          //- TODO: copy to clipboard
+          //- span.input-group-btn(ng-show="MdInvitationModalCtrl.invitationLink.length")
+          //-   button.btn.btn-success(ng-click="") Copy to Clickboard
 
   .md-modal-overlay(ng-click="insideViewCtrl.showInvitationDialog = false")

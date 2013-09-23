@@ -37,6 +37,9 @@
     margin-top: 0;
     margin-bottom: 15px;
   }
+  input[type="text"] {
+    cursor: text;
+  }
 }
 
 .md-invitation-modal-more-options-social-network {

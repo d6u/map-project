@@ -31,10 +31,10 @@ class UsersController < ApplicationController
   # POST   /api/users/fb_login        fb_login
   # ----------------------------------------
   def fb_login
-    @user = User.find_by_fb_user_id(params[:fb_user_id])
+    @user = User.find_by_fb_user_id(params[:user][:fb_user_id])
     head 404 and return if !@user
 
-    @user.fb_access_token = params[:fb_access_token] if @user.fb_access_token.to_s == params[:fb_access_token]
+    @user.fb_access_token = params[:user][:fb_access_token] if @user.fb_access_token.to_s == params[:user][:fb_access_token]
 
     if @user.validate_with_facebook
       @user.save if @user.changed?
