@@ -1,5 +1,7 @@
 path = require('path')
 _    = require('lodash')
+require('js-yaml')
+
 
 # Main
 module.exports = (grunt) ->
@@ -52,28 +54,28 @@ module.exports = (grunt) ->
   # Project configuration.
   grunt.initConfig({
     pkg: grunt.file.readJSON('package.json')
-    compileSettings: grunt.file.readJSON('development/app.json')
+    compileSettings: require('./development/app.yaml')
 
     # --- Clean ---
     clean:
-      development: ["public/scripts", "app/assets/javascripts/**/*", "tmp/grunt"]
+      development: ["public/scripts", "app/assets/javascripts/modules/**/*", "tmp/grunt"]
 
     # --- Copy ---
     copy:
       html:
         expand: true
-        cwd:  '<%= compileSettings.js.sourceFolder %>'
+        cwd:  '<%= compileSettings.js["source folder"] %>'
         src:  '**/*.html'
         dest: 'public/scripts/'
       js:
         expand: true
-        cwd:  '<%= compileSettings.js.sourceFolder %>'
+        cwd:  '<%= compileSettings.js["source folder"] %>'
         src:  '<%= compileSettings.js.copy %>'
-        dest: '<%= compileSettings.js.targetFolder %>'
+        dest: '<%= compileSettings.js["target folder"] %>'
       # tmp task settings will be update dynamically
       tmp:
         expand: true
-        cwd:  '<%= compileSettings.js.sourceFolder %>'
+        cwd:  '<%= compileSettings.js["source folder"] %>'
         src:  ''
         dest: 'tmp/grunt/js'
 
@@ -82,7 +84,7 @@ module.exports = (grunt) ->
       development:
         files: [{
           expand: true
-          cwd:  '<%= compileSettings.js.sourceFolder %>'
+          cwd:  '<%= compileSettings.js["source folder"] %>'
           src:  '**/*.jade'
           dest: 'public/scripts'
           ext:  '.html'
@@ -111,10 +113,10 @@ module.exports = (grunt) ->
         livereload: true
       development:
         files: [
-          '<%= compileSettings.js.sourceFolder %>' + '/**/*.html'
-          '<%= compileSettings.js.sourceFolder %>' + '/**/*.jade'
-          '<%= compileSettings.js.sourceFolder %>' + '/**/*.js'
-          '<%= compileSettings.js.sourceFolder %>' + '/**/*.coffee'
+          '<%= compileSettings.js["source folder"] %>' + '/**/*.html'
+          '<%= compileSettings.js["source folder"] %>' + '/**/*.jade'
+          '<%= compileSettings.js["source folder"] %>' + '/**/*.js'
+          '<%= compileSettings.js["source folder"] %>' + '/**/*.coffee'
         ]
         tasks: ['default']
   })
@@ -132,12 +134,12 @@ module.exports = (grunt) ->
   grunt.registerTask('update-config', 'Dymanic update grunt config', ->
     compileSettings = grunt.config(['compileSettings'])
     # copy:tmp
-    copyList = compileHelper.getAllJsFileList(compileSettings.js.concat, compileSettings.js.sourceFolder)
+    copyList = compileHelper.getAllJsFileList(compileSettings.js.concat, compileSettings.js["source folder"])
     grunt.config(['copy', 'tmp', 'src'], copyList)
     # coffee:development
     filesObj = {}
     for dest, src of compileSettings.js.concat
-      filesObj[path.join('tmp/grunt/js', dest)] = compileHelper.getCoffeeFileList(src, compileSettings.js.sourceFolder)
+      filesObj[path.join('tmp/grunt/js', dest)] = compileHelper.getCoffeeFileList(src, compileSettings.js["source folder"])
     grunt.config(['coffee', 'development', 'files'], filesObj)
   )
 
@@ -146,7 +148,7 @@ module.exports = (grunt) ->
     # concat:development
     filesObj = {}
     for dest, src of compileSettings.js.concat
-      filesObj[path.join(compileSettings.js.targetFolder, dest)] = compileHelper.getConcatTaskFileList(src, dest)
+      filesObj[path.join(compileSettings.js["target folder"], dest)] = compileHelper.getConcatTaskFileList(src, dest)
     grunt.config(['concat', 'development', 'files'], filesObj)
   )
 

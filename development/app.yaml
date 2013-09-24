@@ -1,0 +1,80 @@
+js:
+  source folder: development/js
+  target folder: app/assets/javascripts/modules
+  copy:
+    - location-fallback.js
+  concat:
+    application.js:
+      - _libraries/bootstrap-3.0.0.min.js
+      - _libraries/jquery-ui-1.10.3.custom.min.js
+      - _libraries/masonry-3.1.2.js
+      - _libraries/perfect-scrollbar-0.4.3.with-mousewheel.min.js
+      - _libraries/lodash-1.3.1.min.js
+      - _libraries/socket.io.min.js
+      - _libraries/angular-loader-1.2.0rc2.min.js
+      - _libraries/angular-1.2.0rc2.min.js
+      - _libraries/angular-animate-1.2.0rc2.min.js
+      - _libraries/angular-route-1.2.0rc2.min.js
+      - _libraries/angular-route-segment-1.2.0.min.js
+      - _libraries/restangular-1.1.3.min.js
+      - _modules/date-iso8601.coffee
+      - _modules/md-bootstrap.coffee
+      - _modules/md-jquery-ui.coffee
+      - _modules/md-perfect-scrollbar.coffee
+      - _modules/md-tabset.coffee
+      - _modules/mini-typeahead.coffee
+      - _modules/md-masonry.coffee
+      - _modules/md-socket-io.coffee
+      - application
+      - services
+      - views
+      - components/bottom-bar
+      - components/chatbox
+      - components/drawer
+      - components/edit-project-modal/md-project-modal.coffee
+      - components/invitation-modal
+      - components/map/map-ctrl.coffee
+      - components/map/marker-info.coffee
+      - components/map/md-bottom-bar.coffee
+      - components/map/md-drawer.coffee
+      - components/map/md-edit-project.coffee
+      - components/map/mp-bottom-modalbox.coffee
+      - components/map/mp-center-user-location.coffee
+      - components/map/mp-map-canvas.coffee
+      - components/map/mp-map-searchbox.coffee
+      - components/map/marker-info.coffee
+      - components/map/md-project-modal.coffee
+      - components/notice
+      - components/side-menu
+      - components/misc/mini-map-cover.coffee
+    application-m.js:
+      - _libraries/lodash-1.3.1.min.js
+      - _libraries/socket.io.min.js
+      - _libraries/angular-loader-1.2.0rc1.min.js
+      - _libraries/angular-1.2.0rc1.min.js
+      - _libraries/angular-animate-1.2.0rc1.min.js
+      - _libraries/angular-route-1.2.0rc1.min.js
+      - _libraries/angular-route-segment-1.1.0.20130825.min.js
+      - _libraries/restangular-1.1.3.min.js
+      - application-m
+      - services
+      - views/in-m
+      - views/ot-m
+      - views/_map/map-ctrl.coffee
+      - views/_map/marker-info.coffee
+      - views/_map/mp-map-canvas.coffee
+      - views/_map/md-searchbox-input-m.coffee
+      - views/_map/placelist-ctrl-m.coffee
+      - views/_map/md-edit-project-m.coffee
+      - views/_menu/md-menu-m.coffee
+      - views/_shared/mini-map-cover.coffee
+    application-invitation.js:
+      - _libraries/lodash-1.3.1.min.js
+      - _libraries/angular-loader-1.2.0rc2.min.js
+      - _libraries/angular-1.2.0rc2.min.js
+      - _libraries/angular-animate-1.2.0rc2.min.js
+      - _libraries/restangular-1.1.3.min.js
+      - _modules/date-iso8601.coffee
+      - application-invitation
+      - services
+      - invitation-view

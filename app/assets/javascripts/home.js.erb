@@ -1,9 +1,21 @@
+<% environment.context_class.instance_eval { include ApplicationHelper } %>
+
 // --- Config ---
 require.config({
   enforceDefine: true,
   waitSeconds: 5,
   baseUrl: '/assets',
-  paths: paths, // paths is defined in index.html.erb file
+  paths: {
+    'jquery'     : ['//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min',
+                    '/js/jquery-2.0.3.min'],
+    'modernizr'  : '/js/modernizr-2.6.2.min',
+    'google.maps': '//maps.googleapis.com/maps/api/js?key=<%= $api_keys['google']['browser_app_key'] %>&libraries=places&sensor=true&callback=initGoogleMaps',
+    'facebook'   : '//connect.facebook.net/en_US/all',
+    'ipLocation' : ['http://www.geoplugin.net/json.gp?jsoncallback=define',
+                    '<%= javascript_path_without_suffix("modules/location-fallback.js") %>'],
+    'application': '<%= javascript_path_without_suffix("modules/application.js") %>',
+    'nprogress'  : '/js/nprogress-0.1.2.min'
+  },
   map: {},
   shim: {
     'modernizr': {exports: 'Modernizr'},
@@ -12,7 +24,7 @@ require.config({
       exports: 'FB',
       init: function() {
         this.FB.init({
-          appId      : fbAppId,
+          appId      : '<%= $api_keys['facebook']['app_id'] %>',
           channelUrl : location.origin + '/fb_channel.html',
           status     : true,
           cookie     : true,

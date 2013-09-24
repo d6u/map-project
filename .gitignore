@@ -50,4 +50,4 @@ logfile
 # --- Customized project files ---
 public/scripts
 public/assets
-app/assets/javascripts/*
+app/assets/javascripts/modules/*

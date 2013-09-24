@@ -4,7 +4,7 @@ class HomeController < ApplicationController
 
   # Desktop version
   def index
-    render :layout => false
+    render :layout => 'desktop'
   end
 
 
