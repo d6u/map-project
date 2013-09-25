@@ -17,7 +17,7 @@ MapProject::Application.routes.draw do
 
 
   # JSON API point
-  scope '/api' do
+  namespace :api do
 
     # --- User ---
     scope '/users' do
@@ -51,7 +51,7 @@ MapProject::Application.routes.draw do
       delete 'reject_project_invitation' => 'notifications#reject_project_invitation'
     end
 
-    resources :invitations, :only => [:index, :create, :show, :destroy]
+    resources :invitations, :only => [:index, :create, :destroy]
 
   end
 

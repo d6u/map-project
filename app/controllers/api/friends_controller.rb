@@ -1,3 +1,5 @@
+module Api
+
 class FriendsController < ApplicationController
 
   #     friends GET    /friends(.:format)           friends#index
@@ -23,5 +25,7 @@ class FriendsController < ApplicationController
       head 404
     end
   end
+
+end
 
 end

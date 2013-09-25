@@ -1,3 +1,5 @@
+module Api
+
 class PlacesController < ApplicationController
 
   #     places GET    /places(.:format)            places#index
@@ -57,5 +59,7 @@ class PlacesController < ApplicationController
     Place.destroy_all :id => params[:id]
     head 200
   end
+
+end
 
 end

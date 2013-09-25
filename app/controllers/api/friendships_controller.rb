@@ -1,3 +1,5 @@
+module Api
+
 class FriendshipsController < ApplicationController
 
   #     friendships GET    /friendships(.:format)            #index
@@ -84,5 +86,7 @@ class FriendshipsController < ApplicationController
     Friendship.destroy_all :id => params[:id]
     head 200
   end
+
+end
 
 end

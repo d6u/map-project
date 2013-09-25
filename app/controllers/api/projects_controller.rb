@@ -1,3 +1,5 @@
+module Api
+
 class ProjectsController < ApplicationController
 
   # GET     /api/projects/:project_id/participating_users  participating_users
@@ -149,5 +151,7 @@ class ProjectsController < ApplicationController
     Project.destroy_all :id => params[:id]
     render :json => []
   end
+
+end
 
 end

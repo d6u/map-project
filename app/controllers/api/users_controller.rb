@@ -1,3 +1,5 @@
+module Api
+
 class UsersController < ApplicationController
 
   # GET    /api/users/login_status    login_status
@@ -34,7 +36,7 @@ class UsersController < ApplicationController
     @user = User.find_by_fb_user_id(params[:user][:fb_user_id])
     head 404 and return if !@user
 
-    @user.fb_access_token = params[:user][:fb_access_token] if @user.fb_access_token.to_s == params[:user][:fb_access_token]
+    @user.fb_access_token = params[:user][:fb_access_token] if @user.fb_access_token.to_s != params[:user][:fb_access_token]
 
     if @user.validate_with_facebook
       @user.save if @user.changed?
@@ -155,4 +157,7 @@ class UsersController < ApplicationController
     end
   end
 
+end
+
+# END module Api
 end

@@ -1,3 +1,5 @@
+module Api
+
 class NotificationsController < ApplicationController
 
   # GET     /api/notifications                            #index
@@ -134,5 +136,7 @@ class NotificationsController < ApplicationController
     $redis.publish 'notice_channel', project_invitation_rejected.to_json
     head 200
   end
+
+end
 
 end
