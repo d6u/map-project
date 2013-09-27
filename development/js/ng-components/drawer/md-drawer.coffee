@@ -2,7 +2,7 @@ app.directive 'mdDrawer',
 ['$rootScope', '$timeout', '$routeSegment',
 ( $rootScope,   $timeout,   $routeSegment) ->
 
-  templateUrl: '/scripts/components/drawer/md-drawer.html'
+  templateUrl: '/scripts/ng-components/drawer/md-drawer.html'
   controllerAs: 'drawerCtrl'
   controller: ['$scope', '$element', ($scope, $element) ->
 

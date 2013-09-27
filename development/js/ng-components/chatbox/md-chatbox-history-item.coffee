@@ -5,11 +5,11 @@ app.directive 'mdChatboxHistoryItem',
   chooseTemplate = (type) ->
     switch type
       when 'chatMessage'
-        return '/scripts/components/chatbox/item-templates/mp-chat-history-message.html'
+        return '/scripts/ng-components/chatbox/item-templates/mp-chat-history-message.html'
       when 'userBehavior'
-        return '/scripts/components/chatbox/item-templates/mp-chat-history-user-behavior.html'
+        return '/scripts/ng-components/chatbox/item-templates/mp-chat-history-user-behavior.html'
       when 'placeAdded'
-        return '/scripts/components/chatbox/item-templates/mp-chat-history-place.html'
+        return '/scripts/ng-components/chatbox/item-templates/mp-chat-history-place.html'
 
 
   return (scope, element, attrs) ->
