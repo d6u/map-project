@@ -17,36 +17,36 @@ js:
       - _libraries/angular-route-1.2.0rc2.min.js
       - _libraries/angular-route-segment-1.2.0.min.js
       - _libraries/restangular-1.1.3.min.js
-      - _modules/date-iso8601.coffee
-      - _modules/md-bootstrap.coffee
-      - _modules/md-jquery-ui.coffee
-      - _modules/md-perfect-scrollbar.coffee
-      - _modules/md-tabset.coffee
-      - _modules/mini-typeahead.coffee
-      - _modules/md-masonry.coffee
-      - _modules/md-socket-io.coffee
-      - application
-      - services
-      - views
-      - components/bottom-bar
-      - components/chatbox
-      - components/drawer
-      - components/edit-project-modal/md-project-modal.coffee
-      - components/invitation-modal
-      - components/map/map-ctrl.coffee
-      - components/map/marker-info.coffee
-      - components/map/md-bottom-bar.coffee
-      - components/map/md-drawer.coffee
-      - components/map/md-edit-project.coffee
-      - components/map/mp-bottom-modalbox.coffee
-      - components/map/mp-center-user-location.coffee
-      - components/map/mp-map-canvas.coffee
-      - components/map/mp-map-searchbox.coffee
-      - components/map/marker-info.coffee
-      - components/map/md-project-modal.coffee
-      - components/notice
-      - components/side-menu
-      - components/misc/mini-map-cover.coffee
+      - ng-modules/date-iso8601.coffee
+      - ng-modules/md-bootstrap.coffee
+      - ng-modules/md-jquery-ui.coffee
+      - ng-modules/md-perfect-scrollbar.coffee
+      - ng-modules/md-tabset.coffee
+      - ng-modules/mini-typeahead.coffee
+      - ng-modules/md-masonry.coffee
+      - ng-modules/md-socket-io.coffee
+      - ng-app
+      - ng-services
+      - ng-views
+      - ng-components/bottom-bar
+      - ng-components/chatbox
+      - ng-components/drawer
+      - ng-components/edit-project-modal/md-project-modal.coffee
+      - ng-components/invitation-modal
+      - ng-components/map/map-ctrl.coffee
+      - ng-components/map/marker-info.coffee
+      - ng-components/map/md-bottom-bar.coffee
+      - ng-components/map/md-drawer.coffee
+      - ng-components/map/md-edit-project.coffee
+      - ng-components/map/mp-bottom-modalbox.coffee
+      - ng-components/map/mp-center-user-location.coffee
+      - ng-components/map/mp-map-canvas.coffee
+      - ng-components/map/mp-map-searchbox.coffee
+      - ng-components/map/marker-info.coffee
+      - ng-components/map/md-project-modal.coffee
+      - ng-components/notice
+      - ng-components/side-menu
+      - ng-components/misc/mini-map-cover.coffee
     application-m.js:
       - _libraries/lodash-1.3.1.min.js
       - _libraries/socket.io.min.js
@@ -56,8 +56,8 @@ js:
       - _libraries/angular-route-1.2.0rc1.min.js
       - _libraries/angular-route-segment-1.1.0.20130825.min.js
       - _libraries/restangular-1.1.3.min.js
-      - application-m
-      - services
+      - ng-app-m
+      - ng-services
       - views/in-m
       - views/ot-m
       - views/_map/map-ctrl.coffee
@@ -74,7 +74,7 @@ js:
       - _libraries/angular-1.2.0rc2.min.js
       - _libraries/angular-animate-1.2.0rc2.min.js
       - _libraries/restangular-1.1.3.min.js
-      - _modules/date-iso8601.coffee
-      - application-invitation
-      - services
-      - invitation-view
+      - ng-modules/date-iso8601.coffee
+      - ng-modules/md-collapse.coffee
+      - ng-app-invitation
+      - ng-services
