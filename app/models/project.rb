@@ -12,6 +12,9 @@ class Project < ActiveRecord::Base
                                       :through => :project_participations,
                                       :source  => :user
 
+  # invitation
+  has_many :invitations
+
 
   def places_attrs
     places = self.places

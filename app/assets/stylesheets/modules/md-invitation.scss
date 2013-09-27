@@ -1,0 +1,158 @@
+// --- Modal ---
+.md-invitation-modal {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  bottom: auto;
+  right: auto;
+  z-index: 1500;
+  @include transform(translateX(-50%) translateY(-50%));
+}
+
+.md-invitation-modal-inner {
+  background-color: white;
+  width: 700px;
+  height: 430px;
+}
+
+// --- Modal Content
+.md-invitation-modal-body {
+  padding: 20px;
+  textarea {
+    resize: none;
+    margin-bottom: 10px;
+  }
+  select {
+    margin-bottom: 10px;
+  }
+  div {
+    text-align: center;
+  }
+}
+
+.md-invitation-modal-more-options {
+  padding: 20px;
+  border-top: 1px solid $blue;
+  h5 {
+    margin-top: 0;
+    margin-bottom: 15px;
+  }
+  input[type="text"] {
+    cursor: text;
+  }
+}
+
+.md-invitation-modal-more-options-social-network {
+  margin-bottom: 15px;
+  a {
+    width: 660px / 2 - 10px;
+    &:first-child {
+      margin-right: 20px;
+    }
+  }
+}
+
+
+// --- Show ---
+.md-invitation-show {
+  display: table;
+  margin: 80px auto;
+}
+
+// -- upper part --
+.md-invitation-show-body {
+  background-color: $gray1;
+  padding: 15px;
+}
+
+// with map
+.md-invitation-show-body-with-project {
+  padding: 0;
+  min-height: 300px;
+}
+
+.md-invitation-show-body-half {
+  height: 300px;
+  width: 50%;
+  float: left;
+  &:first-child {
+    box-shadow: 1px 0 0 black;
+  }
+}
+
+.md-invitation-show-body-map {
+  height: 100%;
+  position: relative;
+  overflow: hidden;
+}
+
+.md-invitation-show-body-project-detail {
+  padding: 15px;
+
+}
+
+// without map
+.md-invitation-show-body-user-picture {
+  width: 50px;
+  height: 50px;
+  border-radius: 25px;
+  float: left;
+  margin-right: 15px;
+}
+
+.md-invitation-show-body-user-details {
+  overflow: hidden;
+}
+
+.md-invitation-show-body-user-details-name {
+  margin-bottom: 0;
+}
+
+.md-invitation-show-body-user-details-subtitle {
+  color: $gray5;
+}
+
+// lower part
+.md-invitation-show-action {
+  margin-top: 40px;
+  background-color: $gray1;
+}
+
+.md-invitation-show-action-login {
+  border-top: 1px solid $gray3;
+}
+
+.md-invitation-show-action-head {
+  padding: 15px;
+  margin-bottom: 0;
+  color: $gray6;
+  display: block;
+  &:hover {
+    text-decoration: none;
+    background-color: $blue;
+    color: white;
+  }
+}
+
+.md-invitation-show-action-body {
+  width: 600px;
+}
+
+.md-invitation-show-action-body-half {
+  text-align: center;
+  padding: 15px;
+  width: 50%;
+  float: left;
+  margin-top: 15px;
+  margin-bottom: 15px;
+  &:last-child {
+    box-shadow: -1px 0 0 $gray3;
+  }
+}
+
+.md-invitation-show-action-body-email {
+  input {
+    margin-bottom: 10px;
+  }
+}
+

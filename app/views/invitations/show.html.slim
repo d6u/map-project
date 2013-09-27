@@ -1,0 +1,25 @@
+.md-invitation-show(ng-controller="InvitationCtrl as InvitationCtrl")
+
+  - if @invitation.project
+    .md-invitation-show-body.md-invitation-show-body-with-project.clearfix
+      .md-invitation-show-body-half
+        .md-invitation-show-body-map(md-mini-map=@invitation.project.places.pluck(:coord))
+      .md-invitation-show-body-half.md-invitation-show-body-project-detail
+        img.md-invitation-show-body-user-picture(src=@invitation.user.profile_picture)
+        .md-invitation-show-body-user-details
+          .md-invitation-show-body-user-details-name.lead = @invitation.user.name
+          - if @invitation.message
+            .md-invitation-show-body-user-details-message = @invitation.message
+
+    = render 'user_actions'
+
+  - else
+    .md-invitation-show-body.clearfix
+      img.md-invitation-show-body-user-picture(src=@invitation.user.profile_picture)
+      .md-invitation-show-body-user-details
+        .md-invitation-show-body-user-details-name.lead = @invitation.user.name
+        .md-invitation-show-body-user-details-subtitle wants to invite you to join iwantmap.com
+        - if @invitation.message
+          .md-invitation-show-body-user-details-message = @invitation.message
+
+    = render 'user_actions'

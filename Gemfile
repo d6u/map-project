@@ -18,6 +18,8 @@ gem 'redis-rails', '~> 4.0.0'
 gem 'mongo'
 gem 'mongoid'    , git: 'git://github.com/mongoid/mongoid.git'
 gem 'bson_ext'
+# Template engine
+gem 'slim'
 
 # --- Development and Test ---
 gem 'awesome_print', group: [:development, :test]

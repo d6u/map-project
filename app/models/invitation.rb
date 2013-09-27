@@ -1,14 +1,15 @@
 require 'securerandom'
 
 
-class RememberLogin < ActiveRecord::Base
+class Invitation < ActiveRecord::Base
 
   belongs_to :user
+  belongs_to :project
 
   before_create :generate_code
 
   def generate_code
-    self.remember_token = SecureRandom.hex
+    self.code = SecureRandom.hex
   end
 
   private :generate_code

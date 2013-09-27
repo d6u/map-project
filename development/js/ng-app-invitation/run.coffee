@@ -1,0 +1,2 @@
+app.run(['$rootScope', ($rootScope) ->
+])
