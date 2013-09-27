@@ -16,7 +16,10 @@ require.config({
   map: {},
   shim: {
     'modernizr': {exports: 'Modernizr'},
-    'google.maps': {exports: 'google.maps'},
+    'google.maps': {
+      deps: ['google.map.loaded'],
+      exports: 'google.maps'
+    },
     'facebook': {
       exports: 'FB',
       init: function() {
@@ -40,10 +43,17 @@ require.config({
 
 // --- 3rd party libraries preparation ---
 // function to for async load google map, doesn't do anything else
-function initGoogleMaps() {}
+function initGoogleMaps() {
+  googleMapLoaded.resolve()
+}
 
 
 // --- Require ---
+define('google.map.loaded', ['jquery'], function($) {
+  this.googleMapLoaded = $.Deferred();
+  return this.googleMapLoaded;
+});
+
 // create deferred object for ip location
 define('facebookLoginChecked', ['jquery'], function($) {
   this.facebookLoginChecked = $.Deferred();
@@ -58,6 +68,8 @@ require(['facebookLoginChecked', 'facebook'], function(deferred, FB) {
 });
 
 // init, bootstrap angularjs
-define(['application', 'modernizr', 'google.maps'], function() {
-  angular.bootstrap(document, ['invitationApp']);
+define(['google.map.loaded', 'application', 'modernizr', 'google.maps'], function(g) {
+  g.then(function() {
+    angular.bootstrap(document, ['invitationApp']);
+  });
 });

@@ -1,8 +1,19 @@
-- if @invitation.project
-  .md-invitation-show
-- else
-  .md-invitation-show
+.md-invitation-show
 
+  - if @invitation.project
+    .md-invitation-show-body.md-invitation-show-body-with-project.clearfix
+      .md-invitation-show-body-half
+        .md-invitation-show-body-map(md-mini-map=@invitation.project.places.pluck(:coord))
+      .md-invitation-show-body-half.md-invitation-show-body-project-detail
+        img.md-invitation-show-body-user-picture(src=@invitation.user.profile_picture)
+        .md-invitation-show-body-user-details
+          .md-invitation-show-body-user-details-name.lead = @invitation.user.name
+          - if @invitation.message
+            .md-invitation-show-body-user-details-message = @invitation.message
+
+    = render 'user_actions'
+
+  - else
     .md-invitation-show-body.clearfix
       img.md-invitation-show-body-user-picture(src=@invitation.user.profile_picture)
       .md-invitation-show-body-user-details
@@ -11,31 +22,4 @@
         - if @invitation.message
           .md-invitation-show-body-user-details-message = @invitation.message
 
-    / --- User's Actions ---
-    .md-invitation-show-action(md-collapse)
-
-      .md-invitation-show-action-register(md-collapse-child)
-        a.md-invitation-show-action-head.lead(href md-collapse-head) Register
-        .md-invitation-show-action-body.clearfix(md-collapse-body)
-          .md-invitation-show-action-body-half
-            a.btn.btn-primary(href) Sign up with Facebook
-          .md-invitation-show-action-body-half.md-invitation-show-action-body-email
-            form.form-horizontal
-              input.form-control(type="text" placeholder="Name")
-              input.form-control(type="email" placeholder="Email")
-              input.form-control(type="password" placeholder="Password")
-              input.form-control(type="password" placeholder="Confirm password")
-              button.btn.btn-success Register
-
-      .md-invitation-show-action-login(md-collapse-child)
-        a.md-invitation-show-action-head.lead(href md-collapse-head) Login
-        .md-invitation-show-action-body.clearfix(md-collapse-body style="display: none;")
-          .md-invitation-show-action-body-half
-            a.btn.btn-primary(href) Login with Facebook
-          .md-invitation-show-action-body-half.md-invitation-show-action-body-email
-            form.form-horizontal
-              input.form-control(type="email" placeholder="Email")
-              input.form-control(type="password" placeholder="Password")
-              p.help-block
-                a(href) Forget password?
-              button.btn.btn-success Login
+    = render 'user_actions'
