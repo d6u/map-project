@@ -1,7 +1,7 @@
 app.directive 'mdBottomBar',
 [->
 
-  templateUrl: '/scripts/components/bottom-bar/md-bottom-bar.html'
+  templateUrl: '/scripts/ng-components/bottom-bar/md-bottom-bar.html'
   replace: true
   controllerAs: 'MdBottomBarCtrl'
   controller: ['$scope', 'MpNotification', class MdBottomBarCtrl

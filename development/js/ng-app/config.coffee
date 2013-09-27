@@ -40,7 +40,7 @@ app.config(['socketProvider', '$httpProvider', '$routeSegmentProvider',
 
   # ot
   .segment('ot', {
-    templateUrl:  '/scripts/views/ot/outside-view.html'
+    templateUrl:  '/scripts/ng-views/ot/outside-view.html'
     controller:   'OutsideViewCtrl'
     controllerAs: 'outsideViewCtrl'
     resolve:
@@ -50,7 +50,7 @@ app.config(['socketProvider', '$httpProvider', '$routeSegmentProvider',
 
   # in
   .segment('in', {
-    templateUrl:  '/scripts/views/in/inside-view.html'
+    templateUrl:  '/scripts/ng-views/in/inside-view.html'
     controller:   'InsideViewCtrl'
     controllerAs: 'insideViewCtrl'
     resolve:
@@ -60,25 +60,25 @@ app.config(['socketProvider', '$httpProvider', '$routeSegmentProvider',
   .within('in')
 
     .segment('dashboard', {
-      templateUrl:  '/scripts/views/dashboard/dashboard-view.html'
+      templateUrl:  '/scripts/ng-views/dashboard/dashboard-view.html'
       controller:   'DashboardViewCtrl'
       controllerAs: 'dashboardViewCtrl'
     })
 
     .segment('project', {
-      templateUrl:  '/scripts/views/project/project-view.html'
+      templateUrl:  '/scripts/ng-views/project/project-view.html'
       controller:   'ProjectViewCtrl'
       controllerAs: 'projectViewCtrl'
     })
 
     .segment('friends', {
-      templateUrl:  '/scripts/views/friends/friends-view.html'
+      templateUrl:  '/scripts/ng-views/friends/friends-view.html'
       controller:   'FriendsViewCtrl'
       controllerAs: 'friendsViewCtrl'
     })
 
     .segment('search', {
-      templateUrl:  '/scripts/views/search/search-view.html'
+      templateUrl:  '/scripts/ng-views/search/search-view.html'
       controller:   'SearchViewCtrl'
       controllerAs: 'searchViewCtrl'
     })

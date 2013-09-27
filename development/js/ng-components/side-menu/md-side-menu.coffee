@@ -2,7 +2,7 @@ app.directive 'mdSideMenu',
 ['$routeSegment', 'MpNotification', ($routeSegment, MpNotification) ->
 
   templateUrl: ->
-    if $routeSegment.startsWith('ot') then '/scripts/components/side-menu/md-side-menu-outside.html' else '/scripts/components/side-menu/md-side-menu-inside.html'
+    if $routeSegment.startsWith('ot') then '/scripts/ng-components/side-menu/md-side-menu-outside.html' else '/scripts/ng-components/side-menu/md-side-menu-inside.html'
   replace: true
   controllerAs: 'MdSideMenuCtrl'
   controller: ['$scope', 'MpUser', '$location', class MdSideMenuCtrl

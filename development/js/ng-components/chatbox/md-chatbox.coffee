@@ -2,7 +2,7 @@ app.directive 'mdChatbox',
 ['mpTemplateCache','$compile','$timeout','MpChat',
 ( mpTemplateCache,  $compile,  $timeout,  MpChat) ->
 
-  templateUrl: '/scripts/components/chatbox/md-chatbox.html'
+  templateUrl: '/scripts/ng-components/chatbox/md-chatbox.html'
   replace: true
   controllerAs: 'mdChatboxCtrl'
   controller: ['$element', '$scope', 'TheProject', class MdChatboxCtrl
