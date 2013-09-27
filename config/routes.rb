@@ -55,4 +55,7 @@ MapProject::Application.routes.draw do
 
   end
 
+  # invitations
+  get '/invitations/:code' => 'invitations#show'
+
 end

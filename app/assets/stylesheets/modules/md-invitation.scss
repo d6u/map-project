@@ -51,3 +51,81 @@
     }
   }
 }
+
+
+// --- Show ---
+.md-invitation-show {
+  display: table;
+  margin: 80px auto;
+}
+
+// upper part
+.md-invitation-show-body {
+  background-color: $gray1;
+  padding: 15px;
+}
+
+.md-invitation-show-body-user-picture {
+  width: 50px;
+  height: 50px;
+  border-radius: 25px;
+  float: left;
+  margin-right: 15px;
+}
+
+.md-invitation-show-body-user-details {
+  overflow: hidden;
+}
+
+.md-invitation-show-body-user-details-name {
+  margin-bottom: 0;
+}
+
+.md-invitation-show-body-user-details-subtitle {
+  color: $gray5;
+}
+
+// lower part
+.md-invitation-show-action {
+  margin-top: 40px;
+  background-color: $gray1;
+}
+
+.md-invitation-show-action-login {
+  border-top: 1px solid $gray3;
+}
+
+.md-invitation-show-action-head {
+  padding: 15px;
+  margin-bottom: 0;
+  color: $gray6;
+  display: block;
+  &:hover {
+    text-decoration: none;
+    background-color: $blue;
+    color: white;
+  }
+}
+
+.md-invitation-show-action-body {
+  width: 600px;
+}
+
+.md-invitation-show-action-body-half {
+  text-align: center;
+  padding: 15px;
+  width: 50%;
+  float: left;
+  margin-top: 15px;
+  margin-bottom: 15px;
+  &:last-child {
+    box-shadow: -1px 0 0 $gray3;
+  }
+}
+
+.md-invitation-show-action-body-email {
+  input {
+    margin-bottom: 10px;
+  }
+}
+
