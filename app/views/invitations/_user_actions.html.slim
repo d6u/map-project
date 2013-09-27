@@ -6,11 +6,15 @@
       .md-invitation-show-action-body-half
         a.btn.btn-primary(href) Sign up with Facebook
       .md-invitation-show-action-body-half.md-invitation-show-action-body-email
-        form.form-horizontal
-          input.form-control(type="text" placeholder="Name")
-          input.form-control(type="email" placeholder="Email")
-          input.form-control(type="password" placeholder="Password")
-          input.form-control(type="password" placeholder="Confirm password")
+        form.form-horizontal(md-form-register name="MdFormRegisterCtrl.form" md-form-success="InvitationCtrl.registerSuccess")
+          input.form-control(ng-model="MdFormRegisterCtrl.newUser.name" name="name" required type="text" placeholder="Name")
+          input.form-control(ng-model="MdFormRegisterCtrl.newUser.email" name="email" required type="email" placeholder="Email")
+          input.form-control(ng-model="MdFormRegisterCtrl.newUser.password" name="password" required type="password" placeholder="Password, at least 8 characters")
+          p.help-block
+            | {{MdFormRegisterCtrl.formMessages.passwordError}}
+          input.form-control(ng-model="MdFormRegisterCtrl.newUser.password_confirmation" name="password_confirmation" required type="password" placeholder="Confirm password")
+          p.help-block
+            | {{MdFormRegisterCtrl.formMessages.passwordConfirmationError}}
           button.btn.btn-success Register
 
   .md-invitation-show-action-login(md-collapse-child)
@@ -19,7 +23,7 @@
       .md-invitation-show-action-body-half
         a.btn.btn-primary(href) Login with Facebook
       .md-invitation-show-action-body-half.md-invitation-show-action-body-email
-        form.form-horizontal
+        form.form-horizontal(md-form-login)
           input.form-control(type="email" placeholder="Email")
           input.form-control(type="password" placeholder="Password")
           p.help-block

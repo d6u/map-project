@@ -51,6 +51,9 @@ MapProject::Application.routes.draw do
       delete 'reject_project_invitation' => 'notifications#reject_project_invitation'
     end
 
+    scope     'invitations/:code' do
+      get     'accept_invitation' => 'invitations#accept_invitation'
+    end
     resources :invitations, :only => [:index, :create, :destroy]
 
   end

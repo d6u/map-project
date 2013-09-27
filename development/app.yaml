@@ -78,4 +78,6 @@ js:
       - ng-modules/md-collapse.coffee
       - ng-app-invitation
       - ng-services
+      - ng-views-invitation
+      - ng-components/user-forms
       - ng-components/misc/md-mini-map.coffee

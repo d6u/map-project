@@ -31,8 +31,8 @@ MpUser
   callback: logout method pass success function to this method
 ###
 app.factory 'MpUser',
-['$q','$rootScope','Restangular','$location','$route','$timeout',
-( $q,  $rootScope,  Restangular,  $location,  $route,  $timeout) ->
+['$q','$rootScope','Restangular','$location','$timeout',
+( $q,  $rootScope,  Restangular,  $location,  $timeout) ->
 
   $users = Restangular.all 'users'
 
