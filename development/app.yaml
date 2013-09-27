@@ -13,11 +13,11 @@ js:
       - _libraries/socket.io.min.js
       - _libraries/angular-loader-1.2.0rc2.min.js
       - _libraries/angular-1.2.0rc2.min.js
-      - _libraries/angular-animate-1.2.0rc2.min.js
-      - _libraries/angular-route-1.2.0rc2.min.js
-      - _libraries/angular-route-segment-1.2.0.min.js
-      - _libraries/restangular-1.1.3.min.js
-      - ng-modules/date-iso8601.coffee
+      - custom-libraries/date-iso8601.coffee
+      - _ng-modules/angular-animate-1.2.0rc2.min.js
+      - _ng-modules/angular-route-1.2.0rc2.min.js
+      - _ng-modules/angular-route-segment-1.2.0.min.js
+      - _ng-modules/restangular-1.1.3.min.js
       - ng-modules/md-bootstrap.coffee
       - ng-modules/md-jquery-ui.coffee
       - ng-modules/md-perfect-scrollbar.coffee
@@ -72,9 +72,9 @@ js:
       - _libraries/lodash-1.3.1.min.js
       - _libraries/angular-loader-1.2.0rc2.min.js
       - _libraries/angular-1.2.0rc2.min.js
-      - _libraries/angular-animate-1.2.0rc2.min.js
-      - _libraries/restangular-1.1.3.min.js
-      - ng-modules/date-iso8601.coffee
+      - custom-libraries/date-iso8601.coffee
+      - _ng-modules/angular-animate-1.2.0rc2.min.js
+      - _ng-modules/restangular-1.1.3.min.js
       - ng-modules/md-collapse.coffee
       - ng-app-invitation
       - ng-services
