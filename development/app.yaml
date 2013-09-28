@@ -25,6 +25,7 @@ js:
       - ng-modules/mini-typeahead.coffee
       - ng-modules/md-masonry.coffee
       - ng-modules/md-socket-io.coffee
+      - ng-modules/md-collapse.coffee
       - ng-app
       - ng-services
       - ng-views

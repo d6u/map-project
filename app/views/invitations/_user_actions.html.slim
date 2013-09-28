@@ -1,8 +1,8 @@
-.md-invitation-show-action(md-collapse)
+.md-invitation-show-action(md-collapse ng-switch="MdCollapseCtrl.activeChild")
 
-  .md-invitation-show-action-register(md-collapse-child)
-    a.md-invitation-show-action-head.lead(href md-collapse-head) Register
-    .md-invitation-show-action-body.clearfix(md-collapse-body)
+  .md-invitation-show-action-register(ng-class="{'active': MdCollapseCtrl.activeChild == 0}")
+    a.md-invitation-show-action-head.lead(href ng-click="MdCollapseCtrl.activeChild = 0") Register
+    .md-invitation-show-action-body.md-collapse-body-js.clearfix(ng-switch-when="0")
       .md-invitation-show-action-body-half
         a.btn.btn-primary(href) Sign up with Facebook
       .md-invitation-show-action-body-half.md-invitation-show-action-body-email
@@ -17,9 +17,9 @@
             | {{MdFormRegisterCtrl.formMessages.passwordConfirmationError}}
           button.btn.btn-success Register
 
-  .md-invitation-show-action-login(md-collapse-child)
-    a.md-invitation-show-action-head.lead(href md-collapse-head) Login
-    .md-invitation-show-action-body.clearfix(md-collapse-body style="display: none;")
+  .md-invitation-show-action-login(ng-class="{'active': MdCollapseCtrl.activeChild == 1}")
+    a.md-invitation-show-action-head.lead(href ng-click="MdCollapseCtrl.activeChild = 1") Login
+    .md-invitation-show-action-body.md-collapse-body-js.clearfix(ng-switch-when="1" style="display: none;")
       .md-invitation-show-action-body-half
         a.btn.btn-primary(href) Login with Facebook
       .md-invitation-show-action-body-half.md-invitation-show-action-body-email
