@@ -9,10 +9,6 @@ class User < ActiveRecord::Base
   APP_SECRET   = $api_keys['facebook']['app_secret']
 
 
-  # --- Attrs ---
-  attr_accessor :password
-
-
   # login, remember logins, forget password
   has_many :remember_logins      , dependent: :destroy
   has_many :reset_password_tokens, dependent: :destroy
@@ -44,6 +40,21 @@ class User < ActiveRecord::Base
 
   # invitation
   has_many :invitations, dependent: :destroy
+
+
+  # --- Attrs ---
+  attr_accessor :password
+  attr_accessor :password_confirmation
+
+
+  # --- Validations ---
+  EMAIL_REGEX = /\A[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}\z/i
+  validates :name,          presence: true
+  validates :email,         uniqueness: {case_sensitive: false}, format: {with: EMAIL_REGEX}, allow_nil: true
+  validates :fb_user_id,    presence: true, uniqueness: {case_sensitive: false}, unless: Proc.new {|a| a.fb_access_token.nil?}
+  validates :password,      confirmation: true, length: {minimum: 8}, allow_nil: true
+  validates :password_hash, presence: true, unless: Proc.new {|a| a.password_salt.nil?}
+  validates :password_salt, presence: true, unless: Proc.new {|a| a.password_hash.nil?}
 
 
   # --- Facebook Login ---
