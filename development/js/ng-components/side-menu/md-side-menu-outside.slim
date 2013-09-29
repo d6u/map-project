@@ -38,13 +38,17 @@
         a.md-side-menu-outside-block-btn-fb(href ng-click="outsideViewCtrl.loginWithFacebook()") Login with Facebook
         .md-side-menu-or-separator
           div OR
-        form.form-horizontal(name="MdSideMenuCtrl.loginForm" ng-submit="MdSideMenuCtrl.loginUser()")
-          input.md-side-menu-outside-input(type="email" name="email" placeholder="Email" ng-model="MdSideMenuCtrl.loginFormData.email" required)
-          input.md-side-menu-outside-input(type="password" name="password" placeholder="Password" ng-model="MdSideMenuCtrl.loginFormData.password" required)
+        form(md-form-login md-form-success="MdSideMenuCtrl.loginUser" name="MdFormLoginCtrl.form" ng-submit="MdFormLoginCtrl.submit()")
+          input.md-side-menu-outside-input(name="email" ng-model="MdFormLoginCtrl.user.email" required type="email" placeholder="Email")
+          p
+            | {{MdFormLoginCtrl.formMessages.emailError}}
+          input.md-side-menu-outside-input(name="password" ng-model="MdFormLoginCtrl.user.password" required type="password" ng-minlength="8" ng-trim="false" placeholder="Password")
+          p
+            | {{MdFormLoginCtrl.formMessages.passwordError}}
           .checkbox
             label
-              input(type="checkbox" ng-model="MdSideMenuCtrl.loginFormData.remember_me")
-              |  Remember me on this computer
+              input(ng-model="MdFormLoginCtrl.user.remember_me" type="checkbox")
+              |  Remember me
           button.md-side-menu-outside-block-btn-submit Login
           p.help-block
             a(href) Forget your password?

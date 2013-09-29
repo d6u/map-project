@@ -148,10 +148,13 @@
   &:last-child {
     box-shadow: -1px 0 0 $gray3;
   }
+  .checkbox {
+    text-align: left;
+  }
 }
 
 .md-invitation-show-action-body-email {
-  input {
+  form > input {
     @extend .form-control;
     margin-bottom: 10px;
   }

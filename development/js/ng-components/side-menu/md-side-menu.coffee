@@ -10,15 +10,14 @@ app.directive 'mdSideMenu',
     constructor: ($scope, MpUser, $location) ->
       # --- Outside ---
       @outsideActiveSection = 'register'
-      @registerFormData = {}
+
       @registerUser = (userData) ->
         MpUser.emailRegister userData, ->
           $location.path '/dashboard'
 
-      @loginUser = ->
-        if @loginForm.$valid
-          MpUser.emailLogin @loginFormData, ->
-            $location.path '/dashboard'
+      @loginUser = (userData) ->
+        MpUser.emailLogin userData, ->
+          $location.path '/dashboard'
 
 
       # --- Remove No Action Required Notice when Side Menu is Open ---
