@@ -6,16 +6,20 @@
       .md-invitation-show-action-body-half
         a.btn.btn-primary(href) Sign up with Facebook
       .md-invitation-show-action-body-half.md-invitation-show-action-body-email
-        form.form-horizontal(md-form-register name="MdFormRegisterCtrl.form" md-form-success="InvitationCtrl.registerSuccess")
-          input.form-control(ng-model="MdFormRegisterCtrl.newUser.name" name="name" required type="text" placeholder="Name")
-          input.form-control(ng-model="MdFormRegisterCtrl.newUser.email" name="email" required type="email" placeholder="Email")
-          input.form-control(ng-model="MdFormRegisterCtrl.newUser.password" name="password" required type="password" placeholder="Password, at least 8 characters")
-          p.help-block
+        form(md-form-register md-form-success="MdSideMenuCtrl.registerUser" name="MdFormRegisterCtrl.form" ng-submit="MdFormRegisterCtrl.submit()")
+          input(name="name" ng-model="MdFormRegisterCtrl.newUser.name" required type="text" placeholder="Name")
+          p(ng-cloak)
+            | {{MdFormRegisterCtrl.formMessages.nameError}}
+          input(name="email" ng-model="MdFormRegisterCtrl.newUser.email" required type="email" ng-change="" placeholder="Email")
+          p(ng-cloak)
+            | {{MdFormRegisterCtrl.formMessages.emailError}}
+          input(name="password" ng-model="MdFormRegisterCtrl.newUser.password" required type="password" ng-minlength="8" ng-trim="false" placeholder="Password, at least 8 characters")
+          p(ng-cloak)
             | {{MdFormRegisterCtrl.formMessages.passwordError}}
-          input.form-control(ng-model="MdFormRegisterCtrl.newUser.password_confirmation" name="password_confirmation" required type="password" placeholder="Confirm password")
-          p.help-block
+          input(name="password_confirmation" ng-model="MdFormRegisterCtrl.newUser.password_confirmation" required type="password" ng-trim="false" placeholder="Confirm password")
+          p(ng-cloak)
             | {{MdFormRegisterCtrl.formMessages.passwordConfirmationError}}
-          button.btn.btn-success Register
+          button Register
 
   .md-invitation-show-action-login(ng-class="{'active': MdCollapseCtrl.activeChild == 1}")
     a.md-invitation-show-action-head.lead(href ng-click="MdCollapseCtrl.activeChild = 1") Login

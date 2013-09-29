@@ -152,7 +152,16 @@
 
 .md-invitation-show-action-body-email {
   input {
+    @extend .form-control;
     margin-bottom: 10px;
+  }
+  p {
+    @extend .help-block;
+    color: $red;
+  }
+  button {
+    @extend .btn;
+    @extend .btn-success;
   }
 }
 

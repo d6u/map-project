@@ -16,15 +16,19 @@
         a.md-side-menu-outside-block-btn-fb(href ng-click="outsideViewCtrl.loginWithFacebook()") Sign up with Facebook
         .md-side-menu-or-separator
           div OR
-        form.form-horizontal(name="MdSideMenuCtrl.registerForm" ng-submit="MdSideMenuCtrl.registerUser()")
-          input.md-side-menu-outside-input(type="text" placeholder="Your name" ng-model="MdSideMenuCtrl.registerFormData.name" required)
-          input.md-side-menu-outside-input(type="email" name="email" placeholder="Email" ng-model="MdSideMenuCtrl.registerFormData.email" required)
-          input.md-side-menu-outside-input(type="password" name="password" placeholder="Password, at least 8 characters" ng-model="MdSideMenuCtrl.registerFormData.password" required)
-          p.help-block
-            | {{MdSideMenuCtrl.registerForm.passwordError}}
-          input.md-side-menu-outside-input(type="password" placeholder="Confirm your password" ng-model="MdSideMenuCtrl.registerFormData.password_confirmation" required)
-          p.help-block
-            | {{MdSideMenuCtrl.registerForm.passwordConfirmationError}}
+        form(md-form-register md-form-success="MdSideMenuCtrl.registerUser" name="MdFormRegisterCtrl.form" ng-submit="MdFormRegisterCtrl.submit()")
+          input.md-side-menu-outside-input(name="name" ng-model="MdFormRegisterCtrl.newUser.name" required type="text" placeholder="Your name")
+          p.md-side-menu-outside-form-error
+            | {{MdFormRegisterCtrl.formMessages.nameError}}
+          input.md-side-menu-outside-input(name="email" ng-model="MdFormRegisterCtrl.newUser.email" required type="email" ng-change="" placeholder="Email")
+          p.md-side-menu-outside-form-error
+            | {{MdFormRegisterCtrl.formMessages.emailError}}
+          input.md-side-menu-outside-input(name="password" ng-model="MdFormRegisterCtrl.newUser.password" required type="password" ng-minlength="8" ng-trim="false" placeholder="Password, at least 8 characters")
+          p.md-side-menu-outside-form-error
+            | {{MdFormRegisterCtrl.formMessages.passwordError}}
+          input.md-side-menu-outside-input(name="password_confirmation" ng-model="MdFormRegisterCtrl.newUser.password_confirmation" required type="password" ng-trim="false" placeholder="Confirm your password")
+          p.md-side-menu-outside-form-error
+            | {{MdFormRegisterCtrl.formMessages.passwordConfirmationError}}
           button.md-side-menu-outside-block-btn-submit Register
 
     .md-side-menu-login(ng-class="{'active': MdCollapseCtrl.activeChild == 1}")

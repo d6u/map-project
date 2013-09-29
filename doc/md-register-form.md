@@ -4,16 +4,23 @@
 
 Minimum markup (using Slim):
 
-    form(md-form-register name="MdFormRegisterCtrl.form" md-form-success="")
-      input(ng-model="MdFormRegisterCtrl.newUser.name"     name="name"     required type="text")
-      input(ng-model="MdFormRegisterCtrl.newUser.email"    name="email"    required type="email")
-      input(ng-model="MdFormRegisterCtrl.newUser.password" name="password" required type="password")
-      p.help-block
+    form(md-form-register md-form-success="{method name}" name="MdFormRegisterCtrl.form" ng-submit="MdFormRegisterCtrl.submit()")
+      input(name="name" ng-model="MdFormRegisterCtrl.newUser.name" required type="text")
+      p
+        | {{MdFormRegisterCtrl.formMessages.nameError}}
+      input(name="email" ng-model="MdFormRegisterCtrl.newUser.email" required type="email" ng-change="")
+      p
+        | {{MdFormRegisterCtrl.formMessages.emailError}}
+      input(name="password" ng-model="MdFormRegisterCtrl.newUser.password" required type="password" ng-minlength="8" ng-trim="false")
+      p
         | {{MdFormRegisterCtrl.formMessages.passwordError}}
-      input(ng-model="MdFormRegisterCtrl.newUser.password_confirmation" name="password_confirmation" required type="password")
-      p.help-block
+      input(name="password_confirmation" ng-model="MdFormRegisterCtrl.newUser.password_confirmation" required type="password" ng-trim="false")
+      p
         | {{MdFormRegisterCtrl.formMessages.passwordConfirmationError}}
       button Register
 
-1. `help-block`: optional, but can be used to display error messages
-2. `md-form-success`: the name of function registered on current scope, this will be called with `user` object returned from server as argument after form successful submitted
+## Details
+
+- `p` tag is optional, but can be used to display error messages
+- `md-form-success` attribute should be a method name that take a user object as an argument
+- The form itself only validate and display error. Once the form is valid, the object contains user data will be passed to method defined in `md-form-success`

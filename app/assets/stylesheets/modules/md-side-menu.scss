@@ -92,6 +92,11 @@
   margin-bottom: 10px;
 }
 
+.md-side-menu-outside-form-error {
+  @extend .help-block;
+  color: $red;
+}
+
 // login section
 .md-side-menu-login {
   .checkbox {

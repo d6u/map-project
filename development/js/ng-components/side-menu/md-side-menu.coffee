@@ -11,24 +11,9 @@ app.directive 'mdSideMenu',
       # --- Outside ---
       @outsideActiveSection = 'register'
       @registerFormData = {}
-      @registerUser = ->
-        valid = true
-
-        if @registerFormData.password.length < 8
-          @registerForm.passwordError = 'Password has to be ast 8 characters.'
-          valid = false
-        else
-          @registerForm.passwordError = ''
-
-        if @registerFormData.password != @registerFormData.password_confirmation
-          @registerForm.passwordConfirmationError = 'Password confirmation does not match password.'
-          valid = false
-        else
-          @registerForm.passwordConfirmationError = ''
-
-        if valid && @registerForm.$valid
-          MpUser.emailRegister @registerFormData, ->
-            $location.path '/dashboard'
+      @registerUser = (userData) ->
+        MpUser.emailRegister userData, ->
+          $location.path '/dashboard'
 
       @loginUser = ->
         if @loginForm.$valid
