@@ -1,15 +1,11 @@
 .md-side-menu {
   background-color: white;
   overflow-x: hidden;
-  overflow-y: hidden;
-}
-
-// --- Outside ---
-.md-side-menu-outside-inner {
   overflow-y: auto;
   height: 100%;
 }
 
+// --- Outside ---
 .md-side-menu-header {
   padding: 20px;
   border-bottom: 1px solid $gray3;
@@ -29,10 +25,17 @@
   padding: 20px;
   display: block;
   color: inherit;
-  cursor: default;
   &:hover {
     text-decoration: none;
+    color: white;
+    background-color: $blue;
+  }
+}
+.active .md-side-menu-outside-section-head {
+  cursor: default;
+  &:hover {
     color: inherit;
+    background-color: #fff;
   }
 }
 
@@ -46,11 +49,20 @@
   margin: 0;
 }
 
-.md-side-menu-outside-block-button {
+%md-side-menu-outside-block-btn {
+  @extend .btn;
   display: block;
   margin-left: auto;
   margin-right: auto;
   width: 250px;
+}
+.md-side-menu-outside-block-btn-fb {
+  @extend .btn-primary;
+  @extend %md-side-menu-outside-block-btn;
+}
+.md-side-menu-outside-block-btn-submit {
+  @extend .btn-success;
+  @extend %md-side-menu-outside-block-btn;
 }
 
 .md-side-menu-or-separator {
@@ -72,7 +84,13 @@
 }
 
 .md-side-menu-outside-input {
+  @extend .form-control;
   margin-bottom: 10px;
+}
+
+.md-side-menu-outside-form-error {
+  @extend .help-block;
+  color: $red;
 }
 
 // login section
@@ -82,46 +100,6 @@
   }
 }
 
-// animation
-.md-side-menu-outside-section-collapsed-add,
-.md-side-menu-outside-section-collapsed-remove {
-  @include transition();
-}
-
-.md-side-menu-outside-section-collapsed-add {
-  height: 386px;
-  overflow: hidden;
-  &.md-side-menu-outside-section-collapsed-add-active {
-    height: 66px;
-  }
-}
-
-.md-side-menu-outside-section-collapsed-remove {
-  height: 66px;
-  overflow: hidden;
-  &.md-side-menu-outside-section-collapsed-remove-active {
-    height: 386px;
-    .md-side-menu-outside-section-head {
-      &:hover {
-        cursor: default;
-        background-color: white;
-        color: inherit;
-      }
-    }
-  }
-}
-
-.md-side-menu-outside-section-collapsed {
-  height: 66px;
-  overflow: hidden;
-  .md-side-menu-outside-section-head {
-    &:hover {
-      cursor: pointer;
-      background-color: $blue;
-      color: white;
-    }
-  }
-}
 
 // --- User ---
 .md-side-menu-user {

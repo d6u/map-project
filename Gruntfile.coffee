@@ -90,6 +90,17 @@ module.exports = (grunt) ->
           ext:  '.html'
         }]
 
+    # --- Slim ---
+    slim:
+      development:
+        files: [{
+          expand: true
+          cwd:  '<%= compileSettings.js["source folder"] %>'
+          src:  '**/*.slim'
+          dest: 'public/scripts'
+          ext:  '.html'
+        }]
+
     # --- Coffee ---
     coffee:
       options:
@@ -115,6 +126,7 @@ module.exports = (grunt) ->
         files: [
           '<%= compileSettings.js["source folder"] %>' + '/**/*.html'
           '<%= compileSettings.js["source folder"] %>' + '/**/*.jade'
+          '<%= compileSettings.js["source folder"] %>' + '/**/*.slim'
           '<%= compileSettings.js["source folder"] %>' + '/**/*.js'
           '<%= compileSettings.js["source folder"] %>' + '/**/*.coffee'
         ]
@@ -128,6 +140,7 @@ module.exports = (grunt) ->
   grunt.loadNpmTasks('grunt-contrib-coffee')
   grunt.loadNpmTasks('grunt-contrib-concat')
   grunt.loadNpmTasks('grunt-contrib-watch')
+  grunt.loadNpmTasks('grunt-slim')
 
   # Dynamic task config
   # ----------------------------------------
@@ -160,6 +173,7 @@ module.exports = (grunt) ->
     'copy:js'
     'copy:tmp'
     'jade:development'
+    'slim:development'
     'coffee:development'
     'update-config-after-tmp-ready'
     'concat:development'
@@ -174,6 +188,7 @@ module.exports = (grunt) ->
     'copy:js'
     'copy:tmp'
     'jade:development'
+    'slim:development'
     'coffee:development'
     'update-config-after-tmp-ready'
     'concat:development'

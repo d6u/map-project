@@ -1,0 +1,43 @@
+/ Container: .ly-application
+.ly-pusher(ng-class="{'ly-pusher-pushed': interface.showUserSection}")
+
+  / Pusher side
+  section.ly-pusher-side
+    div(md-side-menu)
+
+  / Pusher body
+  section.ly-pusher-content
+
+    / --- Homepage ---
+    .md-homepage(ng-class="{'md-homepage-fadeout': outsideViewCtrl.hideHomepage}")
+      .md-homepage-content
+        .md-homepage-content-cover
+          header.md-homepage-brand iWantMap
+
+          .md-homepage-body
+            h1.md-homepage-h1 Why is creating a travel plan with friends so hard?
+            h4
+              ' Not any more!
+              a.md-homepage-linktoreason(href md-section-jumper=".md-homepage-content" md-section-jumper-target=".md-homepage-intro-bg" ng-click="outsideViewCtrl.showScreenShot()") Why is that?
+
+        .md-homepage-content-intro
+          .md-homepage-intro-bg
+
+      .md-homepage-bottom-nav-bar
+        a.md-homepage-bottom-nav-bar-try-button(href ng-click="outsideViewCtrl.hideHomepage = true") Give a try
+        a.md-homepage-bottom-nav-bar-fb-button(href ng-click="outsideViewCtrl.loginWithFacebook()") Login with Facebook
+        a.md-homepage-bottom-nav-bar-login-btn(href ng-click="interface.showUserSection = true") Login/Register
+
+
+    / --- Map ---
+    .ly-fullscreen(ng-controller="MapCtrl as mapCtrl")
+      div(md-bottom-bar)
+      .md-map
+        .md-map-canvas(mp-map-canvas)
+        .md-drawer.clearfix(md-drawer ng-class="{'md-drawer-double-size': projectViewCtrl.activeSection == 'both', 'md-drawer-show': projectViewCtrl.showDrawer}")
+        .md-modal.md-effect-3.md-map-modal(md-project-modal ng-class="{'md-modal-show': mdProjectModalCtrl.showModal}")
+        .md-modal-overlay.md-map-modal-overlay
+
+
+  / --- Pusher overlay ---
+  .ly-pusher-overlay(ng-click="interface.showUserSection = false")

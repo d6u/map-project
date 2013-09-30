@@ -4,6 +4,15 @@ class Friendship < ActiveRecord::Base
   belongs_to :friend, :class_name => "User", :foreign_key => "friend_id"
 
 
+  # --- Validations ---
+  validates :user_id, :friend_id, :status, presence: true
+  validates :friend_id, uniqueness: {scope: :user_id}
+
+  validates_each :user_id, :friend_id, if: Proc.new {|a| !a.new_record?} do |record, attr, value|
+    record.errors[attr] << 'cannot be changed' if record.changed.include? attr.to_s
+  end
+
+
   <<-DOC
   Used to generate friendship record with a reversed order of user_id and
     friend_id from current one, with the same status. This method is only used

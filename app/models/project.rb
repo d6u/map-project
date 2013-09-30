@@ -16,6 +16,10 @@ class Project < ActiveRecord::Base
   has_many :invitations
 
 
+  # --- Validations ---
+  validates :title, :owner_id, presence: true
+
+
   def places_attrs
     places = self.places
     places_coords = places.map {|place| place.coord}

@@ -29,4 +29,4 @@ MapProject::Application.configure do
 end
 
 
-Slim::Engine.set_default_options pretty: true, sort_attrs: false
+Slim::Engine.set_default_options sort_attrs: false

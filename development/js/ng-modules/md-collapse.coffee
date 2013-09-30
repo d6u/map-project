@@ -1,46 +1,26 @@
-angular.module('md-collapse', [])
+angular.module('md-collapse', ['ngAnimate'])
 
 # --- collapse ---
 .directive('mdCollapse', [->
+  controllerAs: 'MdCollapseCtrl'
   controller: [class MdCollapseCtrl
     constructor: ->
       @activeChild = 0
   ]
   link: (scope, element, attrs) ->
-
 ])
 
-# --- children ---
-.directive('mdCollapseChild', [->
-  controller: [class MdCollapseChildCtrl
-    constructor: ->
-  ]
-  require: ['^mdCollapse', 'mdCollapseChild']
-  link: (scope, element, attrs, Ctrls) ->
-    Ctrls[1].index = element.index()
-    scope.$watch (->
-      Ctrls[0].activeChild
-    ), (newVal) ->
-      if newVal != undefined
-        Ctrls[1].showBody = (newVal == element.index())
-])
+# --- slide down/up ---
+.animation '.md-collapse-body-js', ->
+  return {
+    enter: (element, done) ->
+      element.css({display: 'none'})
+      element.slideDown 100, done
+      return ->
+        element.stop()
+    leave: (element, done) ->
+      element.slideUp 100, done
+      return ->
+        element.stop()
+  }
 
-# --- head of child ---
-.directive('mdCollapseHead', [->
-  require: ['^mdCollapse', '^mdCollapseChild']
-  link: (scope, element, attrs, Ctrls) ->
-    element.on 'click', ->
-      scope.$apply ->
-        Ctrls[0].activeChild = Ctrls[1].index
-])
-
-# --- body of child ---
-.directive('mdCollapseBody', [->
-  require: '^mdCollapseChild'
-  link: (scope, element, attrs, MdCollapseChildCtrl) ->
-    scope.$watch (->
-      MdCollapseChildCtrl.showBody
-    ), (newVal) ->
-      if newVal != undefined
-        if newVal then element.slideDown() else element.slideUp()
-])
