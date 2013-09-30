@@ -16,6 +16,7 @@ app = angular.module('mapApp', [
   'md-masonry',
   'md-socket-io',
   'md-collapse'
+  'md-section-jumper'
 
   # Application modules that have to run before `.config`
 ])

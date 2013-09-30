@@ -4,10 +4,6 @@ app.controller 'OutsideViewCtrl',
   constructor: ($scope, MpUser, TheProject, MpProjects, $q, $location) ->
     @hideHomepage = false
 
-    @showScreenShot = ->
-      # TODO: move out of controller
-      $('.md-homepage-content').animate({scrollTop: $('.md-homepage-intro-bg').offset().top}, 200)
-
     @loginWithFacebook = ->
       # if has unsaved places
       if TheProject.places.length
