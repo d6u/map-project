@@ -1,20 +1,5 @@
-# mp-map-searchbox
-# ----------------------------------------
 app.directive 'mpMapSearchbox', [->
-
-  controllerAs: 'mpMapSearchboxCtrl'
-  controller: ['$scope', class MpMapSearchboxCtrl
-
-    constructor: ($scope) ->
-      @typeaheadOptions =
-        listClass:     'cp-typeahead'
-        cursorOnClass: 'cp-typeahead-cursor-on'
-
-      @hideHomepage = ->
-        if !$scope.outsideViewCtrl.hideHomepage
-          $scope.outsideViewCtrl.hideHomepage = true
-  ]
-  link: (scope, element, attrs) ->
+  (scope, element, attrs) ->
 
     # events
     # ----------------------------------------

@@ -25,38 +25,31 @@ attrs:
 angular.module('mini-typeahead', [])
 
 # ----------------------------------------
-.directive('miniTypeahead',
-['$compile',
-( $compile)->
+.directive('miniTypeahead', ['$compile', ($compile) ->
 
   priority: -1
-  controller: ['$scope', '$attrs', ($scope, $attrs) ->
+  controller: ['$scope', '$attrs', class MiniTypeaheadCtrl
+    constructor: ($scope, $attrs) ->
 
-    # Default options
-    @options = {
-      watches: []
-      watchResize: true
+      @options = _.assign {
+        # default options
+        watches: []
+        watchResize: true
 
-      # when true, mini-typeahead will adjust the postion of dropdown/up menu on
-      # every $digest cycle
-      watchPosition: true
+        # when true, mini-typeahead will adjust the postion of dropdown/up menu on
+        # every $digest cycle
+        watchPosition: true
 
-      # provide a selector to select the container for dropdown/up menu to append
-      # by default, menu will append to the parent of current element
-      appendTo: null
+        # provide a selector to select the container for dropdown/up menu to append
+        # by default, menu will append to the parent of current element
+        appendTo: null
 
-      listClass: ''
-      itemClass: ''
-      cursorOnClass: ''
-    }
-
-    return
+        listClass: ''
+        itemClass: ''
+        cursorOnClass: ''
+      }, $scope.$eval($attrs.miniTypeahead)
   ]
   link: (scope, element, attrs, MiniTypeaheadCtrl) ->
-
-    # Read options and merge with defaults
-    customeOptions = scope.$eval(attrs.miniTypeahead)
-    MiniTypeaheadCtrl.options = angular.extend(MiniTypeaheadCtrl.options, customeOptions)
 
     # Create new scope for mini-typeahead-dropmenu
     menuScope = scope.$new()
@@ -86,9 +79,7 @@ angular.module('mini-typeahead', [])
     cursorOnClass = scope.MiniTypeaheadCtrl.options.cursorOnClass
 
     # Give some default style to element
-    element.css({
-      position: 'absolute'
-    })
+    element.css({position: 'absolute'})
 
     # Adjust menu position and dimension based on inputElement
     scope.$watch (() ->

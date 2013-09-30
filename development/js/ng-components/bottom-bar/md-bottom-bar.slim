@@ -1,0 +1,48 @@
+/ replace: true
+
+
+.md-bottom-bar
+  .md-bottom-bar-button-group
+    / show side menu
+    a.md-bottom-bar-button.md-bottom-bar-notification-button(href ng-click="interface.showUserSection = true")
+      i.icon-reorder
+      .md-bottom-bar-notification-count(ng-show="mdNoticePop.unreadNotice" ng-cloak="") {{mdNoticePop.unreadNotice}}
+
+    / search input
+    input.md-bottom-bar-input(mp-map-searchbox mini-typeahead="{listClass: 'cp-typeahead', cursorOnClass: 'cp-typeahead-cursor-on'}" mini-typeahead-list="mapCtrl.placePredictions" ng-model="mapCtrl.searchboxInput" ng-change="mapCtrl.getQueryPredictions()" type="text" placeholder="Search place name")
+
+  .md-bottom-bar-button-group-center
+    / show drawer
+    a.md-bottom-bar-button(href="" ng-click="projectViewCtrl.showDrawer = !projectViewCtrl.showDrawer")
+      i.icon-caret-up
+
+  .md-bottom-bar-button-group
+    .md-bottom-bar-button-padding
+
+    / toggle direction
+    a.md-bottom-bar-button(href="" ng-click="mapCtrl.toggleDirections()")
+      i.icon-location-arrow
+    / display all markers
+    a.md-bottom-bar-button(href="" ng-click="drawerCtrl.displayAllMarkers()")
+      i.icon-globe
+
+    .md-bottom-bar-button-padding
+
+    / edit project detail
+    a.md-bottom-bar-button(href="" ng-click="mdProjectModalCtrl.bodyContent = 'editDetail'; mdProjectModalCtrl.showModal = true")
+      i.icon-edit-sign
+    / management participants
+    a.md-bottom-bar-button(href="" ng-click="mdProjectModalCtrl.bodyContent = 'manageFriends'; mdProjectModalCtrl.showModal = true")
+      i.icon-group
+    / add user to this project
+    a.md-bottom-bar-button(href="" ng-click="mdProjectModalCtrl.addFriendsSection = 'all'; mdProjectModalCtrl.bodyContent = 'inviteFriends'; mdProjectModalCtrl.showModal = true")
+      i.icon-plus
+    / share
+    a.md-bottom-bar-button(href)
+      i.icon-share
+
+    .md-bottom-bar-button-padding
+
+    / show chatbox
+    a.md-bottom-bar-button.md-bottom-bar-button-chatbox(href ng-click="projectViewCtrl.showChatbox = !projectViewCtrl.showChatbox" ng-class="{'md-bottom-bar-button-highlight': projectViewCtrl.showChatbox}")
+      i.icon-comments
