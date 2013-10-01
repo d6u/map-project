@@ -3,7 +3,6 @@
 ## API
 
 1. fbLogin([success][, error])
-
     - success: (function, optional)
     - error: (function, optional)
 
@@ -28,5 +27,4 @@
 1. $$user - property
 2. $$fbLoginSuccess(authResponse[, success])
 3. $$getLoginStatus([loginCallback][, notLoginCallback])
-
     - loginCallback(user): (function, options)

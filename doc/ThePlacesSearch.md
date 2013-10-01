@@ -3,12 +3,10 @@
 ## API
 
 1. getSearchPredictions(input)
-
     - input: (String) string which search prediction will be based on
     - return: (Promise) resolve into an array of predictions
 
 2. searchPlacesWith(query)
-
     - query: (String) search term
     - return: (Promise) places array
 
