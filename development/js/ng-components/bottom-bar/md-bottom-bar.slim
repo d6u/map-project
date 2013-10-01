@@ -9,7 +9,7 @@
       .md-bottom-bar-notification-count(ng-show="mdNoticePop.unreadNotice" ng-cloak="") {{mdNoticePop.unreadNotice}}
 
     / search input
-    input.md-bottom-bar-input(mp-map-searchbox mini-typeahead="{listClass: 'cp-typeahead', cursorOnClass: 'cp-typeahead-cursor-on'}" mini-typeahead-list="mapCtrl.placePredictions" ng-model="mapCtrl.searchboxInput" ng-change="mapCtrl.getQueryPredictions()" type="text" placeholder="Search place name")
+    input.md-bottom-bar-input(md-map-searchbox mini-typeahead="{listClass: 'cp-typeahead', cursorOnClass: 'cp-typeahead-cursor-on'}" mini-typeahead-list="MdMapSearchBoxCtrl.placePredictions" ng-model="MdMapSearchBoxCtrl.searchboxInput" ng-change="MdMapSearchBoxCtrl.getQueryPredictions()" type="text" placeholder="Search place name")
 
   .md-bottom-bar-button-group-center
     / show drawer

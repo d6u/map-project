@@ -4,11 +4,9 @@ app.factory 'TheMap',
 
   class TheMap
     constructor: ->
-      @$infoWindow           = new google.maps.InfoWindow()
-      @$autocompleteService  = new google.maps.places.AutocompleteService()
-      @$placesService        = undefined # placeholder
-      @$directionsService    = new google.maps.DirectionsService()
-      @$directionsRenderer   = new google.maps.DirectionsRenderer({
+      @$infoWindow         = new google.maps.InfoWindow
+      @$directionsService  = new google.maps.DirectionsService
+      @$directionsRenderer = new google.maps.DirectionsRenderer({
         # options
         polylineOptions:
           strokeColor: '977ADC'
@@ -34,7 +32,11 @@ app.factory 'TheMap',
         scope.$on '$destroy', =>
           @destroy()
 
+        @trigger 'initialized'
+
       @destroy = ->
+        delete @$googleMap
+        @trigger 'destroyed'
 
       # --- API ---
       @addMarkersOnMap = (markers, fitBounds) ->
@@ -56,42 +58,20 @@ app.factory 'TheMap',
         marker.setMap(null) for marker in @$markers
         @$markers = []
 
-      # return promise
-      #   resolve: predictions
-      #   reject: google service status
-      @getSearchPredictions = (input) ->
-        gotPredictions = $q.defer()
-        @$autocompleteService.getQueryPredictions {
-          bounds: @$googleMap.getBounds()
-          input:  input
-        }, (predictions, status) ->
-          if status == google.maps.DirectionsStatus.OK
-            gotPredictions.resolve(predictions)
-          else
-            gotPredictions.reject(status)
-        gotPredictions.promise
-
-      # return promise
-      #   resolve: search results
-      #   reject: google service status
-      @searchPlacesWith = (query) ->
-        gotResults = $q.defer()
-        @$placesService ?= new google.maps.places.PlacesService(@$googleMap)
-        @$placesService.textSearch {
-          bounds: @$googleMap.getBounds()
-          query:  query
-        }, (results, status) ->
-          if status == google.maps.DirectionsStatus.OK
-            gotResults.resolve(results)
-          else
-            gotResults.reject(status)
-        gotResults.promise
-
       @setMapCenter = (latLng) ->
         @$googleMap.setCenter(latLng)
 
       @setMapBounds = (bounds) ->
         @$googleMap.fitBounds(bounds)
+
+      @getMap = ->
+        @$googleMap
+
+  # --- END TheMap class ---
+
+
+  # extending EventEmitter onto TheMap without changing CoffeeScript syntax
+  _.assign TheMap.prototype, EventEmitter.prototype
 
 
   # --- END ---
