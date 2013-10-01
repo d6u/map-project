@@ -39,6 +39,18 @@
 
     - return: (google.maps.Map) return `undefined` if no map instance
 
+9. bindInfoWindowToMarker(marker, options)
+
+    - marker: (google.maps.Marker)
+    - options: (Object, must contain `content` property) `content` property is used to set content for infoWindow DOM
+    - return: (google.maps.InfoWindow)
+
+    This method also push all new infoWindows to `$infoWindows` array property. This method will add event `click` listener on marker to open the infoWindow on click.
+
+10. removeInfoWindows(infoWindows)
+
+    - infoWindows: (Array | google.maps.InfoWindow)
+
 ## EventEmitter
 
 TheMap service inherited EventEmitter class methods. Usage example would be ThePlacesSearch services is using `on` to attach event listeners on TheMap service.

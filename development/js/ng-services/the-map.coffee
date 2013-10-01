@@ -17,7 +17,8 @@ app.factory 'TheMap',
       })
 
       # properties
-      @$markers = []
+      @$markers     = []
+      @$infoWindows = []
 
       @initialize = (mapDiv, options={}, scope) ->
         location    = MpLocation.getLocation()
@@ -66,6 +67,24 @@ app.factory 'TheMap',
 
       @getMap = ->
         @$googleMap
+
+      @bindInfoWindowToMarker = (marker, options={}) ->
+        infoWindow = new google.maps.InfoWindow _.assign({
+          maxWidth: 320
+        }, options)
+        @$infoWindows.push infoWindow
+
+        google.maps.event.addListener marker, 'click', =>
+          _infoWindow.close() for _infoWindow in @$infoWindows
+          infoWindow.open @getMap(), marker
+
+        return infoWindow
+
+      @removeInfoWindows = (infoWindows) ->
+        infoWindows = [infoWindows] if !infoWindows.length?
+        infoWindow.close() for infoWindow in infoWindows
+        @$infoWindows = _.difference(@$infoWindows, infoWindows)
+
 
   # --- END TheMap class ---
 
