@@ -54,6 +54,10 @@ app.factory 'ThePlacesSearch', ['TheMap', '$q', (TheMap, $q) ->
         gotResults.promise
 
 
+      @removePlaceFromResults = (place) ->
+        @$searchResults = _.without(@$searchResults, place)
+
+
   # --- END ---
   return new ThePlacesSearch
 ]
