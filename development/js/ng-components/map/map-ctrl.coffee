@@ -9,6 +9,8 @@ class MapCtrl
     @savedPlacesInfoWindows   = []
     @placeSearchResults       = []
     @searchResultsInfoWindows = []
+    @$mouseOverInfoWindow = new google.maps.InfoWindow {disableAutoPan: true}
+
 
     # load info window template in advance to prevent duplicate ajax call
     mpTemplateCache.get('/scripts/ng-components/map/marker-info.html')
@@ -20,6 +22,14 @@ class MapCtrl
         newScope        = $scope.$new()
         newScope.place  = place
         TheMap.bindInfoWindowToMarker(marker, template, newScope)
+
+
+    bindMouseOverInfoWindow = (content, marker) =>
+      google.maps.event.addListener marker, 'mouseover', =>
+        @$mouseOverInfoWindow.setContent(content)
+        @$mouseOverInfoWindow.open TheMap.getMap(), marker
+      google.maps.event.addListener marker, 'mouseout', =>
+        @$mouseOverInfoWindow.close()
 
 
     # --- initialization ---
@@ -66,7 +76,8 @@ class MapCtrl
             icon:     result.icon
           }
           @placeSearchResults.push place
-          generateInfoWindowForPlace(place, place.$$marker).then (infoWindow) =>
+          bindMouseOverInfoWindow(place.name, marker)
+          generateInfoWindowForPlace(place, marker).then (infoWindow) =>
             @searchResultsInfoWindows.push infoWindow
         TheMap.addMarkersOnMap(_.map(@placeSearchResults, '$$marker'), true)
     ), true

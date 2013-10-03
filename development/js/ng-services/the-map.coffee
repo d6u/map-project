@@ -4,7 +4,6 @@ app.factory 'TheMap',
 
   class TheMap
     constructor: ->
-      @$infoWindow         = new google.maps.InfoWindow
       @$directionsService  = new google.maps.DirectionsService
       @$directionsRenderer = new google.maps.DirectionsRenderer({
         # options
