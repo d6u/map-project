@@ -2,26 +2,23 @@
 # ----------------------------------------
 (($) ->
   $.fn.getCursorPosition = ->
-    input = this.get(0)
-    if !input then return # // No (input) element found
-    if 'selectionStart' in input
+    el  = this.get(0)
+    pos = 0 # // default value if no (input) element found
+    if el.selectionStart?
       # // Standard-compliant browsers
-      return input.selectionStart
-    else if document.selection
+      pos = el.selectionStart
+    else if document.selection?
       # // IE
-      input.focus()
-      sel = document.selection.createRange()
-      selLen = document.selection.createRange().text.length
-      sel.moveStart('character', -input.value.length)
-      return sel.text.length - selLen
+      el.focus()
+      Sel = document.selection.createRange()
+      SelLength = document.selection.createRange().text.length
+      Sel.moveStart('character', -el.value.length)
+      pos = Sel.text.length - SelLength
+    return pos
 )(jQuery)
 
 
-###
-attrs:
-  miniTypeahead="options": options object contains options to customization
-  miniTypeaheadList="list": list is a array contains dropdonw/up menu options
-###
+# --- Module ---
 angular.module('mini-typeahead', [])
 
 # ----------------------------------------
@@ -42,31 +39,56 @@ angular.module('mini-typeahead', [])
 
         # provide a selector to select the container for dropdown/up menu to append
         # by default, menu will append to the parent of current element
-        appendTo: null
+        appendTo: undefined
 
-        listClass: ''
-        itemClass: ''
-        cursorOnClass: ''
+        listClass: 'mini-typeahead-list'
+        itemClass: 'mini-typeahead-item'
+        cursorOnClass: 'mini-typeahead-cursor-on'
       }, $scope.$eval($attrs.miniTypeahead)
+
+      # UI
+      @showMenu = true
+
+      # attach change and select method to self
+      @change = $scope.$eval($attrs.miniTypeaheadChange)
+      @select = $scope.$eval($attrs.miniTypeaheadSelect)
   ]
   link: (scope, element, attrs, MiniTypeaheadCtrl) ->
 
     # Create new scope for mini-typeahead-dropmenu
-    menuScope = scope.$new()
+    menuScope                   = scope.$new()
     menuScope.MiniTypeaheadCtrl = MiniTypeaheadCtrl
-    menuScope.inputElement = element
+    menuScope.inputElement      = element
 
     # Create mini-typeahead-dropmenu DOM
-    template = '<ol class="'+MiniTypeaheadCtrl.options.listClass+'" mini-typeahead-dropmenu ng-show="MiniTypeaheadCtrl.list.length"><li class="'+MiniTypeaheadCtrl.options.itemClass+'" ng-repeat="item in MiniTypeaheadCtrl.list">{{item.description}}</li></ol>'
+    template = "<ol class=\"#{MiniTypeaheadCtrl.options.listClass}\" mini-typeahead-dropmenu ng-show=\"#{attrs.miniTypeaheadList}.length && MiniTypeaheadCtrl.showMenu\"><li class=\"#{MiniTypeaheadCtrl.options.itemClass}\" ng-repeat=\"item in #{attrs.miniTypeaheadList}\">{{item.description}}</li></ol>"
 
-    if !MiniTypeaheadCtrl.options.appendTo
+    if !MiniTypeaheadCtrl.options.appendTo?
       element.parent().append $compile(template)(menuScope)
     else
       $(MiniTypeaheadCtrl.options.appendTo).append $compile(template)(menuScope)
 
-    # Update list content when new one available
-    scope.$watch attrs.miniTypeaheadList, (newVal, oldVal) ->
-      MiniTypeaheadCtrl.list = newVal
+
+    # --- Events ---
+    # key codes:
+    #   9:  tab
+    #   13: enter
+    #   27: escape
+    #   37: left  arrow
+    #   38: up    arrow
+    #   39: right arrow
+    #   40: down  arrow
+    element.on 'keyup', (event) ->
+      # call change
+      if !(event.keyCode in [13, 27, 38, 40])
+        MiniTypeaheadCtrl.showMenu = true
+        MiniTypeaheadCtrl.change(element.val(), element.getCursorPosition())
+
+      # Call select method if pressed enter
+      if event.keyCode == 13
+        MiniTypeaheadCtrl.select(element.val(), element.getCursorPosition())
+
+      return
 ])
 
 
@@ -78,13 +100,11 @@ angular.module('mini-typeahead', [])
     dropup = true
     cursorOnClass = scope.MiniTypeaheadCtrl.options.cursorOnClass
 
-    # Give some default style to element
-    element.css({position: 'absolute'})
 
-    # Adjust menu position and dimension based on inputElement
-    scope.$watch (() ->
+    # --- Callbacks ---
+    adjustMenuPosition = ->
       element.css({
-        left: scope.inputElement.position().left
+        left:  scope.inputElement.position().left
         width: scope.inputElement.outerWidth()
       })
       setTimeout (->
@@ -107,58 +127,73 @@ angular.module('mini-typeahead', [])
           dropup = false
       ), 200
       return
-    ), ->
+
+
+    # --- Initialize ---
+    # Give some default style to element
+    element.css({position: 'absolute'})
+
+    # Adjust position when property in watches option changed
+    for watchParam in scope.MiniTypeaheadCtrl.options.watches
+      scope.$watch watchParam, adjustMenuPosition
+
+    # Adjust menu position and dimension based on inputElement
+    if scope.MiniTypeaheadCtrl.options.watchPosition
+      scope.$watch adjustMenuPosition, ->
 
 
     # key codes:
     #   9:  tab
+    #   13: enter
     #   27: escape
-    #   down arrow: 40
-    #   up arrow:   38
+    #   37: left  arrow
+    #   38: up    arrow
+    #   39: right arrow
+    #   40: down  arrow
     scope.inputElement.on 'keydown', (event) ->
       # Enable drop down list selection through keyboard
-      if (event.keyCode == 40 || event.keyCode == 38) && scope.inputElement.val().length
-        if element.children().length
-          downArrow = event.keyCode == 40
-          upArrow   = event.keyCode == 38
-          cursor    = element.children('.'+cursorOnClass).first()
+      if (event.keyCode == 40 || event.keyCode == 38) && scope.inputElement.val().length && element.children().length
+        downArrow = event.keyCode == 40
+        upArrow   = event.keyCode == 38
+        cursor    = element.children('.'+cursorOnClass).first()
 
-          if downArrow
-            if cursor.length
-              cursor.removeClass(cursorOnClass)
-              if cursor.next().length
-                cursor.next().addClass(cursorOnClass)
-              else
-                element.children().first().addClass(cursorOnClass)
+        if downArrow
+          if cursor.length
+            cursor.removeClass(cursorOnClass)
+            if cursor.next().length
+              cursor.next().addClass(cursorOnClass)
             else
               element.children().first().addClass(cursorOnClass)
-          else if upArrow
-            if cursor.length
-              cursor.removeClass(cursorOnClass)
-              if cursor.prev().length
-                cursor.prev().addClass(cursorOnClass)
-              else
-                element.children().last().addClass(cursorOnClass)
+          else
+            element.children().first().addClass(cursorOnClass)
+        else if upArrow
+          if cursor.length
+            cursor.removeClass(cursorOnClass)
+            if cursor.prev().length
+              cursor.prev().addClass(cursorOnClass)
             else
               element.children().last().addClass(cursorOnClass)
+          else
+            element.children().last().addClass(cursorOnClass)
 
-          # put selection text into input box
-          scope.inputElement.val element.children('.'+cursorOnClass).html()
-          return false
+        # put selection text into input box
+        scope.inputElement.val element.children('.'+cursorOnClass).html()
+        return false
 
       # Enable tab select first one
-      if event.keyCode == 9 && element.children().length
-        scope.inputElement.val element.children().first().html()
+      if event.keyCode == 9
+        if element.children().length && !element.children('.'+cursorOnClass).length
+          scope.inputElement.val element.children().first().html()
         return false
 
       # Enable escape to close menu
       if event.keyCode == 27 && element.children().length
-        scope.$apply -> scope.MiniTypeaheadCtrl.list = []
+        scope.$apply -> scope.MiniTypeaheadCtrl.showMenu = false
         return false
 
 
     # Click on items to search and show results on map
     element.on 'click', 'li', (event) ->
       scope.inputElement.val $(this).html()
-      scope.$emit 'typeaheadListItemClicked'
+      scope.MiniTypeaheadCtrl.select(scope.inputElement.val(), scope.inputElement.getCursorPosition())
 ])
