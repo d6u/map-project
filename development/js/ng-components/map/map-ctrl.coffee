@@ -1,204 +1,111 @@
 app.controller 'MapCtrl',
-['$scope', 'TheProject', '$routeSegment', 'mpTemplateCache', '$compile',
-( $scope,   TheProject,   $routeSegment,   mpTemplateCache,   $compile) ->
+['$scope','TheProject','$routeSegment','mpTemplateCache','$compile','TheMap',
+'ThePlacesSearch',
+class MapCtrl
+  constructor: ($scope, TheProject, $routeSegment, mpTemplateCache, $compile,
+    TheMap, ThePlacesSearch) ->
 
-  # Helper methods
-  self   = this # used for deep nested callbacks and inside helper
-  helper = {
-    cleanPreviousplacesServiceResults: ->
-      for result in self.placesServiceResults
-        result.$$marker.setMap null
-      self.placesServiceResults = []
+    # properties
+    @savedPlacesInfoWindows   = []
+    @placeSearchResults       = []
+    @searchResultsInfoWindows = []
+    @$mouseOverInfoWindow = new google.maps.InfoWindow {disableAutoPan: true}
 
-    addplacesServiceResultsToMap: ->
-      if self.placesServiceResults.length
-        places = self.placesServiceResults
-        bounds = new google.maps.LatLngBounds()
-        animation = if places.length == 1 then google.maps.Animation.DROP else null
-        _.forEach places, (place) ->
-          markerOptions =
-            map:       self.googleMap
-            title:     place.name
-            position:  place.geometry.location
+
+    # load info window template in advance to prevent duplicate ajax call
+    mpTemplateCache.get('/scripts/ng-components/map/marker-info.html')
+
+    # --- Callbacks ---
+    generateInfoWindowForPlace = (place, marker) =>
+      mpTemplateCache.get('/scripts/ng-components/map/marker-info.html')
+      .then (template) =>
+        newScope        = $scope.$new()
+        newScope.place  = place
+        TheMap.bindInfoWindowToMarker(marker, template, newScope)
+
+
+    bindMouseOverInfoWindow = (content, marker) =>
+      google.maps.event.addListener marker, 'mouseover', =>
+        @$mouseOverInfoWindow.setContent(content)
+        @$mouseOverInfoWindow.open TheMap.getMap(), marker
+      google.maps.event.addListener marker, 'mouseout', =>
+        @$mouseOverInfoWindow.close()
+
+
+    # --- initialization ---
+    @theProject = TheProject
+    if $routeSegment.startsWith('ot')
+      TheProject.initialize($scope)
+    else
+      TheProject.initialize($scope, Number($routeSegment.$routeParams.project_id))
+
+
+    # --- Actions ---
+    @addPlaceToList = (place) ->
+      @placeSearchResults = _.without @placeSearchResults, place
+      TheProject.addPlace(place)
+
+
+    # --- Watchers ---
+    # pin marker for ThePlacesSearch.getLastSearchResults()
+    $scope.$watch (->
+      _.pluck(ThePlacesSearch.getLastSearchResults(), 'id')
+    ), ((newVal) =>
+      # clean up
+      TheMap.clearMarkers(_.map(@placeSearchResults, '$$marker'))
+      TheMap.removeInfoWindows(@searchResultsInfoWindows)
+      @placeSearchResults       = []
+      @searchResultsInfoWindows = []
+
+      # process results
+      results = ThePlacesSearch.getLastSearchResults()
+      if results.length
+        animation = if results.length == 1 then google.maps.Animation.DROP else null
+        for result in results
+          marker = new google.maps.Marker {
+            title:     result.name
+            position:  result.geometry.location
             animation: animation
-          place.$$marker = new google.maps.Marker markerOptions
-          place.notes    = null
-          place.address  = place.formatted_address
-          place.coord    = place.geometry.location.toString()
-          bounds.extend place.$$marker.getPosition()
-          helper.bindInfoWindow(place)
-
-        self.googleMap.fitBounds bounds
-        self.googleMap.setZoom(11) if places.length < 3
-
-    bindInfoWindow: (place) ->
-      google.maps.event.addListener place.$$marker, 'click', ->
-        mpTemplateCache.get('/scripts/ng-components/map/marker-info.html').then (template) ->
-          newScope = $scope.$new()
-          newScope.place = place
-          compiled = $compile(template)(newScope)
-          self.infoWindow.setContent compiled[0]
-          google.maps.event.clearListeners self.infoWindow, 'closeclick'
-          google.maps.event.addListenerOnce self.infoWindow, 'closeclick', ->
-            newScope.$destroy()
-          self.infoWindow.open self.googleMap, place.$$marker
-
-    renderDirections: ->
-      @clearDirections()
-      places = TheProject.places
-      return if places.length < 2
-      requestObj = {
-        travelMode: google.maps.TravelMode.DRIVING
-        waypoints:  []
-      }
-      for place, idx in places
-        if idx > 0 && idx < (places.length - 1)
-          waypointObj = {
-            location: place.$$marker.getPosition()
-            stopover: true
           }
-          requestObj.waypoints.push(waypointObj)
-        else if idx == 0
-          requestObj.origin = place.$$marker.getPosition()
-        else
-          requestObj.destination = place.$$marker.getPosition()
-      # Send request
-      self.directionsService.route requestObj, (result, status) =>
-        if status == google.maps.DirectionsStatus.OK
-          self.directionsRenderer.setMap(self.googleMap) if !self.directionsRenderer.getMap()
-          self.directionsRenderer.setDirections(result)
-          # Map the route leg data to places object, so it can be displayed in places list and infoWindow
-          $scope.$apply =>
-            for leg, idx in result.routes[0].legs
-              TheProject.places[idx].$$leg = leg
-
-    clearDirections: ->
-      for place in $scope.mapCtrl.theProject.places
-        delete place.$$leg
-      self.directionsRenderer.setMap(null) if self.directionsRenderer.getMap()
-  }
-
-  # Map service
-  if $routeSegment.startsWith('ot') then TheProject.initialize($scope) else TheProject.initialize($scope, Number($routeSegment.$routeParams.project_id))
-  @theProject           = TheProject
-  @autocompleteService  = new google.maps.places.AutocompleteService()
-  @placePredictions     = []
-  @placesService        = undefined # placeholder
-  @placesServiceResults = []
-  @infoWindow           = new google.maps.InfoWindow()
-  @directionsService    = new google.maps.DirectionsService()
-  @directionsRenderer   = new google.maps.DirectionsRenderer({
-    polylineOptions:
-      strokeColor: '977ADC'
-      strokeOpacity: 1
-      strokeWeight: 5
-    suppressMarkers: true
-    suppressInfoWindows: true
-  })
+          place = {
+            $$marker: marker
+            name:     result.name
+            notes:    null
+            address:  result.formatted_address
+            coord:    result.geometry.location.toString()
+            icon:     result.icon
+          }
+          @placeSearchResults.push place
+          bindMouseOverInfoWindow(place.name, marker)
+          generateInfoWindowForPlace(place, marker).then (infoWindow) =>
+            @searchResultsInfoWindows.push infoWindow
+        TheMap.addMarkersOnMap(_.map(@placeSearchResults, '$$marker'), true)
+    ), true
 
 
-  # --- Status ---
-  @showDirections = false
-
-
-  # Map API
-  # ----------------------------------------
-  # show input predictions
-  @getQueryPredictions = ->
-    if @searchboxInput.length
-      autocompleteServiceRequest = {
-        bounds: self.googleMap.getBounds()
-        input:  @searchboxInput
-      }
-      @autocompleteService.getQueryPredictions autocompleteServiceRequest, (predictions, serviceStatus) ->
-        $scope.$apply ->
-          self.placePredictions = predictions
-    else
-      @placePredictions = []
-
-  # search places and pin on map
-  @queryPlacesService = (searchTerm) ->
-    @searchboxInput = searchTerm if searchTerm
-    if @searchboxInput.length
-      # address issue that map init after mapCtrl
-      @placesService = new google.maps.places.PlacesService(@googleMap) if !@placesService
-
-      searchRequest = {
-        bounds: @googleMap.getBounds()
-        query:  @searchboxInput
-      }
-      @placesService.textSearch searchRequest, (placesServiceResults, serviceStatus) ->
-        $scope.$apply ->
-          helper.cleanPreviousplacesServiceResults()
-          self.placesServiceResults = placesServiceResults[0..9]
-          self.placePredictions = []
-          helper.addplacesServiceResultsToMap()
-      # close the drop list
-      self.placePredictions = []
-
-  # add place to saved place list
-  @addPlaceToList = (place) ->
-    @placesServiceResults = _.without @placesServiceResults, place
-    @theProject.addPlace(place)
-
-  @setMapCenter = (location) ->
-    @googleMap.setCenter(location)
-
-  @setMapBounds = (bounds) ->
-    @googleMap.fitBounds(bounds)
-
-  # clear search results, predicitons, search box input
-  @clearSearchResults = ->
-    @searchboxInput = ""
-    @placePredictions = []
-    helper.cleanPreviousplacesServiceResults()
-
-  # directions
-  @toggleDirections = ->
-    @showDirections = !@showDirections
-    if @showDirections
-      helper.renderDirections()
-    else
-      helper.clearDirections()
-
-  # Generate x-url-callback link for rediction to map app in iOS
-  # http://maps.apple.com/?daddr=San+Francisco,+CA&saddr=cupertino
-  @xUrlCallbackLink = (address) ->
-    return "http://maps.apple.com/?q=#{address}"
-
-  # Watcher
-  # ----------------------------------------
-  # watch for marked places and make marker for them
-  $scope.$watch (=>
-    return _.pluck(@theProject.places, 'id')
-  ), ((newVal, oldVal) =>
-    if newVal
-      # re-render marker for each places
-      _.forEach @theProject.places, (place, idx) =>
-        # $$saved is used to hide infoWindow add place button
-        place.$$saved = true
-        if place.$$marker
-          place.$$marker.setMap null
-          delete place.$$marker
-        if place.geometry
-          latLog = place.geometry.location
-        else
-          coordMatch = /\((.+), (.+)\)/.exec place.coord
-          latLog = new google.maps.LatLng coordMatch[1], coordMatch[2]
-        markerOptions =
-          map:      @googleMap
-          title:    place.name
-          position: latLog
-          icon:
-            url: "/img/blue-marker-3d.png"
-        place.$$marker = new google.maps.Marker markerOptions
-        helper.bindInfoWindow(place)
-
-      # re-render directions if showDirections == true
-      # if @showDirections
-      #   renderDirections()
-  ), true
-
-  # Return
-  return
+    # watch for marked places and make marker for them
+    $scope.$watch (-> _.pluck(TheProject.places, 'id')), ((newVal, oldVal) =>
+      if newVal
+        # re-render marker for each places
+        for place, i in TheProject.places
+          # $$saved is used to hide infoWindow add place button
+          place.$$saved = true
+          if place.$$marker
+            TheMap.clearMarkers(place.$$marker)
+            delete place.$$marker
+          if place.geometry
+            latLog = place.geometry.location
+          else
+            coordMatch = /\((.+), (.+)\)/.exec place.coord
+            latLog = new google.maps.LatLng coordMatch[1], coordMatch[2]
+          place.$$marker = new google.maps.Marker {
+            title:    place.name
+            position: latLog
+            icon:
+              url: "/img/blue-marker-3d.png"
+          }
+          generateInfoWindowForPlace(place, place.$$marker).then (infoWindow) =>
+            @savedPlacesInfoWindows.push infoWindow
+        TheMap.addMarkersOnMap _.pluck(TheProject.places, '$$marker')
+    ), true
 ]

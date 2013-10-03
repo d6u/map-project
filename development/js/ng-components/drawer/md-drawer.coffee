@@ -1,43 +1,16 @@
 app.directive 'mdDrawer',
-['$rootScope', '$timeout', '$routeSegment',
-( $rootScope,   $timeout,   $routeSegment) ->
+['$rootScope','$timeout','$routeSegment',
+( $rootScope,  $timeout,  $routeSegment) ->
 
   templateUrl: '/scripts/ng-components/drawer/md-drawer.html'
   controllerAs: 'drawerCtrl'
-  controller: ['$scope', '$element', ($scope, $element) ->
+  controller: ['$scope', '$element', 'TheMap', class DrawerCtrl
 
-    # Interface
-    @toggleDrawerSize = ->
-      @maxmize = !@maxmize
+    constructor: ($scope, $element, TheMap) ->
 
-    @toggleEditProject = ->
-      @showEditProjectSubsection = !@showEditProjectSubsection
-
-    @displayAllMarkers = ->
-      bounds = new google.maps.LatLngBounds()
-      for place in $scope.mapCtrl.theProject.places
-        bounds.extend place.$$marker.getPosition()
-      $scope.mapCtrl.setMapBounds(bounds)
-
-    @showPlaceOnMap = (place) ->
-      $scope.mapCtrl.setMapCenter(place.$$marker.getPosition())
-      google.maps.event.trigger(place.$$marker, 'click')
-
-    return
+      @showPlaceOnMap = (place) ->
+        TheMap.setMapCenter(place.$$marker.getPosition())
+        google.maps.event.trigger(place.$$marker, 'click')
   ]
   link: (scope, element, attrs, drawerCtrl) ->
-
-    # Actions
-    scope.clearInput = (control) ->
-      scope.searchbox.input = ''
-      element.find('input').val('')
-      scope.TheMap.searchResults = []
-
-    scope.fbLogin = ->
-      # TODO
-      # $rootScope.MpUser.login ->
-      #   return if scope.MpProjects.currentProjectPlaces.length > 0 then '/new_project' else '/all_projects'
-
-    scope.showProjectAddFriendsModal = ->
-      $rootScope.$broadcast 'showProjectAddFriendsModal', {name: 'test'}
 ]

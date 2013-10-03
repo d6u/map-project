@@ -1,17 +1,3 @@
-###
-TheProject is a class that will handle:
-  new project create, project update, places create/read/update/delete
-  *:  note that project read/delete will be handled by MpProjects
-
-usage:
-  theProject = new TheProject(args)
-
-args:
-  provide a project id to get started
-  if no project id, TheProject will create a shell project for use before login
-###
-
-
 app.service 'TheProject',
 ['Restangular', 'MpFriends', 'MpUser', 'MpProjects', 'socket', '$routeSegment', class TheProject
 
