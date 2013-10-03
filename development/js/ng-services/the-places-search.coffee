@@ -2,7 +2,6 @@ app.factory 'ThePlacesSearch', ['TheMap', '$q', (TheMap, $q) ->
 
   class ThePlacesSearch
     constructor: ->
-      @$autocompleteService = new google.maps.places.AutocompleteService
       @$searchResults = []
 
       # initialize according to TheMap service
@@ -16,23 +15,6 @@ app.factory 'ThePlacesSearch', ['TheMap', '$q', (TheMap, $q) ->
 
       if TheMap.getMap()?
         @$placesService = new google.maps.places.PlacesService(TheMap.getMap())
-
-
-      # return promise
-      #   resolve: predictions
-      #   reject: google service status
-      @getSearchPredictions = (input) ->
-        return null if !TheMap.getMap()?
-        gotPredictions = $q.defer()
-        @$autocompleteService.getQueryPredictions {
-          bounds: TheMap.getMap().getBounds()
-          input:  input
-        }, (predictions, status) ->
-          if status == google.maps.DirectionsStatus.OK
-            gotPredictions.resolve(predictions)
-          else
-            gotPredictions.reject(status)
-        gotPredictions.promise
 
 
       # return promise

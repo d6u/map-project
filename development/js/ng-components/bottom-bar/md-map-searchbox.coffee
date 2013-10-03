@@ -1,15 +1,13 @@
 app.directive 'mdMapSearchbox', [->
 
   controllerAs: 'MdMapSearchBoxCtrl'
-  controller: ['ThePlacesSearch', 'TheMap', 'mpTemplateCache', '$scope', '$compile',
+  controller: ['ThePlacesSearch', 'TheMap', 'mpTemplateCache', '$scope', '$compile', 'SearchPrediction',
     class MdMapSearchBoxCtrl
 
-      constructor: (ThePlacesSearch, TheMap, mpTemplateCache, $scope, $compile) ->
+      constructor: (ThePlacesSearch, TheMap, mpTemplateCache, $scope, $compile, SearchPrediction) ->
+
         @placePredictions         = []
         @searchResultsInfoWindows = []
-
-        # load info window template in advance to prevent duplicate ajax call
-        mpTemplateCache.get('/scripts/ng-components/map/marker-info.html')
 
         # --- Callbacks ---
         generateInfoWindowForPlace = (place, marker) =>
@@ -17,20 +15,21 @@ app.directive 'mdMapSearchbox', [->
           .then (template) =>
             newScope        = $scope.$new()
             newScope.place  = place
-            compiledContent = $compile(template)(newScope)[0]
-            @searchResultsInfoWindows.push TheMap.bindInfoWindowToMarker(marker, {content: compiledContent})
+            @searchResultsInfoWindows.push TheMap.bindInfoWindowToMarker(marker, template, newScope)
 
 
         # --- Actions ---
-        @getQueryPredictions = ->
-          if @searchboxInput.length
-            ThePlacesSearch.getSearchPredictions(@searchboxInput)
+        @getQueryPredictions = (input, offset) =>
+          if input.length
+            SearchPrediction.getSearchPredictions(input, offset)
             .then (predictions) =>
               @placePredictions = predictions
+          else
+            $scope.$apply => @placePredictions = []
 
-        @queryPlacesService = ->
-          if @searchboxInput.length
-            ThePlacesSearch.searchPlacesWith(@searchboxInput).then (results) =>
+        @queryPlacesService = (input, offset) =>
+          if input.length
+            ThePlacesSearch.searchPlacesWith(input).then (results) =>
               TheMap.clearMarkers(_.map(@placeSearchResults, '$$marker'))
               TheMap.removeInfoWindows(@searchResultsInfoWindows)
               @searchResultsInfoWindows = []
@@ -52,16 +51,4 @@ app.directive 'mdMapSearchbox', [->
             @placePredictions = [] # close typehead menu
   ]
   link: (scope, element, attrs, MdMapSearchBoxCtrl) ->
-
-    # --- Events ---
-    # when user press enter key show search results on map
-    # enter key: 13
-    element.on 'keypress', (event) ->
-      if event.keyCode == 13
-        MdMapSearchBoxCtrl.queryPlacesService()
-
-    # Listen to event click event from typeahead menu
-    scope.$on 'typeaheadListItemClicked', (event) ->
-      event.stopPropagation()
-      MdMapSearchBoxCtrl.queryPlacesService()
 ]
