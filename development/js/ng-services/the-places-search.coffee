@@ -1,44 +1,46 @@
-app.factory 'ThePlacesSearch', ['TheMap', '$q', (TheMap, $q) ->
+app.factory 'ThePlacesSearch',
+['TheMap','$q','$rootScope',
+( TheMap,  $q,  $rootScope) ->
 
   class ThePlacesSearch
     constructor: ->
-      @$searchResults = []
+      @$lastSearchResults = []
 
       # initialize according to TheMap service
       TheMap.on 'initialized', =>
         @$placesService = new google.maps.places.PlacesService(TheMap.getMap())
-        @$searchResults = []
-
-      TheMap.on 'destroyed', =>
-        delete @$placesService
-        @$searchResults = []
+        @$lastSearchResults = []
 
       if TheMap.getMap()?
         @$placesService = new google.maps.places.PlacesService(TheMap.getMap())
 
+      TheMap.on 'destroyed', =>
+        delete @$placesService
+        @$lastSearchResults = []
+
 
       # return promise
       #   resolve: search results
-      #   reject: google service status
+      #   reject:  google service status
       @searchPlacesWith = (query) ->
         return null if !@$placesService?
-        @$searchResults = []
         gotResults = $q.defer()
         @$placesService.textSearch {
-          bounds: TheMap.getMap().getBounds()
+          bounds: TheMap.getMap()?.getBounds()
           query:  query
         }, (results, status) =>
           if status == google.maps.DirectionsStatus.OK
-            @$searchResults = results
-            gotResults.resolve(results)
+            @$lastSearchResults = results
+            $rootScope.$apply -> gotResults.resolve(results)
           else
-            gotResults.reject(status)
+            $rootScope.$apply -> gotResults.reject(status)
         gotResults.promise
 
 
       @removePlaceFromResults = (place) ->
-        @$searchResults = _.without(@$searchResults, place)
+        @$lastSearchResults = _.without(@$lastSearchResults, place)
 
+      @getLastSearchResults = -> @$lastSearchResults
 
   # --- END ---
   return new ThePlacesSearch

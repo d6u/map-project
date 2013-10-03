@@ -32,9 +32,11 @@
 8. getMap
     - return: (google.maps.Map) return `undefined` if no map instance
 
-9. bindInfoWindowToMarker(marker, options)
+9. bindInfoWindowToMarker(marker, contentTemplate, scope, options)
     - marker: (google.maps.Marker)
-    - options: (Object, must contain `content` property) `content` property is used to set content for infoWindow DOM
+    - contentTemplate: (String) HTML string as infoWindow content
+    - scope: the scope to compile content of infoWindow
+    - options: (Object, optional) additional options for infoWindow
     - return: (google.maps.InfoWindow)
 
     This method also push all new infoWindows to `$infoWindows` array property. This method will add event `click` listener on marker to open the infoWindow on click.

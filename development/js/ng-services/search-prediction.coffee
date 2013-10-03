@@ -1,6 +1,6 @@
-app.service 'SearchPrediction', ['TheMap', '$q', class SearchPrediction
+app.service 'SearchPrediction', ['TheMap', '$q', '$rootScope', class SearchPrediction
 
-  constructor: (TheMap, $q) ->
+  constructor: (TheMap, $q, $rootScope) ->
 
     @$autocompleteService = new google.maps.places.AutocompleteService
     @$lastPredictions     = []
@@ -18,8 +18,8 @@ app.service 'SearchPrediction', ['TheMap', '$q', class SearchPrediction
       }, (predictions, status) =>
         if status == google.maps.DirectionsStatus.OK
           @$lastPredictions = predictions
-          gotPredictions.resolve(predictions)
+          $rootScope.$apply -> gotPredictions.resolve(predictions)
         else
-          gotPredictions.reject(status)
+          $rootScope.$apply -> gotPredictions.reject(status)
       gotPredictions.promise
 ]

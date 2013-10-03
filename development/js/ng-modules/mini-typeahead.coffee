@@ -46,12 +46,19 @@ angular.module('mini-typeahead', [])
         cursorOnClass: 'mini-typeahead-cursor-on'
       }, $scope.$eval($attrs.miniTypeahead)
 
+
       # UI
       @showMenu = true
 
+
       # attach change and select method to self
-      @change = $scope.$eval($attrs.miniTypeaheadChange)
-      @select = $scope.$eval($attrs.miniTypeaheadSelect)
+      @change = (input, offset) ->
+        $scope.$apply ->
+          $scope.$eval($attrs.miniTypeaheadChange)(input, offset)
+
+      @select = (input, offset) ->
+        $scope.$apply ->
+          $scope.$eval($attrs.miniTypeaheadSelect)(input, offset)
   ]
   link: (scope, element, attrs, MiniTypeaheadCtrl) ->
 

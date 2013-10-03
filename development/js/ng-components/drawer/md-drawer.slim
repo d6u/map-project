@@ -20,9 +20,9 @@
 .md-drawer-body
   / --- Search results ---
   .md-drawer-body-section(ng-show="projectViewCtrl.activeSection == 'searchResults' || projectViewCtrl.activeSection == 'both'")
-    header.md-drawer-list-header.lead Showing {{ThePlacesSearch.$searchResults.length}} search results
+    header.md-drawer-list-header.lead Showing {{mapCtrl.placeSearchResults.length}} search results
     ul.md-places
-      li.md-places-item.clearfix(ng-repeat="place in ThePlacesSearch.$searchResults")
+      li.md-places-item.clearfix(ng-repeat="place in mapCtrl.placeSearchResults")
         .md-places-item-image
           a(href ng-click="drawerCtrl.showPlaceOnMap(place)")
             img(ng-src="{{place.icon}}")
@@ -33,7 +33,7 @@
           .md-places-item-name
             | {{place.name}}
           address.md-places-item-address
-            | {{place.formatted_address}}
+            | {{place.address}}
 
   / --- Places ---
   .md-drawer-body-section(ng-show="projectViewCtrl.activeSection == 'places' || projectViewCtrl.activeSection == 'both'")

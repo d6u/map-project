@@ -1,6 +1,6 @@
 app.directive 'mdDrawer',
-['$rootScope','$timeout','$routeSegment','ThePlacesSearch',
-( $rootScope,  $timeout,  $routeSegment,  ThePlacesSearch) ->
+['$rootScope','$timeout','$routeSegment',
+( $rootScope,  $timeout,  $routeSegment) ->
 
   templateUrl: '/scripts/ng-components/drawer/md-drawer.html'
   controllerAs: 'drawerCtrl'
@@ -13,6 +13,4 @@ app.directive 'mdDrawer',
         google.maps.event.trigger(place.$$marker, 'click')
   ]
   link: (scope, element, attrs, drawerCtrl) ->
-
-    scope.ThePlacesSearch = ThePlacesSearch
 ]

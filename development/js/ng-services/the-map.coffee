@@ -1,6 +1,6 @@
 app.factory 'TheMap',
-['MpLocation','$q',
-( MpLocation,  $q) ->
+['MpLocation','$q','$compile',
+( MpLocation,  $q,  $compile) ->
 
   class TheMap
     constructor: ->
@@ -68,9 +68,10 @@ app.factory 'TheMap',
       @getMap = ->
         @$googleMap
 
-      @bindInfoWindowToMarker = (marker, options={}) ->
+      @bindInfoWindowToMarker = (marker, contentTemplate, scope, options={}) ->
         infoWindow = new google.maps.InfoWindow _.assign({
           maxWidth: 320
+          content:  $compile(contentTemplate)(scope)[0]
         }, options)
         @$infoWindows.push infoWindow
 
