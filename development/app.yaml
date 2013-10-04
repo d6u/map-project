@@ -1,3 +1,7 @@
+html:
+  source folder: development/js
+  target folder: public/scripts
+
 js:
   source folder: development/js
   target folder: app/assets/javascripts/modules

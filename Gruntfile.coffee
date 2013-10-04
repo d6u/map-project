@@ -58,46 +58,48 @@ module.exports = (grunt) ->
 
     # --- Clean ---
     clean:
-      development: ["public/scripts", "app/assets/javascripts/modules/**/*", "tmp/grunt"]
+      angular_templates: ["public/scripts"]
+      rails_pipeline_js: ["app/assets/javascripts/modules/**/*"]
+      temp_files_js:     ["tmp/grunt"]
 
     # --- Copy ---
     copy:
       html:
         expand: true
-        cwd:  '<%= compileSettings.js["source folder"] %>'
+        cwd:  '<%= compileSettings["html"]["source folder"] %>'
         src:  '**/*.html'
-        dest: 'public/scripts/'
+        dest: '<%= compileSettings["html"]["target folder"] %>'
       js:
         expand: true
-        cwd:  '<%= compileSettings.js["source folder"] %>'
+        cwd:  '<%= compileSettings["js"]["source folder"] %>'
         src:  '<%= compileSettings.js.copy %>'
-        dest: '<%= compileSettings.js["target folder"] %>'
-      # tmp task settings will be update dynamically
-      tmp:
+        dest: '<%= compileSettings["js"]["target folder"] %>'
+      # concat_js task settings will be update dynamically
+      concat_js:
         expand: true
-        cwd:  '<%= compileSettings.js["source folder"] %>'
+        cwd:  '<%= compileSettings["js"]["source folder"] %>'
         src:  ''
         dest: 'tmp/grunt/js'
 
     # --- Jade ---
     jade:
-      development:
+      angular_templates:
         files: [{
           expand: true
-          cwd:  '<%= compileSettings.js["source folder"] %>'
+          cwd:  '<%= compileSettings["html"]["source folder"] %>'
           src:  '**/*.jade'
-          dest: 'public/scripts'
+          dest: '<%= compileSettings["html"]["target folder"] %>'
           ext:  '.html'
         }]
 
     # --- Slim ---
     slim:
-      development:
+      angular_templates:
         files: [{
           expand: true
-          cwd:  '<%= compileSettings.js["source folder"] %>'
+          cwd:  '<%= compileSettings["html"]["source folder"] %>'
           src:  '**/*.slim'
-          dest: 'public/scripts'
+          dest: '<%= compileSettings["html"]["target folder"] %>'
           ext:  '.html'
         }]
 
@@ -113,8 +115,8 @@ module.exports = (grunt) ->
     concat:
       options:
         separator: ';'
-      # development task settings will be update dynamically
-      development:
+      # js task settings will be update dynamically
+      js:
         files: []
 
     # --- Watch ---
@@ -122,74 +124,95 @@ module.exports = (grunt) ->
       options:
         spawn: false
         livereload: true
-      development:
-        files: [
-          '<%= compileSettings.js["source folder"] %>' + '/**/*.html'
-          '<%= compileSettings.js["source folder"] %>' + '/**/*.jade'
-          '<%= compileSettings.js["source folder"] %>' + '/**/*.slim'
-          '<%= compileSettings.js["source folder"] %>' + '/**/*.js'
-          '<%= compileSettings.js["source folder"] %>' + '/**/*.coffee'
+      html:
+        files: ['<%= compileSettings["html"]["source folder"] %>' + '/**/*.html']
+        tasks: ['copy:html']
+      jade:
+        files: ['<%= compileSettings["html"]["source folder"] %>' + '/**/*.jade']
+        tasks: ['jade:angular_templates']
+      slim:
+        files: ['<%= compileSettings.js["source folder"] %>' + '/**/*.slim']
+        tasks: ['slim:angular_templates']
+      js:
+        files: ['<%= compileSettings.js["source folder"] %>' + '/**/*.js']
+        tasks: [
+          'copy:js'
+          'update config:copy:concat_js'
+          'copy:concat_js'
+          'update config:concat:js'
+          'concat:js'
         ]
-        tasks: ['default']
+      coffee:
+        files: ['<%= compileSettings.js["source folder"] %>' + '/**/*.coffee']
+        tasks: [
+          'update config:coffee:development'
+          'coffee:development'
+          'update config:concat:js'
+          'concat:js'
+        ]
   })
 
   # Load the plugin that provides task(s).
   grunt.loadNpmTasks('grunt-contrib-clean')
   grunt.loadNpmTasks('grunt-contrib-copy')
   grunt.loadNpmTasks('grunt-contrib-jade')
+  grunt.loadNpmTasks('grunt-slim')
   grunt.loadNpmTasks('grunt-contrib-coffee')
   grunt.loadNpmTasks('grunt-contrib-concat')
   grunt.loadNpmTasks('grunt-contrib-watch')
-  grunt.loadNpmTasks('grunt-slim')
+
 
   # Dynamic task config
-  # ----------------------------------------
-  grunt.registerTask('update-config', 'Dymanic update grunt config', ->
+  # --- copy:concat_js ---
+  grunt.registerTask 'update config:copy:concat_js', 'Dymanic update grunt config for copy:concat_js', ->
+
     compileSettings = grunt.config(['compileSettings'])
-    # copy:tmp
+    # copy:concat_js
     copyList = compileHelper.getAllJsFileList(compileSettings.js.concat, compileSettings.js["source folder"])
-    grunt.config(['copy', 'tmp', 'src'], copyList)
+    grunt.config(['copy', 'concat_js', 'src'], copyList)
+
+
+  # --- coffee:development ---
+  grunt.registerTask 'update config:coffee:development', 'Dymanic update grunt config for coffee:development', ->
+
+    compileSettings = grunt.config(['compileSettings'])
     # coffee:development
     filesObj = {}
     for dest, src of compileSettings.js.concat
       filesObj[path.join('tmp/grunt/js', dest)] = compileHelper.getCoffeeFileList(src, compileSettings.js["source folder"])
     grunt.config(['coffee', 'development', 'files'], filesObj)
-  )
 
-  grunt.registerTask('update-config-after-tmp-ready', 'Dymanic update grunt config when tmp folder is ready', ->
+
+  # --- concat:js ---
+  grunt.registerTask 'update config:concat:js', 'Dymanic update grunt config for concat:js', ->
+
     compileSettings = grunt.config(['compileSettings'])
-    # concat:development
+    # concat:js
     filesObj = {}
     for dest, src of compileSettings.js.concat
       filesObj[path.join(compileSettings.js["target folder"], dest)] = compileHelper.getConcatTaskFileList(src, dest)
-    grunt.config(['concat', 'development', 'files'], filesObj)
-  )
+    grunt.config(['concat', 'js', 'files'], filesObj)
+
 
   # Default task - development
-  grunt.registerTask('default', [
-    'clean:development'
-    'update-config'
-    'copy:html'
-    'copy:js'
-    'copy:tmp'
-    'jade:development'
-    'slim:development'
-    'coffee:development'
-    'update-config-after-tmp-ready'
-    'concat:development'
-    'watch:development'
-  ])
+  grunt.registerTask('default', ['production', 'watch'])
 
   # Production task
   grunt.registerTask('production', [
-    'clean:development'
-    'update-config'
+    'clean:angular_templates'
+    'clean:rails_pipeline_js'
+    'clean:temp_files_js'
+
     'copy:html'
+    'jade:angular_templates'
+    'slim:angular_templates'
+
     'copy:js'
-    'copy:tmp'
-    'jade:development'
-    'slim:development'
+
+    'update config:copy:concat_js'
+    'copy:concat_js'
+    'update config:coffee:development'
     'coffee:development'
-    'update-config-after-tmp-ready'
-    'concat:development'
+    'update config:concat:js'
+    'concat:js'
   ])

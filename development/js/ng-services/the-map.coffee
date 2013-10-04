@@ -15,9 +15,6 @@ app.factory 'TheMap',
         suppressInfoWindows: true
       })
 
-      # properties
-      @$markers     = []
-      @$infoWindows = []
 
       @initialize = (mapDiv, options={}, scope) ->
         location    = MpLocation.getLocation()
@@ -39,25 +36,6 @@ app.factory 'TheMap',
         @trigger 'destroyed'
 
       # --- API ---
-      @addMarkersOnMap = (markers, fitBounds) ->
-        markers = [markers] if !markers.length?
-        for marker in markers
-          marker.setMap(@$googleMap)
-          @$markers.push marker
-        if fitBounds
-          bounds = new google.maps.LatLngBounds
-          bounds.extend marker.getPosition() for marker in markers
-          @setMapBounds bounds
-
-      @clearMarkers = (markers) ->
-        markers = [markers] if !markers.length?
-        marker.setMap null for marker in markers
-        @$markers = _.difference(@$markers, markers)
-
-      @clearAllMarkers = ->
-        marker.setMap(null) for marker in @$markers
-        @$markers = []
-
       @setMapCenter = (latLng) ->
         @$googleMap.setCenter(latLng)
 
@@ -67,24 +45,8 @@ app.factory 'TheMap',
       @getMap = ->
         @$googleMap
 
-      @bindInfoWindowToMarker = (marker, contentTemplate, scope, options={}) ->
-        infoWindow = new google.maps.InfoWindow _.assign({
-          maxWidth: 320
-          content:  $compile(contentTemplate)(scope)[0]
-        }, options)
-        @$infoWindows.push infoWindow
-
-        google.maps.event.addListener marker, 'click', =>
-          _infoWindow.close() for _infoWindow in @$infoWindows
-          infoWindow.open @getMap(), marker
-
-        return infoWindow
-
-      @removeInfoWindows = (infoWindows) ->
-        infoWindows = [infoWindows] if !infoWindows.length?
-        infoWindow.close() for infoWindow in infoWindows
-        @$infoWindows = _.difference(@$infoWindows, infoWindows)
-
+      @getBounds = ->
+        @getMap()?.getBounds()
 
   # --- END TheMap class ---
 
