@@ -13,12 +13,6 @@ app.factory 'MapInfoWindows',
       # preload template
       mpTemplateCache.get('/scripts/ng-components/map/marker-info.html')
 
-      $rootScope.$watch (=>
-        for infoWindow in @$searchResultsInfoWindows
-          console.debug infoWindow.get('$$map')
-        return
-      ), ->
-
 
       # --- API ---
       @bindMouseOverInfoWindowForSearchResult = (marker, result) ->
@@ -42,7 +36,7 @@ app.factory 'MapInfoWindows',
           })
           # save info window
           @$searchResultsInfoWindows.push infoWindow
-
+          @addMarkerDeleteListener(infoWindow, marker)
           # events
           google.maps.event.addListener infoWindow, 'closeclick', =>
             marker.$$detailInfoWindowOpen = false
@@ -66,6 +60,7 @@ app.factory 'MapInfoWindows',
           })
           # save info window
           @$savedPlaceInfoWindows.push infoWindow
+          @addMarkerDeleteListener(infoWindow, marker)
           # mark events relates to info window
           google.maps.event.addListener infoWindow, 'closeclick', =>
             marker.$$detailInfoWindowOpen = false
@@ -88,6 +83,16 @@ app.factory 'MapInfoWindows',
       @closeInfoWindow = (infoWindow) ->
         infoWindow.close()
         google.maps.event.trigger infoWindow, 'closeclick'
+
+
+      @addMarkerDeleteListener = (infoWindow, marker) ->
+        marker.addListener 'deleted', =>
+          @removeInfoWindow(infoWindow)
+
+
+      @removeInfoWindow = (infoWindow) ->
+        @$searchResultsInfoWindows = _.without(@$searchResultsInfoWindows, infoWindow)
+        @$savedPlaceInfoWindows    = _.without(@$savedPlaceInfoWindows,    infoWindow)
 
 
   # --- END MapInfoWindows ---

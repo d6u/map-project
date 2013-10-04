@@ -39,10 +39,15 @@ app.controller 'MapCtrl',
         place.$$marker = MapMarkers.addMarkerForSavedPlace(place)
 
 
+    # helper
     @bindClickToSaveForMarker = (marker) ->
       marker.addListener 'click', =>
         $scope.$apply =>
           @addPlaceToList( _.find(@placeSearchResults, {$$marker: marker}) )
+
+
+    @removePlaceFromPlaceSearchResults = (place) ->
+      @placeSearchResults = _.without(@placeSearchResults, place)
 
 
     # --- initialization ---
@@ -55,7 +60,8 @@ app.controller 'MapCtrl',
 
     # --- Actions ---
     @addPlaceToList = (place) ->
-      @placeSearchResults = _.without(@placeSearchResults, place)
+      MapMarkers.deletePlaceSearchMarker(place.$$marker)
+      @removePlaceFromPlaceSearchResults(place)
       TheProject.addPlace(place)
 
 

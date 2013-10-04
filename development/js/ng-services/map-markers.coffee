@@ -24,7 +24,7 @@ app.factory 'MapMarkers',
 
 
       @clearMarkersOfSearchResult = ->
-        marker.setMap null for marker in @$searchResultsMarkers
+        @deleteMarker(marker) for marker in @$searchResultsMarkers
         @$searchResultsMarkers = []
 
 
@@ -49,6 +49,10 @@ app.factory 'MapMarkers',
         markers = [markers] if !markers.length?
         @$searchResultsMarkers = _.difference(@$searchResultsMarkers, markers)
         @$savedPlacesMarkers   = _.difference(@$savedPlacesMarkers,   markers)
+
+      @deleteMarker = (marker) ->
+        marker.setMap null
+        google.maps.event.trigger(marker, 'deleted')
 
 
   return new MapMarkers
