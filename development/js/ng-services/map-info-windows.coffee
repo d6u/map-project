@@ -9,31 +9,49 @@ app.factory 'MapInfoWindows',
       @$searchResultsInfoWindows = []
       @$savedPlaceInfoWindows    = []
 
+
       # preload template
       mpTemplateCache.get('/scripts/ng-components/map/marker-info.html')
 
+      $rootScope.$watch (=>
+        for infoWindow in @$searchResultsInfoWindows
+          console.debug infoWindow.get('$$map')
+        return
+      ), ->
+
+
       # --- API ---
-      @bindMouseOverInfoWindow = (content, marker) ->
-        google.maps.event.addListener marker, 'mouseover', =>
+      @bindMouseOverInfoWindowForSearchResult = (marker, result) ->
+        marker.addListener 'mouseover', =>
           if !marker.$$detailInfoWindowOpen
-            @$mouseOverInfoWindow.setContent(content)
-            @$mouseOverInfoWindow.open TheMap.getMap(), marker
+            @$mouseOverInfoWindow.setContent(result.name)
+            @$mouseOverInfoWindow.open(TheMap.getMap(), marker)
         google.maps.event.addListener marker, 'mouseout', =>
           @$mouseOverInfoWindow.close()
 
 
-      @bindClickInfoWindowForSearchResult = (result, marker) ->
+      @bindRightClickInfoWindowForSearchResult = (marker, result) ->
         mpTemplateCache.get('/scripts/ng-components/map/marker-info.html')
         .then (template) =>
           # create info window for marker
-          newScope        = $rootScope.$new()
-          newScope.place  = result
+          newScope       = $rootScope.$new()
+          newScope.place = result
           infoWindow = new google.maps.InfoWindow _.assign({
             maxWidth: 320
             content:  $compile(template)(newScope)[0]
           })
           # save info window
           @$searchResultsInfoWindows.push infoWindow
+
+          # events
+          google.maps.event.addListener infoWindow, 'closeclick', =>
+            marker.$$detailInfoWindowOpen = false
+
+          google.maps.event.addListener marker, 'rightclick', =>
+            @$mouseOverInfoWindow.close()
+            @closeAllInfoWindow()
+            marker.$$detailInfoWindowOpen = true
+            infoWindow.open(TheMap.getMap(), marker)
 
 
       @bindClickInfoWindowForSavedPlace = (place, marker) ->
@@ -54,14 +72,25 @@ app.factory 'MapInfoWindows',
 
           google.maps.event.addListener marker, 'click', =>
             @$mouseOverInfoWindow.close()
-            for _infoWindow in @$savedPlaceInfoWindows
-              _infoWindow.close()
-              google.maps.event.trigger _infoWindow, 'closeclick'
+            @closeAllInfoWindow()
             marker.$$detailInfoWindowOpen = true
-            infoWindow.open TheMap.getMap(), marker
+            infoWindow.open(TheMap.getMap(), marker)
 
           # open info window at the first time
           google.maps.event.trigger marker, 'click'
+
+
+      @closeAllInfoWindow = ->
+        @closeInfoWindow(win) for win in @$searchResultsInfoWindows
+        @closeInfoWindow(win) for win in @$savedPlaceInfoWindows
+
+
+      @closeInfoWindow = (infoWindow) ->
+        infoWindow.close()
+        google.maps.event.trigger infoWindow, 'closeclick'
+
+
+  # --- END MapInfoWindows ---
 
 
   return new MapInfoWindows

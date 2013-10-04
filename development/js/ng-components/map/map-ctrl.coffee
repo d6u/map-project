@@ -1,16 +1,45 @@
 app.controller 'MapCtrl',
-['$scope','TheProject','$routeSegment','mpTemplateCache','$compile','TheMap',
-'ThePlacesSearch','MapMarkers',
-class MapCtrl
-  constructor: ($scope, TheProject, $routeSegment, mpTemplateCache, $compile,
-    TheMap, ThePlacesSearch, MapMarkers) ->
+['$scope', 'TheProject', '$routeSegment', 'TheMap', 'ThePlacesSearch','MapMarkers', class MapCtrl
+
+  constructor: ($scope, TheProject, $routeSegment, TheMap, ThePlacesSearch, MapMarkers) ->
 
     # --- properties ---
     @placeSearchResults = []
 
 
     # --- Callbacks ---
-    bindClickAddToSaveForMarker = (marker) =>
+    # from Google API
+    @processPlaceSearchResults = () ->
+      results   = ThePlacesSearch.getLastSearchResults()
+      bounds    = new google.maps.LatLngBounds
+      animation = if results.length == 1 then google.maps.Animation.DROP else null
+      for result in results
+        marker = MapMarkers.addMarkerForSearchResult(result, {animation: animation})
+        @bindClickToSaveForMarker(marker)
+        bounds.extend marker.getPosition()
+        place = {
+          $$marker: marker
+          id:       result.id
+          name:     result.name
+          notes:    null
+          address:  result.formatted_address
+          coord:    result.geometry.location.toString()
+          icon:     result.icon
+        }
+        @placeSearchResults.push place
+      TheMap.setMapBounds(bounds)
+
+
+    # from Database
+    @processServerPlacesDate = (newIds, oldIds) =>
+      for id in _.difference(newIds, oldIds)
+        place          = _.find(TheProject.places, {id: id})
+        place.$$saved  = true
+        place.$$marker.setMap(null)
+        place.$$marker = MapMarkers.addMarkerForSavedPlace(place)
+
+
+    @bindClickToSaveForMarker = (marker) ->
       marker.addListener 'click', =>
         $scope.$apply =>
           @addPlaceToList( _.find(@placeSearchResults, {$$marker: marker}) )
@@ -35,43 +64,14 @@ class MapCtrl
     $scope.$watch (->
       _.pluck(ThePlacesSearch.getLastSearchResults(), 'id')
     ), ((newVal) =>
-      # clean up
       MapMarkers.clearMarkersOfSearchResult()
       @placeSearchResults = []
-      # process results
-      results = ThePlacesSearch.getLastSearchResults()
-      if results.length
-        bounds = new google.maps.LatLngBounds
-        animation = if results.length == 1 then google.maps.Animation.DROP else null
-        for result in results
-          marker = MapMarkers.addMarkerForSearchResult(result, {animation: animation})
-          bindClickAddToSaveForMarker(marker)
-          bounds.extend marker.getPosition()
-          place = {
-            $$marker: marker
-            id:       result.id
-            name:     result.name
-            notes:    null
-            address:  result.formatted_address
-            coord:    result.geometry.location.toString()
-            icon:     result.icon
-          }
-          @placeSearchResults.push place
-        TheMap.setMapBounds(bounds)
+      @processPlaceSearchResults() if newVal.length
     ), true
 
 
     # watch for marked places and make marker for them
-    $scope.$watch (-> _.pluck(TheProject.places, 'id')), ((newVal, oldVal) =>
-      return if !newVal?
-      # re-render marker for each places
-      for place, i in TheProject.places
-        place.$$saved = true
-        if place.$$marker?
-          MapMarkers.removeMarkers place.$$marker
-          place.$$marker.setMap null
-          delete place.$$marker
-
-        place.$$marker = MapMarkers.addMarkerForSavedPlace(place)
-    ), true
+    $scope.$watch (->
+      _.pluck(TheProject.places, 'id').sort()
+    ), @processServerPlacesDate, true
 ]
