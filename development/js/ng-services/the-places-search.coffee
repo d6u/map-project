@@ -1,47 +1,73 @@
 app.factory 'ThePlacesSearch',
-['TheMap','$q','$rootScope',
-( TheMap,  $q,  $rootScope) ->
+['TheMap','$q','$rootScope','MapMarkers','MapInfoWindows',
+( TheMap,  $q,  $rootScope,  MapMarkers,  MapInfoWindows) ->
 
-  class ThePlacesSearch
-    constructor: ->
-      @$lastSearchResults = []
+  # --- Model ---
+  Result = Backbone.Model.extend {
+    initialize: (result, options) ->
+      @marker = MapMarkers.create({
+        title:    @get('name')
+        position: @get('geometry').location
+      }, {place: @, type: 'place_service'})
 
-      # initialize according to TheMap service
+      @infoWindows = MapInfoWindows.createInfoWindowForSearchResult(@)
+
+
+    destroy: ->
+      @marker.destroy()
+      MapInfoWindows.remove(infoWindow) for infoWindow in @infoWindows
+  }
+
+
+  # --- Collection ---
+  ThePlacesSearch = Backbone.Collection.extend {
+
+    model: Result
+
+    initialize: () ->
       TheMap.on 'initialized', =>
         @$placesService = new google.maps.places.PlacesService(TheMap.getMap())
-        @$lastSearchResults = []
+        @reset()
 
       if TheMap.getMap()?
         @$placesService = new google.maps.places.PlacesService(TheMap.getMap())
 
       TheMap.on 'destroyed', =>
         delete @$placesService
-        @$lastSearchResults = []
+        @reset()
+
+      @on 'newSearchResultsAdded', @fitResultsBounds
+
+      @on 'reset', (collection, options) ->
+        place.destroy() for place in options.previousModels
 
 
-      # return promise
-      #   resolve: search results
-      #   reject:  google service status
-      @searchPlacesWith = (query) ->
-        return null if !@$placesService?
-        gotResults = $q.defer()
-        @$placesService.textSearch {
-          bounds: TheMap.getMap()?.getBounds()
-          query:  query
-        }, (results, status) =>
+    # --- other ---
+    searchPlacesWith: (query) ->
+      return null if !@$placesService?
+      gotResults = $q.defer()
+      @$placesService.textSearch {
+        bounds: TheMap.getBounds()
+        query:  query
+      }, (results, status) =>
+        $rootScope.$apply =>
+          @reset()
           if status == google.maps.DirectionsStatus.OK
-            @$lastSearchResults = results
-            $rootScope.$apply -> gotResults.resolve(results)
+            @add(results)
+            @trigger('newSearchResultsAdded')
+            gotResults.resolve(results)
           else
-            $rootScope.$apply -> gotResults.reject(status)
-        gotResults.promise
+            gotResults.reject(status)
+      return gotResults.promise
 
 
-      @removePlaceFromResults = (place) ->
-        @$lastSearchResults = _.without(@$lastSearchResults, place)
+    fitResultsBounds: ->
+      bounds = new google.maps.LatLngBounds
+      bounds.extend place.get('geometry').location for place in @models
+      TheMap.setMapBounds(bounds)
+  }
+  # --- END ThePlacesSearch ---
 
-      @getLastSearchResults = -> @$lastSearchResults
 
-  # --- END ---
   return new ThePlacesSearch
 ]

@@ -66,16 +66,6 @@ app.controller 'MapCtrl',
 
 
     # --- Watchers ---
-    # pin marker for ThePlacesSearch.getLastSearchResults()
-    $scope.$watch (->
-      _.pluck(ThePlacesSearch.getLastSearchResults(), 'id')
-    ), ((newVal) =>
-      MapMarkers.clearMarkersOfSearchResult()
-      @placeSearchResults = []
-      @processPlaceSearchResults() if newVal.length
-    ), true
-
-
     # watch for marked places and make marker for them
     $scope.$watch (->
       _.pluck(TheProject.places, 'id').sort()
