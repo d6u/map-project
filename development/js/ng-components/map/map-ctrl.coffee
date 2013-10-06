@@ -1,7 +1,9 @@
 app.controller 'MapCtrl',
-['$scope', 'TheProject', '$routeSegment', 'TheMap', 'ThePlacesSearch', class MapCtrl
+['$scope', 'TheProject', '$routeSegment', 'TheMap', 'ThePlacesSearch', 'MapMarkers',
+'MapPlaces',
+class MapCtrl
 
-  constructor: ($scope, TheProject, $routeSegment, TheMap, ThePlacesSearch) ->
+  constructor: ($scope, TheProject, $routeSegment, TheMap, ThePlacesSearch, MapMarkers, MapPlaces) ->
 
     # --- properties ---
     @placeSearchResults = []
@@ -10,11 +12,7 @@ app.controller 'MapCtrl',
     # --- Callbacks ---
     # from Database
     processServerPlacesData = (newIds, oldIds) =>
-      for id in _.difference(newIds, oldIds)
-        place          = _.find(TheProject.places, {id: id})
-        # place.$$saved  = true
-        # place.$$marker.setMap(null)
-        # place.$$marker = MapMarkers.addMarkerForSavedPlace(place)
+
 
 
     # helper
@@ -44,10 +42,12 @@ app.controller 'MapCtrl',
     @addPlaceToList = (place) ->
       if place.attributes?
         place.destroy()
-        TheProject.addPlace(place.attributes)
+        place.set({coord: place.get('geometry').location.toString()})
+        MapPlaces.create(place.attributes)
       else
         ThePlacesSearch.findWhere({id: place.id}).destroy()
-        TheProject.addPlace(place)
+        place.coord = place.location.toString()
+        MapPlaces.create(place)
 
 
     # --- Watchers ---

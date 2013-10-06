@@ -21,7 +21,17 @@ app.factory 'MapMarkers', ['TheMap', (TheMap) ->
 
 
   SavedPlaceMarker = Backbone.Model.extend {
+    initialize: (attrs, options) ->
+      @_marker = new google.maps.Marker(_.assign({map: TheMap.getMap()}, attrs))
 
+    getMarker: ->
+      return @_marker
+
+    getPosition: ->
+      return @getMarker().getPosition()
+
+    getMap: (map) ->
+      @getMarker().setMap(map)
   }
 
 
@@ -31,7 +41,7 @@ app.factory 'MapMarkers', ['TheMap', (TheMap) ->
     model: (attrs, options) ->
       if options.type == 'place_service'
         return new SearchMarker(attrs, options)
-      else
+      else if options.type == 'saved_place'
         return new SavedPlaceMarker(attrs, options)
 
     create: ->

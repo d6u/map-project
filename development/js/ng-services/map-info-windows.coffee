@@ -53,6 +53,12 @@ app.factory 'MapInfoWindows',
       return [ @createDetailInfoWindowForSearchResult(place) ]
 
 
+    createInfoWindowForSavedPlaces: (place) ->
+      place.getMarker()._enableMouseover = true
+      @bindMouseOverInfoWindow(place)
+      return [ @createDetailInfoWindowForSavedPlace(place) ]
+
+
     bindMouseOverInfoWindow: (place) ->
       that   = this
       marker = place.marker.getMarker()
@@ -66,6 +72,7 @@ app.factory 'MapInfoWindows',
         @$mouseOverInfoWindow.close()
 
 
+    # --- Search Results ---
     createDetailInfoWindowForSearchResult: (place) ->
       newScope       = $rootScope.$new()
       newScope.place = place.attributes
@@ -74,6 +81,18 @@ app.factory 'MapInfoWindows',
         scope:    newScope
         template: $templateCache.get('/scripts/ng-components/map/marker-info.html')
         event:    'rightclick'
+      })
+
+
+    # --- Saved Places ---
+    createDetailInfoWindowForSavedPlace: (place) ->
+      newScope       = $rootScope.$new()
+      newScope.place = place.attributes
+      return @create({maxWidth: 320}, {
+        place:    place
+        scope:    newScope
+        template: $templateCache.get('/scripts/ng-components/map/marker-info.html')
+        event:    'click'
       })
 
 
