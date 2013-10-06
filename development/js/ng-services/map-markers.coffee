@@ -6,8 +6,8 @@ app.factory 'MapMarkers', ['TheMap', (TheMap) ->
       @_marker = new google.maps.Marker(_.assign({map: TheMap.getMap()}, attrs))
 
     destroy: ->
-      @collection.remove(@)
       @setMap(null)
+      @collection?.remove(@)
 
     setMap: (map) ->
       @_marker.setMap(map)

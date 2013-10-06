@@ -14,6 +14,7 @@ app.factory 'MapInfoWindows',
       }, attrs)
 
       that   = this
+      @scope  = options.scope
       marker = options.place.marker.getMarker()
 
       marker.addListener options.event, ->
@@ -32,6 +33,11 @@ app.factory 'MapInfoWindows',
 
     open: ->
       @_infoWindow.open.apply(@_infoWindow, arguments)
+
+    destroy: ->
+      @close()
+      @scope.$destroy()
+      @collection?.remove(@)
   }
 
 

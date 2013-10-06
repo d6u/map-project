@@ -14,8 +14,9 @@ app.factory 'ThePlacesSearch',
 
 
     destroy: ->
+      infoWindow.destroy() for infoWindow in @infoWindows
       @marker.destroy()
-      MapInfoWindows.remove(infoWindow) for infoWindow in @infoWindows
+      @collection?.remove(@)
   }
 
 
@@ -40,6 +41,9 @@ app.factory 'ThePlacesSearch',
 
       @on 'reset', (collection, options) ->
         place.destroy() for place in options.previousModels
+
+      @on 'remove', (place, collection, options) ->
+        place.destroy()
 
 
     # --- other ---
