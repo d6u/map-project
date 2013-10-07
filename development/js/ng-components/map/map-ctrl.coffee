@@ -1,9 +1,9 @@
 app.controller 'MapCtrl',
-['$scope', 'TheProject', '$routeSegment', 'TheMap', 'ThePlacesSearch', 'MapMarkers',
-'MapPlaces',
-class MapCtrl
+['$scope','TheProject','$routeSegment','TheMap','ThePlacesSearch','MapMarkers',
+'MapPlaces','MapInfoWindows', class MapCtrl
 
-  constructor: ($scope, TheProject, $routeSegment, TheMap, ThePlacesSearch, MapMarkers, MapPlaces) ->
+  constructor: ($scope, TheProject, $routeSegment, TheMap, ThePlacesSearch,
+    MapMarkers, MapPlaces, MapInfoWindows) ->
 
     # --- Callbacks ---
     # helper
@@ -20,6 +20,8 @@ class MapCtrl
 
     MapPlaces.loadProject($scope, $routeSegment.$routeParams.project_id)
 
+    MapInfoWindows.setMapScope($scope)
+
     ThePlacesSearch.on 'newSearchResultsAdded', =>
       ThePlacesSearch.forEach (place) =>
         place.getMarker().addListener 'click', =>
@@ -31,6 +33,11 @@ class MapCtrl
     @centerSearchResult = (place) ->
       place.centerInMap()
       google.maps.event.trigger place.getMarker(), 'rightclick'
+
+
+    @centerSavedPlace = (place) ->
+      place.centerInMap()
+      google.maps.event.trigger place.getMarker(), 'click'
 
 
     @addPlaceToList = (place) ->

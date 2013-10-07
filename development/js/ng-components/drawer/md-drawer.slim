@@ -52,18 +52,18 @@
       li.md-places-item(ng-repeat-start="place in MapCtrl.MapPlaces.models")
 
         .md-places-item-image
-          a(href ng-click="drawerCtrl.showPlaceOnMap(place)")
-            img(ng-src="/img/blue-marker-3d.png")
+          a(href ng-click="MapCtrl.centerSavedPlace(place)")
+            img(src="/img/blue-marker-3d.png")
         .md-places-item-actions
           a.md-places-item-actions-remove(href ng-click="MapCtrl.MapPlaces.remove(place)")
             i.icon-remove
         .md-places-item-details
           .md-places-item-name
-            | {{place.get('name')}}
+            | {{ place.get('name') }}
           address.md-places-item-address
-            | {{place.get('address')}}
+            | {{ place.get('address') }}
           p
-            | {{place.get('notes')}}
+            | {{ place.get('notes') }}
 
 
       / Item - direction info

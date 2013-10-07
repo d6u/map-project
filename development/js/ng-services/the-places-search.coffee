@@ -23,7 +23,7 @@ app.factory 'ThePlacesSearch',
           reference: @get('reference')
         }, (result, status) =>
           if status == google.maps.places.PlacesServiceStatus.OK
-            scope.place = result
+            @set(result)
             mpTemplateCache.get('/scripts/ng-components/map/info-window-detailed.html')
             .then (template) =>
               @infoWindows[0].setContent($compile(template)(scope)[0])

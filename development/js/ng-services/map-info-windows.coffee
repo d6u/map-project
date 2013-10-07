@@ -1,9 +1,9 @@
 app.factory 'MapInfoWindows',
-['TheMap','$compile','mpTemplateCache','$rootScope','$templateCache',
-( TheMap,  $compile,  mpTemplateCache,  $rootScope,  $templateCache) ->
+['TheMap','$compile','mpTemplateCache','$templateCache',
+( TheMap,  $compile,  mpTemplateCache,  $templateCache) ->
 
   # preload template
-  mpTemplateCache.get('/scripts/ng-components/map/marker-info.html')
+  mpTemplateCache.get('/scripts/ng-components/map/info-window-brief.html')
 
 
   # --- Model ---
@@ -15,7 +15,7 @@ app.factory 'MapInfoWindows',
       # fix content undefined issue
       if !options.template?
         content = '<div></div>'
-        mpTemplateCache.get('/scripts/ng-components/map/marker-info.html')
+        mpTemplateCache.get('/scripts/ng-components/map/info-window-brief.html')
         .then (template) =>
           @_infoWindow.setContent($compile(template)(options.scope)[0])
       else
@@ -63,6 +63,9 @@ app.factory 'MapInfoWindows',
     $mouseOverInfoWindow: new google.maps.InfoWindow {disableAutoPan: true}
     model: InfoWindow
 
+    setMapScope: (scope) ->
+      @_scope = scope
+
     createInfoWindowForSearchResult: (place) ->
       place.marker.getMarker()._enableMouseover = true
       @bindMouseOverInfoWindow(place)
@@ -91,24 +94,24 @@ app.factory 'MapInfoWindows',
 
     # --- Search Results ---
     createDetailInfoWindowForSearchResult: (place) ->
-      newScope       = $rootScope.$new()
-      newScope.place = place.attributes
+      newScope       = @_scope.$new()
+      newScope.place = place
       return @create({maxWidth: 320}, {
         place:    place
         scope:    newScope
-        template: $templateCache.get('/scripts/ng-components/map/marker-info.html')
+        template: $templateCache.get('/scripts/ng-components/map/info-window-brief.html')
         event:    'rightclick'
       })
 
 
     # --- Saved Places ---
     createDetailInfoWindowForSavedPlace: (place) ->
-      newScope       = $rootScope.$new()
-      newScope.place = place.attributes
+      newScope       = @_scope.$new()
+      newScope.place = place
       return @create({maxWidth: 320}, {
         place:    place
         scope:    newScope
-        template: $templateCache.get('/scripts/ng-components/map/marker-info.html')
+        template: $templateCache.get('/scripts/ng-components/map/info-window-brief.html')
         event:    'click'
       })
 
