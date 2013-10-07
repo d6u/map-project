@@ -9,12 +9,22 @@ app.factory 'MapInfoWindows',
   # --- Model ---
   InfoWindow = Backbone.Model.extend {
     initialize: (attrs, options) ->
-      @_infoWindow = new google.maps.InfoWindow _.assign({
-        content: $compile(options.template)(options.scope)[0]
-      }, attrs)
+      @scope       = options.scope
+      @_infoWindow = new google.maps.InfoWindow(attrs)
 
+      # fix content undefined issue
+      if !options.template?
+        content = '<div></div>'
+        mpTemplateCache.get('/scripts/ng-components/map/marker-info.html')
+        .then (template) =>
+          @_infoWindow.setContent($compile(template)(options.scope)[0])
+      else
+        content = $compile(options.template)(options.scope)[0]
+
+      @_infoWindow.setContent(content)
+
+      # listeners
       that   = this
-      @scope = options.scope
       marker = options.place.marker.getMarker()
 
       marker.addListener options.event, ->
