@@ -48,6 +48,15 @@ app.factory 'TheMap',
       @getBounds = ->
         @getMap()?.getBounds()
 
+      @setZoom = (zoomLevel) ->
+        @getMap().setZoom(zoomLevel)
+
+      @zoomIn = ->
+        @setZoom( @getMap().getZoom() + 1 )
+
+      @zoomOut = ->
+        @setZoom( @getMap().getZoom() - 1 )
+
   # --- END TheMap class ---
 
 

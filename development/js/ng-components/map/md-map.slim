@@ -6,10 +6,12 @@
 
   .md-map-controls
     / Zoom In
-    a.md-m-c-button(href bs-tooltip-placement="right" bs-tooltip="Zoom In")
+    a.md-m-c-button(href bs-tooltip-placement="right" bs-tooltip="Zoom In"
+      ng-click="MapCtrl.zoomIn()")
       i.icon-plus
     / Zoom Out
-    a.md-m-c-button(href bs-tooltip-placement="right" bs-tooltip="Zoom Out")
+    a.md-m-c-button(href bs-tooltip-placement="right" bs-tooltip="Zoom Out"
+      ng-click="MapCtrl.zoomOut()")
       i.icon-minus
     / Fit All Marker In Map
     a.md-m-c-button(href bs-tooltip-placement="right" bs-tooltip="Display All Markers")

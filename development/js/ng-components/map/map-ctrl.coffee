@@ -47,4 +47,11 @@ app.controller 'MapCtrl',
       })
       delete place.attributes.id
       MapPlaces.create(place.attributes)
+
+    # map control
+    @zoomIn = ->
+      TheMap.zoomIn()
+
+    @zoomOut = ->
+      TheMap.zoomOut()
 ]
