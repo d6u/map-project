@@ -1,0 +1,16 @@
+.md-info-window-content
+  .md-iw-name
+    | {{place.name}}
+  a.md-iw-website(href ng-href="{{place.website}}" target="_blank")
+    | {{place.website}}
+  .md-iw-address
+    | {{place.vicinity}}
+  ol.md-iw-types
+    li.md-iw-type(ng-repeat="type in place.types")
+      ' {{type}}
+  .md-iw-review-summary
+    | {{place.review_summary}}
+  .md-infowindow-options(ng-hide="place.$$saved")
+    a(href ng-click="mapCtrl.addPlaceToList(place)")
+      i.icon-ok
+      | Add to list
