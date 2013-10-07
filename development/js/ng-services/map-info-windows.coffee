@@ -48,6 +48,12 @@ app.factory 'MapInfoWindows',
       @close()
       @scope.$destroy()
       @collection?.remove(@)
+
+    getInfoWindow: ->
+      return @_infoWindow
+
+    setContent: (content) ->
+      @getInfoWindow().setContent(content)
   }
 
 

@@ -1,6 +1,10 @@
 app.factory 'ThePlacesSearch',
-['TheMap','$q','$rootScope','MapMarkers','MapInfoWindows',
-( TheMap,  $q,  $rootScope,  MapMarkers,  MapInfoWindows) ->
+['TheMap','$q','$rootScope','MapMarkers','MapInfoWindows','$compile','mpTemplateCache',
+( TheMap,  $q,  $rootScope,  MapMarkers,  MapInfoWindows,  $compile,  mpTemplateCache) ->
+
+  # preload template
+  mpTemplateCache.get('/scripts/ng-components/map/info-window-detailed.html')
+
 
   # --- Model ---
   Result = Backbone.Model.extend {
@@ -12,11 +16,27 @@ app.factory 'ThePlacesSearch',
 
       @infoWindows = MapInfoWindows.createInfoWindowForSearchResult(@)
 
+      # load place details into info window
+      google.maps.event.addListenerOnce @getMarker(), 'rightclick', =>
+        scope = @infoWindows[0].scope
+        @collection.$placesService.getDetails {
+          reference: @get('reference')
+        }, (result, status) =>
+          if status == google.maps.places.PlacesServiceStatus.OK
+            scope.place = result
+            mpTemplateCache.get('/scripts/ng-components/map/info-window-detailed.html')
+            .then (template) =>
+              @infoWindows[0].setContent($compile(template)(scope)[0])
+
 
     destroy: ->
       infoWindow.destroy() for infoWindow in @infoWindows
       @marker.destroy()
       @collection?.remove(@)
+
+
+    getMarker: ->
+      return @marker.getMarker()
   }
 
 

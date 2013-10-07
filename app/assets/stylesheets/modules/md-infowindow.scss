@@ -7,6 +7,13 @@
   color: $blue;
 }
 
+
+// --- Detailed Info Window ---
+.md-iw-name {
+  font-weight: 400 !important;
+}
+
+
 @media screen and (max-width: 340px) {
   .md-infowindow-wrapper {
     width: 240px;
