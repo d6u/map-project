@@ -33,25 +33,25 @@
           .md-places-item-name
             | {{place.name}}
           address.md-places-item-address
-            | {{place.address}}
+            | {{place.formatted_address}}
 
   / --- Places ---
   .md-drawer-body-section(ng-show="projectViewCtrl.activeSection == 'places' || projectViewCtrl.activeSection == 'both'")
     ul.md-places
-      li.md-places-item(ng-repeat-start="place in mapCtrl.theProject.places" sidebar-place="sidebar-place")
+      li.md-places-item(ng-repeat-start="place in mapCtrl.MapPlaces.models" sidebar-place="sidebar-place")
         .md-places-item-image
           a(href ng-click="drawerCtrl.showPlaceOnMap(place)")
             img(ng-src="/img/blue-marker-3d.png")
         .md-places-item-actions
-          a.md-places-item-actions-remove(href ng-click="mapCtrl.theProject.removePlace(place)")
+          a.md-places-item-actions-remove(href ng-click="mapCtrl.MapPlaces.remove(place)")
             i.icon-remove
         .md-places-item-details
           .md-places-item-name
-            | {{place.name}}
+            | {{place.get('name')}}
           address.md-places-item-address
-            | {{place.formatted_address || place.address}}
+            | {{place.get('address')}}
           p
-            | {{place.notes}}
+            | {{place.get('notes')}}
 
       / Item - direction info
       li.md-places-item.md-places-item-route(ng-repeat-end ng-show="place.$$leg")

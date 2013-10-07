@@ -30,8 +30,12 @@ app.factory 'MapMarkers', ['TheMap', (TheMap) ->
     getPosition: ->
       return @getMarker().getPosition()
 
-    getMap: (map) ->
+    setMap: (map) ->
       @getMarker().setMap(map)
+
+    destroy: ->
+      @setMap(null)
+      @collection?.remove(@)
   }
 
 

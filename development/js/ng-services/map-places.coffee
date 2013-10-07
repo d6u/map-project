@@ -1,5 +1,6 @@
 app.factory 'MapPlaces',
-['MapMarkers', 'MapInfoWindows', (MapMarkers, MapInfoWindows) ->
+['MapMarkers','MapInfoWindows','MpProjects',
+( MapMarkers,  MapInfoWindows,  MpProjects) ->
 
   # --- Model ---
   Place = Backbone.Model.extend {
@@ -15,17 +16,16 @@ app.factory 'MapPlaces',
 
       @infoWindows = MapInfoWindows.createInfoWindowForSavedPlaces(@)
 
-      @on 'destroy', (model, collection, options) ->
+      # --- cleanup ---
+      @on 'destroy', (model, collection, options) =>
         console.debug model, collection, options
+        infoWindow.destroy() for infoWindow in @infoWindows
+        @marker.destroy()
+        @collection?.remove(@)
 
 
     getMarker: ->
       return @marker.getMarker()
-
-    sync: (method, model, options) ->
-
-
-
   }
 
 
@@ -33,13 +33,26 @@ app.factory 'MapPlaces',
   MapPlaces = Backbone.Collection.extend {
 
     model: Place
-    # url: "/projects"
 
     initialize: ->
+      @on 'reset', (collection, options) ->
+        place.destroy() for place in options.previousModels
+      @on 'remove', (place, collection, options) ->
+        place.destroy()
 
-
-    sync: (method, collection, options) ->
-      console.debug method, collection, options
+    loadProject: (scope, projectId) ->
+      if projectId
+        if MpProjects.$initializing?
+          MpProjects.$initializing.then =>
+            MpProjects.findProjectById(projectId).then (project) =>
+              @project = project
+              @url     = "/api/projects/#{@project.id}/places"
+              @fetch()
+        else
+          MpProjects.findProjectById(projectId).then (project) =>
+            @project = project
+            @url     = "/api/projects/#{@project.id}/places"
+            @fetch()
   }
 
 

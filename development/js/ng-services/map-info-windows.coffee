@@ -14,7 +14,7 @@ app.factory 'MapInfoWindows',
       }, attrs)
 
       that   = this
-      @scope  = options.scope
+      @scope = options.scope
       marker = options.place.marker.getMarker()
 
       marker.addListener options.event, ->
@@ -59,6 +59,7 @@ app.factory 'MapInfoWindows',
       return [ @createDetailInfoWindowForSavedPlace(place) ]
 
 
+    # --- mouseover InfoWindow ---
     bindMouseOverInfoWindow: (place) ->
       that   = this
       marker = place.marker.getMarker()

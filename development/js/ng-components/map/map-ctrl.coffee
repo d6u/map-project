@@ -10,11 +10,6 @@ class MapCtrl
 
 
     # --- Callbacks ---
-    # from Database
-    processServerPlacesData = (newIds, oldIds) =>
-
-
-
     # helper
     bindClickSaveToSearchResult = (searchResults) =>
       for place in searchResults
@@ -24,11 +19,8 @@ class MapCtrl
 
 
     # --- initialization ---
-    @theProject = TheProject
-    if $routeSegment.startsWith('ot')
-      TheProject.initialize($scope)
-    else
-      TheProject.initialize($scope, Number($routeSegment.$routeParams.project_id))
+    @MapPlaces = MapPlaces
+    MapPlaces.loadProject($scope, $routeSegment.$routeParams.project_id)
 
 
     ThePlacesSearch.on 'newSearchResultsAdded', =>
@@ -43,10 +35,12 @@ class MapCtrl
       if place.attributes?
         place.destroy()
         place.set({coord: place.get('geometry').location.toString()})
+        delete place.attributes.id
         MapPlaces.create(place.attributes)
       else
         ThePlacesSearch.findWhere({id: place.id}).destroy()
         place.coord = place.location.toString()
+        delete place.id
         MapPlaces.create(place)
 
 
@@ -57,10 +51,4 @@ class MapCtrl
       if newVal
         @placeSearchResults = _.pluck(ThePlacesSearch.models, 'attributes')
     ), true
-
-
-    # watch for marked places and make marker for them
-    $scope.$watch (->
-      return _.pluck(TheProject.places, 'id').sort()
-    ), processServerPlacesData, true
 ]
