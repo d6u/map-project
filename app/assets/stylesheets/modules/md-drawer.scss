@@ -52,3 +52,56 @@ $drawerWidth: 350px;
 
 
 // --- Level 1 ---
+.md-drawer-top-bar {
+  height: 40px;
+}
+
+.md-drawer-body {
+  position  : absolute;
+  top       : 40px;
+  left      : 0;
+  right     : 0;
+  bottom    : 0;
+  overflow-y: auto;
+}
+
+
+// --- Level 2 ---
+// top-bar
+.md-drawer-t-b-button {
+  display         : inline-block;
+  height          : 100%;
+  width           : 155px;
+  text-align      : center;
+  font-size       : 16px;
+  line-height     : 40px;
+  background-color: $mintDark;
+  color           : #FFF;
+
+  &:hover,
+  &.active {
+    color           : #FFF;
+    text-decoration : none;
+    background-color: $mint;
+  }
+}
+
+
+// body
+.md-drawer-b-section {}
+
+
+.md-drawer-b-s-header {
+  font-weight: 300;
+  font-size  : 18px;
+  padding    : 20px;
+  color      : #FFF;
+  text-align : center;
+}
+
+
+// specific
+.md-drawer-t-b-button-close {
+  @extend .md-drawer-t-b-button;
+  width: 40px;
+}

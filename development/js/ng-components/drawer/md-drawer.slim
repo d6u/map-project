@@ -1,46 +1,61 @@
 / Container:
-/ div.md-drawer md-drawer
-/ ng-class="{'md-drawer-double-size': drawerCtrl.activeSection == 'both'}"
+/ .md-drawer(md-drawer
+/   ng-class="{'md-drawer-double-size': projectViewCtrl.activeSection == 'both',
+/   'md-drawer-show': projectViewCtrl.showDrawer}")
 
 
 / --- Top ---
-.md-drawer-topbar
-  a.md-drawer-topbar-button.md-drawer-topbar-button-fill(href ng-class="{active: projectViewCtrl.activeSection == 'searchResults'}" ng-click="projectViewCtrl.activeSection = 'searchResults'") Search Results
-  a.md-drawer-topbar-button(href ng-class="{active: projectViewCtrl.activeSection == 'both'}" ng-click="projectViewCtrl.activeSection = 'both'")
-    i.icon-columns
-  a.md-drawer-topbar-button.md-drawer-topbar-button-fill(href ng-class="{active: projectViewCtrl.activeSection == 'places'}" ng-click="projectViewCtrl.activeSection = 'places'") Places
-  a.md-drawer-topbar-button(href ng-click="projectViewCtrl.showDrawer = false")
+.md-drawer-top-bar
+  a.md-drawer-t-b-button(href
+    ng-class="{active: projectViewCtrl.activeSection == 'searchResults'}"
+    ng-click="projectViewCtrl.activeSection = 'searchResults'")
+    | Search Results
+  a.md-drawer-t-b-button(href
+    ng-class="{active: projectViewCtrl.activeSection == 'places'}"
+    ng-click="projectViewCtrl.activeSection = 'places'")
+    | Places
+  a.md-drawer-t-b-button-close(href
+    ng-click="projectViewCtrl.showDrawer = false")
     i.icon-remove
 
 
 / --- Body ---
 .md-drawer-body
-  / --- Search results ---
-  .md-drawer-body-section(ng-show="projectViewCtrl.activeSection == 'searchResults' || projectViewCtrl.activeSection == 'both'")
-    header.md-drawer-list-header.lead Showing {{mapCtrl.placeSearchResults.length}} search results
+  / --- Search Results ---
+  .md-drawer-b-section(ng-show="projectViewCtrl.activeSection == 'searchResults'")
+
+    header.md-drawer-b-s-header(ng-hide="MapCtrl.ThePlacesSearch.length")
+      | Start a search in the search box on bottom bar.
+
     ul.md-places
-      li.md-places-item.clearfix(ng-repeat="place in mapCtrl.placeSearchResults")
+      / place item
+      li.md-places-item(ng-repeat="place in MapCtrl.ThePlacesSearch.models")
+
         .md-places-item-image
-          a(href ng-click="drawerCtrl.showPlaceOnMap(place)")
-            img(ng-src="{{place.icon}}")
+          a(href ng-click="MapCtrl.centerSearchResult(place)")
+            img(ng-src="{{ place.get('icon') }}")
         .md-places-item-actions
-          a(href ng-click="mapCtrl.addPlaceToList(place)")
+          a(href ng-click="MapCtrl.addPlaceToList(place)")
             i.icon-ok
         .md-places-item-details
           .md-places-item-name
-            | {{place.name}}
+            | {{ place.get('name') }}
           address.md-places-item-address
-            | {{place.formatted_address}}
+            | {{ place.get('formatted_address') }}
+
 
   / --- Places ---
-  .md-drawer-body-section(ng-show="projectViewCtrl.activeSection == 'places' || projectViewCtrl.activeSection == 'both'")
+  .md-drawer-b-section(ng-show="projectViewCtrl.activeSection == 'places'")
+
     ul.md-places
-      li.md-places-item(ng-repeat-start="place in mapCtrl.MapPlaces.models" sidebar-place="sidebar-place")
+      / place item
+      li.md-places-item(ng-repeat-start="place in MapCtrl.MapPlaces.models")
+
         .md-places-item-image
           a(href ng-click="drawerCtrl.showPlaceOnMap(place)")
             img(ng-src="/img/blue-marker-3d.png")
         .md-places-item-actions
-          a.md-places-item-actions-remove(href ng-click="mapCtrl.MapPlaces.remove(place)")
+          a.md-places-item-actions-remove(href ng-click="MapCtrl.MapPlaces.remove(place)")
             i.icon-remove
         .md-places-item-details
           .md-places-item-name
@@ -49,6 +64,7 @@
             | {{place.get('address')}}
           p
             | {{place.get('notes')}}
+
 
       / Item - direction info
       li.md-places-item.md-places-item-route(ng-repeat-end ng-show="place.$$leg")

@@ -14,7 +14,8 @@
       | Login or Register
 
     / show drawer
-    a.md-bb-button(href ng-click="projectViewCtrl.showDrawer = !projectViewCtrl.showDrawer")
+    a.md-bb-button(href
+      ng-click="projectViewCtrl.showDrawer = !projectViewCtrl.showDrawer; projectViewCtrl.activeSection = 'searchResults'")
       i.icon-caret-up
 
   / Middle

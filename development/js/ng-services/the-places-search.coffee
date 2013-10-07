@@ -37,6 +37,10 @@ app.factory 'ThePlacesSearch',
 
     getMarker: ->
       return @marker.getMarker()
+
+
+    centerInMap: ->
+      TheMap.setMapCenter( @getMarker().getPosition() )
   }
 
 

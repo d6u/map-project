@@ -22,7 +22,8 @@
     a.md-m-c-button(href bs-tooltip-placement="right" bs-tooltip="Toggle Display Directions")
       i.icon-code-fork
     / Show Saved Places List
-    a.md-m-c-button(href bs-tooltip-placement="right" bs-tooltip="Show Saved Places List")
+    a.md-m-c-button(href bs-tooltip-placement="right" bs-tooltip="Show Saved Places List"
+      ng-click="projectViewCtrl.showDrawer = !projectViewCtrl.showDrawer; projectViewCtrl.activeSection = 'places'")
       i.icon-th-list
     / Edit Project
     a.md-m-c-button(href bs-tooltip-placement="right" bs-tooltip="Edit Project Detail")
