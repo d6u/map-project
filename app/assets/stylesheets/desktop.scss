@@ -14,11 +14,12 @@
 @import "base/ng-cloak";
 
 @import "layouts/ly-base";
-@import "layouts/ly-pusher";
 
 @import "components/cp-input";
 @import "components/cp-typeahead";
 @import "components/md-modal";
+
+@import "modules/md-pusher";
 
 @import "modules/md-aside";
 @import "modules/md-bottom-bar";
