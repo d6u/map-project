@@ -14,7 +14,8 @@
       ng-click="MapCtrl.zoomOut()")
       i.icon-minus
     / Fit All Marker In Map
-    a.md-m-c-button(href bs-tooltip-placement="right" bs-tooltip="Display All Markers")
+    a.md-m-c-button(href bs-tooltip-placement="right" bs-tooltip="Display All Markers"
+      ng-click="MapCtrl.displayAllMarkers()")
       i.icon-globe
     / Show Direction
     a.md-m-c-button(href bs-tooltip-placement="right" bs-tooltip="Show Direction Informations")

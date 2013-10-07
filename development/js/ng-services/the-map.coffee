@@ -41,6 +41,7 @@ app.factory 'TheMap',
 
       @setMapBounds = (bounds) ->
         @$googleMap.fitBounds(bounds)
+      @fitBounds = @setMapBounds
 
       @getMap = ->
         @$googleMap

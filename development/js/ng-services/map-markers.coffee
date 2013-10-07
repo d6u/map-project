@@ -50,6 +50,12 @@ app.factory 'MapMarkers', ['TheMap', (TheMap) ->
 
     create: ->
       return @push.apply(@, arguments)
+
+    displayAllMarkers: ->
+      if @length
+        bounds = new google.maps.LatLngBounds
+        bounds.extend(place.getPosition()) for place in @models
+        TheMap.fitBounds(bounds)
   }
 
 

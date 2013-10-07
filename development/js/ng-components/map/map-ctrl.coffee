@@ -54,4 +54,7 @@ app.controller 'MapCtrl',
 
     @zoomOut = ->
       TheMap.zoomOut()
+
+    @displayAllMarkers = ->
+      MapMarkers.displayAllMarkers()
 ]
