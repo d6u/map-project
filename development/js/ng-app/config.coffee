@@ -10,7 +10,6 @@ app = angular.module('mapApp', [
   # Self made modules
   'angular-perfect-scrollbar',
   'angular-bootstrap',
-  'angular-jquery-ui',
   'mini-typeahead',
   'md-tabset',
   'md-masonry',

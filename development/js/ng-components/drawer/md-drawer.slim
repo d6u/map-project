@@ -47,9 +47,9 @@
   / --- Places ---
   .md-drawer-b-section(ng-show="projectViewCtrl.activeSection == 'places'")
 
-    ul.md-places
+    ul.md-places(md-places-list-sortable)
       / place item
-      li.md-places-item(ng-repeat-start="place in MapCtrl.MapPlaces.models")
+      li.md-places-item(ng-repeat="place in MapCtrl.MapPlaces.models")
 
         .md-places-item-image
           a(href ng-click="MapCtrl.centerSavedPlace(place)")
@@ -64,13 +64,3 @@
             | {{ place.get('address') }}
           p
             | {{ place.get('notes') }}
-
-
-      / Item - direction info
-      li.md-places-item.md-places-item-route(ng-repeat-end ng-show="place.$$leg")
-        span.md-places-item-route-duration
-          | {{place.$$leg.duration.text}}
-        ' ,
-        span.md-places-item-route-distance
-          | {{place.$$leg.distance.text}}
-        |  to next place

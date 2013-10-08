@@ -7,8 +7,10 @@ app.factory 'MapPlaces',
     initialize: (attrs, options) ->
       # normalize attributes
       @set({$$saved: true})
-      if attrs.formatted_address?
+      if !attrs.address?
         @set({address: attrs.formatted_address})
+      if !attrs.order?
+        @set({order:   @collection.length})
 
       # load details about the place
       @collection.$placesService.getDetails {
@@ -60,7 +62,8 @@ app.factory 'MapPlaces',
   # --- Collection ---
   MapPlaces = Backbone.Collection.extend {
 
-    model: Place
+    model:      Place
+    comparator: 'order'
 
     initialize: ->
       TheMap.on 'initialized', =>

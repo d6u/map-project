@@ -92,6 +92,7 @@ app.factory 'MapDirections',
           if !_arguments[0]?
             for leg, idx in response.routes[0].legs
               MapPlaces.at(idx).set({direction_leg: leg})
+            MapPlaces.at(MapPlaces.length - 1).unset('direction_leg')
 
           gotDirections.resolve(response)
         else
