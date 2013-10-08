@@ -22,13 +22,14 @@
   .md-bb-section-middle
     / search input
     input.md-bb-text-input(type="text" placeholder="Search place name"
-      md-map-searchbox ng-model="MdMapSearchBoxCtrl.inputVal"
+      md-map-searchbox ng-model="MdBottomBarCtrl.inputVal"
       mini-typeahead="{listClass: 'cp-typeahead', cursorOnClass: 'cp-typeahead-cursor-on'}"
       mini-typeahead-list="MdMapSearchBoxCtrl.placePredictions"
       mini-typeahead-change="MdMapSearchBoxCtrl.getQueryPredictions"
       mini-typeahead-select="MdMapSearchBoxCtrl.queryPlacesService")
 
     / clear input
-    a.md-bb-button-clear-input(href ng-show="MdMapSearchBoxCtrl.inputVal.length"
-      ng-click="MdMapSearchBoxCtrl.clearInput()")
+    a.md-bb-button-clear-input(href ng-show="MdBottomBarCtrl.inputVal.length"
+      ng-click="MdBottomBarCtrl.clearInput()"
+      bs-tooltip-placement="top" bs-tooltip="Clear all search results")
       i.icon-remove

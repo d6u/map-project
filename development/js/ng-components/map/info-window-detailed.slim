@@ -10,6 +10,18 @@
       ' {{type}}
   .md-iw-review-summary
     | {{ place.get('review_summary') }}
+
+  / --- Directions ---
+  .md-iw-directions(ng-show="place.has('direction_leg')")
+    .md-iw-d-distance
+      | {{ place.get('direction_leg').distance.text }} to next place
+    .md-iw-d-duration
+      | {{ place.get('direction_leg').duration.text }}
+
+  .md-iw-directions(ng-hide="place.has('direction_leg')")
+    | This is the last stop.
+
+  / --- Actions ---
   .md-infowindow-options(ng-hide="place.get('$$saved')")
     a(href ng-click="MapCtrl.addPlaceToList(place)")
       i.icon-ok

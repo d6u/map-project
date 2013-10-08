@@ -1,9 +1,9 @@
 app.controller 'MapCtrl',
 ['$scope','TheProject','$routeSegment','TheMap','ThePlacesSearch','MapMarkers',
-'MapPlaces','MapInfoWindows', class MapCtrl
+'MapPlaces','MapInfoWindows','MapDirections', class MapCtrl
 
   constructor: ($scope, TheProject, $routeSegment, TheMap, ThePlacesSearch,
-    MapMarkers, MapPlaces, MapInfoWindows) ->
+    MapMarkers, MapPlaces, MapInfoWindows, MapDirections) ->
 
     # --- Callbacks ---
     # helper
@@ -17,6 +17,7 @@ app.controller 'MapCtrl',
     # --- initialization ---
     @MapPlaces       = MapPlaces
     @ThePlacesSearch = ThePlacesSearch
+    @MapDirections   = MapDirections
 
     MapPlaces.loadProject($scope, $routeSegment.$routeParams.project_id)
 
@@ -57,4 +58,13 @@ app.controller 'MapCtrl',
 
     @displayAllMarkers = ->
       MapMarkers.displayAllMarkers()
+
+    @openAllDirectionsInfoWindows = ->
+      if !MapDirections.$autoRender
+        @toggleDirectionsAutoRender()
+      MapPlaces.openAllDirectionsInfoWindows()
+      MapPlaces.displayAllMarkers()
+
+    @toggleDirectionsAutoRender = ->
+      MapDirections.toggleAutoRender()
 ]

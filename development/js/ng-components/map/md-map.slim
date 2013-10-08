@@ -18,11 +18,16 @@
       ng-click="MapCtrl.displayAllMarkers()")
       i.icon-globe
     / Show Direction
-    a.md-m-c-button(href bs-tooltip-placement="right" bs-tooltip="Show Direction Informations")
+    a.md-m-c-button(href bs-tooltip-placement="right" bs-tooltip="Show Direction Informations"
+      ng-click="MapCtrl.openAllDirectionsInfoWindows()")
       i.icon-code-fork
 
     / Toggle Render Direction
-    a.md-m-c-button(href bs-tooltip-placement="right" bs-tooltip="Toggle Display Directions")
+    a.md-m-c-button(href
+      bs-tooltip-placement="right"
+      bs-tooltip="Toggle Display Directions"
+      ng-click="MapCtrl.toggleDirectionsAutoRender()"
+      ng-class="{active: MapCtrl.MapDirections.$autoRender}")
       i.icon-code-fork
     / Show Saved Places List
     a.md-m-c-button(href bs-tooltip-placement="right" bs-tooltip="Show Saved Places List"
