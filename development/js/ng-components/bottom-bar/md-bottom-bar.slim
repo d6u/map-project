@@ -6,7 +6,9 @@
   / Left
   .md-bb-section-left
     / show side menu
-    a.md-bb-button(href ng-click="MpUI.showSideMenu = true")
+    a.md-bb-button(href ng-click="MpUI.showSideMenu = true"
+      bs-tooltip="Show Menu"
+      bs-tooltip-placement="top")
       i.icon-reorder
 
     / Login with Facebook
@@ -15,7 +17,9 @@
 
     / show drawer
     a.md-bb-button(href
-      ng-click="MpUI.showMapDrawer = !MpUI.showMapDrawer; MpUI.mapDrawerActiveSection = 'searchResults'")
+      ng-click="MpUI.showMapDrawer = !MpUI.showMapDrawer; MpUI.mapDrawerActiveSection = 'searchResults'"
+      bs-tooltip="Show List of Search Results"
+      bs-tooltip-placement="top")
       i.icon-caret-up
 
   / Middle
