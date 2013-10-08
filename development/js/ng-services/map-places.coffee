@@ -29,17 +29,19 @@ app.factory 'MapPlaces',
         @collection?.remove(@)
 
 
+    sync: (method, model, options) ->
+      if MpUser.getUser()?
+        Backbone.sync.apply(@, arguments)
+
+    # --- API ---
     getMarker: ->
       return @marker.getMarker()
-
 
     centerInMap: ->
       TheMap.setMapCenter( @getMarker().getPosition() )
 
-
-    sync: (method, model, options) ->
-      if MpUser.getUser()?
-        Backbone.sync.apply(@, arguments)
+    getPosition: ->
+      return @getMarker().getPosition()
   }
 
 

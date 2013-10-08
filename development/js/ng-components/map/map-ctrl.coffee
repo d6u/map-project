@@ -1,9 +1,9 @@
 app.controller 'MapCtrl',
 ['$scope','TheProject','$routeSegment','TheMap','ThePlacesSearch','MapMarkers',
-'MapPlaces','MapInfoWindows', class MapCtrl
+'MapPlaces','MapInfoWindows','MapDirections', class MapCtrl
 
   constructor: ($scope, TheProject, $routeSegment, TheMap, ThePlacesSearch,
-    MapMarkers, MapPlaces, MapInfoWindows) ->
+    MapMarkers, MapPlaces, MapInfoWindows, MapDirections) ->
 
     # --- Callbacks ---
     # helper
@@ -57,4 +57,9 @@ app.controller 'MapCtrl',
 
     @displayAllMarkers = ->
       MapMarkers.displayAllMarkers()
+
+    @renderDirections = ->
+      if MapPlaces.length >= 2
+        MapDirections.route().then (results) ->
+          MapDirections.renderDirections()
 ]
