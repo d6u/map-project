@@ -1,7 +1,8 @@
 app.controller 'OutsideViewCtrl',
-['$scope', 'MpUser', 'TheProject', 'MpProjects', '$q', '$location', class OutsideViewCtrl
+['$scope','MpUser','TheProject','MpProjects','$q','$location','MpUI'
+class OutsideViewCtrl
 
-  constructor: ($scope, MpUser, TheProject, MpProjects, $q, $location) ->
+  constructor: ($scope, MpUser, TheProject, MpProjects, $q, $location, MpUI) ->
     @hideHomepage = false
 
     @loginWithFacebook = ->
@@ -11,9 +12,9 @@ app.controller 'OutsideViewCtrl',
           MpProjects.createProject(TheProject.project).then (project) ->
             $q.all(TheProject.savePlacesOfProject(TheProject.places, project)).then ->
               $location.path "/project/#{project.id}"
-              $scope.interface.showUserSection = false
+              MpUI.showSideMenu = false
       else
         MpUser.fbLogin ->
           $location.path '/dashboard'
-          $scope.interface.showUserSection = false
+          MpUI.showSideMenu = false
 ]

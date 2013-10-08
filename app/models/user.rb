@@ -16,6 +16,7 @@ class User < ActiveRecord::Base
   # project
   has_many :projects             , dependent: :destroy,
                                    foreign_key: 'owner_id'
+  has_many :places
 
   # friends
   has_many :friendships          , dependent:   :destroy

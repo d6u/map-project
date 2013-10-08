@@ -23,17 +23,3 @@
         li.md-project-participants-item(ng-repeat="user in project.participating_users")
           img.md-project-participants-item(ng-src="{{user.profile_picture}}")
       .md-project-lastmessage
-
-
-//- Bottom
-.md-bottom-bar
-  .md-bottom-bar-button-group
-    //- show side menu
-    a.md-bottom-bar-button.md-bottom-bar-notification-button(href="", ng-click="interface.showUserSection = true")
-      i.icon-reorder
-      .md-bottom-bar-notification-count(ng-show="mdNoticePop.unreadNotice", ng-cloak="") {{mdNoticePop.unreadNotice}}
-
-  .md-bottom-bar-button-group-center.md-bottom-bar-text Dashboard
-
-  .md-bottom-bar-button-group
-    //- placeholder: to push .md-bottom-bar-button-group-center to center

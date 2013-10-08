@@ -1,18 +1,28 @@
 //- Container: .ly-application
-.ly-pusher(ng-class="{'ly-pusher-pushed': interface.showUserSection}")
+
+
+.md-pusher(ng-class="{'md-pusher-pushed': MpUI.showSideMenu}")
 
   //- Menu
-  section.ly-pusher-side.md-side-menu(md-side-menu="")
+  section.md-pusher-side
+    div(md-side-menu-inside="")
 
   //- Body
-  section.ly-pusher-content(app-view-segment="1")
+  section.md-pusher-content
+
+    //- View Segment
+    .ly-fullscreen(app-view-segment="1")
+
+    //- Bottom Bar
+    div(md-bottom-bar)
+
 
   //- Pop notice
   ol.md-notice-pop-container(md-notice-pop="")
     li.md-notice-pop.clearfix(ng-repeat="notice in mdNoticePop.notices", md-notice-pop-item="")
 
   //- Overlay
-  .ly-pusher-overlay(ng-click="interface.showUserSection = false")
+  .md-pusher-overlay(ng-click="MpUI.showSideMenu = false")
 
 
   //- --- Invitation Window ---

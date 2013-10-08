@@ -1,28 +1,27 @@
 / Container:
 / .md-drawer(md-drawer
-/   ng-class="{'md-drawer-double-size': projectViewCtrl.activeSection == 'both',
-/   'md-drawer-show': projectViewCtrl.showDrawer}")
+/   ng-class="{'md-drawer-show': MpUI.showMapDrawer}")
 
 
 / --- Top ---
 .md-drawer-top-bar
   a.md-drawer-t-b-button(href
-    ng-class="{active: projectViewCtrl.activeSection == 'searchResults'}"
-    ng-click="projectViewCtrl.activeSection = 'searchResults'")
+    ng-class="{active: MpUI.mapDrawerActiveSection == 'searchResults'}"
+    ng-click="MpUI.mapDrawerActiveSection = 'searchResults'")
     | Search Results
   a.md-drawer-t-b-button(href
-    ng-class="{active: projectViewCtrl.activeSection == 'places'}"
-    ng-click="projectViewCtrl.activeSection = 'places'")
+    ng-class="{active: MpUI.mapDrawerActiveSection == 'places'}"
+    ng-click="MpUI.mapDrawerActiveSection = 'places'")
     | Places
   a.md-drawer-t-b-button-close(href
-    ng-click="projectViewCtrl.showDrawer = false")
+    ng-click="MpUI.showMapDrawer = false")
     i.icon-remove
 
 
 / --- Body ---
 .md-drawer-body
   / --- Search Results ---
-  .md-drawer-b-section(ng-show="projectViewCtrl.activeSection == 'searchResults'")
+  .md-drawer-b-section(ng-show="MpUI.mapDrawerActiveSection == 'searchResults'")
 
     header.md-drawer-b-s-header(ng-hide="MapCtrl.ThePlacesSearch.length")
       | Start a search in the search box on bottom bar.
@@ -45,7 +44,7 @@
 
 
   / --- Places ---
-  .md-drawer-b-section(ng-show="projectViewCtrl.activeSection == 'places'")
+  .md-drawer-b-section(ng-show="MpUI.mapDrawerActiveSection == 'places'")
 
     ul.md-places(md-places-list-sortable)
       / place item
@@ -55,7 +54,8 @@
           a(href ng-click="MapCtrl.centerSavedPlace(place)")
             img(src="/img/blue-marker-3d.png")
         .md-places-item-actions
-          a.md-places-item-actions-remove(href ng-click="MapCtrl.MapPlaces.remove(place)")
+          a.md-places-item-actions-remove(href
+            ng-click="MapCtrl.MapPlaces.remove(place)")
             i.icon-remove
         .md-places-item-details
           .md-places-item-name

@@ -1,7 +1,3 @@
-app.controller 'FriendsViewCtrl',
-[->
-
-  @searchInput = ""
-
-  return
+app.controller 'FriendsViewCtrl', [class FriendsViewCtrl
+  constructor: ->
 ]
