@@ -11,8 +11,9 @@
       bs-tooltip-placement="top")
       i.icon-reorder
 
-    / Login with Facebook
-    a.md-bb-button-login(href)
+    / Login / Register
+    a.md-bb-button-login(href
+      ng-click="MpUI.showSideMenu = true")
       | Login or Register
 
     / show drawer

@@ -43,7 +43,7 @@ app.config(['socketProvider', '$httpProvider', '$routeSegmentProvider',
   .segment('ot', {
     templateUrl:  '/scripts/ng-views/ot/outside-view.html'
     controller:   'OutsideViewCtrl'
-    controllerAs: 'outsideViewCtrl'
+    controllerAs: 'OutsideViewCtrl'
     resolve:
       MpInitializer:          'MpInitializer'
       redirectToInsideIfLogin: mpResolverOt
