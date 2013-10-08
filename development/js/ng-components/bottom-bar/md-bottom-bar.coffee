@@ -20,9 +20,9 @@ app.directive 'mdBottomBar', [->
           when 'in.project'
             @contentTemplateUrl = '/scripts/ng-components/bottom-bar/md-bottom-bar-ot-project.html'
           when 'in.friends'
-            @contentTemplateUrl = ''
+            @contentTemplateUrl = '/scripts/ng-components/bottom-bar/md-bottom-bar-in-friends.html'
           when 'in.search'
-            @contentTemplateUrl = ''
+            @contentTemplateUrl = '/scripts/ng-components/bottom-bar/md-bottom-bar-in-search.html'
   ]
 
   link: (scope, element, attrs, MdBottomBarCtrl) ->

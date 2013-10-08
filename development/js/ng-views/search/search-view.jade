@@ -14,19 +14,3 @@
             | {{user | searchFriendsStatusFilter}}
 
     p.lead(ng-show="searchViewCtrl.showNoResults") Sorry, we cannot find user with name "{{searchViewCtrl.lastSearchInput}}" that is not your friend
-
-
-  //- Bottom
-  .md-bottom-bar
-    .md-bottom-bar-button-group
-      //- show side menu
-      a.md-bottom-bar-button.md-bottom-bar-notification-button(href="", ng-click="interface.showUserSection = true")
-        i.icon-reorder
-        .md-bottom-bar-notification-count(ng-show="mdNoticePop.unreadNotice", ng-cloak="") {{mdNoticePop.unreadNotice}}
-      input.md-bottom-bar-input(type="text", placeholder="Enter name to search", ng-model="searchViewCtrl.searchInput", md-search-view-searchinput="")
-
-    .md-bottom-bar-button-group-center.md-bottom-bar-text
-      {{searchViewCtrl.searchResults.length}} results
-
-    .md-bottom-bar-button-group
-      //- placeholder: to push .md-bottom-bar-button-group-center to center
