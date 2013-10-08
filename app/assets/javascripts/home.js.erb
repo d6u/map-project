@@ -1,13 +1,24 @@
 <% environment.context_class.instance_eval { include ApplicationHelper } %>
 
+// detect class name on element
+function hasClass(elem, className) {
+  return new RegExp(' ' + className + ' ').test(' ' + elem.className + ' ');
+}
+
+// load 1.x jQuery for IE older than 9
+if (hasClass(document.getElementsByTagName('html')[0], 'lt-ie9')) {
+  var jQuerySources = ['//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js', '/js/jquery-1.10.2.min'];
+} else {
+  var jQuerySources = ['//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min', '/js/jquery-2.0.3.min'];
+}
+
 // --- Config ---
 require.config({
   enforceDefine: true,
   waitSeconds: 5,
   baseUrl: '/assets',
   paths: {
-    'jquery'     : ['//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min',
-                    '/js/jquery-2.0.3.min'],
+    'jquery'     : jQuerySources,
     'modernizr'  : '/js/modernizr-2.6.2.min',
     'google.maps': '//maps.googleapis.com/maps/api/js?key=<%= $api_keys['google']['browser_app_key'] %>&libraries=places&sensor=true&callback=initGoogleMaps',
     'facebook'   : '//connect.facebook.net/en_US/all',
@@ -38,7 +49,7 @@ require.config({
       exports: ''
     }
   }
-})
+});
 
 
 // --- 3rd party libraries preparation ---
