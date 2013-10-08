@@ -1,12 +1,18 @@
 / Container: .ly-application
-.ly-pusher(ng-class="{'ly-pusher-pushed': interface.showUserSection}")
+.md-pusher(ng-class="{'md-pusher-pushed': interface.showUserSection}")
 
   / Pusher side
-  section.ly-pusher-side
-    div(md-side-menu)
+  section.md-pusher-side
+    div(md-side-menu-outside)
 
   / Pusher body
-  section.ly-pusher-content
+  section.md-pusher-content
+
+    / --- Map ---
+    .ly-fullscreen(ng-include="'/scripts/ng-components/map/md-map.html'")
+
+    / --- Bottom Bar ---
+    div(md-bottom-bar)
 
     / --- Homepage ---
     .md-homepage(ng-class="{'md-homepage-fadeout': outsideViewCtrl.hideHomepage}")
@@ -29,15 +35,5 @@
         a.md-homepage-bottom-nav-bar-login-btn(href ng-click="interface.showUserSection = true") Login/Register
 
 
-    / --- Map ---
-    .ly-fullscreen(ng-controller="MapCtrl as mapCtrl")
-      div(md-bottom-bar)
-      .md-map
-        .md-map-canvas(mp-map-canvas)
-        .md-drawer.clearfix(md-drawer ng-class="{'md-drawer-double-size': projectViewCtrl.activeSection == 'both', 'md-drawer-show': projectViewCtrl.showDrawer}")
-        .md-modal.md-effect-3.md-map-modal(md-project-modal ng-class="{'md-modal-show': mdProjectModalCtrl.showModal}")
-        .md-modal-overlay.md-map-modal-overlay
-
-
   / --- Pusher overlay ---
-  .ly-pusher-overlay(ng-click="interface.showUserSection = false")
+  .md-pusher-overlay(ng-click="interface.showUserSection = false")

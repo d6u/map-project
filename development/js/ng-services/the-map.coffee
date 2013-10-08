@@ -41,12 +41,22 @@ app.factory 'TheMap',
 
       @setMapBounds = (bounds) ->
         @$googleMap.fitBounds(bounds)
+      @fitBounds = @setMapBounds
 
       @getMap = ->
         @$googleMap
 
       @getBounds = ->
         @getMap()?.getBounds()
+
+      @setZoom = (zoomLevel) ->
+        @getMap().setZoom(zoomLevel)
+
+      @zoomIn = ->
+        @setZoom( @getMap().getZoom() + 1 )
+
+      @zoomOut = ->
+        @setZoom( @getMap().getZoom() - 1 )
 
   # --- END TheMap class ---
 

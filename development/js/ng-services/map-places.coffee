@@ -1,10 +1,16 @@
 app.factory 'MapPlaces',
-['MapMarkers','MapInfoWindows','MpProjects',
-( MapMarkers,  MapInfoWindows,  MpProjects) ->
+['MapMarkers','MapInfoWindows','MpProjects','TheMap','MpUser',
+( MapMarkers,  MapInfoWindows,  MpProjects,  TheMap,  MpUser) ->
 
   # --- Model ---
   Place = Backbone.Model.extend {
     initialize: (attrs, options) ->
+      # normalize attributes
+      @set({$$saved: true})
+      if attrs.formatted_address?
+        @set({address: attrs.formatted_address})
+
+      # marker
       coordMatch = /\((.+), (.+)\)/.exec(attrs.coord)
       latLng     = new google.maps.LatLng(coordMatch[1], coordMatch[2])
       @marker = MapMarkers.create({
@@ -18,7 +24,6 @@ app.factory 'MapPlaces',
 
       # --- cleanup ---
       @on 'destroy', (model, collection, options) =>
-        console.debug model, collection, options
         infoWindow.destroy() for infoWindow in @infoWindows
         @marker.destroy()
         @collection?.remove(@)
@@ -26,6 +31,15 @@ app.factory 'MapPlaces',
 
     getMarker: ->
       return @marker.getMarker()
+
+
+    centerInMap: ->
+      TheMap.setMapCenter( @getMarker().getPosition() )
+
+
+    sync: (method, model, options) ->
+      if MpUser.getUser()?
+        Backbone.sync.apply(@, arguments)
   }
 
 
@@ -53,6 +67,11 @@ app.factory 'MapPlaces',
             @project = project
             @url     = "/api/projects/#{@project.id}/places"
             @fetch()
+
+
+    sync: (method, collection, options) ->
+      if MpUser.getUser()?
+        Backbone.sync.apply(@, arguments)
   }
 
 
