@@ -59,10 +59,11 @@ app.controller 'MapCtrl',
     @displayAllMarkers = ->
       MapMarkers.displayAllMarkers()
 
-    @renderDirections = ->
-      if MapPlaces.length >= 2
-        MapDirections.route().then (results) ->
-          MapDirections.renderDirections()
+    @openAllDirectionsInfoWindows = ->
+      if !MapDirections.$autoRender
+        @toggleDirectionsAutoRender()
+      MapPlaces.openAllDirectionsInfoWindows()
+      MapPlaces.displayAllMarkers()
 
     @toggleDirectionsAutoRender = ->
       MapDirections.toggleAutoRender()

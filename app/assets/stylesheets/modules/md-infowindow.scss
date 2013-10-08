@@ -1,21 +1,20 @@
-.md-infowindow-wrapper {
-  // TODO: fix google map infoWindow overflow on bottom
-  width: 300px;
-}
-
-.md-infowindow-route {
-  color: $blue;
-}
-
-
 // --- Detailed Info Window ---
 .md-iw-name {
   font-weight: 400 !important;
 }
 
 
-@media screen and (max-width: 340px) {
-  .md-infowindow-wrapper {
-    width: 240px;
-  }
+// --- Directions ---
+.md-iw-directions {
+  margin-top: 10px;
+  color     : $mint;
+}
+
+
+.md-iw-d-distance {}
+
+
+.md-iw-d-duration {
+  color    : $mint;
+  font-size: 24px !important;
 }

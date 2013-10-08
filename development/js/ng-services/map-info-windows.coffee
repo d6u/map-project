@@ -13,13 +13,16 @@ app.factory 'MapInfoWindows',
       @_infoWindow = new google.maps.InfoWindow(attrs)
 
       # fix content undefined issue
-      if !options.template?
-        content = '<div></div>'
-        mpTemplateCache.get('/scripts/ng-components/map/info-window-brief.html')
-        .then (template) =>
-          @_infoWindow.setContent($compile(template)(options.scope)[0])
-      else
+      if options.template?
         content = $compile(options.template)(options.scope)[0]
+      else
+        template = $templateCache.get(options.templateUrl)
+        if template?
+          content = $compile(template)(options.scope)[0]
+        else
+          content = '<div></div>'
+          mpTemplateCache.get(options.templateUrl).then (template) =>
+            @_infoWindow.setContent($compile(template)(options.scope)[0])
 
       @_infoWindow.setContent(content)
 
@@ -27,21 +30,23 @@ app.factory 'MapInfoWindows',
       that   = this
       marker = options.place.marker.getMarker()
 
-      marker.addListener options.event, ->
-        that.collection.$mouseOverInfoWindow.close()
-        infoWindow.close() for infoWindow in that.collection.models
-        @_enableMouseover = false
-        that.open(TheMap.getMap(), marker)
-
       @_infoWindow.addListener 'closeclick', ->
         marker._enableMouseover = true
+
+      if options.event?
+        marker.addListener options.event, ->
+          that.collection.$mouseOverInfoWindow.close()
+          infoWindow.close() for infoWindow in that.collection.models
+          @_enableMouseover = false
+          that.open(TheMap.getMap(), marker)
 
 
     close: ->
       @_infoWindow.close()
       google.maps.event.trigger(@_infoWindow, 'closeclick')
 
-    open: ->
+    open: (map, marker) ->
+      marker._enableMouseover = false
       @_infoWindow.open.apply(@_infoWindow, arguments)
 
     destroy: ->
@@ -54,6 +59,9 @@ app.factory 'MapInfoWindows',
 
     setContent: (content) ->
       @getInfoWindow().setContent(content)
+
+    getContent: ->
+      return @getInfoWindow().getContent()
   }
 
 
@@ -62,6 +70,9 @@ app.factory 'MapInfoWindows',
 
     $mouseOverInfoWindow: new google.maps.InfoWindow {disableAutoPan: true}
     model: InfoWindow
+
+    create: ->
+      @push.apply(@, arguments)
 
     setMapScope: (scope) ->
       @_scope = scope
@@ -75,7 +86,8 @@ app.factory 'MapInfoWindows',
     createInfoWindowForSavedPlaces: (place) ->
       place.getMarker()._enableMouseover = true
       @bindMouseOverInfoWindow(place)
-      return [ @createDetailInfoWindowForSavedPlace(place) ]
+      return [ @createDetailInfoWindowForSavedPlace(place),
+               @createDirectionInfoWindowForSavedPlace(place) ]
 
 
     # --- mouseover InfoWindow ---
@@ -97,10 +109,10 @@ app.factory 'MapInfoWindows',
       newScope       = @_scope.$new()
       newScope.place = place
       return @create({maxWidth: 320}, {
-        place:    place
-        scope:    newScope
-        template: $templateCache.get('/scripts/ng-components/map/info-window-brief.html')
-        event:    'rightclick'
+        place:       place
+        scope:       newScope
+        templateUrl: '/scripts/ng-components/map/info-window-brief.html'
+        event:       'rightclick'
       })
 
 
@@ -109,15 +121,26 @@ app.factory 'MapInfoWindows',
       newScope       = @_scope.$new()
       newScope.place = place
       return @create({maxWidth: 320}, {
-        place:    place
-        scope:    newScope
-        template: $templateCache.get('/scripts/ng-components/map/info-window-brief.html')
-        event:    'click'
+        place:       place
+        scope:       newScope
+        templateUrl: '/scripts/ng-components/map/info-window-detailed.html'
+        event:       'click'
       })
 
 
-    create: ->
-      @push.apply(@, arguments)
+    createDirectionInfoWindowForSavedPlace: (place) ->
+      newScope       = @_scope.$new()
+      newScope.place = place
+      return @create({maxWidth: 320}, {
+        place:       place
+        scope:       newScope
+        templateUrl: '/scripts/ng-components/map/info-window-directions.html'
+      })
+
+
+    # --- Universal ---
+    closeAllInfoWindow: ->
+      infoWindow.close() for infoWindow in @models
   }
   # --- END MapInfoWindows ---
 

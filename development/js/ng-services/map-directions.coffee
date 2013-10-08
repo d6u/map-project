@@ -50,6 +50,7 @@ app.factory 'MapDirections',
     # should at least provide
     #   origin, waypoints, destination
     route: (request) ->
+      _arguments    = arguments
       gotDirections = $q.defer()
 
       if request?
@@ -86,6 +87,12 @@ app.factory 'MapDirections',
         # ZERO_RESULTS - no results
         if status == google.maps.DirectionsStatus.OK
           @$lastResults = response
+
+          # assign direction information to saved places
+          if !_arguments[0]?
+            for leg, idx in response.routes[0].legs
+              MapPlaces.at(idx).set({direction_leg: leg})
+
           gotDirections.resolve(response)
         else
           console.debug 'MapDirections error: ', status
@@ -105,10 +112,12 @@ app.factory 'MapDirections',
       @$autoRender = !@$autoRender
       if @$autoRender
         @$directionsRenderer.setMap(TheMap.getMap())
-        @route().then =>
-          @renderDirections()
+        if MapPlaces.length >= 2
+          @route().then =>
+            @renderDirections()
       else
         @$directionsRenderer.setMap(null)
+        place.unset('direction_leg') for place in MapPlaces.models
 
   # --- END MapDirections ---
 

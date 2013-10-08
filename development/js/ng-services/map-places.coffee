@@ -1,6 +1,6 @@
 app.factory 'MapPlaces',
-['MapMarkers','MapInfoWindows','MpProjects','TheMap','MpUser',
-( MapMarkers,  MapInfoWindows,  MpProjects,  TheMap,  MpUser) ->
+['MapMarkers','MapInfoWindows','MpProjects','TheMap','MpUser','$rootScope',
+( MapMarkers,  MapInfoWindows,  MpProjects,  TheMap,  MpUser,  $rootScope) ->
 
   # --- Model ---
   Place = Backbone.Model.extend {
@@ -9,6 +9,15 @@ app.factory 'MapPlaces',
       @set({$$saved: true})
       if attrs.formatted_address?
         @set({address: attrs.formatted_address})
+
+      # load details about the place
+      @collection.$placesService.getDetails {
+        reference: @get('reference')
+      }, (result, status) =>
+        if status == google.maps.places.PlacesServiceStatus.OK
+          $rootScope.$apply =>
+            @set(result)
+            @infoWindows[0].setContent(@infoWindows[0].getContent())
 
       # marker
       coordMatch = /\((.+), (.+)\)/.exec(attrs.coord)
@@ -42,6 +51,9 @@ app.factory 'MapPlaces',
 
     getPosition: ->
       return @getMarker().getPosition()
+
+    openDirectionsInfoWindow: ->
+      @infoWindows[1].open(TheMap.getMap(), @getMarker())
   }
 
 
@@ -51,6 +63,15 @@ app.factory 'MapPlaces',
     model: Place
 
     initialize: ->
+      TheMap.on 'initialized', =>
+        @$placesService = new google.maps.places.PlacesService(TheMap.getMap())
+
+      if TheMap.getMap()?
+        @$placesService = new google.maps.places.PlacesService(TheMap.getMap())
+
+      TheMap.on 'destroyed', =>
+        delete @$placesService
+
       @on 'reset', (collection, options) ->
         place.destroy() for place in options.previousModels
       @on 'remove', (place, collection, options) ->
@@ -74,6 +95,19 @@ app.factory 'MapPlaces',
     sync: (method, collection, options) ->
       if MpUser.getUser()?
         Backbone.sync.apply(@, arguments)
+
+
+    # --- API ---
+    openAllDirectionsInfoWindows: ->
+      MapInfoWindows.closeAllInfoWindow()
+      place.openDirectionsInfoWindow() for place in @models
+
+
+    displayAllMarkers: ->
+      if @length
+        bounds = new google.maps.LatLngBounds
+        bounds.extend(place.getPosition()) for place in @models
+        TheMap.fitBounds(bounds)
   }
 
 
