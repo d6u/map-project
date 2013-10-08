@@ -7,6 +7,38 @@
   width           : 100%;
   height          : 40px;
   background-color: $gray6;
+  overflow-y      : hidden;
+}
+
+
+// --- Inner ---
+.md-bottom-bar-inner {
+  position: relative;
+  height: 100%;
+}
+
+// animation
+.md-bottom-bar-inner {
+  &.ng-enter,
+  &.ng-leave {
+    @include transition();
+  }
+
+  &.ng-enter {
+    @include translate3d(0, -100%, 0);
+  }
+
+  &.ng-enter.ng-enter-active {
+    @include translate3d(0, 0, 0);
+  }
+
+  &.ng-leave {
+    @include translate3d(0, 0, 0);
+  }
+
+  &.ng-leave.ng-leave-active {
+    @include translate3d(0, 100%, 0);
+  }
 }
 
 

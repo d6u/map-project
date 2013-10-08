@@ -67,7 +67,7 @@ app.config(['socketProvider', '$httpProvider', '$routeSegmentProvider',
     })
 
     .segment('project', {
-      templateUrl:  '/scripts/ng-views/project/project-view.html'
+      templateUrl:  '/scripts/ng-components/map/md-map.html'
       controller:   'ProjectViewCtrl'
       controllerAs: 'projectViewCtrl'
     })

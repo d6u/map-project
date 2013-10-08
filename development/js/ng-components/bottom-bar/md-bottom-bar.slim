@@ -2,39 +2,4 @@
 
 
 .md-bottom-bar
-
-  / Left
-  .md-bb-section-left
-    / show side menu
-    a.md-bb-button(href ng-click="MpUI.showSideMenu = true"
-      bs-tooltip="Show Menu"
-      bs-tooltip-placement="top")
-      i.icon-reorder
-
-    / Login / Register
-    a.md-bb-button-login(href
-      ng-click="MpUI.showSideMenu = true")
-      | Login or Register
-
-    / show drawer
-    a.md-bb-button(href
-      ng-click="MpUI.showMapDrawer = !MpUI.showMapDrawer; MpUI.mapDrawerActiveSection = 'searchResults'"
-      bs-tooltip="Show List of Search Results"
-      bs-tooltip-placement="top")
-      i.icon-caret-up
-
-  / Middle
-  .md-bb-section-middle
-    / search input
-    input.md-bb-text-input(type="text" placeholder="Search place name"
-      md-map-searchbox ng-model="MdBottomBarCtrl.inputVal"
-      mini-typeahead="{listClass: 'cp-typeahead', cursorOnClass: 'cp-typeahead-cursor-on'}"
-      mini-typeahead-list="MdMapSearchBoxCtrl.placePredictions"
-      mini-typeahead-change="MdMapSearchBoxCtrl.getQueryPredictions"
-      mini-typeahead-select="MdMapSearchBoxCtrl.queryPlacesService")
-
-    / clear input
-    a.md-bb-button-clear-input(href ng-show="MdBottomBarCtrl.inputVal.length"
-      ng-click="MdBottomBarCtrl.clearInput()"
-      bs-tooltip-placement="top" bs-tooltip="Clear all search results")
-      i.icon-remove
+  .md-bottom-bar-inner(ng-include="MdBottomBarCtrl.contentTemplateUrl")

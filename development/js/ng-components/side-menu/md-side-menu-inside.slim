@@ -1,18 +1,22 @@
-//- replace: true
-section.ly-pusher-side.md-side-menu(perfect-scrollbar="insideViewCtrl.MpNotification.notifications.length")
+/ replace: true
 
-  //- User
+
+.md-side-menu.md-side-menu-inside(
+  perfect-scrollbar="insideViewCtrl.MpNotification.notifications.length")
+
+  / User
   .md-side-menu-user
     div
       img.md-side-menu-user-picture(ng-src="{{insideViewCtrl.MpUser.getProfilePicture()}}")
     p.lead.md-side-menu-user-name
-      {{insideViewCtrl.MpUser.getName()}}
+      | {{insideViewCtrl.MpUser.getName()}}
 
-  //- Menu
+  / Menu
   ul.md-side-menu-actions.clearfix
 
     li.md-side-menu-actions-item
-      a.md-side-menu-actions-item-anchor(href="", ng-click="insideViewCtrl.createNewProject()")
+      a.md-side-menu-actions-item-anchor(href=""
+        ng-click="insideViewCtrl.createNewProject()")
         i.icon-plus
         | New project
     li.md-side-menu-actions-item
@@ -34,14 +38,16 @@ section.ly-pusher-side.md-side-menu(perfect-scrollbar="insideViewCtrl.MpNotifica
         i.icon-cog
         | Settings
     li.md-side-menu-actions-item
-      a.md-side-menu-actions-item-anchor(href="", ng-click="insideViewCtrl.showInvitationDialog = true; interface.showUserSection = false")
+      a.md-side-menu-actions-item-anchor(href=""
+        ng-click="insideViewCtrl.showInvitationDialog = true; interface.showUserSection = false")
         i.icon-heart
         | Invite friends
     li.md-side-menu-actions-item
-      a.md-side-menu-actions-item-anchor(href="", ng-click="insideViewCtrl.logout()")
+      a.md-side-menu-actions-item-anchor(href=""
+        ng-click="insideViewCtrl.logout()")
         i.icon-off
         | Logout
 
-  //- Notification
+  / Notification
   ol.md-side-menu-notifications()
-    li.md-side-menu-notifications-item.md-notice.clearfix(ng-repeat="notice in insideViewCtrl.MpNotification.notifications", md-notification-item="")
+    li.md-side-menu-notifications-item.md-notice.clearfix(ng-repeat="notice in insideViewCtrl.MpNotification.notifications" md-notification-item="")
