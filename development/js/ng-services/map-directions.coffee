@@ -15,6 +15,8 @@ app.factory 'MapDirections',
     }
 
     constructor: () ->
+      @$autoRender = true
+
       @$directionService   = new google.maps.DirectionsService
       @$directionsRenderer = new google.maps.DirectionsRenderer({
         draggable:     false
@@ -27,9 +29,21 @@ app.factory 'MapDirections',
           strokeColor:   '#967ADC'
           strokeOpacity: 1
           strokeWeight:  5
-        preserveViewport: false
+        preserveViewport: true
         suppressMarkers:  true
       })
+
+
+      MapPlaces.on 'all', (eventName) =>
+        if @$autoRender
+          if MapPlaces.length >= 2
+            if eventName in ['add', 'remove', 'sort']
+              @route().then =>
+                @renderDirections()
+          else
+            if eventName == 'remove'
+              @$directionsRenderer.setMap(null)
+
 
 
     # if didn't provide request object, will use data in MapPlaces service
@@ -38,7 +52,13 @@ app.factory 'MapDirections',
     route: (request) ->
       gotDirections = $q.defer()
 
-      if !request?
+      if request?
+        request = _.merge({}, @ROUTE_REQUEST_DEFAULTS, request)
+      else
+        if MapPlaces.length < 2
+          gotDirections.reject()
+          return gotDirections.promise
+
         waypoints = [] if MapPlaces.length > 2
 
         for place, i in MapPlaces.models
@@ -54,8 +74,6 @@ app.factory 'MapDirections',
           origin:      origin
           waypoints:   waypoints
         })
-      else
-        request = _.merge({}, @ROUTE_REQUEST_DEFAULTS, request)
 
       @$directionService.route request, (response, status) =>
         # INVALID_REQUEST
@@ -81,6 +99,16 @@ app.factory 'MapDirections',
       if !@$directionsRenderer.getMap()?
         @$directionsRenderer.setMap(TheMap.getMap())
       @$directionsRenderer.setDirections(@$lastResults)
+
+
+    toggleAutoRender: ->
+      @$autoRender = !@$autoRender
+      if @$autoRender
+        @$directionsRenderer.setMap(TheMap.getMap())
+        @route().then =>
+          @renderDirections()
+      else
+        @$directionsRenderer.setMap(null)
 
   # --- END MapDirections ---
 

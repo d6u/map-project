@@ -23,8 +23,11 @@
       i.icon-code-fork
 
     / Toggle Render Direction
-    a.md-m-c-button(href bs-tooltip-placement="right" bs-tooltip="Toggle Display Directions"
-      ng-click="MapCtrl.renderDirections()")
+    a.md-m-c-button(href
+      bs-tooltip-placement="right"
+      bs-tooltip="Toggle Display Directions"
+      ng-click="MapCtrl.toggleDirectionsAutoRender()"
+      ng-class="{active: MapCtrl.MapDirections.$autoRender}")
       i.icon-code-fork
     / Show Saved Places List
     a.md-m-c-button(href bs-tooltip-placement="right" bs-tooltip="Show Saved Places List"

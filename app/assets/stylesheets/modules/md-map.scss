@@ -35,7 +35,7 @@
   width      : 40px;
   height     : 40px;
   line-height: 40px;
-  font-size  : 14px;
+  font-size  : 16px;
   text-align : center;
   color      : #FFF;
 
@@ -45,6 +45,14 @@
     color           : #FFF;
     background-color: $gray5;
     text-decoration : none;
+  }
+
+  &:active {
+    background-color: $gray4;
+  }
+
+  &.active {
+    color: $green;
   }
 }
 

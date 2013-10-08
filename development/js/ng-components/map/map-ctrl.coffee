@@ -17,6 +17,7 @@ app.controller 'MapCtrl',
     # --- initialization ---
     @MapPlaces       = MapPlaces
     @ThePlacesSearch = ThePlacesSearch
+    @MapDirections   = MapDirections
 
     MapPlaces.loadProject($scope, $routeSegment.$routeParams.project_id)
 
@@ -62,4 +63,7 @@ app.controller 'MapCtrl',
       if MapPlaces.length >= 2
         MapDirections.route().then (results) ->
           MapDirections.renderDirections()
+
+    @toggleDirectionsAutoRender = ->
+      MapDirections.toggleAutoRender()
 ]
