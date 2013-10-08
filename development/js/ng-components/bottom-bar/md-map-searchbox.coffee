@@ -24,6 +24,16 @@ app.directive 'mdMapSearchbox', [->
           if input.length
             ThePlacesSearch.searchPlacesWith(input)
             @placePredictions = [] # close typehead menu
+
+
+        @clearSearchResultsOnMap = ->
+          @placePredictions = []
+          ThePlacesSearch.reset()
   ]
-  link: (scope, element, attrs, MdMapSearchBoxCtrl) ->
+  require: ['^mdBottomBar', 'mdMapSearchbox']
+  link: (scope, element, attrs, Ctrls) ->
+
+    Ctrls[0].clearInput = ->
+      Ctrls[1].clearSearchResultsOnMap()
+      Ctrls[0].inputVal = ''
 ]
