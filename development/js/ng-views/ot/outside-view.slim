@@ -1,5 +1,5 @@
 / Container: .ly-application
-.md-pusher(ng-class="{'md-pusher-pushed': interface.showUserSection}")
+.md-pusher(ng-class="{'md-pusher-pushed': MpUI.showSideMenu}")
 
   / Pusher side
   section.md-pusher-side
@@ -15,25 +15,36 @@
     div(md-bottom-bar)
 
     / --- Homepage ---
-    .md-homepage(ng-class="{'md-homepage-fadeout': outsideViewCtrl.hideHomepage}")
+    .md-homepage(ng-class="{'md-homepage-fadeout': !MpUI.showHomepage}")
       .md-homepage-content
         .md-homepage-content-cover
           header.md-homepage-brand iWantMap
 
           .md-homepage-body
-            h1.md-homepage-h1 Why is creating a travel plan with friends so hard?
+            h1.md-homepage-h1
+              | Why is creating a travel plan with friends so hard?
             h4
               ' Not any more!
-              a.md-homepage-linktoreason(href md-section-jumper=".md-homepage-content" md-section-jumper-target=".md-homepage-intro-bg" ng-click="outsideViewCtrl.showScreenShot()") Why is that?
+              a.md-homepage-linktoreason(href
+                md-section-jumper=".md-homepage-content"
+                md-section-jumper-target=".md-homepage-intro-bg"
+                ng-click="outsideViewCtrl.showScreenShot()")
+                | Why is that?
 
         .md-homepage-content-intro
           .md-homepage-intro-bg
 
       .md-homepage-bottom-nav-bar
-        a.md-homepage-bottom-nav-bar-try-button(href ng-click="outsideViewCtrl.hideHomepage = true") Give a try
-        a.md-homepage-bottom-nav-bar-fb-button(href ng-click="outsideViewCtrl.loginWithFacebook()") Login with Facebook
-        a.md-homepage-bottom-nav-bar-login-btn(href ng-click="interface.showUserSection = true") Login/Register
+        a.md-homepage-bottom-nav-bar-try-button(href
+          ng-click="MpUI.showHomepage = false")
+          | Give a try
+        a.md-homepage-bottom-nav-bar-fb-button(href
+          ng-click="outsideViewCtrl.loginWithFacebook()")
+          | Login with Facebook
+        a.md-homepage-bottom-nav-bar-login-btn(href
+          ng-click="MpUI.showSideMenu = true")
+          | Login/Register
 
 
   / --- Pusher overlay ---
-  .md-pusher-overlay(ng-click="interface.showUserSection = false")
+  .md-pusher-overlay(ng-click="MpUI.showSideMenu = false")

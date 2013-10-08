@@ -1,5 +1,19 @@
 # run
-app.run(['$rootScope', '$http', ($rootScope, $http) ->
+app.run(['$rootScope', '$http', 'MpUI', ($rootScope, $http, MpUI) ->
+
+  # --- UI ---
+  $rootScope.MpUI = MpUI
+
+  firstTime = $rootScope.$on '$routeChangeSuccess', ->
+  NProgress.done()
+  firstTime()
+
+  $rootScope.$on '$routeChangeStart', ->
+    NProgress.start()
+
+  $rootScope.$on '$routeChangeSuccess', ->
+    NProgress.done()
+
 
   # --- Backbone ---
   Backbone.sync = (method, model, options) ->
@@ -14,20 +28,4 @@ app.run(['$rootScope', '$http', ($rootScope, $http) ->
       when 'delete'
         request = $http.delete url
     request.success(options.success).error(options.error)
-
-
-  # Values used to assign classes
-  $rootScope.interface = {
-    showUserSection: false
-  }
-
-  firstTime = $rootScope.$on '$routeChangeSuccess', ->
-    NProgress.done()
-    firstTime()
-
-    $rootScope.$on '$routeChangeStart', ->
-      NProgress.start()
-
-    $rootScope.$on '$routeChangeSuccess', ->
-      NProgress.done()
 ])
