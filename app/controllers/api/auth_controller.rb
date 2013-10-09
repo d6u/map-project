@@ -90,6 +90,34 @@ class Api::AuthController < Api::ApiBaseController
   end
 
 
+
+  def fb_remember_login
+    remember_login = RememberLogin.where({
+      remember_token: cookies[:user_token],
+      user_id:        cookies[:user_id]
+    }).first
+    if remember_login.nil? || remember_login.login_type == 0
+      head 406 # not acceptable
+    else
+      user_params = params.require(:user).permit!
+      @user = remember_login.user
+      if @user.fb_user_id != user_params[:fb_user_id]
+        head 406 # not acceptable
+      else
+        fb_access_token = @user.fb_exchange_long_lived_token(user_params[:fb_access_token])
+        @user.fb_access_token = fb_access_token
+        @user.save
+        session[:user_id] = @user.id
+        remember_login.destroy
+        remember_user_on_this_computer(@user, 1)
+
+        @code = @user.fb_exchange_token_code
+        render 'fb_authorize'
+      end
+    end
+  end
+
+
   # --- Private ---
 
   def remember_user_on_this_computer(user, login_type)

@@ -124,4 +124,18 @@ class AuthControllerTest < ActionController::TestCase
     assert_response 406
   end
 
+
+  # --- fb_remember_login ---
+  test 'fb_remember_login should response 406' do
+    post :fb_remember_login, {
+      user: {
+        fb_access_token: "what is that",
+        fb_user_id: "00000",
+        name: "Daiwei Lu",
+        email: "daiweilu@email.com"
+      }
+    }
+    assert_response 406
+  end
+
 end
