@@ -61,9 +61,31 @@ class Api::AuthController < Api::ApiBaseController
       remember_user_on_this_computer(@user, 1)
 
       @code = @user.fb_exchange_token_code
-      render 'fb_register'
+      render 'fb_authorize'
     else
       head 406 # not acceptable
+    end
+  end
+
+
+
+  def fb_login
+    user_params = params.require(:user).permit!
+
+    if ( @user = User.find_by_fb_user_id(user_params[:fb_user_id]) ).nil?
+      head 406 # not acceptable
+    else
+      if fb_access_token = @user.fb_exchange_long_lived_token(user_params[:fb_access_token])
+        @user.fb_access_token = fb_access_token
+        @user.save
+        session[:user_id] = @user.id
+        remember_user_on_this_computer(@user, 1)
+
+        @code = @user.fb_exchange_token_code
+        render 'fb_authorize'
+      else
+        head 406 # not acceptable
+      end
     end
   end
 

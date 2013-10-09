@@ -47,22 +47,6 @@ class Api::UsersController < Api::ApiBaseController
   end
 
 
-  # POST   /api/users/fb_register     fb_register
-  # ----------------------------------------
-  def fb_register
-    @user = User.new params.require(:user).permit(:fb_access_token, :fb_user_id, :name, :email, :profile_picture)
-
-    if @user.validate_with_facebook
-      @user.save
-      session[:user_id] = @user.id
-      remember_user_on_this_computer
-      render :json => @user, only: [:id, :name, :profile_picture, :email]
-    else
-      head 406
-    end
-  end
-
-
   # POST   /api/users/email_login     email_login
   # ----------------------------------------
   def email_login
