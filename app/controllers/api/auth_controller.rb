@@ -118,6 +118,55 @@ class Api::AuthController < Api::ApiBaseController
   end
 
 
+
+  def email_register
+    if params[:password] != params[:password_confirmation]
+      render json: {error:    true,
+                    message: 'Password and password confirmation does not match.',
+                    error_code: 'US000'},
+             status: 406
+    else
+      @user = User.create params.permit(:name, :email, :password)
+      session[:user_id] = @user.id
+      remember_user_on_this_computer
+      render json: @user,
+             except: [:password_salt, :password_hash, :fb_access_token]
+    end
+  end
+
+
+
+  def email_login
+    @user = User.authorize_with_email(params[:email], params[:password])
+    if @user
+      session[:user_id] = @user.id
+      remember_user_on_this_computer if params[:remember_me]
+      render json: @user,
+             except: [:password_salt, :password_hash, :fb_access_token]
+    else
+      head 401
+    end
+  end
+
+
+
+  def logout
+    if @user
+      if cookies[:user_token]
+        RememberLogin.destroy_all({
+          user_id:        @user.id,
+          remember_token: cookies[:user_token]
+        })
+      end
+
+      session[:user_id] = nil
+      cookies.delete :user_token, :domain => :all
+      cookies.delete :user_id   , :domain => :all
+    end
+    head 200
+  end
+
+
   # --- Private ---
 
   def remember_user_on_this_computer(user, login_type)
