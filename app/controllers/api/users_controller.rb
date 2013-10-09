@@ -1,8 +1,5 @@
 class Api::UsersController < Api::ApiBaseController
 
-  # GET    /api/users/login_status    login_status
-  # POST   /api/users/fb_login        fb_login
-  # POST   /api/users/fb_register     fb_register
   # POST   /api/users/email_login     email_login
   # POST   /api/users/email_register  email_register
   # GET    /api/users/logout          logout
@@ -12,39 +9,6 @@ class Api::UsersController < Api::ApiBaseController
 
 
   skip_before_action :check_login_status, :only => [:login_status, :fb_login, :fb_register, :email_login, :email_register, :logout]
-
-
-  # GET    /api/users/login_status    login_status
-  # ----------------------------------------
-  def login_status
-    if @user
-      if @user.password_hash || @user.validate_with_facebook
-        render json: @user, only: [:id, :name, :profile_picture, :email]
-        return
-      end
-    end
-
-    head 401
-  end
-
-
-  # POST   /api/users/fb_login        fb_login
-  # ----------------------------------------
-  def fb_login
-    @user = User.find_by_fb_user_id(params[:user][:fb_user_id])
-    head 404 and return if !@user
-
-    @user.fb_access_token = params[:user][:fb_access_token] if @user.fb_access_token.to_s != params[:user][:fb_access_token]
-
-    if @user.validate_with_facebook
-      @user.save if @user.changed?
-      session[:user_id] = @user.id
-      remember_user_on_this_computer
-      render :json => @user, only: [:id, :name, :profile_picture, :email]
-    else
-      head 401
-    end
-  end
 
 
   # POST   /api/users/email_login     email_login
