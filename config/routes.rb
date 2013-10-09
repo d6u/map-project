@@ -19,6 +19,11 @@ MapProject::Application.routes.draw do
   # JSON API point
   namespace :api do
 
+    # --- Auth ---
+    scope '/auth' do
+      get 'login_status' => 'auth#login_status'
+    end
+
     # --- User ---
     scope '/users' do
       get  'login_status'   => 'users#login_status'
