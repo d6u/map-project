@@ -50,10 +50,28 @@ class Api::AuthController < Api::ApiBaseController
   end
 
 
+
+  def fb_register
+    @user = User.new params.require(:user).permit(:fb_access_token, :fb_user_id, :name, :email, :profile_picture)
+
+    if fb_access_token = @user.fb_exchange_long_lived_token
+      @user.fb_access_token = fb_access_token
+      @user.save
+      session[:user_id] = @user.id
+      remember_user_on_this_computer(@user, 1)
+
+      @code = @user.fb_exchange_token_code
+      render 'fb_register'
+    else
+      head 406 # not acceptable
+    end
+  end
+
+
   # --- Private ---
 
   def remember_user_on_this_computer(user, login_type)
-    new_remember_login = RememberLogin.new(login_type: type)
+    new_remember_login = RememberLogin.new(login_type: login_type)
     user.remember_logins << new_remember_login
     cookies[:user_token] = {
       value:   new_remember_login.remember_token,

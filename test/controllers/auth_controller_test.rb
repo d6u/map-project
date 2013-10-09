@@ -76,4 +76,36 @@ class AuthControllerTest < ActionController::TestCase
 
   end
 
+
+  # --- fb_register ---
+
+  # fb_access_token may need to change for every test
+  test 'template test' do
+    post :fb_register, {
+      user: {
+        fb_access_token: "CAAIPtruQfZBgBAHQWdYsTlPm0WFGwJJx3HLkWvIiR8sls985rIPk44J4j51PCJppfkOIaD8M6ivSyXaFLZBKlA7dgB45HLQ76E1tW6BRA6qWcom0HBGZA90K2HZBzuL9bu2ZBjGYxHu1nwvI3P4ItjTuf2IAZAY3Pj8lv4nndlHoAFzyXqdIiqAdA65SIfjYnRFx8am9G9sgZDZD",
+        fb_user_id: "720697944",
+        name: "Daiwei Lu",
+        email: "daiweilu@email.com"
+      }
+    }
+    assert_template :fb_register
+    json = MultiJson.load(@response.body)
+    refute_nil json["code"]
+    refute_nil json["user"]
+  end
+
+  # invalid fb_access_token
+  test 'should response 406' do
+    post :fb_register, {
+      user: {
+        fb_access_token: "what is that",
+        fb_user_id: "720697944",
+        name: "Daiwei Lu",
+        email: "daiweilu@email.com"
+      }
+    }
+    assert_response 406
+  end
+
 end

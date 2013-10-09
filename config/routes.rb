@@ -21,14 +21,14 @@ MapProject::Application.routes.draw do
 
     # --- Auth ---
     scope '/auth' do
-      get 'login_status' => 'auth#login_status'
+      get  'login_status' => 'auth#login_status'
+      post 'fb_register'  => 'auth#fb_register'
     end
 
     # --- User ---
     scope '/users' do
       get  'login_status'   => 'users#login_status'
       post 'fb_login'       => 'users#fb_login'
-      post 'fb_register'    => 'users#fb_register'
       post 'email_login'    => 'users#email_login'
       post 'email_register' => 'users#email_register'
       get  'logout'         => 'users#logout'
