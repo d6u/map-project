@@ -1,6 +1,4 @@
-module Api
-
-class ProjectsController < ApplicationController
+class Api::ProjectsController < Api::ApiBaseController
 
   # GET     /api/projects/:project_id/participating_users  participating_users
   # POST    /api/projects/:project_id/add_users            add_users
@@ -151,7 +149,5 @@ class ProjectsController < ApplicationController
     Project.destroy_all :id => params[:id]
     render :json => []
   end
-
-end
 
 end

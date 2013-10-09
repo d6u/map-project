@@ -1,6 +1,4 @@
-module Api
-
-class FriendsController < ApplicationController
+class Api::FriendsController < Api::ApiBaseController
 
   #     friends GET    /friends(.:format)           friends#index
   #             POST   /friends(.:format)           friends#create
@@ -25,7 +23,5 @@ class FriendsController < ApplicationController
       head 404
     end
   end
-
-end
 
 end

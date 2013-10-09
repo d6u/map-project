@@ -1,6 +1,4 @@
-module Api
-
-class UsersController < ApplicationController
+class Api::UsersController < Api::ApiBaseController
 
   # GET    /api/users/login_status    login_status
   # POST   /api/users/fb_login        fb_login
@@ -157,7 +155,4 @@ class UsersController < ApplicationController
     end
   end
 
-end
-
-# END module Api
 end

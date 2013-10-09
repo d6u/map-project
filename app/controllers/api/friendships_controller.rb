@@ -1,6 +1,4 @@
-module Api
-
-class FriendshipsController < ApplicationController
+class Api::FriendshipsController < Api::ApiBaseController
 
   #     friendships GET    /friendships(.:format)            #index
   #                 POST   /friendships(.:format)            #create
@@ -86,7 +84,5 @@ class FriendshipsController < ApplicationController
     Friendship.destroy_all :id => params[:id]
     head 200
   end
-
-end
 
 end

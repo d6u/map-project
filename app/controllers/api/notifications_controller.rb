@@ -1,6 +1,4 @@
-module Api
-
-class NotificationsController < ApplicationController
+class Api::NotificationsController < Api::ApiBaseController
 
   # GET     /api/notifications                            #index
   # DELETE  /api/notifications/:id                        #destroy
@@ -136,7 +134,5 @@ class NotificationsController < ApplicationController
     $redis.publish 'notice_channel', project_invitation_rejected.to_json
     head 200
   end
-
-end
 
 end
