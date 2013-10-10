@@ -10,49 +10,6 @@ class AuthControllerTest < ActionController::TestCase
 
   # --- login_status ---
 
-  # no session no cookies
-  test 'should get 404' do
-    get :login_status
-    assert_response 404
-  end
-
-  # invalid session
-  test 'should remove session' do
-    get :login_status, nil, {user_id: 0}
-    assert_response 404
-    assert_nil session[:user_id]
-  end
-
-  # valid session
-  test 'should return user data' do
-    user = User.find_by_email('daiweilu@email.com')
-    get :login_status, nil, {user_id: user.id}
-    assert_response 200, 'response OK'
-    assert_equal(user.to_json(only: [:id, :name, :profile_picture, :email]),
-      @response.body, 'response body as expected')
-    refute_nil session[:user_id], 'session not nil'
-  end
-
-  # invalid cookies
-  test 'should remove cookies' do
-    cookies[:user_id] = '0'
-    get :login_status
-    assert_response 404
-    assert_nil cookies[:user_id]
-
-    cookies[:user_token] = '123456'
-    get :login_status
-    assert_response 404
-    assert_nil cookies[:user_token]
-
-    cookies[:user_token] = '123456'
-    cookies[:user_id] = '0'
-    get :login_status
-    assert_response 404
-    assert_nil cookies[:user_id]
-    assert_nil cookies[:user_token]
-  end
-
   # valid cookies
   # facebook
   test 'should response facebook' do
