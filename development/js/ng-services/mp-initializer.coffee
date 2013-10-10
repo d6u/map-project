@@ -9,8 +9,14 @@ app.factory 'MpInitializer', ['$q', 'MpUser', ($q, MpUser) ->
   initiation = $q.defer()
 
   MpUser.$$getLoginStatus ((user) ->
+    # email in
     initiation.resolve()
+  ), ((responseData) ->
+    # fb in
+    MpUser.fbRememberLogin (-> initiation.resolve()),
+                            -> initiation.resolve()
   ), ->
+    # out
     initiation.resolve()
 
   return initiation.promise

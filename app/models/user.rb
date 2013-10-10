@@ -75,7 +75,11 @@ class User < ActiveRecord::Base
   end
 
 
+  # TODO: offical FB API has problem exhange code for token on client side
   def fb_exchange_token_code(long_lived_access_token=self.fb_access_token)
+
+    return long_lived_access_token
+
     data = call_facebook '/oauth/client_code', {
       access_token:  long_lived_access_token,
       client_id:     APP_ID,
