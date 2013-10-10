@@ -12,6 +12,9 @@ class Project < ActiveRecord::Base
                                       :through => :project_participations,
                                       :source  => :user
 
+  # chat_histories
+  has_many :chat_histories, dependent: :destroy
+
   # invitation
   has_many :invitations
 
