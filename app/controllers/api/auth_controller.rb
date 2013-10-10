@@ -1,7 +1,7 @@
 class Api::AuthController < Api::ApiBaseController
 
-  skip_before_action :check_login_status
-  skip_before_action :find_user
+  skip_before_action :check_login_status, except: [:logout]
+  skip_before_action :find_user         , except: [:logout]
 
 
 
@@ -126,25 +126,23 @@ class Api::AuthController < Api::ApiBaseController
                     error_code: 'US000'},
              status: 406
     else
-      @user = User.create params.permit(:name, :email, :password)
-      session[:user_id] = @user.id
-      remember_user_on_this_computer
-      render json: @user,
-             except: [:password_salt, :password_hash, :fb_access_token]
+      user = User.create params.permit(:name, :email, :password)
+      session[:user_id] = user.id
+      remember_user_on_this_computer(user, 0)
+      render json: user, except: [:password_salt, :password_hash, :fb_access_token]
     end
   end
 
 
 
   def email_login
-    @user = User.authorize_with_email(params[:email], params[:password])
-    if @user
-      session[:user_id] = @user.id
-      remember_user_on_this_computer if params[:remember_me]
-      render json: @user,
-             except: [:password_salt, :password_hash, :fb_access_token]
+    user = User.authorize_with_email(params[:email], params[:password])
+    if user
+      session[:user_id] = user.id
+      remember_user_on_this_computer(user, 0) if params[:remember_me]
+      render json: user, except: [:password_salt, :password_hash, :fb_access_token]
     else
-      head 401
+      head 406
     end
   end
 

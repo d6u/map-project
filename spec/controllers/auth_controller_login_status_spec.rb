@@ -65,4 +65,23 @@ describe Api::AuthController do
       expect(response.cookies['user_token']).to be_nil
     end
   end
+
+
+  describe 'GET logout' do
+    it 'should remove session and cookies' do
+      remember_login = FactoryGirl.create(:remember_login_email)
+      user           = remember_login.user
+      request.cookies['user_id']    = remember_login.user_id
+      request.cookies['user_token'] = remember_login.remember_token
+
+      get :logout, nil, {user_id: user.id}
+
+      expect(session[:user_id]).to be_nil
+      expect(response.cookies['user_id']).to    be_nil
+      expect(response.cookies['user_token']).to be_nil
+
+      expect(RememberLogin.find_by_remember_token(remember_login.remember_token)).to be_nil
+      expect(User.find(user.id).remember_logins.count).to eq(0)
+    end
+  end
 end
