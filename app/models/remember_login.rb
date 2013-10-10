@@ -12,10 +12,10 @@ class RememberLogin < ActiveRecord::Base
     record.errors[attr] << 'cannot be changed' if record.changed.include? attr.to_s
   end
 
-  before_create :generate_code
+  after_initialize :generate_code
 
   def generate_code
-    self.remember_token = SecureRandom.hex
+    self.remember_token = SecureRandom.hex if self.new_record?
   end
 
   private :generate_code
