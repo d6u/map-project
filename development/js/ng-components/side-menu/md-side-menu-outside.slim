@@ -75,14 +75,14 @@
           input.md-side-menu-outside-input(name="email"
             ng-model="MdFormLoginCtrl.user.email"
             required type="email" placeholder="Email")
-          p
+          p.md-side-menu-outside-form-error
             | {{MdFormLoginCtrl.formMessages.emailError}}
 
           input.md-side-menu-outside-input(name="password"
             ng-model="MdFormLoginCtrl.user.password"
             required type="password" ng-minlength="8" ng-trim="false"
             placeholder="Password")
-          p
+          p.md-side-menu-outside-form-error
             | {{MdFormLoginCtrl.formMessages.passwordError}}
 
           .checkbox

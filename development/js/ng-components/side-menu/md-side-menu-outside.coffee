@@ -8,13 +8,17 @@ app.directive 'mdSideMenuOutside', [->
     constructor: ($scope, MpUser, $location) ->
       @outsideActiveSection = 'register'
 
-      @registerUser = (userData) ->
-        MpUser.emailRegister userData, ->
+      @registerUser = (userData, fail) ->
+        MpUser.emailRegister userData, (->
           $location.path '/dashboard'
+        ), (failedInfo) ->
+          fail(failedInfo) if fail
 
-      @loginUser = (userData) ->
-        MpUser.emailLogin userData, ->
+      @loginUser = (userData, fail) ->
+        MpUser.emailLogin userData, (->
           $location.path '/dashboard'
+        ), (failedInfo) ->
+          fail(failedInfo) if fail
   ]
   link: (scope, element, attrs, MdSideMenuOutsideCtrl) ->
 
