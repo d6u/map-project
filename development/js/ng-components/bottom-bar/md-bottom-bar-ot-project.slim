@@ -23,7 +23,7 @@
   / search input
   input.md-bb-text-input(type="text" placeholder="Search place name"
     md-map-searchbox ng-model="MdBottomBarCtrl.inputVal"
-    mini-typeahead="{listClass: 'cp-typeahead', cursorOnClass: 'cp-typeahead-cursor-on'}"
+    mini-typeahead="{listClass: 'cp-typeahead', cursorOnClass: 'cp-typeahead-cursor-on', appendTo: 'body'}"
     mini-typeahead-list="MdMapSearchBoxCtrl.placePredictions"
     mini-typeahead-change="MdMapSearchBoxCtrl.getQueryPredictions"
     mini-typeahead-select="MdMapSearchBoxCtrl.queryPlacesService")

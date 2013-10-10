@@ -111,34 +111,32 @@ angular.module('mini-typeahead', [])
     # --- Callbacks ---
     adjustMenuPosition = ->
       element.css({
-        left:  scope.inputElement.position().left
+        left:  scope.inputElement.offset().left
         width: scope.inputElement.outerWidth()
       })
-      setTimeout (->
-        distanceToBottom = $(window).height() - scope.inputElement.offset().top - scope.inputElement.outerHeight()
-        distanceToTop    = scope.inputElement.offset().top
-        menuHeight       = element.outerHeight()
-        if distanceToTop > menuHeight && distanceToBottom < menuHeight
-          # drop up
-          element.css({
-            top: 'auto'
-            bottom: scope.inputElement.outerHeight()
-          })
-          dropup = true
-        else
-          # drop down
-          element.css({
-            top: scope.inputElement.outerHeight()
-            bottom: 'auto'
-          })
-          dropup = false
-      ), 200
+      distanceToBottom = $(window).height() - scope.inputElement.offset().top - scope.inputElement.outerHeight()
+      distanceToTop    = scope.inputElement.offset().top
+      menuHeight       = element.outerHeight()
+      if distanceToTop > menuHeight && distanceToBottom < menuHeight
+        # drop up
+        element.css({
+          top: 'auto'
+          bottom: scope.inputElement.outerHeight()
+        })
+        dropup = true
+      else
+        # drop down
+        element.css({
+          top: scope.inputElement.outerHeight()
+          bottom: 'auto'
+        })
+        dropup = false
       return
 
 
     # --- Initialize ---
     # Give some default style to element
-    element.css({position: 'absolute'})
+    element.css({position: 'fixed', zIndex: 3000})
 
     # Adjust position when property in watches option changed
     for watchParam in scope.MiniTypeaheadCtrl.options.watches
