@@ -23,7 +23,7 @@
 
         / Form
         form(md-form-register
-          md-form-success="MdSideMenuCtrl.registerUser"
+          md-form-success="MdSideMenuOutsideCtrl.registerUser"
           name="MdFormRegisterCtrl.form"
           ng-submit="MdFormRegisterCtrl.submit()")
 
@@ -68,21 +68,21 @@
 
         / Form
         form(md-form-login
-          md-form-success="MdSideMenuCtrl.loginUser"
+          md-form-success="MdSideMenuOutsideCtrl.loginUser"
           name="MdFormLoginCtrl.form"
           ng-submit="MdFormLoginCtrl.submit()")
 
           input.md-side-menu-outside-input(name="email"
             ng-model="MdFormLoginCtrl.user.email"
             required type="email" placeholder="Email")
-          p
+          p.md-side-menu-outside-form-error
             | {{MdFormLoginCtrl.formMessages.emailError}}
 
           input.md-side-menu-outside-input(name="password"
             ng-model="MdFormLoginCtrl.user.password"
             required type="password" ng-minlength="8" ng-trim="false"
             placeholder="Password")
-          p
+          p.md-side-menu-outside-form-error
             | {{MdFormLoginCtrl.formMessages.passwordError}}
 
           .checkbox

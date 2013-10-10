@@ -42,7 +42,11 @@ app.directive 'mdFormRegister', [->
 
         # sumit if form is valid
         if @form.$valid && @newUser.password == @newUser.password_confirmation
-          $scope.$eval($attrs.mdFormSuccess)(@newUser)
+          $scope.$eval($attrs.mdFormSuccess)(@newUser, (errorData) =>
+            # process server user creation error messages
+            if errorData.email?
+              @formMessages.emailError = 'Email address has already been taken.'
+          )
   ]
   link: (scope, element, attrs, MdFormRegisterCtrl) ->
 ]

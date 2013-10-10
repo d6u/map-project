@@ -28,7 +28,9 @@ app.directive 'mdFormLogin', [->
 
         # submit if form is valid
         if @form.$valid
-          $scope.$eval($attrs.mdFormSuccess)(@user)
+          $scope.$eval($attrs.mdFormSuccess)(@user, (errorData) =>
+            @formMessages.passwordError = "Email and password don't match."
+          )
   ]
   link: (scope, element, attrs, MdFormLoginCtrl) ->
 ]

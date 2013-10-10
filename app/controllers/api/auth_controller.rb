@@ -120,26 +120,32 @@ class Api::AuthController < Api::ApiBaseController
 
 
   def email_register
-    if params[:password] != params[:password_confirmation]
+    user_params = params.require(:user).permit(:name, :email, :password, :password_confirmation)
+    if user_params[:password] != user_params[:password_confirmation]
       render json: {error:    true,
                     message: 'Password and password confirmation does not match.',
                     error_code: 'US000'},
              status: 406
     else
-      user = User.create params.permit(:name, :email, :password)
-      session[:user_id] = user.id
-      remember_user_on_this_computer(user, 0)
-      render json: user, except: [:password_salt, :password_hash, :fb_access_token]
+      user = User.new user_params
+      if user.save
+        session[:user_id] = user.id
+        remember_user_on_this_computer(user, 0)
+        render json: user, except: [:password_salt, :password_hash, :fb_access_token]
+      else
+        render json: user.errors, status: 406
+      end
     end
   end
 
 
 
   def email_login
-    user = User.authorize_with_email(params[:email], params[:password])
+    user_params = params.require(:user).permit(:email, :password, :remember_me)
+    user = User.authorize_with_email(user_params[:email], user_params[:password])
     if user
       session[:user_id] = user.id
-      remember_user_on_this_computer(user, 0) if params[:remember_me]
+      remember_user_on_this_computer(user, 0) if user_params[:remember_me]
       render json: user, except: [:password_salt, :password_hash, :fb_access_token]
     else
       head 406

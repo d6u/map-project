@@ -1,5 +1,9 @@
 <% environment.context_class.instance_eval { include ApplicationHelper } %>
 
+// --- Load API access data ---
+var fbCLientId    = '<%= $api_keys['facebook']['app_id'] %>';
+
+
 // detect class name on element
 function hasClass(elem, className) {
   return new RegExp(' ' + className + ' ').test(' ' + elem.className + ' ');
@@ -35,7 +39,7 @@ require.config({
       exports: 'FB',
       init: function() {
         this.FB.init({
-          appId      : '<%= $api_keys['facebook']['app_id'] %>',
+          appId      : fbCLientId,
           channelUrl : location.origin + '/fb_channel.html',
           status     : true,
           cookie     : true,
