@@ -1,8 +1,0 @@
-# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
-
-Daiwei:
-  name: Daiwei Lu
-  email: daiweilu@email.com
-  # password: 12345678
-  password_salt: 2972bf1fec73c591c19f7734504c09fb05a7021f
-  password_hash: 9a3b7bb6a6470a16bda3c57edb3653dd9266baa7
