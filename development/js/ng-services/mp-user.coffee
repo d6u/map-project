@@ -1,49 +1,6 @@
-###
-MpUser
-
---- API ---
-.login(path[, success][, error])
-  path:    can be a string or function. If function, result will be used in
-           $location.path(). If return value is a promise, then the promise
-           resolve value will be used for redirection
-  success: function will be called before redirection, if path is a function,
-           success will be called before path.
-  error:   called when login failed
-
-  success and error can be null
-
-.logout([path][, success])
-  path:    same as login method, besides, if null will rediction to '/'
-  success: same as login
-
---- Low level helper ---
-.fbLoginCallback(authResponse, path, callback)
-  login call this method after checking with facebook
-
-  authResponse: same as facebook's authResponse
-  path:         passed from login method
-  callback:     login method pass success function to this method
-
-.fbLogoutCallback(path, callback)
-  logout call this method after logging out FB and server
-
-  path:     passed from logout method
-  callback: logout method pass success function to this method
-###
-
-
 app.factory 'MpUser',
-['$q','$rootScope','Restangular','$location','$timeout','$http','$window',
-( $q,  $rootScope,  Restangular,  $location,  $timeout,  $http,  $window) ->
-
-  $users = Restangular.all 'users'
-
-  $users.addRestangularMethod 'login_status'  , 'get' , 'login_status'
-  $users.addRestangularMethod 'fb_login'      , 'post', 'fb_login'
-  $users.addRestangularMethod 'fb_register'   , 'post', 'fb_register'
-  $users.addRestangularMethod 'email_login'   , 'post', 'email_login'
-  $users.addRestangularMethod 'email_register', 'post', 'email_register'
-  $users.addRestangularMethod 'logout'        , 'get' , 'logout'
+['$q','$rootScope','$http','$window',
+( $q,  $rootScope,  $http,  $window) ->
 
 
   # --- MpUser ---
@@ -85,19 +42,27 @@ app.factory 'MpUser',
 
 
     # --- Email ---
-    emailLogin: (user, success) ->
-      $users.email_login(user).then (user) =>
-        @$$user = user
-        success() if success
+    emailLogin: (user, success, fail) ->
+      $http.post('/api/auth/email_login', {user: user}).then ((response) =>
+        if response.status == 200
+          @$$user = response.data
+          success() if success
+      ), (response) ->
+        if response.status == 406
+          fail(response.data) if fail
 
-    emailRegister: (user, success) ->
-      $users.email_register(user).then (user) =>
-        @$$user = user
-        success() if success
+    emailRegister: (user, success, fail) ->
+      $http.post('/api/auth/email_register', {user: user}).then ((response) =>
+        if response.status == 200
+          @$$user = response.data
+          success() if success
+      ), (response) ->
+        if response.status == 406
+          fail(response.data) if fail
 
     # --- Logout ---
     logout: (success) ->
-      $users.logout().then =>
+      $http.get('/api/auth/logout').then =>
         @$$user = null
         success() if success
 
