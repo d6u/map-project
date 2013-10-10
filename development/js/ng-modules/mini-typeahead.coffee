@@ -114,23 +114,23 @@ angular.module('mini-typeahead', [])
         left:  scope.inputElement.offset().left
         width: scope.inputElement.outerWidth()
       })
-      distanceToBottom = $(window).height() - scope.inputElement.offset().top - scope.inputElement.outerHeight()
-      distanceToTop    = scope.inputElement.offset().top
-      menuHeight       = element.outerHeight()
-      if distanceToTop > menuHeight && distanceToBottom < menuHeight
-        # drop up
-        element.css({
-          top: 'auto'
-          bottom: scope.inputElement.outerHeight()
-        })
-        dropup = true
-      else
-        # drop down
-        element.css({
-          top: scope.inputElement.outerHeight()
-          bottom: 'auto'
-        })
-        dropup = false
+      # distanceToBottom = $(window).height() - scope.inputElement.offset().top - scope.inputElement.outerHeight()
+      # distanceToTop    = scope.inputElement.offset().top
+      # menuHeight       = element.outerHeight()
+      # if distanceToTop > menuHeight && distanceToBottom < menuHeight
+
+      # drop up
+      element.css({
+        top: 'auto'
+        bottom: scope.inputElement.outerHeight()
+      })
+
+      # else
+      #   # drop down
+      #   element.css({
+      #     top: scope.inputElement.outerHeight()
+      #     bottom: 'auto'
+      #   })
       return
 
 
