@@ -18,7 +18,7 @@ app.directive 'mdBottomBar', [->
           when 'in.dashboard'
             @contentTemplateUrl = '/scripts/ng-components/bottom-bar/md-bottom-bar-in-dashboard.html'
           when 'in.project'
-            @contentTemplateUrl = '/scripts/ng-components/bottom-bar/md-bottom-bar-ot-project.html'
+            @contentTemplateUrl = '/scripts/ng-components/bottom-bar/md-bottom-bar-in-project.html'
           when 'in.friends'
             @contentTemplateUrl = '/scripts/ng-components/bottom-bar/md-bottom-bar-in-friends.html'
           when 'in.search'

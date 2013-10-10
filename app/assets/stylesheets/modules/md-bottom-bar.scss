@@ -101,7 +101,7 @@
 }
 
 
-// specific
+// outside login/register button
 .md-bb-button-login {
   @extend .md-bb-button;
   width           : 350px - 40px * 2;
@@ -116,7 +116,22 @@
   }
 }
 
+// inside user profile
+.md-bb-user-profile {
+  @extend .md-bb-button;
+  text-align: left;
+  width     : 350px - 40px * 2;
+  color     : #FFF;
+  background-color: $blueDark;
+  &:hover {
+    background-color: $blue;
+  }
+  &:active {
+    background-color: $blueDark;
+  }
+}
 
+// search box
 .md-bb-text-input {
   display         : block;
   height          : 100%;
@@ -142,7 +157,6 @@
   }
 }
 
-
 .md-bb-button-clear-input {
   @extend .md-bb-button;
   position: absolute;
@@ -160,4 +174,17 @@
   &:hover {
     color: #000;
   }
+}
+
+
+// --- Level 3 ---
+// in.project view, user profile
+.md-bb-u-picture {
+  height: 40px;
+  width : 40px;
+  vertical-align: top;
+}
+
+.md-bb-u-name {
+  margin-left: 12px;
 }
