@@ -19,7 +19,7 @@ ActiveRecord::Schema.define(version: 20131010200128) do
   create_table "chat_histories", force: true do |t|
     t.integer  "user_id",                null: false
     t.integer  "project_id",             null: false
-    t.integer  "type",       default: 0, null: false
+    t.integer  "item_type",  default: 0, null: false
     t.json     "content"
     t.datetime "created_at"
     t.datetime "updated_at"
