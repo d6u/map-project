@@ -22,8 +22,12 @@ gem 'bson_ext'
 gem 'slim'
 
 # --- Development and Test ---
-gem 'awesome_print', group: [:development, :test]
-gem 'debugger'     , group: [:development, :test]
+group :development, :test do
+  gem 'debugger'
+  gem 'rspec-rails', '~> 2.0'
+  gem 'awesome_print'
+  gem 'factory_girl_rails'
+end
 
 # --- Production ---
 gem 'autoprefixer-rails', group: :production

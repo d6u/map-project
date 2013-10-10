@@ -19,15 +19,18 @@ MapProject::Application.routes.draw do
   # JSON API point
   namespace :api do
 
-    # --- User ---
-    scope '/users' do
-      get  'login_status'   => 'users#login_status'
-      post 'fb_login'       => 'users#fb_login'
-      post 'fb_register'    => 'users#fb_register'
-      post 'email_login'    => 'users#email_login'
-      post 'email_register' => 'users#email_register'
-      get  'logout'         => 'users#logout'
+    # --- Auth ---
+    scope '/auth' do
+      get  'login_status'      => 'auth#login_status'
+      post 'fb_register'       => 'auth#fb_register'
+      post 'fb_login'          => 'auth#fb_login'
+      post 'fb_remember_login' => 'auth#fb_remember_login'
+      post 'email_login'       => 'auth#email_login'
+      post 'email_register'    => 'auth#email_register'
+      get  'logout'            => 'auth#logout'
     end
+
+    # --- User ---
     resources :users, :only => [:index, :update]
 
     # --- Project ---

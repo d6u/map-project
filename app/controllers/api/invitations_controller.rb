@@ -1,6 +1,4 @@
-module Api
-
-class InvitationsController < ApplicationController
+class Api::InvitationsController < Api::ApiBaseController
 
   # GET     /api/invitations/:code/accept_invitation  accept_invitation
   # GET     /api/invitations      index
@@ -53,7 +51,5 @@ class InvitationsController < ApplicationController
     Invitation.destroy_all(id: params[:id])
     head 200
   end
-
-end
 
 end

@@ -7,6 +7,7 @@ class User < ActiveRecord::Base
 
   APP_ID       = $api_keys['facebook']['app_id']
   APP_SECRET   = $api_keys['facebook']['app_secret']
+  FB_API_BASE  = 'https://graph.facebook.com'
 
 
   # login, remember logins, forget password
@@ -58,11 +59,34 @@ class User < ActiveRecord::Base
   validates :password_salt, presence: true, unless: Proc.new {|a| a.password_hash.nil?}
 
 
-  # --- Facebook Login ---
-  def validate_with_facebook
-    user_data = MultiJson.load(Net::HTTP.get(URI("https://graph.facebook.com/me?access_token=#{self.fb_access_token}")))
-    return false if !user_data || user_data['error']
-    return user_data['id'].to_s === self.fb_user_id.to_s
+  # --- Facebook Authentication ---
+  def fb_exchange_long_lived_token(short_lived_token=self.fb_access_token)
+    data = call_facebook '/oauth/access_token', {
+      grant_type:       'fb_exchange_token',
+      client_id:         APP_ID,
+      client_secret:     APP_SECRET,
+      fb_exchange_token: short_lived_token
+    }
+    if data["access_token"].nil?
+      return false
+    else
+      return data["access_token"]
+    end
+  end
+
+
+  def fb_exchange_token_code(long_lived_access_token=self.fb_access_token)
+    data = call_facebook '/oauth/client_code', {
+      access_token:  long_lived_access_token,
+      client_id:     APP_ID,
+      client_secret: APP_SECRET,
+      redirect_uri: 'http://local.dev',
+    }
+    if data["code"].nil?
+      return false
+    else
+      return data["code"]
+    end
   end
 
 
@@ -121,8 +145,52 @@ class User < ActiveRecord::Base
     # TODO
   end
 
+
+  # [method, ]path, query
+  #   method: Symbol, e.g. :get
+  #   path:   String, e.g. '/me'
+  #   query:  Hash,   e.g. {access_token: '12345678'}
+  # private method
+  def call_facebook(*args)
+    if args[0].class == Symbol
+      method = args[0]
+      path   = args[1]
+      params = args[2]
+    else
+      method = :get
+      path   = args[0]
+      params = args[1]
+    end
+
+    url   = (path =~ /^\/.+/) ? (FB_API_BASE+path) : (FB_API_BASE+'/'+path)
+    uri   = URI.parse(url)
+    https = Net::HTTP.new(uri.host, uri.port)
+    https.use_ssl = true
+    case method.to_s.upcase
+    when 'GET'
+      uri.query   = URI.encode_www_form(params)
+      api_request = Net::HTTP::Get.new(uri.request_uri)
+    when 'POST'
+      api_request = Net::HTTP::Post.new(uri.request_uri)
+      api_request.set_form_data(params) if !params.empty?
+    end
+
+    api_reponse = https.request(api_request)
+    begin
+      MultiJson.load(api_reponse.body)
+    rescue MultiJson::LoadError
+      begin
+        Hash[URI.decode_www_form(api_reponse.body)]
+      rescue ArgumentError
+        api_reponse.body
+      end
+    end
+  end
+
+
   private :generate_password_salt_and_hash, :generate_password_salt,
           :generate_password_hash,
-          :generate_password_salt_and_hash_if_changed_password
+          :generate_password_salt_and_hash_if_changed_password,
+          :call_facebook
 
 end
