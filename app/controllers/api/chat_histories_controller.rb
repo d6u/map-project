@@ -10,9 +10,9 @@ class Api::ChatHistoriesController < Api::ApiBaseController
   # GET   /api/projects/:project_id/chat_histories
   def index
     if params[:max_id].nil?
-      render json: @project.chat_histories.limit(20)
+      render json: @project.chat_histories.order('id DESC').limit(20)
     else
-      render json: @project.chat_histories.where('id <= ?', params[:max_id]).limit(20)
+      render json: @project.chat_histories.where('id <= ?', params[:max_id]).order('id DESC').limit(20)
     end
   end
 

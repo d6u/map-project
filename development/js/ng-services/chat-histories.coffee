@@ -19,6 +19,7 @@ app.factory 'ChatHistories',
   ChatHistories = Backbone.Collection.extend {
 
     model: ChatHistory
+    comparator: 'id'
 
     initialize: () ->
       @on 'request', (model, xhr, options) ->
