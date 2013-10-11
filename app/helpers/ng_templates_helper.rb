@@ -1,0 +1,2 @@
+module NgTemplatesHelper
+end

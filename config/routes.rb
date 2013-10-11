@@ -65,4 +65,10 @@ MapProject::Application.routes.draw do
   # invitations
   get '/invitations/:code' => 'invitations#show'
 
+
+  # --- Development Routes ---
+  if !Rails.env.production?
+    get '/scripts/*template_path.html' => 'ng_templates#index'
+  end
+
 end
