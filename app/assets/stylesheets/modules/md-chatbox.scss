@@ -1,143 +1,40 @@
 // --- Container ---
 .md-chatbox {
-  position: fixed;
-  z-index: 1000;
-  bottom: 40px;
-  right: 10px;
-  height: 400px;
-  width: 300px;
-  background-color: white;
-
-  &.md-chatbox-sidemode {
-    position: fixed;
-    top: 0;
-    bottom: 40px;
-    right: 0;
-    height: auto;
-    ~ .md-map {
-      right: 300px;
-    }
-  }
+  height: 100%;
 }
 
 
-// --- Header ---
-.md-chatbox-header {
-  height: 35px;
-  background-color: $blue;
-  color: white;
-  position: relative;
-  text-align: right;
-}
-
-.md-chatbox-header-button {
+// --- Level 1 ---
+.md-chatbox-friends-pictures {
   display: inline-block;
-  height: 35px;
-  width: 35px;
-  font-size: 18px;
-  line-height: 35px;
-  text-align: center;
-  color: white;
-  &:hover {
-    color: white;
-    text-decoration: none;
-    background-color: $blueDark;
-  }
+  width: 350px - 40px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
 }
 
+.md-chatbox-bb-button {
+  @extend .md-bb-button;
 
-// --- Inputs ---
-.md-chatbox-inputs {
-  position: absolute;
-  bottom: 0;
-  width: 100%;
-  height: 60px;
-
-  textarea {
-    resize: none;
+  &.md-chatbox-bb-button-expanded {
     width: 100%;
-    height: 100%;
-    padding: 5px 62px 5px 5px; // button on right width 57px
-    line-height: 24px; // inner height 48px
-  }
-
-  button {
-    position: absolute;
-    right: 0;
-    height: 59px;
-    border: none;
-    // border-left: 1px solid;
-    border-radius: 0;
-    margin: 1px;
-  }
-}
-
-
-// --- History ---
-.md-chatbox-history {
-  overflow: hidden;
-  position: absolute;
-  top: 35px;
-  bottom: 60px;
-  width: 100%;
-}
-
-.md-chatbox-history-item {
-  @include display_flex;
-  -webkit-align-items: flex-start;
-          align-items: flex-start;
-  margin: 5px;
-
-  &.mp-chat-history-self {
-    @include justify-content(flex-end);
-
-    .mp-chat-user-picture {
-      -webkit-order: 2;
-      order: 2;
-    }
-
-    .mp-chat-message {
-      margin-left: 0;
-      margin-right: 5px;
-      -webkit-order: 1;
-      order: 1;
+    i {
+      display       : inline-block;
+      width         : 40px;
+      height        : 40px;
+      vertical-align: middle;
+      line-height   : 40px;
     }
   }
 }
 
-.mp-chat-user-picture {
-    width: 40px;
-    height: 40px;
-    img {
-        width: 100%;
-        height: 100%;
-        border-radius: 2px;
-    }
+
+// --- Level 2 ---
+.md-chatbox-bb-button-title {
+  display: inline-block;
+  width  : 350px - 40px;
 }
 
-// mp-chat-message
-.mp-chat-message {
-    margin-left: 5px;
-    background-color: $blue;
-    color: white;
-    padding: 3px;
-    min-width: 60px;
-    max-width: 244px;
-    border-radius: 2px;
 
-    p {
-        margin-bottom: 0;
-    }
-}
 
-.mp-chat-message-content {
-    word-wrap: break-word;
-}
 
-// mp-chat-user-behavior
-.mp-chat-user-behavior {
-    color: $gray3;
-    p {
-        margin-bottom: 0;
-    }
-}

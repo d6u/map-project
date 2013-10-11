@@ -1,25 +1,9 @@
 //- replace: true
 
 
-.md-chatbox(ng-show="projectViewCtrl.showChatbox", ng-class="{'md-chatbox-sidemode': mdChatboxCtrl.sidemode && projectViewCtrl.showChatbox}")
-
-  header.md-chatbox-header
-    //- disable side mode
-    a.md-chatbox-header-button(href="", ng-click="mdChatboxCtrl.sidemode = fasle", ng-show="mdChatboxCtrl.sidemode")
-      i.icon-long-arrow-left
-    //- enable side mode
-    a.md-chatbox-header-button(href="", ng-click="mdChatboxCtrl.sidemode = true", ng-hide="mdChatboxCtrl.sidemode")
-      i.icon-long-arrow-right
-    //- close chatbox
-    a.md-chatbox-header-button(href="", ng-click="projectViewCtrl.showChatbox = false")
-      i.icon-remove
-
-  //- chat-history
-  .md-chatbox-history(perfect-scrollbar="mdChatboxCtrl.MpChat.chatHistory.length", md-chatbox-history="")
-    //- chat-item
-    .md-chatbox-history-item(ng-repeat="chatItem in mdChatboxCtrl.MpChat.chatHistory", md-chatbox-history-item="")
-
-  //- chat-inputs
-  .md-chatbox-inputs
-    textarea.form-control.cp-input-naked(name="", placeholder="Say something", md-chatbox-input="")
-    button.btn.btn-primary Send
+.md-chatbox()
+  ol.md-chatbox-friends-pictures(ng-show="MdChatboxCtrl.ParticipatingUsers.length")
+    li.md-chatbox-fp-item()
+  a.md-chatbox-bb-button(href="", ng-class="{'md-chatbox-bb-button-expanded': !MdChatboxCtrl.ParticipatingUsers.length}")
+    span.md-chatbox-bb-button-title(ng-hide="MdChatboxCtrl.ParticipatingUsers.length") Add Friends to Conversation
+    i.icon-plus
