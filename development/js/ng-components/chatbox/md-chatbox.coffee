@@ -12,8 +12,11 @@ app.directive 'mdChatbox',
     constructor: ($element, $scope, TheProject, $routeSegment, ParticipatingUsers) ->
 
       # --- Init ---
-      @participatedUsers = ParticipatingUsers.models
-      @chatHistories     = ChatHistories.models
+      $scope.$watch (-> ChatHistories.models), (newVal, oldVal) =>
+        @chatHistories = newVal
+
+      $scope.$watch (-> ParticipatingUsers.models), (newVal, oldVal) =>
+        @participatedUsers = newVal
 
 
       # --- Events ---

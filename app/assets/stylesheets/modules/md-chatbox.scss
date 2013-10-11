@@ -65,8 +65,11 @@
   width   : 300px;
   background-color: #FFF;
 
-  &.md-chatbox-body-hide {
-    display: none;
+  opacity: 0;
+  visibility: hidden;
+  &.md-chatbox-body-show {
+    opacity: 1;
+    visibility: visible;
   }
 }
 
@@ -86,7 +89,7 @@
   list-style: none;
   padding   : 0;
   margin    : 0;
-  overflow-y: scroll;
+  overflow-y: auto;
 }
 
 .md-chatbox-bh-item {
