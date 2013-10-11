@@ -1,15 +1,17 @@
 / Left
 .md-bb-section-left
   / show side menu
-  a.md-bb-button(href ng-click="MpUI.showSideMenu = true"
-    bs-tooltip="Show Menu"
-    bs-tooltip-placement="top")
+  a.md-bb-button(href ng-click="MpUI.showSideMenu = true")
     i.icon-reorder
 
-  / Login / Register
-  a.md-bb-button-login(href
-    ng-click="MpUI.showSideMenu = true")
-    | Login or Register
+  / User Profile
+  a.md-bb-user-profile(href
+    ng-click="MpUI.showSideMenu = true"
+    bs-tooltip="Show Menu"
+    bs-tooltip-placement="top")
+    img.md-bb-u-picture(ng-src="{{insideViewCtrl.MpUser.getUser().profile_picture}}")
+    span.md-bb-u-name
+      | {{ insideViewCtrl.MpUser.getUser().name }}
 
   / show drawer
   a.md-bb-button(href
@@ -17,6 +19,12 @@
     bs-tooltip="Show List of Search Results"
     bs-tooltip-placement="top")
     i.icon-caret-up
+
+
+/ Right
+.md-bb-section-right
+  .md-chatbox(md-chatbox)
+
 
 / Middle
 .md-bb-section-middle

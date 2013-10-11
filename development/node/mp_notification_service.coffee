@@ -27,11 +27,20 @@ class MpNotificationService
       console.log '--> Redis receive message: ', message
       if channel == 'notice_channel'
         data = JSON.parse(message)
-        MpUserNode.pushMessageToUserId data.receiver_id, 'serverData', data,
-        (socket, eventName, data) ->
-          switch data.type
-            when 'addFriendRequestAccepted'
-              MpUserNode.pushOnlineFriendIds(socket)
+        switch data.type
+          when 'chatMessage'
+            pgQuery('SELECT pp.user_id FROM project_participations pp
+            WHERE pp.project_id = $1 AND pp.status > 0', [data.project_id])
+            .then (participations) =>
+              for p in participations
+                if p.user_id != data.sender_id
+                  MpUserNode.pushMessageToUserId p.user_id, 'serverData', data
+          else
+            MpUserNode.pushMessageToUserId data.receiver_id, 'serverData',
+            data, (socket, eventName, data) ->
+              switch data.type
+                when 'addFriendRequestAccepted'
+                  MpUserNode.pushOnlineFriendIds(socket)
 
 
     # --- Socket.io connection ---

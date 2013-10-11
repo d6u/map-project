@@ -12,5 +12,6 @@ app.factory 'MpUI', [->
     showHomepage:  true
     showMapDrawer: false
     mapDrawerActiveSection: 'searchResults'
+    showChatboxBody: false
   }
 ]

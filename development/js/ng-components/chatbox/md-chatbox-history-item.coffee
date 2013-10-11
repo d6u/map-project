@@ -1,21 +1,18 @@
 # mp-chat-history-item
+
+
 app.directive 'mdChatboxHistoryItem',
 ['$compile','mpTemplateCache', ($compile, mpTemplateCache) ->
 
-  chooseTemplate = (type) ->
-    switch type
-      when 'chatMessage'
-        return '/scripts/ng-components/chatbox/item-templates/mp-chat-history-message.html'
-      when 'userBehavior'
-        return '/scripts/ng-components/chatbox/item-templates/mp-chat-history-user-behavior.html'
-      when 'placeAdded'
-        return '/scripts/ng-components/chatbox/item-templates/mp-chat-history-place.html'
+  chooseTemplate = (item_type) ->
+    switch item_type
+      when 0 then type = 'message'
+    return "/scripts/ng-components/chatbox/item-templates/mp-chat-history-#{type}.html"
 
 
-  return (scope, element, attrs) ->
-
-    mpTemplateCache.get(chooseTemplate(scope.chatItem.type)).then (template) ->
+  # --- Directive Obj ---
+  return link: (scope, element, attrs) ->
+    mpTemplateCache.get( chooseTemplate(scope.item.get('item_type')) )
+    .then (template) ->
       element.html $compile(template)(scope)
-      if scope.chatItem.$self
-        element.addClass 'mp-chat-history-self'
 ]

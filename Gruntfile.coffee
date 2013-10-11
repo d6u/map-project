@@ -129,10 +129,10 @@ module.exports = (grunt) ->
         tasks: ['copy:html']
       jade:
         files: ['<%= compileSettings["html"]["source folder"] %>' + '/**/*.jade']
-        tasks: ['jade:angular_templates']
-      slim:
-        files: ['<%= compileSettings.js["source folder"] %>' + '/**/*.slim']
-        tasks: ['slim:angular_templates']
+        tasks: ['clean:angular_templates', 'jade:angular_templates']
+      # slim:
+      #   files: ['<%= compileSettings.js["source folder"] %>' + '/**/*.slim']
+      #   tasks: ['slim:angular_templates']
       js:
         files: ['<%= compileSettings.js["source folder"] %>' + '/**/*.js']
         tasks: [
@@ -195,17 +195,22 @@ module.exports = (grunt) ->
 
 
   # Default task - development
-  grunt.registerTask('default', ['production', 'watch'])
+  grunt.registerTask('default', ['shared', 'watch'])
 
   # Production task
   grunt.registerTask('production', [
+    'shared'
+    'slim:angular_templates'
+  ])
+
+  # development and production shared tasks
+  grunt.registerTask('shared', [
     'clean:angular_templates'
     'clean:rails_pipeline_js'
     'clean:temp_files_js'
 
     'copy:html'
     'jade:angular_templates'
-    'slim:angular_templates'
 
     'copy:js'
 

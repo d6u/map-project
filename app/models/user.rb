@@ -40,6 +40,9 @@ class User < ActiveRecord::Base
     :through => :project_participations,
     :source  => :project
 
+  # chat histories
+  has_many :chat_histories, dependent: :destroy
+
   # invitation
   has_many :invitations, dependent: :destroy
 

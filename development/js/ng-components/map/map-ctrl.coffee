@@ -1,9 +1,9 @@
 app.controller 'MapCtrl',
 ['$scope','TheProject','$routeSegment','TheMap','ThePlacesSearch','MapMarkers',
-'MapPlaces','MapInfoWindows','MapDirections', class MapCtrl
+'MapPlaces','MapInfoWindows','MapDirections','ParticipatingUsers', class MapCtrl
 
   constructor: ($scope, TheProject, $routeSegment, TheMap, ThePlacesSearch,
-    MapMarkers, MapPlaces, MapInfoWindows, MapDirections) ->
+    MapMarkers, MapPlaces, MapInfoWindows, MapDirections, ParticipatingUsers) ->
 
     # --- Callbacks ---
     # helper

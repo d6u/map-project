@@ -1,39 +1,33 @@
 app.directive 'mdChatbox',
-['mpTemplateCache','$compile','$timeout','MpChat',
-( mpTemplateCache,  $compile,  $timeout,  MpChat) ->
+['mpTemplateCache','$compile','$timeout','ChatHistories',
+( mpTemplateCache,  $compile,  $timeout,  ChatHistories) ->
 
   templateUrl: '/scripts/ng-components/chatbox/md-chatbox.html'
   replace: true
-  controllerAs: 'mdChatboxCtrl'
-  controller: ['$element', '$scope', 'TheProject', class MdChatboxCtrl
 
-    constructor: ($element, $scope, TheProject) ->
+  controllerAs: 'MdChatboxCtrl'
+  controller: ['$element', '$scope', 'TheProject', '$routeSegment',
+  'ParticipatingUsers', class MdChatboxCtrl
 
-      @sidemode = false
-      @MpChat   = MpChat
+    constructor: ($element, $scope, TheProject, $routeSegment, ParticipatingUsers) ->
 
-      MpChat.initialize($scope)
+      # --- Init ---
+      $scope.$watch (-> ChatHistories.models), (newVal, oldVal) =>
+        @chatHistories = newVal
 
-      @showPlaceOnMap = (place) ->
-        $scope.drawerCtrl.showPlaceOnMap(_.find(TheProject.places, {id: place.id}))
+      $scope.$watch (-> ParticipatingUsers.models), (newVal, oldVal) =>
+        @participatedUsers = newVal
+
+
+      # --- Events ---
+      $scope.$on 'enterNewMessage', (event, message) ->
+        ChatHistories.create({
+          item_type: 0
+          content:
+            m: message
+        }, {selfSender: true})
+        event.stopPropagation()
   ]
-  link: (scope, element, attrs, mdChatboxCtrl) ->
 
-    # TODO: improve
-    # this is used to scroll to bottom of chat historys
-    scope.$watch 'projectViewCtrl.showChatbox', (newValue) ->
-      if newValue
-        $timeout (->
-          chatHistoryBox = element.find('.md-chatbox-history')
-          lastChild = chatHistoryBox.children('.md-chatbox-history-item').last()
-          if lastChild.length > 0
-            scrollTop = lastChild.position().top + 10 + lastChild.height() - chatHistoryBox.height()
-            chatHistoryBox.animate({scrollTop: scrollTop}, 150, ->
-              chatHistoryBox.perfectScrollbar 'update'
-            )
-        ), 300
-
-    # Send message to server
-    scope.$on 'enterNewMessage', (event, message) ->
-      MpChat.sendChatMessage(message)
+  link: (scope, element, attrs, MdChatboxCtrl) ->
 ]
