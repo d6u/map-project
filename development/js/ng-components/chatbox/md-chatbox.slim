@@ -4,8 +4,8 @@
 .md-chatbox
 
   / --- Show when user == 0
-  ol.md-chatbox-friends(ng-show="MdChatboxCtrl.ParticipatingUsers.length")
-    li.md-chatbox-friend(ng-repeat="friend in MdChatboxCtrl.ParticipatingUsers.models")
+  ol.md-chatbox-friends(ng-show="MdChatboxCtrl.participatedUsers.length")
+    li.md-chatbox-friend(ng-repeat="friend in MdChatboxCtrl.participatedUsers")
       a.md-chatbox-f-picture(href
         bs-tooltip="{{ friend.get('name') }}"
         bs-tooltip-placement="top")
@@ -14,7 +14,7 @@
   a.md-chatbox-bb-button(href
     bs-tooltip="Open Chatbox"
     bs-tooltip-placement="top"
-    ng-show="MdChatboxCtrl.ParticipatingUsers.length"
+    ng-show="MdChatboxCtrl.participatedUsers.length"
     ng-click="MpUI.showChatboxBody = !MpUI.showChatboxBody")
     i.icon-comment
 
@@ -26,19 +26,21 @@
       | {{  }}
 
     / chat-history
-    .md-chatbox-b-history()
-      / chat-item
+    ol.md-chatbox-b-histories-container
+      li.md-chatbox-bh-item(ng-repeat="item in MdChatboxCtrl.chatHistories"
+        md-chatbox-history-item
+        ng-class="{'md-chatbox-bh-item-self-sender': item.$selfSender}")
 
     / chat-inputs
     .md-chatbox-b-inputs
-      textarea(placeholder="Say Something to Your Friends...")
+      textarea(md-chatbox-input placeholder="Say Something to Your Friends...")
 
 
   / --- Hide when user > 0
   a.md-chatbox-bb-button.md-chatbox-bb-button-expanded(href
     bs-tooltip="Add Friends to Conversation"
     bs-tooltip-placement="top"
-    ng-hide="MdChatboxCtrl.ParticipatingUsers.length")
+    ng-hide="MdChatboxCtrl.participatedUsers.length")
     span.md-chatbox-bb-button-title
       | Add Friends to Conversation
     i.icon-plus

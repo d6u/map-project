@@ -76,14 +76,74 @@
   color: #FFF;
 }
 
-.md-chatbox-b-history {
-  position: absolute;
-  top: 40px;
-  left: 0;
-  width: 100%;
-  bottom: 54px;
+// chat histories
+.md-chatbox-b-histories-container {
+  position  : absolute;
+  top       : 40px;
+  left      : 0;
+  width     : 100%;
+  bottom    : 54px;
+  list-style: none;
+  padding   : 0;
+  margin    : 0;
+  overflow-y: scroll;
 }
 
+.md-chatbox-bh-item {
+  @extend .clearfix;
+  margin-bottom: 5px;
+
+  &.md-chatbox-bh-item-self-sender {
+    .md-chatbox-bhi-user-profile {
+      float: right;
+      text-align: right;
+    }
+
+    .md-chatbox-bhi-content {
+      float: right;
+      text-align: right;
+    }
+
+    .md-chatbox-bhi-c-message {
+      text-align: right;
+    }
+  }
+}
+
+.md-chatbox-bhi-user-profile {
+  float: left;
+  width: 45px;
+  text-align: left;
+  img {
+    height: 40px;
+    width:  40px;
+    vertical-align: top;
+  }
+}
+
+.md-chatbox-bhi-content {
+  float: left;
+  max-width: 285px - 45px - 5px;
+  // width: 300px - 60px;
+}
+
+.md-chatbox-bhi-c-message {
+  padding-left: 5px;
+  padding-right: 5px;
+  background-color: $blueDark;
+  color: #FFF;
+  margin: 0;
+}
+
+.md-chatbox-bhi-c-timestamp {
+  margin-top: 3px;
+  font-size: 12px;
+  color: $gray4;
+}
+
+
+
+// inputs
 .md-chatbox-b-inputs {
   position: absolute;
   bottom: 0;

@@ -19,7 +19,8 @@ class Api::ChatHistoriesController < Api::ApiBaseController
 
   # POST  /api/projects/:project_id/chat_histories
   def create
-    chat_history = ChatHistory.new params.require(:chat_history).permit(:user_id, :type, :content)
+    chat_history = ChatHistory.new params.require(:chat_history).permit(:item_type, content: [:m])
+    chat_history.user = @user
     if @project.chat_histories << chat_history
       render json: chat_history
     else

@@ -5,6 +5,6 @@ class ChatHistory < ActiveRecord::Base
 
   validates :user_id,    presence: true
   validates :project_id, presence: true
-  validates :type,       presence: true
+  validates :item_type,  presence: true
 
 end

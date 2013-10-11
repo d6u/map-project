@@ -1,6 +1,6 @@
 app.directive 'mdChatbox',
-['mpTemplateCache','$compile','$timeout','MpChat',
-( mpTemplateCache,  $compile,  $timeout,  MpChat) ->
+['mpTemplateCache','$compile','$timeout','ChatHistories',
+( mpTemplateCache,  $compile,  $timeout,  ChatHistories) ->
 
   templateUrl: '/scripts/ng-components/chatbox/md-chatbox.html'
   replace: true
@@ -9,18 +9,21 @@ app.directive 'mdChatbox',
   controller: ['$element', '$scope', 'TheProject', '$routeSegment',
   'ParticipatingUsers', class MdChatboxCtrl
 
-    constructor: ($element, $scope, TheProject, $routeSegment,
-    ParticipatingUsers) ->
+    constructor: ($element, $scope, TheProject, $routeSegment, ParticipatingUsers) ->
 
       # --- Init ---
-      # @MpChat = MpChat
+      @participatedUsers = ParticipatingUsers.models
+      @chatHistories     = ChatHistories.models
 
-      # MpChat.initialize($scope)
 
-      if $routeSegment.$routeParams.project_id?
-        @ParticipatingUsers = ParticipatingUsers
-        ParticipatingUsers.loadProject($scope, $routeSegment.$routeParams.project_id)
-        ParticipatingUsers.fetch()
+      # --- Events ---
+      $scope.$on 'enterNewMessage', (event, message) ->
+        ChatHistories.create({
+          item_type: 0
+          content:
+            m: message
+        }, {selfSender: true})
+        event.stopPropagation()
   ]
 
   link: (scope, element, attrs, MdChatboxCtrl) ->

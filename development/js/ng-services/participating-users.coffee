@@ -1,16 +1,22 @@
 app.factory 'ParticipatingUsers', [->
 
   # --- Model ---
-  ParticipatingUser = Backbone.Model.extend {}
+  User = Backbone.Model.extend {
+
+  }
 
 
   # --- Collection ---
   ParticipatingUsers = Backbone.Collection.extend {
 
-    model: ParticipatingUser
+    model: User
 
-    loadProject: (scope, projectId) ->
-      @url = "/api/projects/#{projectId}/participating_users"
+    initialize: () ->
+
+    initProject: (id, scope) ->
+      @$scope = scope
+      @url    = "/api/projects/#{id}/participating_users"
+      @fetch({reset: true})
   }
 
 
