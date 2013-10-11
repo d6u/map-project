@@ -1,6 +1,7 @@
 // --- Container ---
 .md-chatbox {
-  height: 100%;
+  height  : 100%;
+  position: relative;
 }
 
 
@@ -42,7 +43,7 @@
 }
 
 
-// --- Deep Levels ---
+// --- Levels >= 3 ---
 // friends pictures
 .md-chatbox-f-picture {
   display: inline-block;
@@ -54,3 +55,45 @@
   }
 }
 
+
+// --- Chatbox Body ---
+.md-chatbox-body {
+  position: absolute;
+  bottom  : 40px;
+  right   : 0;
+  height  : 400px;
+  width   : 300px;
+  background-color: #FFF;
+
+  &.md-chatbox-body-hide {
+    display: none;
+  }
+}
+
+.md-chatbox-b-header {
+  height: 40px;
+  background-color: $blue;
+  color: #FFF;
+}
+
+.md-chatbox-b-history {
+  position: absolute;
+  top: 40px;
+  left: 0;
+  width: 100%;
+  bottom: 54px;
+}
+
+.md-chatbox-b-inputs {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 54px;
+
+  textarea {
+    @extend .form-control;
+    padding: 6px;
+    resize: none;
+  }
+}

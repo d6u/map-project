@@ -3,6 +3,7 @@
 
 .md-chatbox
 
+  / --- Show when user == 0
   ol.md-chatbox-friends(ng-show="MdChatboxCtrl.ParticipatingUsers.length")
     li.md-chatbox-friend(ng-repeat="friend in MdChatboxCtrl.ParticipatingUsers.models")
       a.md-chatbox-f-picture(href
@@ -11,9 +12,33 @@
         img(ng-src="{{ friend.get('profile_picture') }}")
 
   a.md-chatbox-bb-button(href
+    bs-tooltip="Open Chatbox"
+    bs-tooltip-placement="top"
+    ng-show="MdChatboxCtrl.ParticipatingUsers.length"
+    ng-click="MpUI.showChatboxBody = !MpUI.showChatboxBody")
+    i.icon-comment
+
+
+  / --- Chatbox Body ---
+  section.md-chatbox-body(ng-class="{'md-chatbox-body-hide': !MpUI.showChatboxBody}")
+    header.md-chatbox-b-header
+      / TODO: should load project title
+      | {{  }}
+
+    / chat-history
+    .md-chatbox-b-history()
+      / chat-item
+
+    / chat-inputs
+    .md-chatbox-b-inputs
+      textarea(placeholder="Say Something to Your Friends...")
+
+
+  / --- Hide when user > 0
+  a.md-chatbox-bb-button.md-chatbox-bb-button-expanded(href
     bs-tooltip="Add Friends to Conversation"
     bs-tooltip-placement="top"
-    ng-class="{'md-chatbox-bb-button-expanded': MdChatboxCtrl.ParticipatingUsers.length == 0}")
-    span.md-chatbox-bb-button-title(ng-hide="MdChatboxCtrl.ParticipatingUsers.length")
+    ng-hide="MdChatboxCtrl.ParticipatingUsers.length")
+    span.md-chatbox-bb-button-title
       | Add Friends to Conversation
     i.icon-plus
