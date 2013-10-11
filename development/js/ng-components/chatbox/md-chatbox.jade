@@ -1,9 +1,0 @@
-//- replace: true
-
-
-.md-chatbox()
-  ol.md-chatbox-friends-pictures(ng-show="MdChatboxCtrl.ParticipatingUsers.length")
-    li.md-chatbox-fp-item()
-  a.md-chatbox-bb-button(href="", ng-class="{'md-chatbox-bb-button-expanded': !MdChatboxCtrl.ParticipatingUsers.length}")
-    span.md-chatbox-bb-button-title(ng-hide="MdChatboxCtrl.ParticipatingUsers.length") Add Friends to Conversation
-    i.icon-plus

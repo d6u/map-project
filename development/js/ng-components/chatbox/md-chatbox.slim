@@ -1,0 +1,19 @@
+/ replace: true
+
+
+.md-chatbox
+
+  ol.md-chatbox-friends(ng-show="MdChatboxCtrl.ParticipatingUsers.length")
+    li.md-chatbox-friend(ng-repeat="friend in MdChatboxCtrl.ParticipatingUsers.models")
+      a.md-chatbox-f-picture(href
+        bs-tooltip="{{ friend.get('name') }}"
+        bs-tooltip-placement="top")
+        img(ng-src="{{ friend.get('profile_picture') }}")
+
+  a.md-chatbox-bb-button(href
+    bs-tooltip="Add Friends to Conversation"
+    bs-tooltip-placement="top"
+    ng-class="{'md-chatbox-bb-button-expanded': MdChatboxCtrl.ParticipatingUsers.length == 0}")
+    span.md-chatbox-bb-button-title(ng-hide="MdChatboxCtrl.ParticipatingUsers.length")
+      | Add Friends to Conversation
+    i.icon-plus

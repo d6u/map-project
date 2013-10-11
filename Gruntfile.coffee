@@ -129,7 +129,7 @@ module.exports = (grunt) ->
         tasks: ['copy:html']
       jade:
         files: ['<%= compileSettings["html"]["source folder"] %>' + '/**/*.jade']
-        tasks: ['jade:angular_templates']
+        tasks: ['clean:angular_templates', 'jade:angular_templates']
       # slim:
       #   files: ['<%= compileSettings.js["source folder"] %>' + '/**/*.slim']
       #   tasks: ['slim:angular_templates']
