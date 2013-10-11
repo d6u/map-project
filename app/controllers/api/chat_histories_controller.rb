@@ -23,6 +23,7 @@ class Api::ChatHistoriesController < Api::ApiBaseController
     chat_history.user = @user
     if @project.chat_histories << chat_history
       render json: chat_history
+      push_chat_hisotry_to_clients(chat_history)
     else
       head 406
     end
@@ -46,6 +47,23 @@ class Api::ChatHistoriesController < Api::ApiBaseController
     @project = Project.find params[:project_id]
   end
 
-  private :find_project
+
+  def push_chat_hisotry_to_clients(chat_history)
+    case chat_history.item_type
+    when 0
+      push_data = {
+        type:      'chatMessage',
+        sender:     chat_history.user_id,
+        project_id: chat_history.project_id,
+        message:    chat_history.content['m'],
+        created_at: chat_history.created_at
+      }
+    end
+
+    $redis.publish 'notice_channel', MultiJson.dump(push_data)
+  end
+
+
+  private :find_project, :push_chat_hisotry_to_clients
 
 end

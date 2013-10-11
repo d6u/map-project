@@ -1,6 +1,6 @@
 app.factory 'ChatHistories',
-['socket','TheProject','$routeSegment','MpUser','MpFriends',
-( socket,  TheProject,  $routeSegment,  MpUser,  MpFriends) ->
+['socket','TheProject','$routeSegment','MpUser','MpFriends','ParticipatingUsers',
+( socket,  TheProject,  $routeSegment,  MpUser,  MpFriends,  ParticipatingUsers) ->
 
 
   # --- Model ---
@@ -9,6 +9,13 @@ app.factory 'ChatHistories',
       if options.selfSender || attrs.user_id == MpUser.getId()
         @$selfSender = true
         @$sender = MpUser.getUser()
+      else if options.sender?
+        @$sender = options.sender
+      else
+        sender   = ParticipatingUsers.get(attrs.user_id)
+        @$sender = {
+          profile_picture: sender.get('profile_picture')
+        }
 
       @on 'sync', (model, resp, options) ->
         delete model.$sending
@@ -25,7 +32,17 @@ app.factory 'ChatHistories',
       @on 'request', (model, xhr, options) ->
         model.$sending = true
 
-      @on 'sync', (model, resp, options) ->
+      socket.on 'serverData', (data) =>
+        if data.type == 'chatMessage'
+          sender = ParticipatingUsers.get(data.sender)
+          @add({
+            item_type: 0
+            content:
+              m: data.message
+          }, {
+            sender:
+              profile_picture: sender.get('profile_picture')
+          })
 
 
     initProject: (id, scope) ->
