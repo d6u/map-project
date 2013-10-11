@@ -9,7 +9,7 @@ app.animation '.md-chatbox-bh-item', ->
           targetScrollTop = 0 - element.parent().height()
           element.parent().children().each ->
             targetScrollTop += $(this).outerHeight(true)
-          element.parent().animate({scrollTop: targetScrollTop}, 100)
+          element.parent().animate({scrollTop: targetScrollTop}, 200, 'easeOutCubic')
 
       return
   }
