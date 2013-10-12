@@ -41,7 +41,8 @@
       i.icon-th-list
     / Edit Project
     a.md-m-c-button(href bs-tooltip-placement="right"
-      bs-tooltip="Edit Project Detail")
+      bs-tooltip="Edit Project Detail"
+      ng-click="MpUI.showProjectModal = true; MpUI.projectModalContent = 'editDetail'")
       i.icon-cog
     / Share
     a.md-m-c-button(href bs-tooltip-placement="right"
@@ -49,5 +50,6 @@
       i.icon-share
 
   .md-modal.md-effect-3.md-map-modal(md-project-modal
-    ng-class="{'md-modal-show': mdProjectModalCtrl.showModal}")
-  .md-modal-overlay.md-map-modal-overlay
+    ng-class="{'md-modal-show': MpUI.showProjectModal}")
+  .md-modal-overlay.md-map-modal-overlay(
+    ng-click="MpUI.showProjectModal = false")

@@ -76,8 +76,4 @@ app.directive 'mdProjectModal',
     return
   ]
   link: (scope, element, attrs, mdProjectModalCtrl) ->
-
-    element.next().on 'click', (event) ->
-      scope.$apply ->
-        mdProjectModalCtrl.showModal = false
 ]
