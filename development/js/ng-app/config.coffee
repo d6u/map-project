@@ -16,6 +16,7 @@ app = angular.module('mapApp', [
   'md-socket-io',
   'md-collapse'
   'md-section-jumper'
+  'ngBackbone'
 
   # Application modules that have to run before `.config`
 ])

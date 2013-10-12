@@ -13,5 +13,8 @@ app.factory 'MpUI', [->
     showMapDrawer: false
     mapDrawerActiveSection: 'searchResults'
     showChatboxBody: false
+
+    showProjectModal: false
+    projectModalContent: 'editDetail'
   }
 ]

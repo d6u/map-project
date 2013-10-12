@@ -37,7 +37,7 @@ app.factory 'MapDirections',
       MapPlaces.on 'all', (eventName) =>
         if @$autoRender
           if MapPlaces.length >= 2
-            if eventName in ['add', 'remove', 'sort']
+            if eventName in ['add', 'remove', 'sort', 'sync']
               @route().then =>
                 @renderDirections()
           else

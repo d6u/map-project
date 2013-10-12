@@ -1,0 +1,110 @@
+/ Container: .md-modal.md-effect-3(md-project-modal ng-class="{'md-modal-show': MdProjectModalCtrl.showModal}")
+.md-content.md-project-modal
+
+  / Close Button
+  a.md-project-modal-close(href ng-click="MpUI.showProjectModal = false")
+    i.icon-remove
+
+  / Navbar
+  .md-project-modal-navbar
+    .md-project-modal-navbar-inner
+      a.md-project-modal-navbar-buttons(href
+        ng-class="{active: MpUI.projectModalContent == 'editDetail'}"
+        ng-click="MpUI.projectModalContent = 'editDetail'")
+        | Edit Project Detail
+      a.md-project-modal-navbar-buttons(href
+        ng-class="{active: MpUI.projectModalContent == 'manageFriends'}"
+        ng-click="MpUI.projectModalContent = 'manageFriends'")
+        | Manage Participated Friends
+      a.md-project-modal-navbar-buttons(href
+        ng-class="{active: MpUI.projectModalContent == 'inviteFriends'}"
+        ng-click="MpUI.projectModalContent = 'inviteFriends'; MdProjectModalCtrl.addFriendsSection = 'all'")
+        | Invite Friends to Join
+
+  / Body
+  .md-project-modal-body(ng-switch on="MpUI.projectModalContent")
+
+    div(ng-switch-when="editDetail")
+      form.form-horizontal.md-project-modal-body-form
+        .form-group
+          label.col-lg-2.control-label(for) Title
+          .col-lg-10
+            input.form-control(type="text"
+              placeholder="Enter project title"
+              ng-model="MdProjectModalCtrl._projectAttrs.title")
+        .form-group
+          label.col-lg-2.control-label(for) Notes
+          .col-lg-10
+            textarea.form-control(type="text"
+              placeholder="Enter project notes"
+              ng-model="MdProjectModalCtrl._projectAttrs.notes")
+        .form-group
+          .col-lg-offset-2.col-lg-10
+            .checkbox
+              label
+                input(type="checkbox"
+                ng-model="MdProjectModalCtrl._projectAttrs.deleteCheckbox")
+                |  I want to delete this project
+        .form-group.md-project-modal-body-form-actions
+          .col-lg-offset-2.col-lg-10
+            button.btn.btn-default(ng-click="MdProjectModalCtrl.revertChanges()") Cancel
+            button.btn.btn-primary(ng-click="MdProjectModalCtrl.saveChanges()") Save
+            button.btn.btn-danger(ng-click="MdProjectModalCtrl.deleteProject()") Delete
+
+    / Manage Friends
+    .md-project-modal-body-manage-friends(ng-switch-when="manageFriends")
+      ul.md-user-list.clearfix
+        li.md-user-list-item(ng-repeat="user in mapCtrl.theProject.participatedUsers")
+          a.md-user-list-item-picture(href)
+            img(ng-src="{{user.profile_picture}}")
+          .md-user-list-item-detail
+            a.md-user-list-item-detail-name(href)
+              | {{user.name}}
+          a.md-project-modal-body-manage-friends-remove-button(href
+            ng-click="MdProjectModalCtrl.removeUserFromProject(user)")
+            i.icon-remove
+
+
+    / Invite friends
+    div(ng-switch-when="inviteFriends")
+
+      ul.md-project-modal-body-add-friends-menu
+        li.md-project-modal-body-add-friends-menu-item
+          a(href ng-class="{active: MdProjectModalCtrl.addFriendsSection == 'selected'}"
+            ng-click="MdProjectModalCtrl.addFriendsSection = 'selected'")
+            | Selected
+        li.md-project-modal-body-add-friends-menu-item
+          a(href ng-class="{active: MdProjectModalCtrl.addFriendsSection == 'all'}"
+            ng-click="MdProjectModalCtrl.addFriendsSection = 'all'")
+            | All
+
+
+      .md-project-modal-body-add-friends(ng-switch
+        on="MdProjectModalCtrl.addFriendsSection")
+
+        ul.md-user-list.clearfix(ng-switch-when="selected")
+          li.md-user-list-item-mini.md-project-modal-body-add-friends-list-item(
+            ng-repeat="user in MdProjectModalCtrl.getSelectedNotParticipatingUsers()"
+            ng-class="{active: user.$selected}"
+            ng-click="user.$selected = false")
+            a.md-user-list-item-picture(href)
+              img(ng-src="{{user.profile_picture}}")
+            .md-user-list-item-detail
+              a.md-user-list-item-detail-name(href)
+                | {{user.name}}
+
+        ul.md-user-list.clearfix(ng-switch-when="all")
+          li.md-user-list-item-mini.md-project-modal-body-add-friends-list-item(
+            ng-repeat="user in MdProjectModalCtrl._notParticipatingFriends"
+            ng-click="user.$selected = !user.$selected"
+            ng-class="{active: user.$selected}")
+            a.md-user-list-item-picture(href)
+              img(ng-src="{{user.profile_picture}}")
+            .md-user-list-item-detail
+              a.md-user-list-item-detail-name(href)
+                | {{user.name}}
+
+        / confirm button
+        a.md-project-modal-body-confirm-button.btn.btn-success(href
+          ng-click="MdProjectModalCtrl.sendInvitationToSelectedUsers()")
+          | Add Selected
