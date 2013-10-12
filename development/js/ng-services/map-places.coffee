@@ -77,22 +77,23 @@ app.factory 'MapPlaces',
 
       @on 'reset', (collection, options) ->
         place.destroy() for place in options.previousModels
+
       @on 'remove', (place, collection, options) ->
         place.destroy()
 
-    loadProject: (scope, projectId) ->
-      if projectId
-        if MpProjects.$initializing?
+
+    initProject: (id, scope) ->
+      @$scope = scope
+
+      if MpProjects.$initializing?
           MpProjects.$initializing.then =>
-            MpProjects.findProjectById(projectId).then (project) =>
-              @project = project
-              @url     = "/api/projects/#{@project.id}/places"
-              @fetch()
+            @$$loadProject(id)
         else
-          MpProjects.findProjectById(projectId).then (project) =>
-            @project = project
-            @url     = "/api/projects/#{@project.id}/places"
-            @fetch()
+          @$$loadProject(id)
+
+      @$scope.$on '$destroy', =>
+        delete @$scope
+        @reset()
 
 
     sync: (method, collection, options) ->
@@ -111,6 +112,14 @@ app.factory 'MapPlaces',
         bounds = new google.maps.LatLngBounds
         bounds.extend(place.getPosition()) for place in @models
         TheMap.fitBounds(bounds)
+
+
+    # --- Helpers ---
+    $$loadProject: (id) ->
+      MpProjects.findProjectById(id).then (project) =>
+        @project = project
+        @url     = "/api/projects/#{@project.id}/places"
+        @fetch({reset: true})
   }
 
 

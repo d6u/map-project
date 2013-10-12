@@ -40,6 +40,10 @@ app.factory 'ChatHistories',
       @$scope = scope
       @url    = "/api/projects/#{id}/chat_histories"
       @fetch({reset: true})
+
+      @$scope.$on '$destroy', =>
+        delete @$scope
+        @reset()
   }
 
 

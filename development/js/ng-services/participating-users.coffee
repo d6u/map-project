@@ -17,6 +17,10 @@ app.factory 'ParticipatingUsers', [->
       @$scope = scope
       @url    = "/api/projects/#{id}/participating_users"
       @fetch({reset: true})
+
+      @$scope.$on '$destroy', =>
+        delete @$scope
+        @reset()
   }
 
 

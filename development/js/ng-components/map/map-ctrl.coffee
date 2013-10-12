@@ -19,8 +19,6 @@ app.controller 'MapCtrl',
     @ThePlacesSearch = ThePlacesSearch
     @MapDirections   = MapDirections
 
-    MapPlaces.loadProject($scope, $routeSegment.$routeParams.project_id)
-
     MapInfoWindows.setMapScope($scope)
 
     ThePlacesSearch.on 'newSearchResultsAdded', =>
