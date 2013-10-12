@@ -3,7 +3,7 @@
 
 
 .md-chatbox-bhi-user-profile
-  img(ng-src="{{ item.$sender.profile_picture }}")
+  img(ng-src="{{ item.$sender.get('profile_picture') }}")
 
 .md-chatbox-bhi-content
   p.md-chatbox-bhi-c-message
