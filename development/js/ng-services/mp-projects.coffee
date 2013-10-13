@@ -1,69 +1,57 @@
 ###
-MpProjects handles project query/create/update/delete
+MpProjects handles project CRUD (create/read/update/delete)
 ###
 
+
 app.service 'MpProjects',
-['Restangular', '$q', class MpProjects
-
-  constructor: (@Restangular, @$q) ->
-    @projects   = []
-
-    # --- Resouces ---
-    @$$projects = Restangular.all 'projects'
-
-    Restangular.addElementTransformer 'projects', true, (projects) =>
-      projects.addRestangularMethod 'find_by_title', 'get', undefined, {title: 'last unsaved project'}
-      return projects
+['Restangular','$q','Backbone','$http',
+( Restangular,  $q,  Backbone,  $http) ->
 
 
-  # --- Login/out process management ---
-  initialize: (scope) ->
-    @$initializing = @getProjects()
-    @$initializing.then =>
-      delete @$initializing
+  # --- Model ---
+  Project = Backbone.Model.extend {
+
+    initialize: (attrs, options) ->
+      @set({title: 'Untitled map'}) if !attrs.title?
+  }
 
 
-  # --- Project interface ---
-  getProjects: (queryParams={include_participating: true}) ->
-    @$$projects.getList(queryParams).then (projects) =>
-      @projects = projects
+  # --- Collection ---
+  MpProjects = Backbone.Collection.extend {
 
-  createProject: (project={}) ->
-    if !project.title
-      project.title = 'last unsaved project'
-    return @$$projects.post(project).then (project) =>
-      @projects.unshift project
-      return project
+    model: Project
+    comparator: 'updated_at'
+    url: '/api/projects'
 
-  # will return a promise which resolve into a project,
-  #   reject if no project for provided id
-  findProjectById: (id) ->
-    id     = Number(id)
-    found  = @$q.defer()
-    target = _.find(@projects, {id: id})
-    if target
-      found.resolve(target)
-    # double check on server if no project found on local
-    else
-      @Restangular.one('projects', id).get().then ((project) =>
-        # found a project on server means local copies are not complete,
-        #   needs to update local copies
+    initialize: () ->
+
+
+    initService: (scope) ->
+      @$scope = scope
+      @fetch({reset: true})
+      @initializing = true
+
+      @once 'sync', =>
+        delete @initializing
+
+
+    findProjectById: (id) ->
+      found   = $q.defer()
+      project = @get(id)
+
+      if project?
         found.resolve(project)
-        @projects.push(project)
-        # TODO: update local
-      ), ->
-        found.reject()
+      else
+        @fetch({
+          success: =>
+            project = @get(id)
+            if project? then found.resolve(project) else found.reject()
+        })
 
-    return found.promise
+      return found.promise
+  }
+  # END MpProjects
 
-  updateProject: (project) ->
-    id = project.id
-    delete project.id
-    _project = _.find @projects, {id: id}
-    angular.extend _project, project
-    _project.put()
 
-  removeProject: (project) ->
-    @projects = _.without @projects, project
-    project.remove()
+  return new MpProjects
 ]

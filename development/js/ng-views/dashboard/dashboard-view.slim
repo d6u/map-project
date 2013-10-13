@@ -1,0 +1,33 @@
+/ Container: section.ly-pusher-content(app-view-segment="1")
+
+/ Projects list
+.ly-fullscreen(style="overflow: hidden"
+  perfect-scrollbar="InsideViewCtrl.projects.length" )
+
+  ol.md-projects.clearfix(md-masonry
+    md-masonry-watch="InsideViewCtrl.projects.length"
+    md-masonry-item-selector=".md-projects-item")
+
+    / Add project
+    li.md-projects-item.md-projects-create
+      a(href ng-click="InsideViewCtrl.createNewProject()")
+        i.icon-plus
+
+    / Project list
+    li.md-projects-item.md-project(ng-repeat="project in InsideViewCtrl.projects")
+      .md-project-cover
+        .md-project-cover-background(mini-map-cover)
+        .md-project-cover-overlay
+          a(ng-href="/project/{{project.id}}")
+            | {{ project.get('title') }}
+      .md-project-owner
+        img.md-project-owner-picture(ng-src="{{project.get('owner').profile_picture}}")
+        span.md-project-owner-name
+          | {{ project.get('owner').name }}
+        a.btn.btn-default(ng-href="/project/{{project.id}}") Open
+      .md-project-notes(ng-show="project.get('notes') && project.get('notes').length")
+        | {{ project.get('notes') }}
+      ul.md-project-participants.clearfix(ng-show="project.get('participating_users').length")
+        li.md-project-participants-item(ng-repeat="user in project.get('participating_users')")
+          img.md-project-participants-item(ng-src="{{user.profile_picture")
+      .md-project-lastmessage
