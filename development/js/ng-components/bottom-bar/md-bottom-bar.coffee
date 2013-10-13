@@ -4,9 +4,9 @@ app.directive 'mdBottomBar', [->
   replace:     true
 
   controllerAs: 'MdBottomBarCtrl'
-  controller: ['$scope', 'MpNotification', '$routeSegment', class MdBottomBarCtrl
+  controller: ['$scope', 'MpNotification', '$routeSegment', 'MapPlaces', class MdBottomBarCtrl
 
-    constructor: ($scope, MpNotification, $routeSegment) ->
+    constructor: ($scope, MpNotification, $routeSegment, MapPlaces) ->
 
       # change bottom bar inner when user navigate
       $scope.$watch (->
@@ -14,15 +14,23 @@ app.directive 'mdBottomBar', [->
       ), (newVal) =>
         switch newVal
           when 'ot'
-            @contentTemplateUrl = '/scripts/ng-components/bottom-bar/md-bottom-bar-ot-project.html'
+            templateName = 'ot-project'
           when 'in.dashboard'
-            @contentTemplateUrl = '/scripts/ng-components/bottom-bar/md-bottom-bar-in-dashboard.html'
+            templateName = 'in-dashboard'
           when 'in.project'
-            @contentTemplateUrl = '/scripts/ng-components/bottom-bar/md-bottom-bar-in-project.html'
+            templateName = 'in-project'
           when 'in.friends'
-            @contentTemplateUrl = '/scripts/ng-components/bottom-bar/md-bottom-bar-in-friends.html'
+            templateName = 'in-friends'
           when 'in.search'
-            @contentTemplateUrl = '/scripts/ng-components/bottom-bar/md-bottom-bar-in-search.html'
+            templateName = 'in-search'
+        @contentTemplateUrl = "/scripts/ng-components/bottom-bar/md-bottom-bar-#{templateName}.html" if templateName?
+
+
+      # --- Listeners ---
+      $scope.$watch (->
+        return MapPlaces.project?.get('title')
+      ), (newVal) =>
+        @projectTitle = newVal if newVal?
   ]
 
   link: (scope, element, attrs, MdBottomBarCtrl) ->
