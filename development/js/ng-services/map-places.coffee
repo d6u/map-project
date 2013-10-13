@@ -85,11 +85,11 @@ app.factory 'MapPlaces',
     initProject: (id, scope) ->
       @$scope = scope
 
-      if MpProjects.$initializing?
-          MpProjects.$initializing.then =>
-            @$$loadProject(id)
-        else
+      if MpProjects.initializing
+        MpProjects.once 'sync', =>
           @$$loadProject(id)
+      else
+        @$$loadProject(id)
 
       @$scope.$on '$destroy', =>
         delete @$scope

@@ -11,19 +11,17 @@ class Api::ProjectsController < Api::ApiBaseController
   # DELETE  /api/projects/:id                              destroy
 
 
+  before_action :find_project_if_authorized_to_view
+
+
   # GET     /api/projects/:project_id/participating_users
   def participating_users
-    project = Project.find_by_id(params[:project_id])
-    if project
-      if @user == project.owner
-        render(json: project.participating_users,
-               only: [:id, :name, :profile_picture])
-      else
-        render(json: (project.participating_users - [@user] + [project.owner]),
-               only: [:id, :name, :profile_picture])
-      end
+    if @project.owner == @user
+      render(json: @project.participating_users,
+             only: [:id, :name, :profile_picture])
     else
-      head(404)
+      render(json: (@project.participating_users - [@user] + [@project.owner]),
+             only: [:id, :name, :profile_picture])
     end
   end
 
@@ -110,7 +108,11 @@ class Api::ProjectsController < Api::ApiBaseController
 
   # GET     /api/projects
   def index
-    @projects = params[:include_participating] == 'true' ? @user.projects + @user.participating_projects : @user.projects
+    if params[:include_participating] == true
+      @projects = @user.projects + @user.participating_projects
+    else
+      @projects = @user.projects
+    end
   end
 
 
@@ -121,33 +123,41 @@ class Api::ProjectsController < Api::ApiBaseController
   end
 
 
-
-
-
-
-
+  # GET     /api/projects/:id
   def show
-    project = params[:title] ? @user.projects.find_by_title(params[:title]) : @user.projects.find_by_id(params[:id])
+    render json: @project
+  end
 
-    if project
-      render :json => project
-    else
-      head 401
+
+  # PATCH   /api/projects/:id
+  # PUT     /api/projects/:id
+  def update
+    @project.attributes = params.require(:project).permit(:title, :notes)
+    @project.save if @project.changed?
+    render json: @project
+  end
+
+
+  # DELETE  /api/projects/:id
+  def destroy
+    @project.destroy
+    render json: @project
+  end
+
+
+  # --- Private ---
+
+  def find_project_if_authorized_to_view
+    id = params[:id] || params[:project_id]
+    if !id.nil?
+      @project = Project.find_by_id(id)
+
+      if @project.nil? || (@project.owner != @user && !@user.participating_projects.include?(@project))
+        head 401
+      end
     end
   end
 
-
-  def update
-    project = Project.find_by_id params[:id]
-    project.attributes = params.require(:project).permit(:title, :notes)
-    project.save if project.changed?
-    render :json => project
-  end
-
-
-  def destroy
-    Project.destroy_all :id => params[:id]
-    render :json => []
-  end
+  private :find_project_if_authorized_to_view
 
 end

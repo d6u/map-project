@@ -54,7 +54,7 @@ app.config(['socketProvider', '$httpProvider', '$routeSegmentProvider',
   .segment('in', {
     templateUrl:  '/scripts/ng-views/in/inside-view.html'
     controller:   'InsideViewCtrl'
-    controllerAs: 'insideViewCtrl'
+    controllerAs: 'InsideViewCtrl'
     resolve:
       MpInitializer:              'MpInitializer'
       redirectToOutsideIfNotLogin: mpResolverIn

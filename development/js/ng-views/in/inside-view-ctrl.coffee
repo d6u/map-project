@@ -1,33 +1,41 @@
 app.controller 'InsideViewCtrl',
 ['$scope','MpProjects','MpNotification','$location','MpFriends','socket',
- 'MpUser','MpInvitation',
-( $scope,  MpProjects,  MpNotification,  $location,  MpFriends,  socket,
-  MpUser,  MpInvitation) ->
+ 'MpUser','MpInvitation', class InsideViewCtrl
 
-  @MpProjects     = MpProjects
-  @MpNotification = MpNotification
-  @MpFriends      = MpFriends
-  @MpUser         = MpUser
+  constructor: ($scope, MpProjects, MpNotification, $location, MpFriends, socket, MpUser, MpInvitation) ->
 
-  MpProjects.initialize     $scope
-  MpFriends.initialize      $scope
-  MpNotification.initialize $scope
+    # --- Init Services ---
+    childScope = $scope.$new()
 
-  socket.connect()
-
-  # --- View's methods ---
-  @createNewProject = ->
-    @MpProjects.createProject().then (project) ->
-      $location.path('/project/' + project.id)
-
-  @logout = ->
-    socket.disconnect()
-    MpUser.logout ->
-      $location.path '/'
-
-  @showInvitationDialog = false
+    MpProjects.initService(childScope)
 
 
-  # --- Return ---
-  return
+    # --- Listeners ---
+    MpProjects.on 'all', =>
+      @projects = MpProjects.models
+
+
+    MpFriends.initialize      $scope
+    MpNotification.initialize $scope
+
+    socket.connect()
+
+    @MpNotification = MpNotification
+    @MpFriends      = MpFriends
+    @MpUser         = MpUser
+
+
+    # --- UI Actions ---
+    @createNewProject = ->
+      MpProjects.create({}, {
+        success: (project) ->
+          $location.path("/project/#{project.id}")
+      })
+
+    @logout = ->
+      socket.disconnect()
+      MpUser.logout ->
+        $location.path '/'
+
+    @showInvitationDialog = false
 ]

@@ -2,21 +2,21 @@
 
 
 .md-side-menu.md-side-menu-inside(
-  perfect-scrollbar="insideViewCtrl.MpNotification.notifications.length")
+  perfect-scrollbar="InsideViewCtrl.MpNotification.notifications.length")
 
   / User
   .md-side-menu-user
     div
-      img.md-side-menu-user-picture(ng-src="{{insideViewCtrl.MpUser.getProfilePicture()}}")
+      img.md-side-menu-user-picture(ng-src="{{InsideViewCtrl.MpUser.getProfilePicture()}}")
     p.lead.md-side-menu-user-name
-      | {{insideViewCtrl.MpUser.getName()}}
+      | {{InsideViewCtrl.MpUser.getName()}}
 
   / Menu
   ul.md-side-menu-actions.clearfix
 
     li.md-side-menu-actions-item
-      a.md-side-menu-actions-item-anchor(href=""
-        ng-click="insideViewCtrl.createNewProject()")
+      a.md-side-menu-actions-item-anchor(href
+        ng-click="InsideViewCtrl.createNewProject()")
         i.icon-plus
         | New project
     li.md-side-menu-actions-item
@@ -38,16 +38,18 @@
         i.icon-cog
         | Settings
     li.md-side-menu-actions-item
-      a.md-side-menu-actions-item-anchor(href=""
-        ng-click="insideViewCtrl.showInvitationDialog = true; interface.showUserSection = false")
+      a.md-side-menu-actions-item-anchor(href
+        ng-click="InsideViewCtrl.showInvitationDialog = true; MpUI.showSideMenu = false")
         i.icon-heart
         | Invite friends
     li.md-side-menu-actions-item
-      a.md-side-menu-actions-item-anchor(href=""
-        ng-click="insideViewCtrl.logout()")
+      a.md-side-menu-actions-item-anchor(href
+        ng-click="InsideViewCtrl.logout()")
         i.icon-off
         | Logout
 
   / Notification
   ol.md-side-menu-notifications()
-    li.md-side-menu-notifications-item.md-notice.clearfix(ng-repeat="notice in insideViewCtrl.MpNotification.notifications" md-notification-item="")
+    li.md-side-menu-notifications-item.md-notice.clearfix(
+      ng-repeat="notice in InsideViewCtrl.MpNotification.notifications"
+      md-notification-item)

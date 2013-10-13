@@ -18,9 +18,9 @@ app.directive 'miniMapCover', ['MpLocation', (MpLocation) ->
 
     scope.miniMap = new google.maps.Map(element[0], mapOptions)
 
-    if scope.project.places.length > 0
+    if scope.project.get('places')?.length > 0
       bounds = new google.maps.LatLngBounds()
-      for place in scope.project.places
+      for place in scope.project.get('places')
         coordMatch = /\((.+), (.+)\)/.exec(place.coord)
         latLog = new google.maps.LatLng(coordMatch[1], coordMatch[2])
         markerOptions =

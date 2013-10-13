@@ -9,9 +9,9 @@
     ng-click="MpUI.showSideMenu = true"
     bs-tooltip="Show Menu"
     bs-tooltip-placement="top")
-    img.md-bb-u-picture(ng-src="{{insideViewCtrl.MpUser.getProfilePicture()}}")
+    img.md-bb-u-picture(ng-src="{{InsideViewCtrl.MpUser.getProfilePicture()}}")
     span.md-bb-u-name
-      | {{ insideViewCtrl.MpUser.getName() }}
+      | {{ MdBottomBarCtrl.projectTitle }}
 
   / show drawer
   a.md-bb-button(href
