@@ -1,8 +1,5 @@
 class InvitationsController < ApplicationController
 
-  skip_before_action :check_login_status
-
-
   # GET    /invitations/:code    show
   # ----------------------------------------
   def show
