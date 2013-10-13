@@ -1,6 +1,6 @@
 app.factory 'TheMap',
-['MpLocation','$q','$compile',
-( MpLocation,  $q,  $compile) ->
+['MpLocation','$q','$compile','MpUI',
+( MpLocation,  $q,  $compile,  MpUI) ->
 
   class TheMap
     constructor: ->
@@ -29,7 +29,13 @@ app.factory 'TheMap',
         scope.$on '$destroy', =>
           @destroy()
 
+        scope.$watch (->
+          return MpUI.showMapDrawer
+        ), =>
+          setTimeout (=>google.maps.event.trigger(@getMap(), 'resize')), 500
+
         @trigger 'initialized'
+
 
       @destroy = ->
         delete @$googleMap
