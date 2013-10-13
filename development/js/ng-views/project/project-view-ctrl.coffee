@@ -1,16 +1,11 @@
 app.controller 'ProjectViewCtrl',
-['$scope','$routeSegment','ChatHistories','ParticipatingUsers','MapPlaces',
+['$scope','$routeSegment','ChatHistories','ParticipatingUsers',
 class ProjectViewCtrl
 
-  constructor: ($scope, $routeSegment, ChatHistories, ParticipatingUsers,
-  MapPlaces) ->
+  constructor: ($scope, $routeSegment, ChatHistories, ParticipatingUsers) ->
 
     # --- Init Services ---
     childScope = $scope.$new()
-
-    MapPlaces.initProject(
-      $routeSegment.$routeParams.project_id,
-      childScope)
 
     ParticipatingUsers.initProject(
       $routeSegment.$routeParams.project_id,

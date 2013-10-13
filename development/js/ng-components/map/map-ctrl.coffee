@@ -1,9 +1,9 @@
 app.controller 'MapCtrl',
-['$scope','TheProject','$routeSegment','TheMap','ThePlacesSearch','MapMarkers',
-'MapPlaces','MapInfoWindows','MapDirections','ParticipatingUsers', class MapCtrl
+['$scope','$routeSegment','TheMap','ThePlacesSearch','MapMarkers',
+'MapPlaces','MapInfoWindows','MapDirections', class MapCtrl
 
-  constructor: ($scope, TheProject, $routeSegment, TheMap, ThePlacesSearch,
-    MapMarkers, MapPlaces, MapInfoWindows, MapDirections, ParticipatingUsers) ->
+  constructor: ($scope, $routeSegment, TheMap, ThePlacesSearch, MapMarkers,
+  MapPlaces, MapInfoWindows, MapDirections) ->
 
     # --- Callbacks ---
     # helper
@@ -14,12 +14,23 @@ app.controller 'MapCtrl',
             @addPlaceToList(place.attributes)
 
 
-    # --- initialization ---
-    @MapPlaces       = MapPlaces
+    # --- Init Services ---
+    MapInfoWindows.setMapScope($scope)
+
+    childScope = $scope.$new()
+
+    MapPlaces.initProject(
+      $routeSegment.$routeParams.project_id,
+      childScope)
+
     @ThePlacesSearch = ThePlacesSearch
     @MapDirections   = MapDirections
 
-    MapInfoWindows.setMapScope($scope)
+
+    # --- Listeners ---
+    MapPlaces.on 'all', =>
+      @savedPlaces = MapPlaces.models
+
 
     ThePlacesSearch.on 'newSearchResultsAdded', =>
       ThePlacesSearch.forEach (place) =>
@@ -46,6 +57,11 @@ app.controller 'MapCtrl',
       })
       delete place.attributes.id
       MapPlaces.create(place.attributes)
+
+
+    @removePlaceFromList = (place) ->
+      MapPlaces.remove(place)
+
 
     # map control
     @zoomIn = ->
