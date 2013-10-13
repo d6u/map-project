@@ -48,14 +48,14 @@
 
     ul.md-places(md-places-list-sortable)
       / place item
-      li.md-places-item(ng-repeat="place in MapCtrl.MapPlaces.models")
+      li.md-places-item(ng-repeat="place in MapCtrl.savedPlaces")
 
         .md-places-item-image
           a(href ng-click="MapCtrl.centerSavedPlace(place)")
             img(src="/img/blue-marker-3d.png")
         .md-places-item-actions
           a.md-places-item-actions-remove(href
-            ng-click="MapCtrl.MapPlaces.remove(place)")
+            ng-click="MapCtrl.removePlaceFromList(place)")
             i.icon-remove
         .md-places-item-details
           .md-places-item-name

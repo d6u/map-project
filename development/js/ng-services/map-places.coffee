@@ -18,6 +18,7 @@ app.factory 'MapPlaces',
       }, (result, status) =>
         if status == google.maps.places.PlacesServiceStatus.OK
           $rootScope.$apply =>
+            delete result.id
             @set(result)
             @infoWindows[0].setContent(@infoWindows[0].getContent())
 
@@ -85,15 +86,16 @@ app.factory 'MapPlaces',
     initProject: (id, scope) ->
       @$scope = scope
 
-      if MpProjects.initializing
-        MpProjects.once 'sync', =>
-          @$$loadProject(id)
-      else
-        @$$loadProject(id)
-
       @$scope.$on '$destroy', =>
         delete @$scope
         @reset()
+
+      if id?
+        if MpProjects.initializing
+          MpProjects.once 'sync', =>
+            @$$loadProject(id)
+        else
+          @$$loadProject(id)
 
 
     sync: (method, collection, options) ->
