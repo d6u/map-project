@@ -5,6 +5,8 @@ app.controller 'InsideViewCtrl',
   constructor: ($scope, MpProjects, MpNotification, $location, MpFriends, socket, MpUser, MpInvitation) ->
 
     # --- Init Services ---
+    socket.connect()
+
     childScope = $scope.$new()
 
     MpProjects.initService(childScope)
@@ -21,7 +23,7 @@ app.controller 'InsideViewCtrl',
 
     # old
     MpNotification.initialize $scope
-    socket.connect()
+
     @MpNotification = MpNotification
     @MpUser         = MpUser
 

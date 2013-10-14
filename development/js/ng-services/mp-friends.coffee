@@ -15,16 +15,48 @@ app.service 'MpFriends',
     model: Friend
     url: "/api/friends"
 
-    initialize: ->
+    onlineIds: []
 
+
+    initialize: ->
 
 
     initService: (scope) ->
       @fetch({reset: true})
 
+      socket.on 'friendsOnlineIds', (ids) =>
+        @onlineIds = ids
+        @updateFriendsOnlineStatus()
+
+      # listen to on/off line event in collection instread of model to reduce
+      #   digest cycle
+      socket.on 'friendGoOnline', (id) =>
+        @onlineIds = _.union(@onlineIds, [id])
+        @updateFriendsOnlineStatus()
+
+      socket.on 'friendGoOffline', (id) =>
+        @onlineIds = _.without(@onlineIds, id)
+        @updateFriendsOnlineStatus()
+
+
+      @on 'all', @updateFriendsOnlineStatus, @
+
+      # --- clean up ---
       deregister = scope.$on '$destroy', =>
-        @reset()
         deregister()
+        @off 'all', @updateFriendsOnlineStatus, @
+        socket.removeAllListeners('friendGoOffline')
+        socket.removeAllListeners('friendGoOnline')
+        socket.removeAllListeners('friendsOnlineIds')
+        @reset()
+
+
+    updateFriendsOnlineStatus: ->
+      @forEach (friend) =>
+        if _.indexOf(@onlineIds, friend.id) > -1
+          friend.online = true
+        else
+          delete friend.online if friend.online?
   }
   # END MpFriends
 
