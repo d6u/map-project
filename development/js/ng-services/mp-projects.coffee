@@ -36,6 +36,10 @@ app.service 'MpProjects',
       @once 'sync', =>
         delete @initializing
 
+      deregister = scope.$on '$destroy', =>
+        @reset()
+        deregister()
+
 
     findProjectById: (id) ->
       found   = $q.defer()

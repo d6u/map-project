@@ -8,20 +8,21 @@ app.controller 'InsideViewCtrl',
     childScope = $scope.$new()
 
     MpProjects.initService(childScope)
+    MpFriends.initService(childScope)
 
 
     # --- Listeners ---
     MpProjects.on 'all', =>
       @projects = MpProjects.models
 
+    MpFriends.on 'all', =>
+      @friends = MpFriends.models
 
-    MpFriends.initialize      $scope
+
+    # old
     MpNotification.initialize $scope
-
     socket.connect()
-
     @MpNotification = MpNotification
-    @MpFriends      = MpFriends
     @MpUser         = MpUser
 
 
