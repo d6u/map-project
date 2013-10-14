@@ -1,30 +1,21 @@
 app.controller 'SearchViewCtrl',
-['$scope', '$location', 'MpFriends', ($scope, $location, MpFriends) ->
+['$scope', '$location', 'MpUserSearch', class SearchViewCtrl
 
-  @searchUser = ->
-    if @searchInput
-      $location.search('name', @searchInput)
-      $scope.insideViewCtrl.MpFriends.findUserByName(@searchInput).then (users) =>
-        @searchResults = users
-        if users.length
-          @showNoResults = false
-        else
-          @lastSearchInput = @searchInput
-          @showNoResults = true
+  constructor: ($scope, $location, MpUserSearch) ->
 
-  @addUserAsFriend = (user) ->
-    MpFriends.addUserAsFriend(user)
+    @showNoResults = false
 
-
-  # --- Init ---
-  @showNoResults = false
-
-  if $location.search().name
-    @searchInput = $location.search().name
-    @searchUser()
-  else
-    @searchResults = []
+    $scope.$watch (->
+      return MpUserSearch.models
+    ), =>
+      @searchResults = MpUserSearch.models
+      if MpUserSearch.length
+        @showNoResults = false
+      else
+        @showNoResults = true
+        @lastSearchInput = $location.search().name
 
 
-  return
+    @addUserAsFriend = (user) ->
+      MpFriends.addUserAsFriend(user)
 ]

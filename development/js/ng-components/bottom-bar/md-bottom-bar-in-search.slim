@@ -11,7 +11,10 @@
 .md-bb-section-middle
   / search input
   input.md-bb-text-input(type="text"
-    placeholder="Enter a name to search")
+    placeholder="Enter a name to search"
+    md-user-search-input
+    ng-model="MdUserSearchInputCtrl.searchInput"
+    ng-keyup="MdUserSearchInputCtrl.searchUser($event)")
 
   / clear input
   a.md-bb-button-clear-input(href ng-show=""
