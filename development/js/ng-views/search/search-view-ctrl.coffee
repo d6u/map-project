@@ -3,16 +3,11 @@ app.controller 'SearchViewCtrl',
 
   constructor: ($scope, $location, MpUserSearch) ->
 
-    @showNoResults = false
-
     $scope.$watch (->
       return MpUserSearch.models
     ), =>
       @searchResults = MpUserSearch.models
-      if MpUserSearch.length
-        @showNoResults = false
-      else
-        @showNoResults = true
+      if !MpUserSearch.length
         @lastSearchInput = $location.search().name
 
 

@@ -13,9 +13,12 @@
       .md-user-list-item-actions
         a.btn(href
           ng-click="SearchViewCtrl.addUserAsFriend(user)"
-          ng-disabled="user.added"
-          ng-class="{'btn-primary': user.added && !user.pending, 'btn-success': !(user.added && !user.pending)}")
+          ng-disabled="user.get('added')"
+          ng-class="{'btn-primary': user.get('added') && !user.get('pending'), 'btn-success': !(user.get('added') && !user.get('pending'))}")
           | {{ user | searchFriendsStatusFilter }}
 
-  p.lead(ng-show="SearchViewCtrl.showNoResults")
-    | Sorry, we cannot find user with name "{{SearchViewCtrl.lastSearchInput}}" that is not your friend
+  p.lead(ng-hide="SearchViewCtrl.searchResults.length || MpUI.showSearchIntro")
+    | Sorry, we cannot find user with name "{{SearchViewCtrl.lastSearchInput}}" that is not your friend.
+
+  p.lead(ng-show="MpUI.showSearchIntro")
+    | Enter name in the bottom bar to search.

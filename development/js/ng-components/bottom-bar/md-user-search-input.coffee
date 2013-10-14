@@ -1,12 +1,13 @@
 app.directive 'mdUserSearchInput', [->
 
   controllerAs: 'MdUserSearchInputCtrl'
-  controller: ['MpUserSearch', '$location', class MdUserSearchInputCtrl
+  controller: ['MpUserSearch', '$location', 'MpUI', class MdUserSearchInputCtrl
 
-    constructor: (MpUserSearch, $location) ->
+    constructor: (MpUserSearch, $location, MpUI) ->
 
       @searchUser  = ($event) ->
         if $event.keyCode == 13 && @searchInput
+          MpUI.showSearchIntro = false
           $location.search('name', @searchInput)
           MpUserSearch.searchUserByName(@searchInput)
 
@@ -18,6 +19,7 @@ app.directive 'mdUserSearchInput', [->
 
 
       if $location.search().name?
+        MpUI.showSearchIntro = false
         @searchInput = $location.search().name
         MpUserSearch.searchUserByName(@searchInput)
       else
