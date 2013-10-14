@@ -6,106 +6,117 @@ MpUserNode manage user socket clients save/retrieval and various other
 
 q       = require('q')
 _       = require('lodash')
-redis   = require('redis')
-rClient = redis.createClient()
+redis   = require('redis').createClient()
 pgQuery = require('./pg_query_helper')
 logger  = require('tracer').colorConsole();
 
 
-rClient.on 'error', (err) ->
+redis.on 'error', (err) ->
   logger.warn "Redis error " + err
 
 
 # --- Modules ---
 module.exports = {
 
-  # --- Helpers ---
-  setSockets: (@sockets) ->
-  findSocketById: (id) ->
-    return _.find(@sockets.clients(), {id: id})
+
+  # --- Init ---
+  setSocketIo: (@socketIo) ->
 
 
-  # --- socket management ---
-  addSocketToUserNode: (socket) ->
-    rClient.sadd "user:#{socket.handshake.user.id}:socket_ids", socket.id
+  # --- Socket Management ---
+  # get socket by socket id (not user id)
+  getSocket: (id) ->
+    return _.find(@socketIo.sockets.clients(), {id: id})
 
-  removeSocketFromUserNode: (socket) ->
+
+  # add socket id to Redis
+  #   return promise, resolve with all socket ids belongs to same user
+  addSocket: (socket) ->
+    allSocket = q.defer()
     userId = socket.handshake.user.id
-    rClient.srem "user:#{userId}:socket_ids", socket.id
-    @getUserSocketIds(userId).then undefined, ->
-      rClient.del "user:#{userId}:socket_ids"
+    redis.sadd "user:#{userId}:socket_ids", socket.id, =>
+      @getUserSocketIds(userId).then(
+        ((ids) -> allSocket.resolve(ids)),
+        (-> logger.warn('No socket ids found! Should don\'t be happending.'))
+      )
+    return allSocket.promise
+
+
+  # remove socket id from Redis
+  #   return promise, resolve with other socket ids belongs to same user
+  #   resolve into empty array if no more socket online
+  # also removes user:#{id}:socket_ids entry if the set is empty
+  removeSocket: (socket) ->
+    socketLeft = q.defer()
+    userId     = socket.handshake.user.id
+    redis.srem "user:#{userId}:socket_ids", socket.id
+    @getUserSocketIds(userId).then(
+      ((ids) -> socketLeft.resolve(ids)),
+      (->
+        redis.del "user:#{userId}:socket_ids"
+        socketLeft.resolve([])
+      )
+    )
+    return socketLeft.promise
+
 
   getUserSocketIds: (userId) ->
-    findIds = q.defer()
-    rClient.smembers "user:#{userId}:socket_ids", (err, socketIds) =>
-      if socketIds.length then findIds.resolve(socketIds) else findIds.reject()
-    return findIds.promise
+    foundIds = q.defer()
+    redis.smembers "user:#{userId}:socket_ids", (err, ids) =>
+      if ids.length then foundIds.resolve(ids) else foundIds.reject()
+    return foundIds.promise
 
 
   # --- user data management ---
-  getOnlineFriendIds: (socket) ->
+  getOnlineFriendsIds: (userId) ->
     # query friends
-    pgQuery('SELECT friend_id FROM friendships WHERE user_id = $1 AND status > 0',
-    [socket.handshake.user.id]).then (friendships) =>
+    return pgQuery('SELECT friend_id
+             FROM friendships
+             WHERE user_id = $1 AND status > 0',
+            [userId])
+    .then (friendships) =>
+      logger.debug(friendships)
       # cache friend ids in redis
-      @cacheFriendsIds(_.pluck(friendships, 'friend_id'), socket)
+      @cacheFriendsIds(_.pluck(friendships, 'friend_id'), userId)
       # create promises array
       allFriendsChecked = []
       # check online status for each friend
       friendships.forEach (friendship) =>
         friendChecked = q.defer()
-        allFriendsChecked.push friendChecked.promise
-        @getUserSocketIds(friendship.friend_id).then ((socketIds) ->
-          friendChecked.resolve(friendship.friend_id)
-        ), ->
-          friendChecked.resolve(null)
+        allFriendsChecked.push(friendChecked.promise)
+        @getUserSocketIds(friendship.friend_id).then(
+          ((ids) -> friendChecked.resolve(friendship.friend_id)),
+          (      -> friendChecked.resolve(null))
+        )
       # wain for all friend checked
       #   friendIds contains null value if related friend is not online
-      q.all(allFriendsChecked).then (friendIds) ->
-        _.filter friendIds, (id) -> _.isNumber(id)
+      return q.all(allFriendsChecked).then (ids) ->
+        return _.filter(ids, (id) -> _.isNumber(id))
 
-  cacheFriendsIds: (friendIds, socket) ->
+
+  # currently is not very useful because cached data is not used anywhere
+  cacheFriendsIds: (friendIds, userId) ->
     if friendIds.length
-      rClient.sadd "user:#{socket.handshake.user.id}:friend_ids", friendIds
+      redis.sadd "user:#{userId}:friend_ids", friendIds
 
 
   # --- send data to client ---
-  pushOnlineFriendIds: (socket) ->
-    @getOnlineFriendIds(socket).then (onlineFriendIds) =>
-      socket.emit 'onlineFriendsList', onlineFriendIds
-
-  pushMessageToUserId: (userId, eventName, data, eachCallback) ->
-    @getUserSocketIds(userId).then (socketIds) =>
-      for socketId in socketIds
-        socket = @findSocketById(socketId)
-        socket.emit eventName, data
-        eachCallback(socket, eventName, data, userId) if eachCallback
+  pushDataToSocket: (socket, eventName, data) ->
+    socket.emit(eventName, data)
 
 
-  # --- broadcast online/offline status to friends ---
-  pushOnlineStatusToFriends: (socket) ->
-    sender_id = socket.handshake.user.id
-    @getOnlineFriendIds(socket).then (ids) =>
+  # eachCallback will be called with (socket, eventName, data, userId) as
+  #   arguments, for each socket connection belongs to particular user.
+  #   If eachCallback returns false, data won't be sent for the socket in
+  #   current loop.
+  pushDataToUserId: (userId, eventName, data, eachCallback) ->
+    @getUserSocketIds(userId).then (ids) =>
       for id in ids
-        @pushMessageToUserId(id, 'friendGoOnline', sender_id)
-
-  pushOfflineStatusToFriends: (socket) ->
-    sender_id = socket.handshake.user.id
-    pseudoSocket = {handshake: {user: {id: socket.handshake.user.id}}}
-    @getOnlineFriendIds(pseudoSocket).then (ids) =>
-      for id in ids
-        @pushMessageToUserId(id, 'friendGoOffline', sender_id)
-
-
-  # --- Inside project broadcast ---
-  broadcastMessageOfProject: (projectId, messageData, senderSocket) ->
-    rClient.smembers "project:#{projectId}:user_ids", (err, userIds) =>
-      if !userIds.length
-        pgQuery('SELECT u.id FROM users u INNER JOIN project_participations pp ON pp.user_id = u.id WHERE pp.project_id = $1 UNION SELECT u.id FROM users u INNER JOIN projects p ON p.owner_id = u.id WHERE p.id = $1;', [projectId]).then (users) =>
-
-          # got users
-          for user in users
-            if user.id != senderSocket.handshake.user.id
-              @pushMessageToUserId(user.id, 'chatMessage', messageData)
-      # TODO: else
+        socket = @getSocket(id)
+        if eachCallback?
+          result = eachCallback(socket, eventName, data, userId)?
+          if result? && result != false
+            socket.emit eventName, data
+        else
+          socket.emit eventName, data
 }
