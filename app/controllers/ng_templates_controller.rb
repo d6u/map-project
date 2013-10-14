@@ -1,6 +1,5 @@
 class NgTemplatesController < ApplicationController
 
-
   # render slim template in development or testing mode
   #   because Grunt render slim is too slow
 
