@@ -47,12 +47,12 @@ MapProject::Application.routes.draw do
 
     resources :friendships,   :only => [:index, :create, :show, :update, :destroy]
 
-    resources :notifications, :only => [:index, :destroy]
-    scope    '/notifications/:id' do
-      post   'accept_friend_request' => 'notifications#accept_friend_request'
-      delete 'ignore_friend_request' => 'notifications#ignore_friend_request'
-      post   'accept_project_invitation' => 'notifications#accept_project_invitation'
-      delete 'reject_project_invitation' => 'notifications#reject_project_invitation'
+    resources :notices, :only => [:index, :destroy]
+    scope    '/notices/:id' do
+      post   'accept_friend_request'     => 'notices#accept_friend_request'
+      delete 'ignore_friend_request'     => 'notices#ignore_friend_request'
+      post   'accept_project_invitation' => 'notices#accept_project_invitation'
+      delete 'reject_project_invitation' => 'notices#reject_project_invitation'
     end
 
     scope     'invitations/:code' do
