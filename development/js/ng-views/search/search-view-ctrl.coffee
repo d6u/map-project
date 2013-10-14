@@ -9,8 +9,4 @@ app.controller 'SearchViewCtrl',
       @searchResults = MpUserSearch.models
       if !MpUserSearch.length
         @lastSearchInput = $location.search().name
-
-
-    @addUserAsFriend = (user) ->
-      MpFriends.addUserAsFriend(user)
 ]

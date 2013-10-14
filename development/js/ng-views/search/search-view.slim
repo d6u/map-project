@@ -12,7 +12,7 @@
           | {{ user.get('name') }}
       .md-user-list-item-actions
         a.btn(href
-          ng-click="SearchViewCtrl.addUserAsFriend(user)"
+          ng-click="user.addAsFriend()"
           ng-disabled="user.get('added')"
           ng-class="{'btn-primary': user.get('added') && !user.get('pending'), 'btn-success': !(user.get('added') && !user.get('pending'))}")
           | {{ user | searchFriendsStatusFilter }}

@@ -1,10 +1,13 @@
 app.factory 'MpUserSearch',
-['Backbone',
-( Backbone)->
+['Backbone','$http',
+( Backbone,  $http)->
 
   # --- Model ---
   User = Backbone.Model.extend {
-    initialize: ->
+
+    addAsFriend: ->
+      @set({pending: true, added: true})
+      $http.post("/api/friendships", {friendship: {friend_id: @id}})
   }
 
 
