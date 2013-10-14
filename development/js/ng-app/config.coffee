@@ -82,7 +82,7 @@ app.config(['socketProvider', '$httpProvider', '$routeSegmentProvider',
     .segment('search', {
       templateUrl:  '/scripts/ng-views/search/search-view.html'
       controller:   'SearchViewCtrl'
-      controllerAs: 'searchViewCtrl'
+      controllerAs: 'SearchViewCtrl'
     })
 
   # otherwise
