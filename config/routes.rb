@@ -42,10 +42,8 @@ MapProject::Application.routes.draw do
       delete 'remove_users'        => 'projects#remove_users'
     end
 
-
-    resources :friends,       :only => [:index, :show]
-
-    resources :friendships,   :only => [:index, :create, :show, :update, :destroy]
+    # --- Friendships ---
+    resources :friendships, :only => [:index, :create, :show, :update, :destroy]
 
     resources :notices, :only => [:index, :destroy]
     scope    '/notices/:id' do
