@@ -24,6 +24,8 @@ app.service 'MpProjects',
     url: '/api/projects'
 
     initialize: () ->
+      @on 'destroy', (model) =>
+        @remove(model)
 
 
     initService: (scope) ->
