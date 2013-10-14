@@ -1,8 +1,8 @@
 app.controller 'OutsideViewCtrl',
-['$scope','MpUser','TheProject','MpProjects','$q','$location','MpUI'
+['$scope','MpUser','MpProjects','$q','$location','MpUI'
 class OutsideViewCtrl
 
-  constructor: ($scope, MpUser, TheProject, MpProjects, $q, $location, MpUI) ->
+  constructor: ($scope, MpUser, MpProjects, $q, $location, MpUI) ->
     @hideHomepage = false
 
     @loginWithFacebook = ->

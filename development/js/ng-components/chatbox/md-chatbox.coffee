@@ -1,15 +1,13 @@
 app.directive 'mdChatbox',
-['mpTemplateCache','$compile','$timeout','ChatHistories',
-( mpTemplateCache,  $compile,  $timeout,  ChatHistories) ->
+[->
 
   templateUrl: '/scripts/ng-components/chatbox/md-chatbox.html'
   replace: true
 
   controllerAs: 'MdChatboxCtrl'
-  controller: ['$element', '$scope', 'TheProject', '$routeSegment',
-  'ParticipatingUsers', class MdChatboxCtrl
+  controller: ['$scope', 'ParticipatingUsers', 'ChatHistories', class MdChatboxCtrl
 
-    constructor: ($element, $scope, TheProject, $routeSegment, ParticipatingUsers) ->
+    constructor: ($scope, ParticipatingUsers, ChatHistories) ->
 
       # --- Init ---
       $scope.$watch (-> ChatHistories.models), (newVal, oldVal) =>
