@@ -14,14 +14,13 @@ app.factory 'ParticipatingUsers', [->
     initialize: () ->
 
     initProject: (id, scope) ->
-      @$scope = scope
-      @url    = "/api/projects/#{id}/participating_users"
+      @url = "/api/projects/#{id}/participating_users"
       @fetch({reset: true})
 
-      @$scope.$on '$destroy', =>
-        delete @$scope
+      scope.$on '$destroy', =>
         @reset()
   }
+  # END ParticipatingUsers
 
 
   return new ParticipatingUsers

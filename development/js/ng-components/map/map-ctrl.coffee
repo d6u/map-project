@@ -17,12 +17,6 @@ app.controller 'MapCtrl',
     # --- Init Services ---
     MapInfoWindows.setMapScope($scope)
 
-    childScope = $scope.$new()
-
-    MapPlaces.initProject(
-      $routeSegment.$routeParams.project_id,
-      childScope)
-
     @ThePlacesSearch = ThePlacesSearch
     @MapDirections   = MapDirections
 
