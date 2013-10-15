@@ -2,19 +2,19 @@ app.directive 'mdNotificationItem',
 ['mpTemplateCache', '$compile', (mpTemplateCache, $compile) ->
 
   controllerAs: 'mdNotificationItemCtrl'
-  controller: ['$scope', 'MpNotification', 'MpFriends', ($scope, MpNotification, MpFriends) ->
+  controller: ['$scope', 'MpNotices', 'MpFriends', ($scope, MpNotices, MpFriends) ->
 
     @ignoreFriendRequest = ->
-      MpNotification.ignoreFriendRequest($scope.notice)
+      MpNotices.ignoreFriendRequest($scope.notice)
 
     @acceptFriendRequest = ->
-      MpNotification.acceptFriendRequest($scope.notice)
+      MpNotices.acceptFriendRequest($scope.notice)
 
     @rejectProjectInvitation = ->
-      MpNotification.rejectProjectInvitation($scope.notice)
+      MpNotices.rejectProjectInvitation($scope.notice)
 
     @acceptProjectInvitation = ->
-      MpNotification.acceptProjectInvitation($scope.notice)
+      MpNotices.acceptProjectInvitation($scope.notice)
 
 
     return

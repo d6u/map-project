@@ -1,6 +1,6 @@
 app.directive 'mdSideMenuInside',
-['MpNotification','MpUI',
-( MpNotification,  MpUI) ->
+['MpNotices','MpUI',
+( MpNotices,  MpUI) ->
 
   templateUrl:  '/scripts/ng-components/side-menu/md-side-menu-inside.html'
   replace:      true
@@ -23,7 +23,7 @@ app.directive 'mdSideMenuInside',
 
       $scope.$watch 'interface.showUserSection', (newVal) ->
         return if newVal != true
-        for notice in MpNotification.notifications
+        for notice in MpNotices.models
           if noActionRequiredNotice.indexOf(notice.type) > -1 &&
           alreadyRemovedNoticeIds.indexOf(notice.id) == -1
             notice.remove()
