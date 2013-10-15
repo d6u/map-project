@@ -1,6 +1,6 @@
 app.service 'MpNotices',
-['socket','MpFriends','Backbone','$http',
-( socket,  MpFriends,  Backbone,  $http) ->
+['socket','MpFriends','Backbone','$http','$q',
+( socket,  MpFriends,  Backbone,  $http,  $q) ->
 
 
   # --- Constants ---
@@ -22,18 +22,6 @@ app.service 'MpNotices',
   Notice = Backbone.Model.extend {
 
     initialize: ->
-      senderId = @get('sender_id')
-      friend = MpFriends.get(senderId)
-      if friend?
-        @sender = friend
-      else
-        sender = _.find(@collection.models, {sender: {id: senderId}})
-        if sender?
-          @sender = sender
-        else
-          $http.get("/api/users/#{senderId}").then (response) =>
-            if response.status == 200
-              @sender = response.data
   }
 
 
@@ -46,8 +34,9 @@ app.service 'MpNotices',
 
 
     initialize: ->
-      @on 'add', ->
-        console.debug arguments
+      @on 'add', (model) =>
+        @findSender( model.get('sender_id') ).then (sender) =>
+          @assignSenderToModels(sender)
 
 
     initService: (scope) ->
@@ -56,6 +45,11 @@ app.service 'MpNotices',
         reset: true
         success: =>
           delete @initializing
+
+          senderIds = _.uniq( @pluck('sender_id') )
+          senderIds.forEach (id) =>
+            @findSender(id).then (sender) =>
+              @assignSenderToModels(sender)
       })
 
       addPushData = (data) =>
@@ -67,6 +61,33 @@ app.service 'MpNotices',
         @reset()
         socket.removeAllListeners('pushData', addPushData)
         deregister()
+
+
+    # find sender through local data first, then on the server
+    #   used to find the sender for each notice
+    # return promise resolve into user data obj
+    findSender: (id) ->
+      found = $q.defer()
+
+      friend = MpFriends.get(id)
+      if friend?
+        found.resolve(friend)
+      else
+        sender = _.find(@models, {sender: {id: id}})
+        if sender?
+          found.resolve(sender)
+        else
+          $http.get("/api/users/#{id}").then (response) =>
+            if response.status == 200
+              found.resolve(response.data)
+
+      return found.promise
+
+
+    # assign sender data to model with same sender_id
+    assignSenderToModels: (sender) ->
+      for notice in @where({sender_id: sender.id})
+        notice.sender = sender
   }
   # END MpNotices
 
