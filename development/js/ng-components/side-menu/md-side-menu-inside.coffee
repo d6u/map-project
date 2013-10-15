@@ -9,26 +9,29 @@ app.directive 'mdSideMenuInside',
 
     constructor: ($scope, MpUser, $location) ->
 
-      # --- Remove No Action Required Notice when Side Menu is Open ---
-      noActionRequiredNotice = [
-        'addFriendRequestAccepted'
-        'projectInvitationAccepted'
-        'projectInvitationRejected'
-        'newUserAdded'
-        'youAreRemovedFromProject'
-      ]
+      # --- Constants ---
+      NO_ACTION_REQUIRED_NOTICE = [5, 15, 16, 25, 26, 35, 36, 45, 46, 55]
 
-      # store notice id that already removed from server but has a local copy
-      alreadyRemovedNoticeIds = []
 
-      $scope.$watch 'interface.showUserSection', (newVal) ->
+      # --- Listeners ---
+      $scope.$watch (->
+        return MpNotices.models
+      ), =>
+        @notices = MpNotices.models
+
+
+      # removed from server, but still have a local copy
+      destroyedNoticeIds = []
+
+      $scope.$watch (->
+        return MpUI.showSideMenu
+      ), (newVal) ->
         return if newVal != true
         for notice in MpNotices.models
-          if noActionRequiredNotice.indexOf(notice.type) > -1 &&
-          alreadyRemovedNoticeIds.indexOf(notice.id) == -1
-            notice.remove()
-            alreadyRemovedNoticeIds.push(notice.id)
-
+          if _.indexOf(NO_ACTION_REQUIRED_NOTICE, notice.notice_type) > -1 &&
+          _.indexOf(destroyedNoticeIds, notice.id) == -1
+            MpNotices.remove(notice)
+            destroyedNoticeIds.push(notice.id)
   ]
   link: (scope, element, attrs, MdSideMenuInsideCtrl) ->
 
