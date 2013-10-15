@@ -30,7 +30,7 @@ app.directive 'mdSideMenuInside',
         for notice in @notices
           if _.indexOf(NO_ACTION_REQUIRED_NOTICE, notice.get('notice_type')) > -1 &&
           _.indexOf(destroyedNoticeIds, notice.id) == -1
-            MpNotices.remove(notice)
+            notice.destroy()
             destroyedNoticeIds.push(notice.id)
   ]
   link: (scope, element, attrs, MdSideMenuInsideCtrl) ->
