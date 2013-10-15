@@ -11,3 +11,7 @@ Contains user_id of firends of particular user, no matter online or offline.
 3. `#{_session_id}` (value)
 
 Store session data for Rails
+
+4. `project:#{project_id}:user_ids` (set)
+
+IDs of all participating users for a particular project, including project owner.

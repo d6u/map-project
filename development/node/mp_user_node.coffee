@@ -94,6 +94,14 @@ module.exports = {
         return _.filter(ids, (id) -> _.isNumber(id))
 
 
+  # --- Project Data Management ---
+  getProjectUserIds: (projectId) ->
+    found = q.defer()
+    redis.smembers "project:#{projectId}:user_ids", (err, ids) =>
+      if ids.length then found.resolve(ids) else found.reject()
+    return found.promise
+
+
   # currently is not very useful because cached data is not used anywhere
   cacheFriendsIds: (friendIds, userId) ->
     if friendIds.length

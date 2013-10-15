@@ -1,49 +1,17 @@
 # Chat History
 
-## Intro
+## Brief
 
-### Category
+Chat History records are hold in `chat_histories` table. Records have a column with JSON data type, so only PostgreSQL could support this object.
 
-Items (records) in chat history has two categories.
+## Types
 
-1. Items that will appears in chat history box, when user is editing related project.
-2. Records that will be saved into database.
+`item_type` code | Type Name     | Content Column Structure
+---------------- | ---------     | ------------------------
+0                | chat message  | `{m: "message"}`
+1                | place added   | `{pl_id: place_id, pl_rf: "reference string for Google API"}`
+2                | place removed | `{pl_rf: "reference string for Google API"}`
 
-A good example would be user online/offline notice. The notice will appear in chat history box (UI), but will never saved into database.
+## Lifecycle
 
-### Type
-
-Items have three types (for now). Type is different concept with categories. Type gives rules of how to display (might also affect saving) an item.
-
-1. Message: chat text
-2. Behavior: user go online/offline, a place deleted from project
-3. Place: when user saved a place into a project
-
-## Data Structure by Type
-
-#### Message
-
-    {
-        type: 'chatMessage',
-        sender: {User},
-        message: "String",
-        self: Boolean
-    }
-
-#### Behavior
-
-    {
-        type: 'userBehavior',
-        message: 'someone has done something'
-    }
-
-#### Place
-
-`placeAdded` is generated in PlacesController#create of Rails, the notice will send to everyone in the project including the sender
-
-    {
-        type: 'placeAdded',
-        sender: {User},
-        receiver_id: Integer,
-        place: {Place}
-    }
+When ever a chat_history record is generated, it will be broadcasted to every one in the same project, including the sender.

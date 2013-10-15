@@ -35,8 +35,13 @@ MapProject::Application.routes.draw do
 
     # --- Project ---
     resources :projects, :only => [:index, :create, :show, :update, :destroy] do
+
       resources :places, :only => [:index, :create, :show, :update, :destroy]
+
       resources :chat_histories, :only => [:index, :create, :show]
+      post 'chat_histories/place_added'   => 'chat_histories#place_added'
+      post 'chat_histories/place_removed' => 'chat_histories#place_removed'
+
       get    'participating_users' => 'projects#participating_users'
       post   'add_users'           => 'projects#add_users'
       delete 'remove_users'        => 'projects#remove_users'

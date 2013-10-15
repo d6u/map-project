@@ -76,11 +76,7 @@ class Api::ProjectsController < Api::ApiBaseController
 
   # GET     /api/projects
   def index
-    if params[:include_participating] == true
-      @projects = @user.projects + @user.participating_projects
-    else
-      @projects = @user.projects
-    end
+    @projects = @user.projects + @user.participating_projects
   end
 
 

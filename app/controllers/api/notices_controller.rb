@@ -28,7 +28,7 @@ class Api::NoticesController < Api::ApiBaseController
   def accept_friend_request
     @notice.destroy
 
-    friendship = Friendship.find_by_id @notice.content[:fs_id]
+    friendship = Friendship.find_by_id @notice.content['fs_id']
     if friendship.nil?
       head 404
     elsif friendship.status != 0
@@ -62,7 +62,7 @@ class Api::NoticesController < Api::ApiBaseController
     @notice.destroy
     render json: @notice
 
-    participation = ProjectParticipation.find_by_id @notice.content[:pp_id]
+    participation = ProjectParticipation.find_by_id @notice.content['pp_id']
     project = participation.project
 
     project.project_participations.each {|pp|
