@@ -12,13 +12,9 @@
 .md-notice-body
 
   header.md-notice-body-header
+
+    ' User has been removed from project
     a.md-notice-body-header-user-name-link(href)
       b
-        | {{ notice.sender.name }}
-    |  wants to add you as friend
-
-  .md-notice-body-actions
-    a.btn.btn-default(href
-      ng-click="mdNotificationItemCtrl.ignoreFriendRequest()") Ignore
-    a.btn.btn-success(href
-      ng-click="mdNotificationItemCtrl.acceptFriendRequest()") Accept
+        | {{notice.body.project.title}}
+    | .

@@ -12,13 +12,19 @@
 .md-notice-body
 
   header.md-notice-body-header
+
     a.md-notice-body-header-user-name-link(href)
       b
         | {{ notice.sender.name }}
-    |  wants to add you as friend
+    |  invites you to join
+
+    a.md-notice-body-header-user-name-link(href)
+      b
+        | {{ notice.body.project.title }}
+    |  project
 
   .md-notice-body-actions
     a.btn.btn-default(href
-      ng-click="mdNotificationItemCtrl.ignoreFriendRequest()") Ignore
+      ng-click="mdNotificationItemCtrl.rejectProjectInvitation()") Reject
     a.btn.btn-success(href
-      ng-click="mdNotificationItemCtrl.acceptFriendRequest()") Accept
+      ng-click="mdNotificationItemCtrl.acceptProjectInvitation()") Accept
