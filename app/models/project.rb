@@ -36,4 +36,25 @@ class Project < ActiveRecord::Base
     }
   end
 
+
+  # --- Callbacks ---
+
+  after_create  :cache_owner_id_on_redis
+  after_destroy :remove_project_user_ids_cache_from_redis
+
+
+  # --- Private ---
+
+  def cache_owner_id_on_redis
+    $redis.sadd("project:#{self.id}:user_ids", self.owner_id)
+  end
+
+
+  def remove_project_user_ids_cache_from_redis
+    $redis.del("project:#{self.id}:user_ids")
+  end
+
+
+  private :cache_owner_id_on_redis, :remove_project_user_ids_cache_from_redis
+
 end
