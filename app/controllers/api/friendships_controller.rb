@@ -8,12 +8,15 @@ class Api::FriendshipsController < Api::ApiBaseController
   # DELETE /api/friendships/:id  #destroy
 
 
-  before_action :find_friendship, except: [:index, :create]
-
-
   # GET    /api/friendships
   def index
-    render :json => @user.friendships.order('status DESC'), :include => :friend
+    render json: @user.friendships.
+                  joins(:friend).
+                  select('users.id AS id,
+                          users.name,
+                          users.profile_picture,
+                          friendships.id AS friendship_id,
+                          friendships.status')
   end
 
 
@@ -58,13 +61,16 @@ class Api::FriendshipsController < Api::ApiBaseController
 
   # GET    /api/friendships/:id
   def show
-    render json: @friendship
+    render json: Friendship.joins(:friend).
+                 select('friendships.*, users.name, users.profile_picture').
+                 find(params[:id])
   end
 
 
   # PATCH  /api/friendships/:id
   # PUT    /api/friendships/:id
   def update
+    @friendship = Friendship.find(params[:id])
     @friendship.attributes = params.require(:friendship).permit(:comments)
     @friendship.save if @friendship.changed?
     render json: @friendship
@@ -73,19 +79,9 @@ class Api::FriendshipsController < Api::ApiBaseController
 
   # DELETE /api/friendships/:id
   def destroy
-    @friendship.destroy()
+    @friendship = Friendship.find(params[:id])
+    @friendship.destroy
     render json: @friendship
   end
-
-
-  # --- Private ---
-
-  def find_friendship
-    @friendship = Friendship.joins(:friend).
-                  select('friendships.*, users.name, users.profile_picture').
-                  find(params[:id])
-  end
-
-  private :find_friendship
 
 end

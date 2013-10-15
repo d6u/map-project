@@ -13,7 +13,7 @@ app.service 'MpFriends',
   MpFriends = Backbone.Collection.extend {
 
     model: Friend
-    url: "/api/friends"
+    url: "/api/friendships"
 
     onlineIds: []
 
