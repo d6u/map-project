@@ -31,7 +31,7 @@ MapProject::Application.routes.draw do
     end
 
     # --- User ---
-    resources :users, :only => [:index]
+    resources :users, :only => [:index, :show]
 
     # --- Project ---
     resources :projects, :only => [:index, :create, :show, :update, :destroy] do

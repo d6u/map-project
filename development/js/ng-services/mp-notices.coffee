@@ -1,8 +1,6 @@
 app.service 'MpNotices',
-['$rootScope','$timeout','$q','Restangular','$route','socket','MpFriends',
- 'MpProjects','Backbone',
-( $rootScope,  $timeout,  $q,  Restangular,  $route,  socket,  MpFriends,
-  MpProjects,  Backbone) ->
+['socket','MpFriends','Backbone','$http',
+( socket,  MpFriends,  Backbone,  $http) ->
 
 
   # --- Constants ---
@@ -24,6 +22,18 @@ app.service 'MpNotices',
   Notice = Backbone.Model.extend {
 
     initialize: ->
+      senderId = @get('sender_id')
+      friend = MpFriends.get(senderId)
+      if friend?
+        @sender = friend
+      else
+        sender = _.find(@collection.models, {sender: {id: senderId}})
+        if sender?
+          @sender = sender
+        else
+          $http.get("/api/users/#{senderId}").then (response) =>
+            if response.status == 200
+              @sender = response.data
   }
 
 
@@ -36,6 +46,8 @@ app.service 'MpNotices',
 
 
     initialize: ->
+      @on 'add', ->
+        console.debug arguments
 
 
     initService: (scope) ->
