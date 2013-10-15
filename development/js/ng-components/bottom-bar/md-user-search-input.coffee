@@ -5,11 +5,18 @@ app.directive 'mdUserSearchInput', [->
 
     constructor: (MpUserSearch, $location, MpUI) ->
 
-      @searchUser  = ($event) ->
+      @searchUser = ($event) ->
         if $event.keyCode == 13 && @searchInput
           MpUI.showSearchIntro = false
           $location.search('name', @searchInput)
           MpUserSearch.searchUserByName(@searchInput)
+
+
+      @cleanSearchResults = ->
+        @searchInput = ''
+        $location.search({})
+        MpUI.showSearchIntro = true
+        MpUserSearch.reset()
 
 
       # --- Init ---

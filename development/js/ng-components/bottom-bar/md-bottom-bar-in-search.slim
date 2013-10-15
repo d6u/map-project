@@ -17,7 +17,9 @@
     ng-keyup="MdUserSearchInputCtrl.searchUser($event)")
 
   / clear input
-  a.md-bb-button-clear-input(href ng-show=""
-    ng-click=""
-    bs-tooltip="Clear all search results" bs-tooltip-placement="top")
+  a.md-bb-button-clear-input(href
+    ng-show="MdUserSearchInputCtrl.searchInput.length"
+    ng-click="MdUserSearchInputCtrl.cleanSearchResults()"
+    bs-tooltip="Clear all search results"
+    bs-tooltip-placement="top")
     i.icon-remove
