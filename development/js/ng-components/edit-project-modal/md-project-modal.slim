@@ -54,12 +54,14 @@
     / Manage Friends
     .md-project-modal-body-manage-friends(ng-switch-when="manageFriends")
       ul.md-user-list.clearfix
-        li.md-user-list-item(ng-repeat="user in mapCtrl.theProject.participatedUsers")
+        li.md-user-list-item(
+          ng-repeat="user in MdProjectModalCtrl.participatingUsers")
+
           a.md-user-list-item-picture(href)
-            img(ng-src="{{user.profile_picture}}")
+            img(ng-src="{{ user.get('profile_picture') }}")
           .md-user-list-item-detail
             a.md-user-list-item-detail-name(href)
-              | {{user.name}}
+              | {{ user.get('name') }}
           a.md-project-modal-body-manage-friends-remove-button(href
             ng-click="MdProjectModalCtrl.removeUserFromProject(user)")
             i.icon-remove
@@ -88,21 +90,24 @@
             ng-class="{active: user.$selected}"
             ng-click="user.$selected = false")
             a.md-user-list-item-picture(href)
-              img(ng-src="{{user.profile_picture}}")
+              img(ng-src="{{ user.get('profile_picture') }}")
             .md-user-list-item-detail
               a.md-user-list-item-detail-name(href)
-                | {{user.name}}
+                | {{ user.get('name') }}
+
 
         ul.md-user-list.clearfix(ng-switch-when="all")
+
           li.md-user-list-item-mini.md-project-modal-body-add-friends-list-item(
             ng-repeat="user in MdProjectModalCtrl._notParticipatingFriends"
             ng-click="user.$selected = !user.$selected"
             ng-class="{active: user.$selected}")
+
             a.md-user-list-item-picture(href)
-              img(ng-src="{{user.profile_picture}}")
+              img(ng-src="{{ user.get('profile_picture') }}")
             .md-user-list-item-detail
               a.md-user-list-item-detail-name(href)
-                | {{user.name}}
+                | {{ user.get('name') }}
 
         / confirm button
         a.md-project-modal-body-confirm-button.btn.btn-success(href

@@ -1,4 +1,4 @@
-app.factory 'ParticipatingUsers', [->
+app.factory 'ParticipatingUsers', ['$http', ($http) ->
 
   # --- Model ---
   User = Backbone.Model.extend {
@@ -11,9 +11,13 @@ app.factory 'ParticipatingUsers', [->
 
     model: User
 
-    initialize: () ->
+    initialize: ->
+      @on 'remove', (user) =>
+        $http.delete("/api/projects/#{@project_id}/remove_users", {params: {user_ids: user.id}})
+
 
     initProject: (id, scope) ->
+      @project_id = id
       @url = "/api/projects/#{id}/participating_users"
       @fetch({reset: true})
 
