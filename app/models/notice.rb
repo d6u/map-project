@@ -21,6 +21,19 @@ class Notice < ActiveRecord::Base
   end
 
 
+  # sender, receiver
+  def self.create_add_friend_request_accepted(s, r)
+    sender_id   = get_id(s)
+    receiver_id = get_id(r)
+
+    return Notice.create({
+      sender_id:   sender_id,
+      receiver_id: receiver_id,
+      notice_type: 5
+    })
+  end
+
+
   # sender, receiver, project, project_participation
   def self.create_project_invitation(s, r, p, pp, comments=nil)
     sender_id   = get_id(s)
@@ -34,6 +47,51 @@ class Notice < ActiveRecord::Base
       project_id:  project_id,
       notice_type: 10,
       content:    {pp_id: pp_id, m: comments}
+    })
+  end
+
+
+  # sender, receiver, project
+  def self.create_project_invitation_accepted(s, r, p)
+    sender_id   = get_id(s)
+    receiver_id = get_id(r)
+    project_id  = get_id(p)
+
+    return Notice.create({
+      sender_id:   sender_id,
+      receiver_id: receiver_id,
+      project_id:  project_id,
+      notice_type: 15
+    })
+  end
+
+
+  # sender, receiver, project
+  def self.create_project_invitation_rejected(s, r, p)
+    sender_id   = get_id(s)
+    receiver_id = get_id(r)
+    project_id  = get_id(p)
+
+    return Notice.create({
+      sender_id:   sender_id,
+      receiver_id: receiver_id,
+      project_id:  project_id,
+      notice_type: 16
+    })
+  end
+
+
+  # sender, receiver, project,
+  def self.create_new_user_added(s, r, p)
+    sender_id   = get_id(s)
+    receiver_id = get_id(r)
+    project_id  = get_id(p)
+
+    return Notice.create({
+      sender_id:   sender_id,
+      receiver_id: receiver_id,
+      project_id:  project_id,
+      notice_type: 25
     })
   end
 
