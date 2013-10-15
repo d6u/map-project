@@ -3,6 +3,9 @@ class Api::ChatHistoriesController < Api::ApiBaseController
   # GET   /api/projects/:project_id/chat_histories      #index
   # POST  /api/projects/:project_id/chat_histories      #create
   # GET   /api/projects/:project_id/chat_histories/:id  #show
+  # POST  /api/projects/:project_id/chat_histories/place_added   #place_added
+  # POST  /api/projects/:project_id/chat_histories/place_removed #place_removed
+
 
   before_action :find_project, except: [:show]
 
@@ -19,14 +22,26 @@ class Api::ChatHistoriesController < Api::ApiBaseController
 
   # POST  /api/projects/:project_id/chat_histories
   def create
-    chat_history = ChatHistory.new params.require(:chat_history).permit(:item_type, content: [:m])
-    chat_history.user = @user
-    if @project.chat_histories << chat_history
-      render json: chat_history
-      push_chat_hisotry_to_clients(chat_history)
+    @chat_history = ChatHistory.new params.require(:chat_history).permit(content: [:m])
+    @chat_history.user = @user
+    if @project.chat_histories << @chat_history
+      render json: @chat_history
+      push_chat_hisotry_to_clients(@chat_history)
     else
       head 406
     end
+  end
+
+
+  # POST  /api/projects/:project_id/chat_histories/place_added
+  def place_added
+
+  end
+
+
+  # POST  /api/projects/:project_id/chat_histories/place_removed
+  def place_removed
+
   end
 
 
@@ -49,18 +64,7 @@ class Api::ChatHistoriesController < Api::ApiBaseController
 
 
   def push_chat_hisotry_to_clients(chat_history)
-    case chat_history.item_type
-    when 0
-      push_data = {
-        type:      'chatMessage',
-        sender:     chat_history.user_id,
-        project_id: chat_history.project_id,
-        message:    chat_history.content['m'],
-        created_at: chat_history.created_at
-      }
-    end
-
-    $redis.publish 'notice_channel', MultiJson.dump(push_data)
+    $redis.publish 'chat_channel', chat_history.to_json
   end
 
 

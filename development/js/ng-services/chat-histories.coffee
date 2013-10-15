@@ -27,13 +27,8 @@ app.factory 'ChatHistories',
       @on 'request', (model, xhr, options) ->
         model.$sending = true
 
-      socket.on 'serverData', (data) =>
-        if data.type == 'chatMessage'
-          @add({
-            item_type: 0
-            content:
-              m: data.message
-          })
+      socket.on 'chatData', (data) =>
+        @add(data)
 
 
     initProject: (id, scope) ->

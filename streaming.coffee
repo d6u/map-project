@@ -80,6 +80,18 @@ subscriber.on 'message', (channel, message) ->
     MpUserNode.pushDataToUserId(data.receiver_id, 'pushData', data)
 
 
+# -- Sub Chat Message --
+chatSubscriber = redis.createClient()
+chatSubscriber.subscribe 'chat_channel'
+chatSubscriber.on 'message', (channel, message) ->
+  logger.debug "--> Redis receive message from #{channel}: ", message
+  if channel == 'chat_channel'
+    data = JSON.parse(message)
+    MpUserNode.getProjectUserIds(data.project_id).then (ids) ->
+      for id in ids
+        MpUserNode.pushDataToUserId(id, 'chatData', data)
+
+
 # --- Socket.io connection ---
 socketIo.sockets.on 'connection', (socket) ->
 
