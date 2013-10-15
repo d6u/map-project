@@ -2,42 +2,26 @@ app.directive 'mdNotificationItem',
 ['mpTemplateCache', '$compile', (mpTemplateCache, $compile) ->
 
   controllerAs: 'mdNotificationItemCtrl'
-  controller: ['$scope', 'MpNotices', 'MpFriends', ($scope, MpNotices, MpFriends) ->
-
-    @ignoreFriendRequest = ->
-      MpNotices.ignoreFriendRequest($scope.notice)
-
-    @acceptFriendRequest = ->
-      MpNotices.acceptFriendRequest($scope.notice)
-
-    @rejectProjectInvitation = ->
-      MpNotices.rejectProjectInvitation($scope.notice)
-
-    @acceptProjectInvitation = ->
-      MpNotices.acceptProjectInvitation($scope.notice)
-
-
-    return
-  ]
+  controller: [->]
 
   link: (scope, element, attrs, mdNotificationItemCtrl) ->
 
     switch scope.notice.get('notice_type')
       when 0
         templateName = 'add-friend-request'
-      when 'addFriendRequestAccepted'
+      when 5
         templateName = 'add-friend-request-accepted'
-      when 'projectInvitation'
+      when 10
         templateName = 'project-invitation'
-      when 'projectInvitationAccepted'
+      when 15
         templateName = 'project-invitation-accepted'
-      when 'projectInvitationRejected'
+      when 16
         templateName = 'project-invitation-rejected'
-      when 'newUserAdded'
+      when 25
         templateName = 'new-user-added'
-      when 'youAreRemovedFromProject'
+      when 45
         templateName = 'you-are-removed-from-project'
-      when 'projectUserListUpated'
+      when 26
         templateName = 'project-user-list-updated'
 
 

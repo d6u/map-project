@@ -27,82 +27,50 @@ class Api::ProjectsController < Api::ApiBaseController
 
 
   # POST    /api/projects/:project_id/add_users
-  # ----------------------------------------
   def add_users
-    user_ids = params[:user_ids].split(',')
-    project  = Project.find_by_id params[:project_id]
-    head 404 and return if !project
-    project_participations = user_ids.map do |id|
-      {:project_id => project.id,
-       :user_id    => id,
-       :status     => 0}
-    end
-    begin
-      participations = ProjectParticipation.create(project_participations)
-    rescue ActiveRecord::RecordNotUnique
-      head 409 and return
-    end
+    user_ids = params[:user_ids].split(',').map {|id| id.to_i}
 
-    # send notice to each user
-    participations.each do |participation|
-      project_invitation = Notice.create({
-        type:        'projectInvitation',
-        sender:      @user.public_info,
-        receiver_id: participation.user_id,
-        body: {
-          project_participation_id: participation.id,
-          project: {
-            id:    project.id,
-            title: project.title,
-            notes: project.notes
-          }
-        }
+    project_participations = []
+
+    user_ids.each {|id|
+      participation = ProjectParticipation.new({
+        project_id: @project.id,
+        user_id:    id
       })
-      $redis.publish 'notice_channel', project_invitation.to_json
-    end
+      if @project.project_participations << participation
+        project_participations << participation
+        notice = Notice.create_project_invitation(@user, id, @project, participation)
+        send_push_notice(notice)
+      end
+    }
 
-    head 200
+    render json: project_participations
   end
 
 
   # DELETE  /api/projects/:project_id/remove_users
-  # ----------------------------------------
   def remove_users
-    project  = Project.find_by_id params[:project_id]
-    head 404 and return if !project
+    removing_ids = params[:user_ids].split(',').map {|id| id.to_i}
 
-    removing_ids = params[:user_ids].split(',')
-    project.project_participations.each do |pp|
+    destroyed_participations = []
+
+    @project.project_participations.each {|pp|
       if removing_ids.include? pp.user_id
         pp.destroy
-        you_are_removed_from_project = Notice.create({
-          type:       'youAreRemovedFromProject',
-          sender:      @user.public_info,
-          receiver_id: pp.user_id,
-          body: {
-            project: {
-              title: project.title
-            }
-          }
-        })
-        $redis.publish 'notice_channel', you_are_removed_from_project.to_json
-      else
-        project_user_list_updated = Notice.create({
-          type:       'projectUserListUpated',
-          sender:      @user.public_info,
-          receiver_id: pp.user_id,
-          body: {
-            project: {
-              id:    project.id,
-              title: project.title
-            }
-          }
-        })
-        $redis.publish 'notice_channel', project_user_list_updated.to_json
-      end
-    end
+        destroyed_participations << pp
 
-    head 200
+        notice = Notice.create_your_are_removed_from_project(@user, pp.user_id, @project)
+        send_push_notice(notice)
+      end
+    }
+
+    render json: destroyed_participations
+
+    @project.reload
+    @project.participating_users.each {|pu|
+      notice = Notice.create_project_user_list_updated(@user, pu, @project)
+      send_push_notice(notice)
+    }
   end
 
 

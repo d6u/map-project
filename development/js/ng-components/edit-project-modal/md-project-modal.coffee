@@ -5,11 +5,13 @@ app.directive 'mdProjectModal',
 
   controllerAs: 'MdProjectModalCtrl'
   controller: ['$scope','$location','MpFriends','MapPlaces','MpUI','MpProjects',
+  'ParticipatingUsers','$http','$routeSegment',
   class MdProjectModalCtrl
 
-    constructor: ($scope, $location, MpFriends, MapPlaces, MpUI, MpProjects) ->
+    constructor: ($scope, $location, MpFriends, MapPlaces, MpUI, MpProjects, ParticipatingUsers, $http, $routeSegment) ->
 
       @addFriendsSection = 'all'
+
 
       # --- Edit project tab ---
       @_projectAttrs = {
@@ -52,9 +54,16 @@ app.directive 'mdProjectModal',
           @_projectAttrs.notes = MapPlaces.project.get('notes')
       ), true
 
+
       # --- Manage participants ---
+      $scope.$watch (->
+        return ParticipatingUsers.models
+      ), =>
+        @participatingUsers = ParticipatingUsers.models
+
+
       @removeUserFromProject = (user) ->
-        TheProject.removeParticipatingUser(user)
+        ParticipatingUsers.remove(user)
 
 
       # --- Add user ---
@@ -65,20 +74,25 @@ app.directive 'mdProjectModal',
       ), ((newVal) =>
         if MpUI.showProjectModal == true &&
         MpUI.projectModalContent == 'inviteFriends'
-          participatedUserIds = _.pluck(MapPlaces.participatedUsers, 'id')
+          participating_user_ids = ParticipatingUsers.pluck('id')
           @_notParticipatingFriends = []
-          for friend in MpFriends.friends
-            if _.indexOf(participatedUserIds, friend.id) < 0
-              @_notParticipatingFriends.push _.cloneDeep(friend)
+          for friend in MpFriends.models
+          # for friend in MpFriends.filter((friend) -> friend.get('status') > 0)
+            if _.indexOf(participating_user_ids, friend.id) < 0
+              @_notParticipatingFriends.push( friend.clone() )
       ), true
+
 
       @getSelectedNotParticipatingUsers = ->
         return _.filter(@_notParticipatingFriends, '$selected')
 
+
       @sendInvitationToSelectedUsers = ->
         selectedUsers = _.filter(@_notParticipatingFriends, '$selected')
         if selectedUsers.length
-          MapPlaces.addParticipatedUsers selectedUsers
+          MpUI.showProjectModal = false
+          ids = _.pluck(selectedUsers, 'id')
+          $http.post("/api/projects/#{$routeSegment.$routeParams.project_id}/add_users", {user_ids: ids.join(',')})
   ]
 
   link: (scope, element, attrs, MdProjectModalCtrl) ->

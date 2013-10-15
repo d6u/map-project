@@ -21,7 +21,21 @@ app.service 'MpNotices',
   # --- Model ---
   Notice = Backbone.Model.extend {
 
-    initialize: ->
+    ignoreFriendRequest: ->
+      $http.delete("/api/notices/#{@id}/ignore_friend_request")
+      @collection.remove(@)
+
+    acceptFriendRequest: ->
+      $http.post("/api/notices/#{@id}/accept_friend_request")
+      @collection.remove(@)
+
+    rejectProjectInvitation: ->
+      $http.delete("/api/notices/#{@id}/reject_project_invitation")
+      @collection.remove(@)
+
+    acceptProjectInvitation: ->
+      $http.post("/api/notices/#{@id}/accept_project_invitation")
+      @collection.remove(@)
   }
 
 
@@ -37,6 +51,9 @@ app.service 'MpNotices',
       @on 'add', (notice) =>
         @findSender( notice.get('sender_id') ).then (sender) =>
           @assignSenderToModels(sender)
+
+      @on 'destroy', (notice) =>
+        @remove(notice)
 
 
     initService: (scope) ->
