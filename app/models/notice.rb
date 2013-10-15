@@ -20,4 +20,62 @@ class Notice < ActiveRecord::Base
     })
   end
 
+
+  # sender, receiver, project, project_participation
+  def self.create_project_invitation(s, r, p, pp, comments=nil)
+    sender_id   = get_id(s)
+    receiver_id = get_id(r)
+    project_id  = get_id(p)
+    pp_id       = get_id(pp)
+
+    return Notice.create({
+      sender_id:   sender_id,
+      receiver_id: receiver_id,
+      project_id:  project_id,
+      notice_type: 10,
+      content:    {pp_id: pp_id, m: comments}
+    })
+  end
+
+
+  # sender, receiver, project
+  def self.create_your_are_removed_from_project(s, r, p, comments=nil)
+    sender_id   = get_id(s)
+    receiver_id = get_id(r)
+    project_id  = get_id(p)
+
+    return Notice.create({
+      sender_id:   sender_id,
+      receiver_id: receiver_id,
+      project_id:  project_id,
+      notice_type: 45,
+      content:    {m: comments}
+    })
+  end
+
+
+  # sender, receiver, project
+  def self.create_project_user_list_updated(s, r, p, comments=nil)
+    sender_id   = get_id(s)
+    receiver_id = get_id(r)
+    project_id  = get_id(p)
+
+    return Notice.create({
+      sender_id:   sender_id,
+      receiver_id: receiver_id,
+      project_id:  project_id,
+      notice_type: 26,
+      content:    {m: comments}
+    })
+  end
+
+
+  # --- Private ---
+
+  def self.get_id(object)
+    return (object.is_a? Fixnum) ? object : object.id
+  end
+
+  private_class_method :get_id
+
 end
