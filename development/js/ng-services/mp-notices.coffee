@@ -1,6 +1,6 @@
 app.service 'MpNotices',
-['socket','MpFriends','Backbone','$http','$q',
-( socket,  MpFriends,  Backbone,  $http,  $q) ->
+['socket','MpFriends','Backbone','$http','$q','$timeout',
+( socket,  MpFriends,  Backbone,  $http,  $q,  $timeout) ->
 
 
   # --- Constants ---
@@ -34,8 +34,8 @@ app.service 'MpNotices',
 
 
     initialize: ->
-      @on 'add', (model) =>
-        @findSender( model.get('sender_id') ).then (sender) =>
+      @on 'add', (notice) =>
+        @findSender( notice.get('sender_id') ).then (sender) =>
           @assignSenderToModels(sender)
 
 
@@ -47,7 +47,7 @@ app.service 'MpNotices',
           delete @initializing
 
           senderIds = _.uniq( @pluck('sender_id') )
-          senderIds.forEach (id) =>
+          for id in senderIds
             @findSender(id).then (sender) =>
               @assignSenderToModels(sender)
       })
@@ -71,15 +71,16 @@ app.service 'MpNotices',
 
       friend = MpFriends.get(id)
       if friend?
-        found.resolve(friend)
+        $timeout -> found.resolve(friend.attributes)
       else
-        sender = _.find(@models, {sender: {id: id}})
+        modelWithSender = _.find(@models, {sender: {id: id}})
         if sender?
-          found.resolve(sender)
+          $timeout -> found.resolve(modelWithSender.sender)
         else
-          $http.get("/api/users/#{id}").then (response) =>
-            if response.status == 200
-              found.resolve(response.data)
+          $timeout ->
+            $http.get("/api/users/#{id}").then (response) =>
+              if response.status == 200
+                found.resolve(response.data)
 
       return found.promise
 
