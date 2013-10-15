@@ -146,7 +146,7 @@ class Api::AuthController < Api::ApiBaseController
   # --- Private ---
 
   def fb_auth_process(fb_access_token=nil)
-    if !fb_access_token.nil?
+    if fb_access_token.nil?
       fb_access_token = @user.fb_exchange_long_lived_token
     else
       fb_access_token = @user.fb_exchange_long_lived_token(fb_access_token)

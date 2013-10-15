@@ -24,6 +24,8 @@ app.service 'MpProjects',
     url: '/api/projects'
 
     initialize: () ->
+      @on 'destroy', (model) =>
+        @remove(model)
 
 
     initService: (scope) ->
@@ -33,6 +35,10 @@ app.service 'MpProjects',
 
       @once 'sync', =>
         delete @initializing
+
+      deregister = scope.$on '$destroy', =>
+        @reset()
+        deregister()
 
 
     findProjectById: (id) ->

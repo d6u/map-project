@@ -4,10 +4,10 @@ app.directive 'mdProjectModal',
   templateUrl: '/scripts/ng-components/edit-project-modal/md-project-modal.html'
 
   controllerAs: 'MdProjectModalCtrl'
-  controller: ['$scope','$location','MpFriends','MapPlaces','MpUI',
+  controller: ['$scope','$location','MpFriends','MapPlaces','MpUI','MpProjects',
   class MdProjectModalCtrl
 
-    constructor: ($scope, $location, MpFriends, MapPlaces, MpUI) ->
+    constructor: ($scope, $location, MpFriends, MapPlaces, MpUI, MpProjects) ->
 
       @addFriendsSection = 'all'
 
@@ -19,8 +19,8 @@ app.directive 'mdProjectModal',
       }
 
       @revertChanges = ->
-        @_projectAttrs.title = MapPlaces.project.title
-        @_projectAttrs.notes = MapPlaces.project.notes
+        @_projectAttrs.title = MapPlaces.project.get('title')
+        @_projectAttrs.notes = MapPlaces.project.get('notes')
         MpUI.showProjectModal = false
 
       @saveChanges = ->
@@ -28,16 +28,18 @@ app.directive 'mdProjectModal',
           @_projectAttrs.errorMessage = "You must have a title to start with."
         else
           @_projectAttrs.errorMessage = null
-          MapPlaces.project.title = @_projectAttrs.title
-          MapPlaces.project.notes = @_projectAttrs.notes
-          MapPlaces.project.put()
+          MapPlaces.project.set({
+            title: @_projectAttrs.title
+            notes: @_projectAttrs.notes
+          })
+          MapPlaces.project.save()
           MpUI.showProjectModal = false
 
       @deleteProject = ->
         if @_projectAttrs.deleteCheckbox
-          $scope.insideViewCtrl.MpProjects.removeProject(MapPlaces.project)
-          .then ->
-            $location.path('/home')
+          MapPlaces.project.destroy()
+          $location.path('/home')
+          MpUI.showProjectModal = false
 
       # reset deleteCheckbox when interface changes
       $scope.$watch (=>
@@ -46,8 +48,8 @@ app.directive 'mdProjectModal',
         @_projectAttrs.deleteCheckbox = false
         if MpUI.showProjectModal == true &&
         MpUI.projectModalContent == 'editDetail'
-          @_projectAttrs.title = MapPlaces.project.title
-          @_projectAttrs.notes = MapPlaces.project.notes
+          @_projectAttrs.title = MapPlaces.project.get('title')
+          @_projectAttrs.notes = MapPlaces.project.get('notes')
       ), true
 
       # --- Manage participants ---

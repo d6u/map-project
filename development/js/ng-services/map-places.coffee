@@ -84,18 +84,15 @@ app.factory 'MapPlaces',
 
 
     initProject: (id, scope) ->
-      @$scope = scope
-
-      @$scope.$on '$destroy', =>
-        delete @$scope
-        @reset()
-
       if id?
         if MpProjects.initializing
           MpProjects.once 'sync', =>
             @$$loadProject(id)
         else
           @$$loadProject(id)
+
+      scope.$on '$destroy', =>
+        @reset()
 
 
     sync: (method, collection, options) ->

@@ -16,5 +16,7 @@ app.factory 'MpUI', [->
 
     showProjectModal: false
     projectModalContent: 'editDetail'
+
+    showSearchIntro: true
   }
 ]

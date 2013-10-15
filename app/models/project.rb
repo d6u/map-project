@@ -15,6 +15,9 @@ class Project < ActiveRecord::Base
   # chat_histories
   has_many :chat_histories, dependent: :destroy
 
+  # notices
+  has_many :notices, dependent: :destroy
+
   # invitation
   has_many :invitations
 

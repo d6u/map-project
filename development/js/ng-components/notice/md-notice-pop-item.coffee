@@ -3,24 +3,28 @@ app.directive 'mdNoticePopItem',
 
   (scope, element, attrs) ->
 
-    switch scope.notice.type
-      when 'addFriendRequest'
-        templateUrl = '/scripts/ng-components/notice/notice-pop-templates/add-friend-request.html'
+    switch scope.notice.get('notice_type')
+      when 0
+        templateName = 'add-friend-request'
       when 'addFriendRequestAccepted'
-        templateUrl = '/scripts/ng-components/notice/notice-pop-templates/add-friend-request-accepted.html'
+        templateName = 'add-friend-request-accepted'
       when 'projectInvitation'
-        templateUrl = '/scripts/ng-components/notice/notice-pop-templates/project-invitation.html'
+        templateName = 'project-invitation'
       when 'projectInvitationAccepted'
-        templateUrl = '/scripts/ng-components/notice/notice-pop-templates/project-invitation-accepted.html'
+        templateName = 'project-invitation-accepted'
       when 'projectInvitationRejected'
-        templateUrl = '/scripts/ng-components/notice/notice-pop-templates/project-invitation-rejected.html'
+        templateName = 'project-invitation-rejected'
       when 'newUserAdded'
-        templateUrl = '/scripts/ng-components/notice/notice-pop-templates/new-user-added.html'
+        templateName = 'new-user-added'
       when 'youAreRemovedFromProject'
-        templateUrl = '/scripts/ng-components/notice/notice-pop-templates/you-are-removed-from-project.html'
+        templateName = 'you-are-removed-from-project'
       when 'projectUserListUpated'
-        templateUrl = '/scripts/ng-components/notice/notice-pop-templates/project-user-list-update.html'
+        templateName = 'project-user-list-update'
+
+
+    templateUrl = "/scripts/ng-components/notice/notice-pop-templates/#{templateName}.html"
+
 
     mpTemplateCache.get(templateUrl).then (template) ->
-      element.html($compile(template)(scope))
+      element.html( $compile(template)(scope) )
 ]

@@ -1,36 +1,39 @@
 class Api::FriendshipsController < Api::ApiBaseController
 
-  #     friendships GET    /friendships(.:format)            #index
-  #                 POST   /friendships(.:format)            #create
-  #  new_friendship GET    /friendships/new(.:format)        #new
-  # edit_friendship GET    /friendships/:id/edit(.:format)   #edit
-  #      friendship GET    /friendships/:id(.:format)        #show
-  #                 PATCH  /friendships/:id(.:format)        #update
-  #                 PUT    /friendships/:id(.:format)        #update
-  #                 DELETE /friendships/:id(.:format)        #destroy
+  # GET    /api/friendships      #index
+  # POST   /api/friendships      #create
+  # GET    /api/friendships/:id  #show
+  # PATCH  /api/friendships/:id  #update
+  # PUT    /api/friendships/:id  #update
+  # DELETE /api/friendships/:id  #destroy
 
 
-  # GET
+  # GET    /api/friendships
   def index
-    render :json => @user.friendships.order('status DESC'), :include => :friend
+    render json: @user.friendships.
+                  joins(:friend).
+                  select('users.id AS id,
+                          users.name,
+                          users.profile_picture,
+                          friendships.id AS friendship_id,
+                          friendships.status')
   end
 
 
-  # POST
-  # ----------------------------------------
+  # POST   /api/friendships
   def create
-    friendship = @user.friendships.find_by_friend_id params[:friendship][:friend_id]
+    @friendship = @user.friendships.find_by_friend_id(params[:friendship][:friend_id])
 
-    # --- Friendship record already exist ---
-    if friendship
+    # --- friendship record already exist ---
+    if @friendship
       # user blocked friend
-      if friendship.status < 0
+      if @friendship.status < 0
         render :json => {:error      => true,
                          :message    => 'You have blocked this user.',
                          :error_code => 'FS000'},
                :status => 409
       # request already sent
-      elsif friendship.status == 0
+      elsif @friendship.status == 0
         render :json => {:error      => true,
                          :message    => 'Friend request has already sent.',
                          :error_code => 'FS001'},
@@ -43,46 +46,42 @@ class Api::FriendshipsController < Api::ApiBaseController
                :status => 409
       end
 
-    # --- Brand new friendship ---
+    # --- brand new friendship ---
     else
-      friendship = Friendship.new params.require(:friendship).permit(:friend_id, :comments)
-      @user.friendships << friendship
+      @friendship = Friendship.new params.require(:friendship).permit(:friend_id, :comments)
+      @user.friendships << @friendship
+      render json: @friendship
 
       # Create notice object and send to Node.js server
-      add_friend_request = Notice.create({
-        :type        => 'addFriendRequest',
-        :sender      => @user.public_info,
-        :receiver_id => friendship.friend_id,
-        :body        => { friendship_id: friendship.id }
-      })
-
-      $redis.publish 'notice_channel', add_friend_request.to_json
-      render :json => friendship
+      notice = Notice.create_add_friend_request(@user, @friendship.friend_id, @friendship, @friendship.comments)
+      send_push_notice(notice)
     end
   end
 
 
-  # GET
+  # GET    /api/friendships/:id
   def show
-    friendship = Friendship.find_by_id params[:id]
-    if friendship
-      render :json => friendship
-    else
-      head 404
-    end
+    render json: Friendship.joins(:friend).
+                 select('friendships.*, users.name, users.profile_picture').
+                 find(params[:id])
   end
 
 
-  # PUT
+  # PATCH  /api/friendships/:id
+  # PUT    /api/friendships/:id
   def update
-
+    @friendship = Friendship.find(params[:id])
+    @friendship.attributes = params.require(:friendship).permit(:comments)
+    @friendship.save if @friendship.changed?
+    render json: @friendship
   end
 
 
-  # DELETE
+  # DELETE /api/friendships/:id
   def destroy
-    Friendship.destroy_all :id => params[:id]
-    head 200
+    @friendship = Friendship.find(params[:id])
+    @friendship.destroy
+    render json: @friendship
   end
 
 end

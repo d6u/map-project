@@ -1,82 +1,68 @@
-###
-MpFriends handles user/friends query/add/show/remove
-###
-
 app.service 'MpFriends',
-['Restangular', 'socket', '$q', class MpFriends
+['Restangular','socket','$q','Backbone',
+( Restangular,  socket,  $q,  Backbone) ->
 
-  constructor: (@Restangular, @socket, @$q) ->
-    @friends          = []
-    @onlineFriendsIds = []
+  # --- Model ---
+  Friend = Backbone.Model.extend {
 
-    # --- Resouces ---
-    @$$friends     = Restangular.all 'friends'
-    @$$friendships = Restangular.all 'friendships'
-    @$$userQuery   = Restangular.all 'users'
-
-    # --- Socket.io ---
-    # push sync
-    socket.on 'onlineFriendsList', (ids) =>
-      @onlineFriendsIds = ids
-
-    socket.on 'friendGoOnline', (id) =>
-      @onlineFriendsIds = _.union(@onlineFriendsIds, [id])
-
-    socket.on 'friendGoOffline', (id) =>
-      @onlineFriendsIds = _.without(@onlineFriendsIds, id)
-
-    socket.on 'serverData', (data) =>
-      if data.type == 'addFriendRequestAccepted'
-        @addUserToFriendsList(data.sender)
+    initialize: ->
+  }
 
 
-  # --- Login/out process management ---
-  initialize: (scope) ->
-    refreshFriendsOnlineStatus = =>
-      for friend in @friends
-        friend.$online = if _.indexOf(@onlineFriendsIds, friend.id) >= 0 then true else false
-    # watch friends changes
-    scope.$watch (=>
-      _.pluck(@friends, 'id').sort()
-    ), refreshFriendsOnlineStatus, true
-    # watch onlineFriendsIds changes
-    scope.$watch (=>
-      @onlineFriendsIds.sort()
-    ), refreshFriendsOnlineStatus, true
+  # --- Collection --
+  MpFriends = Backbone.Collection.extend {
 
-    @getFriends()
-
-    scope.$on '$destroy', =>
-      @destroy()
-
-  destroy: ->
-    @friends          = []
-    @onlineFriendsIds = []
+    model: Friend
+    url: "/api/friendships"
+    comparator: (a, b) ->
+      return b.get('status') - a.get('status')
 
 
-  # --- Friend interface ---
-  getFriends: ->
-    @$$friends.getList().then (friends) =>
-      @friends = friends
-
-  syncFriendsOnlineStatus: (onlineFriendsList) ->
-    @socket.emit 'requestOnlineFriendsList', undefined, (ids) =>
-      @onlineFriendsIds = ids
-
-  addUserToFriendsList: (user) ->
-    newFriend = @Restangular.one('friends', user.id)
-    angular.extend(newFriend, user)
-    @friends.push newFriend
+    onlineIds: []
 
 
-  # --- Friendship interface ---
-  addUserAsFriend: (user) ->
-    user.added   = true
-    user.pending = true
-    @$$friendships.post({friend_id: user.id})
+    initialize: ->
 
 
-  # --- Search user interface ---
-  findUserByName: (name) ->
-    @$$userQuery.getList({name: name})
+    initService: (scope) ->
+      @fetch({reset: true})
+
+      socket.on 'friendsOnlineIds', (ids) =>
+        @onlineIds = ids
+        @updateFriendsOnlineStatus()
+
+      # listen to on/off line event in collection instread of model to reduce
+      #   digest cycle
+      socket.on 'friendGoOnline', (id) =>
+        @onlineIds = _.union(@onlineIds, [id])
+        @updateFriendsOnlineStatus()
+
+      socket.on 'friendGoOffline', (id) =>
+        @onlineIds = _.without(@onlineIds, id)
+        @updateFriendsOnlineStatus()
+
+
+      @on 'all', @updateFriendsOnlineStatus, @
+
+      # --- clean up ---
+      deregister = scope.$on '$destroy', =>
+        deregister()
+        @off 'all', @updateFriendsOnlineStatus, @
+        socket.removeAllListeners('friendGoOffline')
+        socket.removeAllListeners('friendGoOnline')
+        socket.removeAllListeners('friendsOnlineIds')
+        @reset()
+
+
+    updateFriendsOnlineStatus: ->
+      @forEach (friend) =>
+        if _.indexOf(@onlineIds, friend.id) > -1
+          friend.online = true
+        else
+          delete friend.online if friend.online?
+  }
+  # END MpFriends
+
+
+  return new MpFriends
 ]

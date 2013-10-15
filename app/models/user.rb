@@ -27,6 +27,8 @@ class User < ActiveRecord::Base
 
   has_many :friends, -> { where 'friendships.status > 0' },
                      :through => :friendships
+  has_many :pending_friends, -> { where 'friendships.status = 0' },
+                             through: :friendships
   has_many :followers, :through => :followships, :source => :user
 
   # projects participations
@@ -42,6 +44,12 @@ class User < ActiveRecord::Base
 
   # chat histories
   has_many :chat_histories, dependent: :destroy
+
+  # notices
+  has_many :sent_notices    , class_name: 'Notice', foreign_key: 'sender_id',
+                              dependent: :destroy
+  has_many :received_notices, class_name: 'Notice', foreign_key: 'receiver_id',
+                              dependent: :destroy
 
   # invitation
   has_many :invitations, dependent: :destroy

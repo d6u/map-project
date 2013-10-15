@@ -1,0 +1,21 @@
+/ Container:
+/ li
+/ .md-notice-pop
+/ .clearfix
+/ ng-repeat="notice in mdNoticePop.notices"
+/ md-notice-pop-item
+
+a.md-notice-pop-click.clearfix(href)
+
+  .md-notice-image
+    img(ng-src="{{ notice.sender.profile_picture }}")
+
+  .md-notice-body
+    header.md-notice-body-header
+      b
+        | {{ notice.sender.name }}
+      |  invites you to join
+      b
+        | {{ notice.body.project.title }}
+      |  project
+

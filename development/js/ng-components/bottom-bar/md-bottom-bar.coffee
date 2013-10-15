@@ -4,9 +4,9 @@ app.directive 'mdBottomBar', [->
   replace:     true
 
   controllerAs: 'MdBottomBarCtrl'
-  controller: ['$scope', 'MpNotification', '$routeSegment', 'MapPlaces', class MdBottomBarCtrl
+  controller: ['$scope','$routeSegment','MapPlaces', class MdBottomBarCtrl
 
-    constructor: ($scope, MpNotification, $routeSegment, MapPlaces) ->
+    constructor: ($scope, $routeSegment, MapPlaces) ->
 
       # change bottom bar inner when user navigate
       $scope.$watch (->

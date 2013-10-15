@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20131010200128) do
+ActiveRecord::Schema.define(version: 20131014183747) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -57,6 +57,20 @@ ActiveRecord::Schema.define(version: 20131010200128) do
   add_index "invitations", ["code"], name: "index_invitations_on_code", using: :btree
   add_index "invitations", ["project_id"], name: "index_invitations_on_project_id", using: :btree
   add_index "invitations", ["user_id"], name: "index_invitations_on_user_id", using: :btree
+
+  create_table "notices", force: true do |t|
+    t.integer  "sender_id",   null: false
+    t.integer  "receiver_id", null: false
+    t.integer  "project_id"
+    t.integer  "notice_type", null: false
+    t.json     "content"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "notices", ["project_id"], name: "index_notices_on_project_id", using: :btree
+  add_index "notices", ["receiver_id"], name: "index_notices_on_receiver_id", using: :btree
+  add_index "notices", ["sender_id"], name: "index_notices_on_sender_id", using: :btree
 
   create_table "places", force: true do |t|
     t.text     "notes"

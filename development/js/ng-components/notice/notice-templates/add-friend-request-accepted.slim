@@ -1,0 +1,19 @@
+/ Container:
+/ li
+/ .md-side-menu-notifications-item
+/ .md-notice
+/ ng-repeat="notice in insideViewCtrl.MpNotification.notifications"
+/ md-notification-item
+
+
+.md-notice-image
+  img(ng-src="{{ notice.sender.profile_picture }}")
+
+.md-notice-body
+
+  header.md-notice-body-header
+
+    a.md-notice-body-header-user-name-link(href)
+      b
+        | {{notice.sender.name}}
+    |  has accepted your friend request

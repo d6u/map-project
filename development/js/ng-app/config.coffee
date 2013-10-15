@@ -76,13 +76,13 @@ app.config(['socketProvider', '$httpProvider', '$routeSegmentProvider',
     .segment('friends', {
       templateUrl:  '/scripts/ng-views/friends/friends-view.html'
       controller:   'FriendsViewCtrl'
-      controllerAs: 'friendsViewCtrl'
+      controllerAs: 'FriendsViewCtrl'
     })
 
     .segment('search', {
       templateUrl:  '/scripts/ng-views/search/search-view.html'
       controller:   'SearchViewCtrl'
-      controllerAs: 'searchViewCtrl'
+      controllerAs: 'SearchViewCtrl'
     })
 
   # otherwise

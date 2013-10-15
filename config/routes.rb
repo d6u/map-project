@@ -31,7 +31,7 @@ MapProject::Application.routes.draw do
     end
 
     # --- User ---
-    resources :users, :only => [:index, :update]
+    resources :users, :only => [:index, :show]
 
     # --- Project ---
     resources :projects, :only => [:index, :create, :show, :update, :destroy] do
@@ -42,17 +42,15 @@ MapProject::Application.routes.draw do
       delete 'remove_users'        => 'projects#remove_users'
     end
 
+    # --- Friendships ---
+    resources :friendships, :only => [:index, :create, :show, :update, :destroy]
 
-    resources :friends,       :only => [:index, :show]
-
-    resources :friendships,   :only => [:index, :create, :show, :update, :destroy]
-
-    resources :notifications, :only => [:index, :destroy]
-    scope    '/notifications/:id' do
-      post   'accept_friend_request' => 'notifications#accept_friend_request'
-      delete 'ignore_friend_request' => 'notifications#ignore_friend_request'
-      post   'accept_project_invitation' => 'notifications#accept_project_invitation'
-      delete 'reject_project_invitation' => 'notifications#reject_project_invitation'
+    resources :notices, :only => [:index, :destroy]
+    scope    '/notices/:id' do
+      post   'accept_friend_request'     => 'notices#accept_friend_request'
+      delete 'ignore_friend_request'     => 'notices#ignore_friend_request'
+      post   'accept_project_invitation' => 'notices#accept_project_invitation'
+      delete 'reject_project_invitation' => 'notices#reject_project_invitation'
     end
 
     scope     'invitations/:code' do

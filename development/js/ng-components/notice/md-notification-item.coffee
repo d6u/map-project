@@ -2,19 +2,19 @@ app.directive 'mdNotificationItem',
 ['mpTemplateCache', '$compile', (mpTemplateCache, $compile) ->
 
   controllerAs: 'mdNotificationItemCtrl'
-  controller: ['$scope', 'MpNotification', 'MpFriends', ($scope, MpNotification, MpFriends) ->
+  controller: ['$scope', 'MpNotices', 'MpFriends', ($scope, MpNotices, MpFriends) ->
 
     @ignoreFriendRequest = ->
-      MpNotification.ignoreFriendRequest($scope.notice)
+      MpNotices.ignoreFriendRequest($scope.notice)
 
     @acceptFriendRequest = ->
-      MpNotification.acceptFriendRequest($scope.notice)
+      MpNotices.acceptFriendRequest($scope.notice)
 
     @rejectProjectInvitation = ->
-      MpNotification.rejectProjectInvitation($scope.notice)
+      MpNotices.rejectProjectInvitation($scope.notice)
 
     @acceptProjectInvitation = ->
-      MpNotification.acceptProjectInvitation($scope.notice)
+      MpNotices.acceptProjectInvitation($scope.notice)
 
 
     return
@@ -22,24 +22,28 @@ app.directive 'mdNotificationItem',
 
   link: (scope, element, attrs, mdNotificationItemCtrl) ->
 
-    switch scope.notice.type
-      when 'addFriendRequest'
-        templateUrl = '/scripts/ng-components/notice/notice-templates/add-friend-request.html'
+    switch scope.notice.get('notice_type')
+      when 0
+        templateName = 'add-friend-request'
       when 'addFriendRequestAccepted'
-        templateUrl = '/scripts/ng-components/notice/notice-templates/add-friend-request-accepted.html'
+        templateName = 'add-friend-request-accepted'
       when 'projectInvitation'
-        templateUrl = '/scripts/ng-components/notice/notice-templates/project-invitation.html'
+        templateName = 'project-invitation'
       when 'projectInvitationAccepted'
-        templateUrl = '/scripts/ng-components/notice/notice-templates/project-invitation-accepted.html'
+        templateName = 'project-invitation-accepted'
       when 'projectInvitationRejected'
-        templateUrl = '/scripts/ng-components/notice/notice-templates/project-invitation-rejected.html'
+        templateName = 'project-invitation-rejected'
       when 'newUserAdded'
-        templateUrl = '/scripts/ng-components/notice/notice-templates/new-user-added.html'
+        templateName = 'new-user-added'
       when 'youAreRemovedFromProject'
-        templateUrl = '/scripts/ng-components/notice/notice-templates/you-are-removed-from-project.html'
+        templateName = 'you-are-removed-from-project'
       when 'projectUserListUpated'
-        templateUrl = '/scripts/ng-components/notice/notice-templates/project-user-list-updated.html'
+        templateName = 'project-user-list-updated'
+
+
+    templateUrl = "/scripts/ng-components/notice/notice-templates/#{templateName}.html"
+
 
     mpTemplateCache.get(templateUrl).then (template) ->
-      element.html($compile(template)(scope))
+      element.html( $compile(template)(scope) )
 ]

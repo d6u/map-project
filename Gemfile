@@ -14,10 +14,6 @@ gem 'oj'
 gem 'redis'
 gem 'redis-store', git: 'git@github.com:daiweilu/redis-store.git'
 gem 'redis-rails', '~> 4.0.0'
-# Mongo
-gem 'mongo'
-gem 'mongoid'    , git: 'git://github.com/mongoid/mongoid.git'
-gem 'bson_ext'
 # Template engine
 gem 'slim'
 
@@ -43,8 +39,6 @@ end
 
 
 
-# Use ActiveModel has_secure_password
-# gem 'bcrypt-ruby', '~> 3.0.0'
 
 # Use Capistrano for deployment
 # gem 'capistrano', group: :development

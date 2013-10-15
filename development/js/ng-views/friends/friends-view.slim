@@ -1,0 +1,28 @@
+/ Container: section.ly-pusher-content(app-view-segment="1")
+
+
+.md-friends
+
+  / --- Body ---
+  ol.md-friends-list.md-user-list
+
+    / --- items ---
+    li.md-friends-list-item.md-user-list-item(
+      ng-repeat="friend in FriendsViewCtrl.friends")
+
+      a.md-user-list-item-picture(href)
+        img(ng-src="{{ friend.get('profile_picture') }}")
+
+      .md-user-list-item-detail
+        a.md-user-list-item-detail-name(href)
+          | {{ friend.get('name') }}
+
+      .md-user-list-item-actions(ng-show="friend.get('status') == 0")
+        a.btn(disabled)
+          | Pending
+
+
+  / show when empty
+  p.lead(ng-hide="FriendsViewCtrl.friends.length")
+    ' You don't have any friend yet.
+    a(href="/search") Add someone here.

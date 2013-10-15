@@ -2,7 +2,7 @@
 
 
 .md-side-menu.md-side-menu-inside(
-  perfect-scrollbar="InsideViewCtrl.MpNotification.notifications.length")
+  perfect-scrollbar="MdSideMenuInsideCtrl.notices.length")
 
   / User
   .md-side-menu-user
@@ -22,7 +22,7 @@
     li.md-side-menu-actions-item
       a.md-side-menu-actions-item-anchor(href="/dashboard")
         i.icon-th-large
-        | All projects
+        | Dashboard</br>(All Projects)
     li.md-side-menu-actions-item
       a.md-side-menu-actions-item-anchor(href="/friends")
         i.icon-group
@@ -48,8 +48,9 @@
         i.icon-off
         | Logout
 
+
   / Notification
   ol.md-side-menu-notifications()
     li.md-side-menu-notifications-item.md-notice.clearfix(
-      ng-repeat="notice in InsideViewCtrl.MpNotification.notifications"
+      ng-repeat="notice in MdSideMenuInsideCtrl.notices"
       md-notification-item)
