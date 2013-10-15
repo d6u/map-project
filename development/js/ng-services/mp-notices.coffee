@@ -1,4 +1,4 @@
-app.service 'MpNotification',
+app.service 'MpNotices',
 ['$rootScope','$timeout','$q','Restangular','$route','socket','MpFriends',
  'MpProjects','Backbone',
 ( $rootScope,  $timeout,  $q,  Restangular,  $route,  socket,  MpFriends,
@@ -28,31 +28,33 @@ app.service 'MpNotification',
 
 
   # --- Collection ---
-  MpNotification = Backbone.Collection.extend {
+  MpNotices = Backbone.Collection.extend {
 
     model: Notice
-    url: "/api/notifications"
+    url: "/api/notices"
 
 
     initialize: ->
 
 
     initService: (scope) ->
-      @fetch({reset: true})
+      @initializing = true
+      @fetch({
+        reset: true
+        success: =>
+          delete @initializing
+      })
 
       socket.on 'pushData', (data) =>
-        console.debug 'pushData', data
+        @add(data)
 
       deregister = scope.$on '$destroy', =>
         @reset()
         socket.removeAllListeners('pushData')
         deregister()
   }
-  # END MpNotification
+  # END MpNotices
 
 
-  return new MpNotification
-
-
-  # --- Incoming server notices management ---
+  return new MpNotices
 ]

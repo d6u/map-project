@@ -1,17 +1,17 @@
 app.controller 'InsideViewCtrl',
-['$scope','MpProjects','MpNotification','$location','MpFriends','socket',
+['$scope','MpProjects','MpNotices','$location','MpFriends','socket',
  'MpUser', class InsideViewCtrl
 
-  constructor: ($scope, MpProjects, MpNotification, $location, MpFriends, socket, MpUser) ->
+  constructor: ($scope, MpProjects, MpNotices, $location, MpFriends, socket, MpUser) ->
 
     # --- Init Services ---
     socket.connect()
 
     childScope = $scope.$new()
 
-    MpProjects.initService     childScope
-    MpFriends.initService      childScope
-    MpNotification.initService childScope
+    MpProjects.initService childScope
+    MpFriends.initService  childScope
+    MpNotices.initService  childScope
 
 
     # --- Listeners ---
