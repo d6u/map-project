@@ -14,6 +14,9 @@ app.service 'MpFriends',
 
     model: Friend
     url: "/api/friendships"
+    comparator: (a, b) ->
+      return b.get('status') - a.get('status')
+
 
     onlineIds: []
 

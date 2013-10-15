@@ -76,7 +76,7 @@ app.config(['socketProvider', '$httpProvider', '$routeSegmentProvider',
     .segment('friends', {
       templateUrl:  '/scripts/ng-views/friends/friends-view.html'
       controller:   'FriendsViewCtrl'
-      controllerAs: 'friendsViewCtrl'
+      controllerAs: 'FriendsViewCtrl'
     })
 
     .segment('search', {
