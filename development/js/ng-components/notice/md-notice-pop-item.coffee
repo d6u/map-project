@@ -26,5 +26,5 @@ app.directive 'mdNoticePopItem',
 
 
     mpTemplateCache.get(templateUrl).then (template) ->
-      element.html( $compile(template)(scope)[0] )
+      element.html( $compile(template)(scope) )
 ]
