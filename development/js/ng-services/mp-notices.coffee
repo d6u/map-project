@@ -32,6 +32,7 @@ app.service 'MpNotices',
 
     model: Notice
     url: "/api/notices"
+    comparator: 'created_at'
 
 
     initialize: ->
@@ -45,12 +46,14 @@ app.service 'MpNotices',
           delete @initializing
       })
 
-      socket.on 'pushData', (data) =>
+      addPushData = (data) =>
         @add(data)
+
+      socket.on('pushData', addPushData)
 
       deregister = scope.$on '$destroy', =>
         @reset()
-        socket.removeAllListeners('pushData')
+        socket.removeAllListeners('pushData', addPushData)
         deregister()
   }
   # END MpNotices

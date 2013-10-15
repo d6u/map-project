@@ -18,7 +18,10 @@ app.directive 'mdNoticePop',
 
       # --- Callbacks ---
       showNotice = (notices) =>
-        @notices.add(notices)
+        if notices.length > 5
+          @notices.add(notices[0..4])
+        else
+          @notices.add(notices)
 
 
       # --- Init ---
