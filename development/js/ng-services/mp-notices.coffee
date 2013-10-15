@@ -38,6 +38,9 @@ app.service 'MpNotices',
         @findSender( notice.get('sender_id') ).then (sender) =>
           @assignSenderToModels(sender)
 
+      @on 'remove', (notice) =>
+        notice.destroy()
+
 
     initService: (scope) ->
       @initializing = true

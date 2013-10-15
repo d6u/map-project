@@ -25,10 +25,10 @@ app.directive 'mdSideMenuInside',
 
       $scope.$watch (->
         return MpUI.showSideMenu
-      ), (newVal) ->
+      ), (newVal) =>
         return if newVal != true
-        for notice in MpNotices.models
-          if _.indexOf(NO_ACTION_REQUIRED_NOTICE, notice.notice_type) > -1 &&
+        for notice in @notices
+          if _.indexOf(NO_ACTION_REQUIRED_NOTICE, notice.get('notice_type')) > -1 &&
           _.indexOf(destroyedNoticeIds, notice.id) == -1
             MpNotices.remove(notice)
             destroyedNoticeIds.push(notice.id)
