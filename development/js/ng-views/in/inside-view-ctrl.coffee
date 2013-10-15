@@ -4,6 +4,10 @@ app.controller 'InsideViewCtrl',
 
   constructor: ($scope, MpProjects, MpNotices, $location, MpFriends, socket, MpUser) ->
 
+    # --- Properties ---
+    @MpUser = MpUser
+
+
     # --- Init Services ---
     socket.connect()
 
