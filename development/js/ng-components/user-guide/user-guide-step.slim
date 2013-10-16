@@ -1,8 +1,13 @@
 p
   | {{ message }}
 
-.md-user-guide-actions
-  button.md-user-guide-action-button-next(ng-click="next()" ng-hide="isLast") Next
-  button.md-user-guide-action-button-finish(ng-click="close()" ng-show="isLast") Finish
 
-  button.md-user-guide-action-button-skip(ng-click="skip()" ng-hide="isLast") Skip
+.md-user-guide-actions
+
+  button.md-user-guide-action-button-next(
+    ng-click="next()" ng-hide="isLast") Next
+  button.md-user-guide-action-button-finish(
+    ng-click="next()" ng-show="isLast") Finish
+
+  button.md-user-guide-action-button-skip(
+    ng-click="skip()" ng-hide="isLast") Skip

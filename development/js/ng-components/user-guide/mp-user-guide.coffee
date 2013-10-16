@@ -29,10 +29,6 @@ app.factory 'MpUserGuide',
     MpUserGuide.lastPopover.popover('destroy')
     MpUserGuide.stepCounter = guideContent.length - 1
 
-  popoverScope.close = ->
-    MpUserGuide.lastPopover.popover('destroy')
-    MpUserGuide.stepCounter--
-
 
   # --- Guide Control Service ---
   MpUserGuide = {
@@ -50,6 +46,8 @@ app.factory 'MpUserGuide',
       if guideContent[@stepCounter + 1]?
         @stepCounter++
         @$renderGuide(@stepCounter)
+      else
+        @lastPopover.popover('destroy')
 
 
     # --- helpers ---
@@ -73,9 +71,18 @@ app.factory 'MpUserGuide',
         title:     title
         content:   content
       })
+
       # add timeout to properly position popover
       setTimeout ->
         popoverTarget.popover('show')
+
+        popoverClickCallback = ->
+          popoverScope.next()
+
+        popoverTarget.one 'click', popoverClickCallback
+
+        popoverTarget.one 'hide.bs.popover', ->
+          popoverTarget.off 'click', popoverClickCallback
 
       return popoverTarget
   }
