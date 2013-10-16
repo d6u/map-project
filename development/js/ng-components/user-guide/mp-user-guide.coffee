@@ -13,8 +13,14 @@ app.factory 'MpUserGuide',
     {
       selector:  '#user-guide-results'
       title:     'Search Results'
-      message:   'You can open a list of search results. Click the check mark save the place. (You place will not be transfer to the cloud if you do not login.)'
+      message:   'Click to open a list of search results.'
       placement: 'top'
+    },
+    {
+      selector:  '#user-guide-directions'
+      title:     'Direction'
+      message:   'Show directions between places you save (when you have more than one place saved).'
+      placement: 'right'
     }
   ]
 
