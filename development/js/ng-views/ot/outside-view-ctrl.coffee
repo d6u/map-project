@@ -1,8 +1,8 @@
 app.controller 'OutsideViewCtrl',
-['$scope','MpUser','MpProjects','$q','$location','MpUI','MapPlaces',
+['MpUser','MpProjects','$q','$location','MpUI','MapPlaces','MpUserGuide',
 class OutsideViewCtrl
 
-  constructor: ($scope, MpUser, MpProjects, $q, $location, MpUI, MapPlaces) ->
+  constructor: (MpUser, MpProjects, $q, $location, MpUI, MapPlaces, MpUserGuide) ->
     @hideHomepage = false
 
     @loginWithFacebook = ->
@@ -17,4 +17,8 @@ class OutsideViewCtrl
         MpUser.fbLogin ->
           $location.path '/dashboard'
           MpUI.showSideMenu = false
+
+
+    @initUserGuide = ->
+      MpUserGuide.init()
 ]

@@ -4,7 +4,7 @@
 //= require_self
 
 
-@import "_libraries/bootstrap.min";
+@import "_libraries/bootstrap-3.0.0.min";
 @import "_variables/colors";
 @import "_mixins/flexbox";
 @import "_mixins/animation";
@@ -40,6 +40,7 @@
 @import "modules/md-side-menu";
 @import "modules/md-user-list";
 @import "modules/md-invitation";
+@import "modules/md-user-guide";
 
 
 @import "shame";

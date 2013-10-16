@@ -38,7 +38,7 @@
 
       .md-homepage-bottom-nav-bar
         a.md-homepage-bottom-nav-bar-try-button(href
-          ng-click="MpUI.showHomepage = false")
+          ng-click="MpUI.showHomepage = false; OutsideViewCtrl.initUserGuide()")
           | Give a try
         a.md-homepage-bottom-nav-bar-fb-button(href
           ng-click="OutsideViewCtrl.loginWithFacebook()")

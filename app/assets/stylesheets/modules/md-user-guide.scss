@@ -1,0 +1,20 @@
+.md-user-guide-actions {
+
+  button {
+    @extend .btn;
+  }
+
+  // put in the same level with <button> so styles won't be over written
+  .md-user-guide-action-button-next {
+    @extend .btn-success;
+  }
+
+  .md-user-guide-action-button-finish {
+    @extend .btn-primary;
+  }
+
+  .md-user-guide-action-button-skip {
+    @extend .btn-default;
+    float: right;
+  }
+}

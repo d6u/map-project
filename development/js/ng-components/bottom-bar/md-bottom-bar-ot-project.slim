@@ -12,7 +12,7 @@
     | Login or Register
 
   / show drawer
-  a.md-bb-button(href
+  a.md-bb-button#user-guide-results(href
     ng-click="MpUI.showMapDrawer = !MpUI.showMapDrawer; MpUI.mapDrawerActiveSection = 'searchResults'"
     bs-tooltip="Show List of Search Results"
     bs-tooltip-placement="top")
@@ -21,7 +21,9 @@
 / Middle
 .md-bb-section-middle
   / search input
-  input.md-bb-text-input(type="text" placeholder="Search place name"
+  input.md-bb-text-input#user-guide-search(
+    type="text"
+    placeholder="Search place name"
     md-map-searchbox ng-model="MdBottomBarCtrl.inputVal"
     mini-typeahead="{listClass: 'cp-typeahead', cursorOnClass: 'cp-typeahead-cursor-on', appendTo: 'body'}"
     mini-typeahead-list="MdMapSearchBoxCtrl.placePredictions"
