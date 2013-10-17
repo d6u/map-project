@@ -1,8 +1,8 @@
-//= require _libraries/bootstrap.css
 //= require _libraries/font-awesome.scss
 //= require_self
 
 
+@import "_libraries/bootstrap-3.0.0.min";
 @import "_variables/colors";
 @import "_mixins/animation";
 @import "_mixins/flexbox";
@@ -11,7 +11,7 @@
 @import "components/md-modal";
 
 @import "layouts/ly-base";
-@import "layouts/ly-pusher";
+// @import "layouts/ly-pusher";
 @import "layouts/ly-workplace-m";
 
 @import "modules/md-menu-m";
