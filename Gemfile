@@ -12,7 +12,7 @@ gem 'jbuilder'    , '~> 1.2'
 gem 'oj'
 # Redis
 gem 'redis'
-gem 'redis-store', git: 'git@github.com:daiweilu/redis-store.git'
+gem 'redis-store', git: 'https://github.com/daiweilu/redis-store.git'
 gem 'redis-rails', '~> 4.0.0'
 # Template engine
 gem 'slim'
