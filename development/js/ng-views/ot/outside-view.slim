@@ -1,0 +1,52 @@
+/ Container: .ly-application
+
+
+.md-pusher(ng-class="{'md-pusher-pushed': MpUI.showSideMenu}")
+
+  / Pusher side
+  section.md-pusher-side
+    div(md-side-menu-outside)
+
+  / Pusher body
+  section.md-pusher-content
+
+    / --- Map ---
+    .ly-fullscreen(ng-include="'/scripts/ng-components/map/md-map.html'")
+
+    / --- Bottom Bar ---
+    div(md-bottom-bar)
+
+    / --- Homepage ---
+    .md-homepage(ng-class="{'md-homepage-fadeout': !MpUI.showHomepage}")
+      .md-homepage-content
+        .md-homepage-content-cover
+          header.md-homepage-brand iWantMap
+
+          .md-homepage-body
+            h1.md-homepage-h1
+              | Why is creating a travel plan with friends so hard?
+            h4
+              ' Not any more!
+              a.md-homepage-linktoreason(href
+                md-section-jumper=".md-homepage-content"
+                md-section-jumper-target=".md-homepage-intro-bg"
+                ng-click="OutsideViewCtrl.showScreenShot()")
+                | Why is that?
+
+        .md-homepage-content-intro
+          .md-homepage-intro-bg
+
+      .md-homepage-bottom-nav-bar
+        a.md-homepage-bottom-nav-bar-try-button(href
+          ng-click="MpUI.showHomepage = false; OutsideViewCtrl.initUserGuide()")
+          | Give a try
+        a.md-homepage-bottom-nav-bar-fb-button(href
+          ng-click="OutsideViewCtrl.loginWithFacebook()")
+          | Login with Facebook
+        a.md-homepage-bottom-nav-bar-login-btn(href
+          ng-click="MpUI.showSideMenu = true")
+          | Login/Register
+
+
+  / --- Pusher overlay ---
+  .md-pusher-overlay(ng-click="MpUI.showSideMenu = false")

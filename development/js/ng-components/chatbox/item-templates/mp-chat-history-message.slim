@@ -1,0 +1,12 @@
+/ Container
+/   li.md-chatbox-bh-item(ng-repeat="item in MdChatboxCtrl.chatHistories" md-chatbox-history-item)
+
+
+.md-chatbox-bhi-user-profile
+  img(ng-src="{{ item.$sender.get('profile_picture') }}")
+
+.md-chatbox-bhi-content
+  p.md-chatbox-bhi-c-message
+    | {{ item.get('content').m }}
+  time.md-chatbox-bhi-c-timestamp
+    | {{ item.get('created_at') | date:'shortTime' }}

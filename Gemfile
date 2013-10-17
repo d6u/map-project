@@ -2,60 +2,46 @@ source 'https://rubygems.org'
 
 ruby '2.0.0'
 
-# Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
-gem 'rails', '4.0.0'
-
-# Use postgresql as the database for Active Record
+# --- Core modules ---
+gem 'rails'       , '4.0.0'
 gem 'pg'
-
-# Use SCSS for stylesheets
-gem 'sass-rails', '~> 4.0.0'
-
-# Use Uglifier as compressor for JavaScript assets
-gem 'uglifier', '>= 1.3.0'
-
-# Use CoffeeScript for .js.coffee assets and views
+gem 'sass-rails'  , '~> 4.0.0'
+gem 'uglifier'    , '>= 1.3.0'
 gem 'coffee-rails', '~> 4.0.0'
+gem 'jbuilder'    , '~> 1.2'
+gem 'oj'
+# Redis
+gem 'redis'
+gem 'redis-store', git: 'https://github.com/daiweilu/redis-store.git'
+gem 'redis-rails', '~> 4.0.0'
+# Template engine
+gem 'slim'
 
-# See https://github.com/sstephenson/execjs#readme for more supported runtimes
-# gem 'therubyracer', platforms: :ruby
+# --- Development and Test ---
+group :development, :test do
+  gem 'debugger'
+  gem 'rspec-rails', '~> 2.0'
+  gem 'awesome_print'
+  gem 'factory_girl_rails'
+end
 
-# Use jquery as the JavaScript library
-gem 'jquery-rails'
+# --- Production ---
+gem 'autoprefixer-rails', group: :production
+# gem 'puma'         , group: :production
+# gem 'newrelic_rpm'
 
-# Turbolinks makes following links in your web application faster. Read more: https://github.com/rails/turbolinks
-# gem 'turbolinks'
 
-# Build JSON APIs with ease. Read more: https://github.com/rails/jbuilder
-gem 'jbuilder', '~> 1.2'
-
+# --- Misc ---
 group :doc do
   # bundle exec rake doc:rails generates the API under doc/api.
   gem 'sdoc', require: false
 end
 
-# Use ActiveModel has_secure_password
-# gem 'bcrypt-ruby', '~> 3.0.0'
 
-# Use unicorn as the app server
-# gem 'unicorn'
+
 
 # Use Capistrano for deployment
 # gem 'capistrano', group: :development
 
-# Use debugger
-# gem 'debugger', group: [:development, :test]
-
-
-# --- Core modules ---
-gem 'redis'
-gem 'oj'
-gem 'mongo'
-gem 'mongoid', git: 'git://github.com/mongoid/mongoid.git'
-gem 'bson_ext'
-# gem 'puma'         , group: :production
-# gem 'newrelic_rpm'
-
-# --- Development ---
-gem 'awesome_print'     , group: :development
-gem 'autoprefixer-rails', group: :production
+# See https://github.com/sstephenson/execjs#readme for more supported runtimes
+# gem 'therubyracer', platforms: :ruby

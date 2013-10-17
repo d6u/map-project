@@ -1,0 +1,32 @@
+/ Container: section.ly-pusher-content(app-view-segment="1")
+
+
+.md-search-view
+
+  / --- Body ---
+  ol.md-search-view-list.md-user-list
+
+    / --- items ---
+    li.md-search-view-list-item.md-user-list-item(
+      ng-repeat="user in SearchViewCtrl.searchResults")
+
+      a.md-user-list-item-picture(href)
+        img(ng-src="{{ user.get('profile_picture') }}")
+
+      .md-user-list-item-detail
+        a.md-user-list-item-detail-name(href)
+          | {{ user.get('name') }}
+
+      .md-user-list-item-actions
+        a.btn(href
+          ng-click="user.addAsFriend()"
+          ng-disabled="user.get('added')"
+          ng-class="{'btn-primary': user.get('added') && !user.get('pending'), 'btn-success': !(user.get('added') && !user.get('pending'))}")
+          | {{ user | searchFriendsStatusFilter }}
+
+
+  p.lead(ng-hide="SearchViewCtrl.searchResults.length || MpUI.showSearchIntro")
+    | Sorry, we cannot find user with name "{{SearchViewCtrl.lastSearchInput}}" that is not your friend.
+
+  p.lead(ng-show="MpUI.showSearchIntro")
+    | Enter name in the bottom bar to search.

@@ -1,0 +1,98 @@
+<% environment.context_class.instance_eval { include ApplicationHelper } %>
+
+// --- Load API access data ---
+var fbCLientId    = '<%= $api_keys['facebook']['app_id'] %>';
+
+
+// detect class name on element
+function hasClass(elem, className) {
+  return new RegExp(' ' + className + ' ').test(' ' + elem.className + ' ');
+}
+
+// load 1.x jQuery for IE older than 9
+if (hasClass(document.getElementsByTagName('html')[0], 'lt-ie9')) {
+  var jQuerySources = ['//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js', '/js/jquery-1.10.2.min'];
+} else {
+  var jQuerySources = ['//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min', '/js/jquery-2.0.3.min'];
+}
+
+// --- Config ---
+require.config({
+  enforceDefine: true,
+  waitSeconds: 5,
+  baseUrl: '/assets',
+  paths: {
+    'jquery'     : jQuerySources,
+    'modernizr'  : '/js/modernizr-2.6.2.min',
+    'google.maps': '//maps.googleapis.com/maps/api/js?key=<%= $api_keys['google']['browser_app_key'] %>&libraries=places&sensor=true&callback=initGoogleMaps',
+    'facebook'   : '//connect.facebook.net/en_US/all',
+    'ipLocation' : ['http://www.geoplugin.net/json.gp?jsoncallback=define',
+                    '<%= javascript_path_without_suffix("modules/location-fallback.js") %>'],
+    'application': '<%= javascript_path_without_suffix("modules/application.js") %>',
+    'nprogress'  : '/js/nprogress-0.1.2.min'
+  },
+  map: {},
+  shim: {
+    'modernizr': {exports: 'Modernizr'},
+    'google.maps': {exports: 'google.maps'},
+    'facebook': {
+      exports: 'FB',
+      init: function() {
+        this.FB.init({
+          appId      : fbCLientId,
+          channelUrl : location.origin + '/fb_channel.html',
+          status     : true,
+          cookie     : true,
+          xfbml      : true
+        });
+        return this.FB
+      }
+    },
+    'application': {
+      deps: ['jquery'],
+      exports: ''
+    }
+  }
+});
+
+
+// --- 3rd party libraries preparation ---
+// function to for async load google map, doesn't do anything else
+function initGoogleMaps() {}
+
+
+// --- Require ---
+// create deferred object for ip location
+define('ipLocationChecked', ['jquery'], function($) {
+  this.ipLocationChecked = $.Deferred();
+  return this.ipLocationChecked;
+});
+
+define('facebookLoginChecked', ['jquery'], function($) {
+  this.facebookLoginChecked = $.Deferred();
+  return this.facebookLoginChecked;
+});
+
+// Progress bar on top
+require(['nprogress'], function(NProgress) {
+  this.NProgress = NProgress;
+  NProgress.start();
+});
+
+// facebook login check
+require(['facebookLoginChecked', 'facebook'], function(deferred, FB) {
+  FB.getLoginStatus(function(response) {
+    deferred.resolve(response);
+  });
+});
+
+// resolve location from ip address
+require(['ipLocationChecked', 'ipLocation'], function(deferred, ipLocation) {
+  deferred.resolve(ipLocation);
+});
+
+// init, bootstrap angularjs
+define(['nprogress', 'ipLocationChecked', 'application', 'modernizr', 'google.maps'], function(NProgress) {
+  NProgress.inc();
+  angular.bootstrap(document, ['mapApp']);
+});

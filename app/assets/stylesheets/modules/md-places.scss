@@ -1,38 +1,49 @@
+// --- Container ---
 .md-places {
   list-style-type: none;
-  padding: 0;
-  margin: 0;
+  padding        : 0;
+  margin         : 0;
 }
 
+
+// --- Level 1 ---
 .md-places-item {
-  padding: 5px;
+  @extend .clearfix;
+  padding      : 5px;
+  color        : #FFF;
+  margin-bottom: 10px;
   &:hover {
-    background-color: #ededed;
+    background-color: #FFF;
+    color           : $gray6;
   }
 }
 
+
+// --- Level 2 ---
 .md-places-item-image {
   float: left;
   img {
     margin-top: 2px;
-    width: 25px;
+    width     : 25px;
   }
 }
 
 .md-places-item-actions {
   float: right;
   a {
-    display: block;
-    width: 30px;
-    height: 30px;
-    font-size: 21px;
+    display    : block;
+    width      : 30px;
+    height     : 30px;
+    font-size  : 21px;
     line-height: 30px;
-    text-align: center;
+    text-align : center;
+    color      : $greenDark;
     &:hover {
-      color: $green;
+      color          : $green;
       text-decoration: none;
     }
     &.md-places-item-actions-remove {
+      color: $redDark;
       &:hover {
         color: $red;
       }
@@ -45,24 +56,14 @@
   margin-right: 40px;
 }
 
+
+// --- More Levels ---
 .md-places-item-name {
-  font-weight: bold;
+  font-size: 16px;
+  margin-bottom: 10px;
 }
 
 .md-places-item-address {
   margin-bottom: 0;
-  color: $gray5;
+  font-weight: 300;
 }
-
-// Route
-.md-places-item-route {
-  cursor: pointer;
-  text-indent: 35px;
-  font-size: 14px;
-  color: $greenDark;
-  span {
-    // margin-right: 20px;
-  }
-}
-
-.md-places-item-route-duration {}

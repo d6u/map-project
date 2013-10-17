@@ -1,0 +1,11 @@
+.md-info-window-content
+  .md-iw-name
+    | {{ place.get('name') }}
+  a.md-iw-website(href ng-href="{{ place.get('website') }}" target="_blank")
+    | {{ place.get('website') }}
+  .md-iw-address
+    | {{ place.get('vicinity') || place.get('address') }}
+  .md-infowindow-options(ng-hide="place.get('$$saved')")
+    a(href ng-click="MapCtrl.addPlaceToList(place)")
+      i.icon-ok
+      | Add to list

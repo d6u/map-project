@@ -1,0 +1,55 @@
+.md-map(ng-controller="MapCtrl as MapCtrl")
+
+  .md-drawer(md-drawer
+    ng-class="{'md-drawer-show': MpUI.showMapDrawer}")
+
+  .md-map-canvas(mp-map-canvas)
+
+  .md-map-controls
+    / Zoom In
+    a.md-m-c-button(href bs-tooltip-placement="right"
+      bs-tooltip="Zoom In"
+      ng-click="MapCtrl.zoomIn()")
+      i.icon-plus
+    / Zoom Out
+    a.md-m-c-button(href bs-tooltip-placement="right"
+      bs-tooltip="Zoom Out"
+      ng-click="MapCtrl.zoomOut()")
+      i.icon-minus
+    / Fit All Marker In Map
+    a.md-m-c-button(href bs-tooltip-placement="right"
+      bs-tooltip="Display All Markers"
+      ng-click="MapCtrl.displayAllMarkers()")
+      i.icon-globe
+    / Show Direction
+    a.md-m-c-button#user-guide-directions(href bs-tooltip-placement="right"
+      bs-tooltip="Show Direction Informations"
+      ng-click="MapCtrl.openAllDirectionsInfoWindows()")
+      i.icon-code-fork
+
+    / Toggle Render Direction
+    a.md-m-c-button(href
+      bs-tooltip-placement="right"
+      bs-tooltip="Toggle Display Directions"
+      ng-click="MapCtrl.toggleDirectionsAutoRender()"
+      ng-class="{active: MapCtrl.MapDirections.$autoRender}")
+      i.icon-code-fork
+    / Show Saved Places List
+    a.md-m-c-button(href bs-tooltip-placement="right"
+      bs-tooltip="Show Saved Places List"
+      ng-click="MpUI.showMapDrawer = !MpUI.showMapDrawer; MpUI.mapDrawerActiveSection = 'places'")
+      i.icon-th-list
+    / Edit Project
+    a.md-m-c-button(href bs-tooltip-placement="right"
+      bs-tooltip="Edit Project Detail"
+      ng-click="MpUI.showProjectModal = true; MpUI.projectModalContent = 'editDetail'")
+      i.icon-cog
+    / Share
+    a.md-m-c-button(href bs-tooltip-placement="right"
+      bs-tooltip="Share This Map with Friends")
+      i.icon-share
+
+  .md-modal.md-effect-3.md-map-modal(md-project-modal
+    ng-class="{'md-modal-show': MpUI.showProjectModal}")
+  .md-modal-overlay.md-map-modal-overlay(
+    ng-click="MpUI.showProjectModal = false")

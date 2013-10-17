@@ -1,0 +1,20 @@
+/ Container:
+/ li
+/ .md-side-menu-notifications-item
+/ .md-notice
+/ ng-repeat="notice in insideViewCtrl.MpNotification.notifications"
+/ md-notification-item
+
+
+.md-notice-image
+  img(ng-src="{{ notice.sender.profile_picture }}")
+
+.md-notice-body
+
+  header.md-notice-body-header
+
+    ' User has been removed from project
+    a.md-notice-body-header-user-name-link(href)
+      b
+        | {{notice.body.project.title}}
+    | .

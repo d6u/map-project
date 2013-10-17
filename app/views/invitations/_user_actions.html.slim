@@ -1,0 +1,43 @@
+.md-invitation-show-action(md-collapse ng-switch="MdCollapseCtrl.activeChild")
+
+  .md-invitation-show-action-register(ng-class="{'active': MdCollapseCtrl.activeChild == 0}")
+    a.md-invitation-show-action-head.lead(href ng-click="MdCollapseCtrl.activeChild = 0") Register
+    .md-invitation-show-action-body.md-collapse-body-js.clearfix(ng-switch-when="0")
+      .md-invitation-show-action-body-half
+        a.btn.btn-primary(href) Sign up with Facebook
+      .md-invitation-show-action-body-half.md-invitation-show-action-body-email
+        form(md-form-register md-form-success="InvitationCtrl.registerUser" name="MdFormRegisterCtrl.form" ng-submit="MdFormRegisterCtrl.submit()")
+          input(name="name" ng-model="MdFormRegisterCtrl.newUser.name" required type="text" placeholder="Name")
+          p(ng-cloak)
+            | {{MdFormRegisterCtrl.formMessages.nameError}}
+          input(name="email" ng-model="MdFormRegisterCtrl.newUser.email" required type="email" ng-change="" placeholder="Email")
+          p(ng-cloak)
+            | {{MdFormRegisterCtrl.formMessages.emailError}}
+          input(name="password" ng-model="MdFormRegisterCtrl.newUser.password" required type="password" ng-minlength="8" ng-trim="false" placeholder="Password, at least 8 characters")
+          p(ng-cloak)
+            | {{MdFormRegisterCtrl.formMessages.passwordError}}
+          input(name="password_confirmation" ng-model="MdFormRegisterCtrl.newUser.password_confirmation" required type="password" ng-trim="false" placeholder="Confirm password")
+          p(ng-cloak)
+            | {{MdFormRegisterCtrl.formMessages.passwordConfirmationError}}
+          button Register
+
+  .md-invitation-show-action-login(ng-class="{'active': MdCollapseCtrl.activeChild == 1}")
+    a.md-invitation-show-action-head.lead(href ng-click="MdCollapseCtrl.activeChild = 1") Login
+    .md-invitation-show-action-body.md-collapse-body-js.clearfix(ng-switch-when="1" style="display: none;")
+      .md-invitation-show-action-body-half
+        a.btn.btn-primary(href) Login with Facebook
+      .md-invitation-show-action-body-half.md-invitation-show-action-body-email
+        form(md-form-login md-form-success="InvitationCtrl.loginUser" name="MdFormLoginCtrl.form" ng-submit="MdFormLoginCtrl.submit()")
+          input(name="email" ng-model="MdFormLoginCtrl.user.email" required type="email" placeholder="Email")
+          p(ng-cloak)
+            | {{MdFormLoginCtrl.formMessages.emailError}}
+          input(name="password" ng-model="MdFormLoginCtrl.user.password" required type="password" ng-minlength="8" ng-trim="false" placeholder="Password")
+          p(ng-cloak)
+            | {{MdFormLoginCtrl.formMessages.passwordError}}
+          .checkbox
+            label
+              input(ng-model="MdFormLoginCtrl.user.remember_me" type="checkbox")
+              |  Remember me
+          p.help-block
+            a(href) Forget password?
+          button Login

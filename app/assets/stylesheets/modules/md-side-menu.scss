@@ -1,36 +1,112 @@
 .md-side-menu {
   background-color: white;
   overflow-x: hidden;
-  overflow-y: hidden;
+  overflow-y: auto;
+  height: 100%;
 }
 
 // --- Outside ---
-.md-side-menu-promote {
-  margin: 20px;
-}
-
-.md-side-menu-promote-text-group {
-  margin-bottom: 20px;
-  .lead {
+.md-side-menu-header {
+  padding: 20px;
+  border-bottom: 1px solid $gray3;
+  h1 {
     margin: 0;
   }
 }
 
-.md-side-menu-promote-button-group {
-  text-align: center;
+.md-side-menu-register {
+  border-bottom: 1px solid $gray3;
+  form {
+    margin-bottom: 20px;
+  }
 }
 
-.md-side-menu-intro {
-  margin: 80px 20px 20px;
-  .lead {
-    font-weight: bold;
-    margin-bottom: 10px;
-  }
-  ul {
-    padding-left: 20px;
-    font-size: 16px;
+.md-side-menu-outside-section-head {
+  padding: 20px;
+  display: block;
+  color: inherit;
+  &:hover {
+    text-decoration: none;
+    color: white;
+    background-color: $blue;
   }
 }
+.active .md-side-menu-outside-section-head {
+  cursor: default;
+  &:hover {
+    color: inherit;
+    background-color: #fff;
+  }
+}
+
+.md-side-menu-outside-section-body {
+  padding-left: 20px;
+  padding-right: 20px;
+  overflow: hidden;
+}
+
+.md-side-menu-sub-header {
+  margin: 0;
+}
+
+%md-side-menu-outside-block-btn {
+  @extend .btn;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  width: 250px;
+}
+.md-side-menu-outside-block-btn-fb {
+  @extend .btn-primary;
+  @extend %md-side-menu-outside-block-btn;
+}
+.md-side-menu-outside-block-btn-submit {
+  @extend .btn-success;
+  @extend %md-side-menu-outside-block-btn;
+}
+
+.md-side-menu-or-separator {
+  font-size: 18px;
+  font-style: italic;
+  border-bottom: 1px solid $gray3;
+  text-align: center;
+  $height: 26px;
+  $margin-top: 15px;
+  margin-top: $margin-top;
+  margin-bottom: $margin-top + $height / 2;
+  height: $height / 2;
+  color: $gray6;
+  div {
+    display: inline-block;
+    width: 30px;
+    background-color: white;
+  }
+}
+
+.md-side-menu-outside-input {
+  @extend .form-control;
+  margin-bottom: 10px;
+}
+
+.md-side-menu-outside-form-error {
+  @extend .help-block;
+  color: $red;
+}
+
+// login section
+.md-side-menu-login {
+  .checkbox {
+    margin-bottom: 10px;
+  }
+}
+
+
+// --- Inside ---
+.md-side-menu-inside {
+  overflow-y: hidden;
+  position: relative;
+}
+
 
 // --- User ---
 .md-side-menu-user {

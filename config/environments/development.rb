@@ -27,3 +27,6 @@ MapProject::Application.configure do
   # number of complex assets.
   config.assets.debug = true
 end
+
+
+Slim::Engine.set_default_options sort_attrs: false

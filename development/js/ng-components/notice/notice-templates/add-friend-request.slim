@@ -1,0 +1,24 @@
+/ Container:
+/ li
+/ .md-side-menu-notifications-item
+/ .md-notice
+/ ng-repeat="notice in insideViewCtrl.MpNotification.notifications"
+/ md-notification-item
+
+
+.md-notice-image
+  img(ng-src="{{ notice.sender.profile_picture }}")
+
+.md-notice-body
+
+  header.md-notice-body-header
+    a.md-notice-body-header-user-name-link(href)
+      b
+        | {{ notice.sender.name }}
+    |  wants to add you as friend
+
+  .md-notice-body-actions
+    a.btn.btn-default(href
+      ng-click="notice.ignoreFriendRequest()") Ignore
+    a.btn.btn-success(href
+      ng-click="notice.acceptFriendRequest()") Accept

@@ -1,13 +1,13 @@
 // Main
 .md-homepage {
   position: absolute; // keep on top of map canvas
-  z-index : 750;
+  z-index : 2000;
   top     : 0;
   left    : 0;
   width   : 100%;
   height  : 100%;
   color   : white;
-  background-color: $aquaDark;
+  background-color: rgba($aquaDark, .9);
 
   opacity: 1;
   visibility: visible; // hide it afterwards
@@ -17,28 +17,42 @@
     opacity: 0;
     visibility: hidden;
   }
+
+  + div {
+    z-index: 500;
+  }
 }
 
+// --- Up ---
 .md-homepage-content {
-  position: relative;
-  height: 100%;
+  position: absolute;
+  left: 0;
+  width: 100%;
+  top: 0;
+  bottom: 85px;
+
   overflow-y: scroll; // display multiple multi-page info
   -webkit-overflow-scrolling: touch;
+
+  > div {
+    height: 100%;
+    position: relative;
+  }
 }
 
-// Header contains login buttons
-.md-homepage-header {
+.md-homepage-brand {
   height: 55px;
   line-height: 55px;
-  a {
-    margin-left: 20px;
-    color: white;
-    vertical-align: baseline;
-  }
+  width: 150px;
+  margin-left: 40px;
+  text-align: center;
+  background-color: $blueDark;
+  font-size: 22px;
 }
 
 // Body container title
 .md-homepage-body {
+  @extend .container;
   margin-top: 80px;
   text-align: center;
 }
@@ -55,75 +69,56 @@
   }
 }
 
+// screen shot section
+.md-homepage-intro-bg {
+  height: 100%;
+  background: image-url('/img/screenshot_1.png') center center no-repeat;
+  background-size: contain;
+}
+
+// --- Bottom ---
+.md-homepage-bottom-nav-bar {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 85px;
+  background-color: $gray6;
+  padding-top: 26px;
+  padding-left: 10px;
+
+}
+
+.md-homepage-bottom-nav-bar-try-button {
+  @extend .btn;
+  @extend .btn-success;
+  @extend .btn-lg;
+  display: block;
+  width: 200px;
+  margin: 0 auto;
+  position: absolute;
+  left: 50%;
+  top: 20px;
+  margin-left: -100px;
+}
+
+.md-homepage-bottom-nav-bar-fb-button {
+  @extend .btn;
+  @extend .btn-primary;
+  margin-right: 10px;
+}
+
+.md-homepage-bottom-nav-bar-login-btn {
+  color: white;
+  &:hover {
+    color: white;
+  }
+}
+
 // Only show on mobile
 .md-homepage-start {
   margin-top: 20px;
 }
-
-// Only show on desktop
-.md-homepage-guide {
-  position: absolute;
-  z-index: 100;
-  bottom: 0;
-  width: 100%;
-  left: 0;
-  height: 85px;
-  background-color: rgba(0,0,0,.5);
-}
-
-.md-homepage-guide-title {
-  text-align: center;
-}
-
-
-// --- Intro ---
-.md-homepage-intro {
-  margin-top: 300px;
-  margin-bottom: 200px;
-}
-
-.md-homepage-intro-bg {
-  img {
-    width: 100%;
-  }
-}
-
-
-// --- Bottom bar style when homepage is visible ---
-.md-bottom-bar {
-  // &.md-homepage-show-bottom-bar-add
-  &.md-homepage-show-bottom-bar-remove {
-    @include transition();
-  }
-
-  &.md-homepage-show-bottom-bar,
-  &.md-homepage-show-bottom-bar-remove,
-  &.md-homepage-show-bottom-bar-add.md-homepage-show-bottom-bar-add-active {
-    bottom: -40px;
-    .md-bottom-bar-input {
-      position: relative;
-      top: -45px;
-      left: 50%;
-      background-color: $gray1;
-      &::-moz-placeholder {
-        color: $gray4;
-      }
-      &:hover {
-        background-color: white;
-      }
-    }
-  }
-
-  &.md-homepage-show-bottom-bar-add,
-  &.md-homepage-show-bottom-bar-remove.md-homepage-show-bottom-bar-remove-active {
-    bottom: 0;
-    .md-bottom-bar-input {
-      top: 0;
-      left: 0;
-    }
-  }
-}
-
 
 // Smaller screen
 // ----------------------------------------

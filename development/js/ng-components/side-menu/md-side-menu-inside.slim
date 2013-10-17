@@ -1,0 +1,56 @@
+/ replace: true
+
+
+.md-side-menu.md-side-menu-inside(
+  perfect-scrollbar="MdSideMenuInsideCtrl.notices.length")
+
+  / User
+  .md-side-menu-user
+    div
+      img.md-side-menu-user-picture(ng-src="{{InsideViewCtrl.MpUser.getProfilePicture()}}")
+    p.lead.md-side-menu-user-name
+      | {{InsideViewCtrl.MpUser.getName()}}
+
+  / Menu
+  ul.md-side-menu-actions.clearfix
+
+    li.md-side-menu-actions-item
+      a.md-side-menu-actions-item-anchor(href
+        ng-click="InsideViewCtrl.createNewProject()")
+        i.icon-plus
+        | New project
+    li.md-side-menu-actions-item
+      a.md-side-menu-actions-item-anchor(href="/dashboard")
+        i.icon-th-large
+        | Dashboard</br>(All Projects)
+    li.md-side-menu-actions-item
+      a.md-side-menu-actions-item-anchor(href="/friends")
+        i.icon-group
+        | Friends
+    li.md-side-menu-actions-item
+      a.md-side-menu-actions-item-anchor(href="/search")
+        i.icon-search
+        | Find friends
+
+
+    li.md-side-menu-actions-item
+      a.md-side-menu-actions-item-anchor(href="/settings")
+        i.icon-cog
+        | Settings
+    li.md-side-menu-actions-item
+      a.md-side-menu-actions-item-anchor(href
+        ng-click="InsideViewCtrl.showInvitationDialog = true; MpUI.showSideMenu = false")
+        i.icon-heart
+        | Invite friends
+    li.md-side-menu-actions-item
+      a.md-side-menu-actions-item-anchor(href
+        ng-click="InsideViewCtrl.logout()")
+        i.icon-off
+        | Logout
+
+
+  / Notification
+  ol.md-side-menu-notifications()
+    li.md-side-menu-notifications-item.md-notice.clearfix(
+      ng-repeat="notice in MdSideMenuInsideCtrl.notices"
+      md-notification-item)

@@ -1,9 +1,0 @@
-.md-infowindow-wrapper(marker-info="marker-info")
-  .md-infowindow-title {{place.name}}
-  .md-infowindow-address {{place.address}}
-  .md-infowindow-route(ng-show="place.$$leg")
-    | {{place.$$leg.duration.text}} {{place.$$leg.distance.text}} to next place
-  .md-infowindow-options(ng-hide="place.$$saved")
-    a(href="", ng-click="mapCtrl.addPlaceToList(place)")
-      i.icon-ok
-      | Add to list

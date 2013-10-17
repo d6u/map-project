@@ -1,0 +1,15 @@
+.md-info-window-content
+  .md-iw-name
+    | {{ place.get('name') }}
+  .md-iw-address
+    | {{ place.get('address') }}
+
+  .md-iw-directions(ng-show="place.has('direction_leg')")
+    .md-iw-d-distance
+      | {{ place.get('direction_leg').distance.text }} to next place
+    .md-iw-d-duration
+      | {{ place.get('direction_leg').duration.text }}
+
+  .md-iw-directions(ng-hide="place.has('direction_leg')")
+    | This is the last stop.
+

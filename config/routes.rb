@@ -17,37 +17,61 @@ MapProject::Application.routes.draw do
 
 
   # JSON API point
-  scope '/api' do
+  namespace :api do
+
+    # --- Auth ---
+    scope '/auth' do
+      get  'login_status'      => 'auth#login_status'
+      post 'fb_register'       => 'auth#fb_register'
+      post 'fb_login'          => 'auth#fb_login'
+      post 'fb_remember_login' => 'auth#fb_remember_login'
+      post 'email_login'       => 'auth#email_login'
+      post 'email_register'    => 'auth#email_register'
+      get  'logout'            => 'auth#logout'
+    end
 
     # --- User ---
-    scope '/users' do
-      post 'login'    => 'users#login'
-      get  'logout'   => 'users#logout'
-      post 'register' => 'users#create'
-    end
-    resources :users, :only => [:index, :update]
+    resources :users, :only => [:index, :show]
 
     # --- Project ---
     resources :projects, :only => [:index, :create, :show, :update, :destroy] do
+
       resources :places, :only => [:index, :create, :show, :update, :destroy]
+
+      resources :chat_histories, :only => [:index, :create, :show]
+      post 'chat_histories/place_added'   => 'chat_histories#place_added'
+      post 'chat_histories/place_removed' => 'chat_histories#place_removed'
+
       get    'participating_users' => 'projects#participating_users'
       post   'add_users'           => 'projects#add_users'
       delete 'remove_users'        => 'projects#remove_users'
     end
 
+    # --- Friendships ---
+    resources :friendships, :only => [:index, :create, :show, :update, :destroy]
 
-    resources :friends,       :only => [:index, :show]
-
-    resources :friendships,   :only => [:index, :create, :show, :update, :destroy]
-
-    resources :notifications, :only => [:index, :destroy]
-    scope    '/notifications/:id' do
-      post   'accept_friend_request' => 'notifications#accept_friend_request'
-      delete 'ignore_friend_request' => 'notifications#ignore_friend_request'
-      post   'accept_project_invitation' => 'notifications#accept_project_invitation'
-      delete 'reject_project_invitation' => 'notifications#reject_project_invitation'
+    resources :notices, :only => [:index, :destroy]
+    scope    '/notices/:id' do
+      post   'accept_friend_request'     => 'notices#accept_friend_request'
+      delete 'ignore_friend_request'     => 'notices#ignore_friend_request'
+      post   'accept_project_invitation' => 'notices#accept_project_invitation'
+      delete 'reject_project_invitation' => 'notices#reject_project_invitation'
     end
 
+    scope     'invitations/:code' do
+      get     'accept_invitation' => 'invitations#accept_invitation'
+    end
+    resources :invitations, :only => [:index, :create, :destroy]
+
+  end
+
+  # invitations
+  get '/invitations/:code' => 'invitations#show'
+
+
+  # --- Development Routes ---
+  if !Rails.env.production?
+    get '/scripts/*template_path.html' => 'ng_templates#index'
   end
 
 end

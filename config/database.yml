@@ -19,5 +19,5 @@ production:
   encoding: unicode
   database: map-project_production
   pool: 5
-  username: iwantmap
+  username: map-project
   password: 1234

@@ -8,7 +8,8 @@
     "q": "*",
     "lodash": "*",
     "pg": "~2.6.0",
-    "tracer": "~0.5.1"
+    "tracer": "~0.5.1",
+    "cookie": "~0.1.0"
   },
   "devDependencies": {
     "grunt": "~0.4.1",
@@ -20,7 +21,9 @@
     "grunt-contrib-clean": "~0.5.0",
     "grunt-contrib-watch": "~0.5.1",
     "grunt-contrib-jade": "~0.8.0",
-    "grunt-contrib-concat": "~0.3.0"
+    "grunt-contrib-concat": "~0.3.0",
+    "js-yaml": "~2.1.0",
+    "grunt-slim": "~0.1.0"
   },
   "engines": {
     "node": ">=0.10"

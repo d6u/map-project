@@ -1,0 +1,96 @@
+/ replace: true
+/ root element
+/   .md-side-menu.md-side-menu-outside(md-side-menu)
+
+
+.md-side-menu.md-side-menu-outside
+
+  .md-side-menu-header
+    h1 Map Project
+
+  div(md-collapse ng-switch="MdCollapseCtrl.activeChild")
+    / ng-switch 0
+    .md-side-menu-register(ng-class="{'active': MdCollapseCtrl.activeChild == 0}")
+      a.md-side-menu-outside-section-head(href
+        ng-click="MdCollapseCtrl.activeChild = 0")
+        h3.md-side-menu-sub-header Register
+      .md-side-menu-outside-section-body.md-collapse-body-js(ng-switch-when="0")
+        a.md-side-menu-outside-block-btn-fb(href
+          ng-click="OutsideViewCtrl.loginWithFacebook()")
+          | Sign up with Facebook
+        .md-side-menu-or-separator
+          div OR
+
+        / Form
+        form(md-form-register
+          md-form-success="MdSideMenuOutsideCtrl.registerUser"
+          name="MdFormRegisterCtrl.form"
+          ng-submit="MdFormRegisterCtrl.submit()")
+
+          input.md-side-menu-outside-input(name="name"
+            ng-model="MdFormRegisterCtrl.newUser.name"
+            required type="text" placeholder="Your name")
+          p.md-side-menu-outside-form-error
+            | {{MdFormRegisterCtrl.formMessages.nameError}}
+
+          input.md-side-menu-outside-input(name="email"
+            ng-model="MdFormRegisterCtrl.newUser.email"
+            required type="email" placeholder="Email")
+          p.md-side-menu-outside-form-error
+            | {{MdFormRegisterCtrl.formMessages.emailError}}
+
+          input.md-side-menu-outside-input(name="password"
+            ng-model="MdFormRegisterCtrl.newUser.password"
+            required type="password" ng-minlength="8" ng-trim="false"
+            placeholder="Password, at least 8 characters")
+          p.md-side-menu-outside-form-error
+            | {{MdFormRegisterCtrl.formMessages.passwordError}}
+
+          input.md-side-menu-outside-input(name="password_confirmation"
+            ng-model="MdFormRegisterCtrl.newUser.password_confirmation"
+            required type="password" ng-trim="false"
+            placeholder="Confirm your password")
+          p.md-side-menu-outside-form-error
+            | {{MdFormRegisterCtrl.formMessages.passwordConfirmationError}}
+
+          button.md-side-menu-outside-block-btn-submit Register
+
+    / ng-switch 1
+    .md-side-menu-login(ng-class="{'active': MdCollapseCtrl.activeChild == 1}")
+      a.md-side-menu-outside-section-head(href
+        ng-click="MdCollapseCtrl.activeChild = 1")
+        h3.md-side-menu-sub-header Login
+      .md-side-menu-outside-section-body.md-collapse-body-js(ng-switch-when="1")
+        a.md-side-menu-outside-block-btn-fb(href
+          ng-click="OutsideViewCtrl.loginWithFacebook()") Login with Facebook
+        .md-side-menu-or-separator
+          div OR
+
+        / Form
+        form(md-form-login
+          md-form-success="MdSideMenuOutsideCtrl.loginUser"
+          name="MdFormLoginCtrl.form"
+          ng-submit="MdFormLoginCtrl.submit()")
+
+          input.md-side-menu-outside-input(name="email"
+            ng-model="MdFormLoginCtrl.user.email"
+            required type="email" placeholder="Email")
+          p.md-side-menu-outside-form-error
+            | {{MdFormLoginCtrl.formMessages.emailError}}
+
+          input.md-side-menu-outside-input(name="password"
+            ng-model="MdFormLoginCtrl.user.password"
+            required type="password" ng-minlength="8" ng-trim="false"
+            placeholder="Password")
+          p.md-side-menu-outside-form-error
+            | {{MdFormLoginCtrl.formMessages.passwordError}}
+
+          .checkbox
+            label
+              input(ng-model="MdFormLoginCtrl.user.remember_me" type="checkbox")
+              |  Remember me
+
+          button.md-side-menu-outside-block-btn-submit Login
+
+          p.help-block
+            a(href) Forget your password?

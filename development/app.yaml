@@ -1,0 +1,96 @@
+html:
+  source folder: development/js
+  target folder: public/scripts
+
+js:
+  source folder: development/js
+  target folder: app/assets/javascripts/modules
+  copy:
+    - location-fallback.js
+  concat:
+    application.js:
+      # Socket.io comes with EventEmitter
+      # - _libraries/EventEmitter-4.2.4.min.js
+      - _libraries/jquery.easing-1.3.js
+      - _libraries/bootstrap-3.0.0.min.js
+      - _libraries/jquery-ui-1.10.3.custom.min.js
+      - _libraries/masonry-3.1.2.js
+      - _libraries/perfect-scrollbar-0.4.3.with-mousewheel.min.js
+      - _libraries/lodash-2.2.1.compat.min.js
+      - _libraries/backbone-1.0.min.js
+      - _libraries/socket.io.min.js
+      - _libraries/angular-loader-1.2.0rc2.min.js
+      - _libraries/angular-1.2.0rc2.min.js
+      - custom-libraries/date-iso8601.coffee
+      - _ng-modules/angular-animate-1.2.0rc2.min.js
+      - _ng-modules/angular-route-1.2.0rc2.min.js
+      - _ng-modules/angular-route-segment-1.2.0.min.js
+      - _ng-modules/restangular-1.1.3.min.js
+      - ng-modules/md-bootstrap.coffee
+      - ng-modules/md-jquery-ui.coffee
+      - ng-modules/md-perfect-scrollbar.coffee
+      - ng-modules/md-tabset.coffee
+      - ng-modules/mini-typeahead.coffee
+      - ng-modules/md-masonry.coffee
+      - ng-modules/md-socket-io.coffee
+      - ng-modules/md-collapse.coffee
+      - ng-modules/md-section-jumper.coffee
+      - ng-modules/ng-backbone.coffee
+      - ng-app
+      - ng-services
+      - ng-views
+      - ng-components/bottom-bar
+      - ng-components/chatbox
+      - ng-components/drawer
+      - ng-components/edit-project-modal/md-project-modal.coffee
+      - ng-components/invitation-modal
+      - ng-components/map/map-ctrl.coffee
+      - ng-components/map/marker-info.coffee
+      - ng-components/map/md-bottom-bar.coffee
+      - ng-components/map/md-drawer.coffee
+      - ng-components/map/md-edit-project.coffee
+      - ng-components/map/mp-bottom-modalbox.coffee
+      - ng-components/map/mp-center-user-location.coffee
+      - ng-components/map/mp-map-canvas.coffee
+      - ng-components/map/mp-map-searchbox.coffee
+      - ng-components/map/marker-info.coffee
+      - ng-components/map/md-project-modal.coffee
+      - ng-components/notice
+      - ng-components/side-menu
+      - ng-components/user-forms
+      - ng-components/user-guide
+      - ng-components/misc/mini-map-cover.coffee
+    application-m.js:
+      - _libraries/lodash-1.3.1.min.js
+      - _libraries/socket.io.min.js
+      - _libraries/angular-loader-1.2.0rc1.min.js
+      - _libraries/angular-1.2.0rc1.min.js
+      - _libraries/angular-animate-1.2.0rc1.min.js
+      - _libraries/angular-route-1.2.0rc1.min.js
+      - _libraries/angular-route-segment-1.1.0.20130825.min.js
+      - _libraries/restangular-1.1.3.min.js
+      - ng-app-m
+      - ng-services
+      - views/in-m
+      - views/ot-m
+      - views/_map/map-ctrl.coffee
+      - views/_map/marker-info.coffee
+      - views/_map/mp-map-canvas.coffee
+      - views/_map/md-searchbox-input-m.coffee
+      - views/_map/placelist-ctrl-m.coffee
+      - views/_map/md-edit-project-m.coffee
+      - views/_menu/md-menu-m.coffee
+      - views/_shared/mini-map-cover.coffee
+    application-invitation.js:
+      - _libraries/lodash-1.3.1.min.js
+      - _libraries/angular-loader-1.2.0rc2.min.js
+      - _libraries/angular-1.2.0rc2.min.js
+      - custom-libraries/date-iso8601.coffee
+      - _ng-modules/angular-animate-1.2.0rc2.min.js
+      - _ng-modules/restangular-1.1.3.min.js
+      - ng-modules/md-collapse.coffee
+      - ng-app-invitation
+      - ng-services
+      - ng-views-invitation
+      - ng-components/user-forms
+      - ng-components/misc/md-mini-map.coffee

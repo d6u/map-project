@@ -1,11 +1,62 @@
+// --- Container ---
 .md-map {
   position: absolute;
-  left: 0;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  z-index: 700;
+  left    : 0;
+  top     : 0;
+  right   : 0;
+  bottom  : 40px;
 }
+
+
+// --- Level 1 ---
+.md-map-canvas {
+  position: absolute;
+  z-index : 500;
+  top     : 0;
+  left    : 0;
+  right   : 0;
+  bottom  : 0;
+}
+
+
+.md-map-controls {
+  position        : absolute;
+  z-index         : 1000;
+  top             : 5px;
+  left            : 5px;
+  width           : 40px;
+  background-color: $gray6;
+}
+
+
+// --- Level 2 ---
+.md-m-c-button {
+  display    : block;
+  width      : 40px;
+  height     : 40px;
+  line-height: 40px;
+  font-size  : 16px;
+  text-align : center;
+  color      : #FFF;
+
+  @include transition();
+
+  &:hover {
+    color           : #FFF;
+    background-color: $gray5;
+    text-decoration : none;
+  }
+
+  &:active {
+    background-color: $gray4;
+  }
+
+  &.active {
+    color: $green;
+  }
+}
+
+
 
 .md-map-modal {
   position: absolute;
