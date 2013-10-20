@@ -22,7 +22,7 @@ class Api::PlacesController < Api::ApiBaseController
   def create
     @place = Place.new params.require(:place).permit(:notse, :name, :address, :coord, :order, :reference)
     @place.user = @user
-    @project.places << place
+    @project.places << @place
     render :json => @place
 
     # send placeAdded event to Node server
