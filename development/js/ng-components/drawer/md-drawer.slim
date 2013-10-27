@@ -45,13 +45,19 @@
           span.md-places-item-tel
             | {{ place.get('formatted_phone_number') }}
           br
-          a.md-places-item-website(href="{{ place.get('website') }}" target="_blank")
+          a.md-places-item-website(
+            ng-href="{{ place.get('website') }}"
+            target="_blank")
             | {{ place.get('website') }}
 
         .md-places-item-photos(
           ng-show="place.has('photos')"
           ng-bind-html="place | renderPhoto")
 
+        a.md-places-item-more-info-button(
+          ng-show="place.has('url')"
+          ng-href="{{ place.get('url') }}"
+          target="_blank") More Info
 
 
   / --- Places ---

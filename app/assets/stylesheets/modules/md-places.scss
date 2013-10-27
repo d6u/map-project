@@ -51,6 +51,16 @@
 
 .md-places-item-photos {
   margin-top: 10px;
+  img {
+    vertical-align: top;
+    margin-right: 12px;
+    &:last-child { margin-right: 0; }
+  }
+}
+
+.md-places-item-more-info-button {
+  display: block;
+  margin-top: 10px;
 }
 
 
