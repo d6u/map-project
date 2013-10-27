@@ -1,6 +1,7 @@
 # declear
 app = angular.module('mapApp', [
   # 3rd party modules
+  'ngSanitize',
   'ngAnimate',
   'ngRoute',
   'route-segment',

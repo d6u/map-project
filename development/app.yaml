@@ -22,6 +22,7 @@ js:
       - _libraries/angular-loader-1.2.0rc2.min.js
       - _libraries/angular-1.2.0rc2.min.js
       - custom-libraries/date-iso8601.coffee
+      - _ng-modules/angular-sanitize-1.2.0rc2.min.js
       - _ng-modules/angular-animate-1.2.0rc2.min.js
       - _ng-modules/angular-route-1.2.0rc2.min.js
       - _ng-modules/angular-route-segment-1.2.0.min.js

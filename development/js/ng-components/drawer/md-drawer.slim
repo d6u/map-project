@@ -30,17 +30,28 @@
       / place item
       li.md-places-item(ng-repeat="place in MapCtrl.ThePlacesSearch.models")
 
-        .md-places-item-image
-          a(href ng-click="MapCtrl.centerSearchResult(place)")
-            img(ng-src="{{ place.get('icon') }}")
         .md-places-item-actions
           a(href ng-click="MapCtrl.addPlaceToList(place)")
-            i.icon-ok
-        .md-places-item-details
+            i.icon-plus
+
+        a.md-places-item-header(href ng-click="MapCtrl.centerSavedPlace(place)")
           .md-places-item-name
             | {{ place.get('name') }}
-          address.md-places-item-address
-            | {{ place.get('formatted_address') }}
+          address.md-places-item-address(ng-bind-html="place | assembleAddress")
+
+        .md-places-item-detail
+          span.md-places-item-price(ng-bind-html="place.get('price_level') | renderPriceLevel")
+          span.md-places-item-rating(ng-bind-html="place.get('rating') | renderRating")
+          span.md-places-item-tel
+            | {{ place.get('formatted_phone_number') }}
+          br
+          a.md-places-item-website(href="{{ place.get('website') }}" target="_blank")
+            | {{ place.get('website') }}
+
+        .md-places-item-photos(
+          ng-show="place.has('photos')"
+          ng-bind-html="place | renderPhoto")
+
 
 
   / --- Places ---
