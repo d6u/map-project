@@ -6,8 +6,11 @@ app.filter 'assembleAddress', ->
           return false if type == 'administrative_area_level_2'
         return true
 
-      a    = _.pluck(components, 'short_name')
-      html = "#{a[0]} #{a[1]}<br/>#{a[2]}, #{a[3]}, #{a[4]} #{a[5]}"
+      a     = _.pluck(components, 'short_name')
+      html  = "#{a[0]} #{a[1]}<br/>#{a[2]}"
+      html += ", #{a[3]}" if a[3]?
+      html += ", #{a[4]}" if a[4]?
+      html += " #{a[5]}" if a[5]?
     else
       html = place.get('formatted_address')
     return html;

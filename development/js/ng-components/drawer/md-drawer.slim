@@ -39,7 +39,7 @@
             | {{ place.get('name') }}
           address.md-places-item-address(ng-bind-html="place | assembleAddress")
 
-        .md-places-item-detail
+        .md-places-item-detail(ng-show="place.has('price_level') || place.has('rating') || place.has('formatted_phone_number') || place.has('website')")
           span.md-places-item-price(ng-bind-html="place.get('price_level') | renderPriceLevel")
           span.md-places-item-rating(ng-bind-html="place.get('rating') | renderRating")
           span.md-places-item-tel
