@@ -32,6 +32,9 @@
     @extend .btn;
     @extend .btn-success;
     @extend .btn-sm;
+    &.md-places-item-actions-remove {
+      @extend .btn-danger;
+    }
   }
 }
 
@@ -63,11 +66,29 @@
   margin-top: 10px;
 }
 
+.md-places-item-more-actions {
+  @extend .btn-group;
+  margin-top: 10px;
+}
+
 
 // --- More Levels ---
 .md-places-item-name {
   font-size: 16px;
   line-height: 1;
+  a {
+    display: inline-block;
+    color: $gray4;
+    height: 16px;
+    padding: 0 5px;
+    margin-right: 10px;
+    cursor: move;
+    @include transition();
+    &:hover {
+      text-decoration: none;
+      color: $gray6;
+    }
+  }
 }
 
 .md-places-item-address {
@@ -86,4 +107,16 @@
   color: $yellow;
   width: 80px;
   display: inline-block;
+}
+
+.md-places-item-website {
+  display: block;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.md-places-item-more-action-button {
+  @extend .btn;
+  @extend .btn-default;
 }

@@ -67,17 +67,35 @@
       / place item
       li.md-places-item(ng-repeat="place in MapCtrl.savedPlaces")
 
-        .md-places-item-image
-          a(href ng-click="MapCtrl.centerSavedPlace(place)")
-            img(src="/img/blue-marker-3d.png")
         .md-places-item-actions
           a.md-places-item-actions-remove(href
             ng-click="MapCtrl.removePlaceFromList(place)")
             i.icon-remove
-        .md-places-item-details
+
+        .md-places-item-header(ng-click="MapCtrl.centerSavedPlace(place)")
           .md-places-item-name
+            a(href)
+              i.icon-reorder
             | {{ place.get('name') }}
-          address.md-places-item-address
-            | {{ place.get('address') }}
-          p
-            | {{ place.get('notes') }}
+          address.md-places-item-address(ng-bind-html="place | assembleAddress")
+
+        .md-places-item-detail(ng-show="place.has('price_level') || place.has('rating') || place.has('formatted_phone_number') || place.has('website')")
+          span.md-places-item-price(ng-bind-html="place.get('price_level') | renderPriceLevel")
+          span.md-places-item-rating(ng-bind-html="place.get('rating') | renderRating")
+          span.md-places-item-tel
+            | {{ place.get('formatted_phone_number') }}
+          a.md-places-item-website(
+            ng-href="{{ place.get('website') }}"
+            target="_blank")
+            | {{ place.get('website') }}
+
+        a.md-places-item-more-info-button(
+          ng-show="place.has('url')"
+          ng-href="{{ place.get('url') }}"
+          target="_blank") More Info from Google
+
+        / More Action Buttons
+        .md-places-item-more-actions
+          a.md-places-item-more-action-button(href) Send
+          a.md-places-item-more-action-button(href) Center
+          a.md-places-item-more-action-button(href) Edit Notes
