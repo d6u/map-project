@@ -1,6 +1,5 @@
 app.factory 'ThePlacesSearch',
-['TheMap','$q','$rootScope','MapMarkers','MapInfoWindows','$compile','mpTemplateCache',
-( TheMap,  $q,  $rootScope,  MapMarkers,  MapInfoWindows,  $compile,  mpTemplateCache) ->
+['TheMap', '$q', '$rootScope', 'MapMarkers', 'MapInfoWindows', '$compile', 'mpTemplateCache', 'PlacesService', (TheMap, $q, $rootScope, MapMarkers, MapInfoWindows, $compile, mpTemplateCache, PlacesService) ->
 
   # preload template
   mpTemplateCache.get('/scripts/ng-components/map/info-window-detailed.html')
@@ -19,14 +18,11 @@ app.factory 'ThePlacesSearch',
       # load place details into info window
       google.maps.event.addListenerOnce @getMarker(), 'rightclick', =>
         scope = @infoWindows[0].scope
-        @collection.$placesService.getDetails {
-          reference: @get('reference')
-        }, (result, status) =>
-          if status == google.maps.places.PlacesServiceStatus.OK
-            @set(result)
-            mpTemplateCache.get('/scripts/ng-components/map/info-window-detailed.html')
-            .then (template) =>
-              @infoWindows[0].setContent($compile(template)(scope)[0])
+        @getDetails().then =>
+          mpTemplateCache
+          .get('/scripts/ng-components/map/info-window-detailed.html')
+          .then (template) =>
+            @infoWindows[0].setContent($compile(template)(scope)[0])
 
 
     destroy: ->
@@ -34,13 +30,15 @@ app.factory 'ThePlacesSearch',
       @marker.destroy()
       @collection?.remove(@)
 
-
     getMarker: ->
       return @marker.getMarker()
 
-
     centerInMap: ->
       TheMap.setMapCenter( @getMarker().getPosition() )
+
+    getDetails: ->
+      PlacesService.getDetails(@get('reference')).then (result) =>
+        @set(result)
   }
 
 
@@ -51,17 +49,14 @@ app.factory 'ThePlacesSearch',
 
     initialize: () ->
       TheMap.on 'initialized', =>
-        @$placesService = new google.maps.places.PlacesService(TheMap.getMap())
         @reset()
-
-      if TheMap.getMap()?
-        @$placesService = new google.maps.places.PlacesService(TheMap.getMap())
 
       TheMap.on 'destroyed', =>
-        delete @$placesService
         @reset()
 
-      @on 'newSearchResultsAdded', @fitResultsBounds
+      @on 'newSearchResultsAdded', =>
+        @fitResultsBounds()
+        @queryFirstThreePlacesDetails()
 
       @on 'reset', (collection, options) ->
         place.destroy() for place in options.previousModels
@@ -72,27 +67,32 @@ app.factory 'ThePlacesSearch',
 
     # --- other ---
     searchPlacesWith: (query) ->
-      return null if !@$placesService?
-      gotResults = $q.defer()
-      @$placesService.textSearch {
-        bounds: TheMap.getBounds()
-        query:  query
-      }, (results, status) =>
-        $rootScope.$apply =>
-          @reset()
-          if status == google.maps.DirectionsStatus.OK
-            @add(results)
-            @trigger('newSearchResultsAdded')
-            gotResults.resolve(results)
-          else
-            gotResults.reject(status)
-      return gotResults.promise
+      return PlacesService
+      .textSearch({query: query})
+      .finally( => @reset() )
+      .then(
+        ((results) =>
+          @add(results)
+          @trigger('newSearchResultsAdded')
+          return results
+        ),
+        ((status) =>
+          throw status
+        )
+      )
 
 
     fitResultsBounds: ->
       bounds = new google.maps.LatLngBounds
       bounds.extend place.get('geometry').location for place in @models
       TheMap.setMapBounds(bounds)
+
+
+    queryFirstThreePlacesDetails: ->
+      for i in [0..2]
+        if @models[i]?
+          @models[i].getDetails()
+
   }
   # --- END ThePlacesSearch ---
 

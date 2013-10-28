@@ -9,13 +9,11 @@
 // --- Level 1 ---
 .md-places-item {
   @extend .clearfix;
-  padding      : 5px;
-  color        : #FFF;
-  margin-bottom: 10px;
-  &:hover {
-    background-color: #FFF;
-    color           : $gray6;
-  }
+  margin: 10px;
+  background-color: #FFF;
+  padding: 10px;
+  box-shadow: 1px 1px 1px rgba(0, 0, 0, .3);
+  color: $gray6;
 }
 
 
@@ -31,39 +29,94 @@
 .md-places-item-actions {
   float: right;
   a {
-    display    : block;
-    width      : 30px;
-    height     : 30px;
-    font-size  : 21px;
-    line-height: 30px;
-    text-align : center;
-    color      : $greenDark;
-    &:hover {
-      color          : $green;
-      text-decoration: none;
-    }
+    @extend .btn;
+    @extend .btn-success;
+    @extend .btn-sm;
     &.md-places-item-actions-remove {
-      color: $redDark;
-      &:hover {
-        color: $red;
-      }
+      @extend .btn-danger;
     }
   }
 }
 
-.md-places-item-details {
-  margin-left: 35px;
-  margin-right: 40px;
+.md-places-item-header {
+  display: block;
+  overflow: hidden;
+  padding-right: 10px;
+  color: inherit;
+  &:hover {
+    color: inherit;
+  }
+}
+
+.md-places-item-detail {
+  margin-top: 10px;
+}
+
+.md-places-item-photos {
+  margin-top: 10px;
+  img {
+    vertical-align: top;
+    margin-right: 12px;
+    &:last-child { margin-right: 0; }
+  }
+}
+
+.md-places-item-more-info-button {
+  display: block;
+  margin-top: 10px;
+}
+
+.md-places-item-more-actions {
+  @extend .btn-group;
+  margin-top: 10px;
 }
 
 
 // --- More Levels ---
 .md-places-item-name {
   font-size: 16px;
-  margin-bottom: 10px;
+  line-height: 1;
+  a {
+    display: inline-block;
+    color: $gray4;
+    height: 16px;
+    padding: 0 5px;
+    margin-right: 10px;
+    cursor: move;
+    @include transition();
+    &:hover {
+      text-decoration: none;
+      color: $gray6;
+    }
+  }
 }
 
 .md-places-item-address {
-  margin-bottom: 0;
   font-weight: 300;
+  margin-top: 5px;
+  margin-bottom: 0;
+  line-height: 1.2;
+}
+
+.md-places-item-price {
+  width: 50px;
+  display: inline-block;
+}
+
+.md-places-item-rating {
+  color: $yellow;
+  width: 80px;
+  display: inline-block;
+}
+
+.md-places-item-website {
+  display: block;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.md-places-item-more-action-button {
+  @extend .btn;
+  @extend .btn-default;
 }
