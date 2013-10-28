@@ -67,21 +67,19 @@ app.factory 'ThePlacesSearch',
 
     # --- other ---
     searchPlacesWith: (query) ->
-      gotResults = $q.defer()
-      PlacesService.textSearch({query: query})
+      return PlacesService
+      .textSearch({query: query})
+      .finally( => @reset() )
       .then(
         ((results) =>
-          @reset()
           @add(results)
           @trigger('newSearchResultsAdded')
-          gotResults.resolve(results)
+          return results
         ),
         ((status) =>
-          @reset()
-          gotResults.reject(status)
+          throw status
         )
       )
-      return gotResults.promise
 
 
     fitResultsBounds: ->
