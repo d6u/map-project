@@ -19,12 +19,12 @@ js:
       - _libraries/lodash-2.2.1.compat.min.js
       - _libraries/backbone-1.0.min.js
       - _libraries/socket.io.min.js
-      - _libraries/angular-loader-1.2.0rc2.min.js
-      - _libraries/angular-1.2.0rc2.min.js
+      - _libraries/angular-1.2.0rc3.min.js
+      # - _libraries/angular-loader-1.2.0rc3.min.js
       - custom-libraries/date-iso8601.coffee
-      - _ng-modules/angular-sanitize-1.2.0rc2.min.js
-      - _ng-modules/angular-animate-1.2.0rc2.min.js
-      - _ng-modules/angular-route-1.2.0rc2.min.js
+      - _ng-modules/angular-sanitize-1.2.0rc3.min.js
+      - _ng-modules/angular-animate-1.2.0rc3.min.js
+      - _ng-modules/angular-route-1.2.0rc3.min.js
       - _ng-modules/angular-route-segment-1.2.0.min.js
       - _ng-modules/restangular-1.1.3.min.js
       - ng-modules/md-bootstrap.coffee
@@ -84,10 +84,10 @@ js:
       - views/_shared/mini-map-cover.coffee
     application-invitation.js:
       - _libraries/lodash-1.3.1.min.js
-      - _libraries/angular-loader-1.2.0rc2.min.js
-      - _libraries/angular-1.2.0rc2.min.js
+      - _libraries/angular-loader-1.2.0rc3.min.js
+      - _libraries/angular-1.2.0rc3.min.js
       - custom-libraries/date-iso8601.coffee
-      - _ng-modules/angular-animate-1.2.0rc2.min.js
+      - _ng-modules/angular-animate-1.2.0rc3.min.js
       - _ng-modules/restangular-1.1.3.min.js
       - ng-modules/md-collapse.coffee
       - ng-app-invitation
