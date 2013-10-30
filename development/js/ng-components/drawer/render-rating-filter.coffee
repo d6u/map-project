@@ -4,7 +4,7 @@ app.filter 'renderRating', ->
     html  = ''
     for i in [0..4]
       if i <= level
-        html += '<i class="icon-star"></i>'
+        html += '<i class="fa fa-star"></i>'
       else
-        html += '<i class="icon-star-o"></i>'
+        html += '<i class="fa fa-star-o"></i>'
     return html

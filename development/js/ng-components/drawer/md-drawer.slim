@@ -15,7 +15,7 @@
     | Places
   a.md-drawer-t-b-button-close(href
     ng-click="MpUI.showMapDrawer = false")
-    i.icon-remove
+    i.fa.fa-times
 
 
 / --- Body ---
@@ -32,7 +32,7 @@
 
         .md-places-item-actions
           a(href ng-click="MapCtrl.addPlaceToList(place)")
-            i.icon-plus
+            i.fa.fa-plus
 
         a.md-places-item-header(href ng-click="MapCtrl.centerSavedPlace(place)")
           .md-places-item-name
@@ -70,12 +70,12 @@
         .md-places-item-actions
           a.md-places-item-actions-remove(href
             ng-click="MapCtrl.removePlaceFromList(place)")
-            i.icon-remove
+            i.fa.fa-times
 
         .md-places-item-header(ng-click="MapCtrl.centerSavedPlace(place)")
           .md-places-item-name
             a(href)
-              i.icon-reorder
+              i.fa.fa-reorder
             | {{ place.get('name') }}
           address.md-places-item-address(ng-bind-html="place | assembleAddress")
 

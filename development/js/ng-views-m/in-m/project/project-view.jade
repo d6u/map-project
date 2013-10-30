@@ -9,10 +9,10 @@
       //- Searchbox - inputgroup
       .md-searchbox-inputgroup
         a.md-searchbox-inputgroup-button(href="", ng-click="projectViewCtrl.workplaceScrollup = true")
-          i.icon-angle-down
+          i.fa.fa-angle-down
         input.md-searchbox-inputgroup-input.form-control.cp-input-naked(type="text", placeholder="Search place", ng-model="mapCtrl.searchboxInput", md-searchbox-input-m="", ng-change="mapCtrl.getQueryPredictions()")
         a.md-searchbox-inputgroup-clearinput(href="", ng-show="mapCtrl.searchboxInput.length || mapCtrl.placesServiceResults", ng-click="mapCtrl.clearSearchResults()")
-          i.icon-remove
+          i.fa.fa-times
 
       //- Searchbox - result
       ol.md-searchbox-results
@@ -36,16 +36,16 @@
     //- Bottom - toolbar
     .ly-workplace-map-toolbar.md-placelist-toolbar
       a.md-placelist-toolbar-button(href="", ng-click="projectViewCtrl.workplaceScrollup = false")
-        i.icon-angle-up
+        i.fa.fa-angle-up
         | Back
       a.md-placelist-toolbar-button(href="", ng-click="placelistCtrl.displayAllMarkers()")
-        i.icon-fullscreen
+        i.fa.fa-fullscreen
         | Map all
       a.md-placelist-toolbar-button(href="", ng-click="placelistCtrl.showEditProjectDetailForm()")
-        i.icon-pencil
+        i.fa.fa-pencil
         | Edit project
       a.md-placelist-toolbar-button(href="", ng-click="placelistCtrl.focusSearchboxInput()")
-        i.icon-plus
+        i.fa.fa-plus
         | Add place
 
     //- Bottom - edit project detail modal
@@ -59,7 +59,7 @@
 .ly-workplace-buttons
   .ly-workplace-buttons-left
     a.cp-input-square-button(href="", ng-click="interface.showUserSection = true")
-      i.icon-reorder
+      i.fa.fa-reorder
   .ly-workplace-buttons-right
     a.cp-input-square-button(href="", ng-click="projectViewCtrl.showChat = !projectViewCtrl.showChat")
-      i.icon-comments-alt
+      i.fa.fa-comments-alt
