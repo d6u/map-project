@@ -42,19 +42,22 @@ app.factory 'MapInfoWindows',
           that.collection.$mouseOverInfoWindow.close()
           that.collection.closeAllInfoWindows()
           @_enableMouseover = false
-          that.open(TheMap.getMap(), marker) if options.place._detailSynced
-          # after details are loaded, wait for images to load
-          that.on 'detailsLoaded', ->
-            setTimeout -> # wait until next cycle where images are all inserted
-              allLoaded = []
-              $(that._infoWindow.getContent()).find('img').each ->
-                loaded = $q.defer()
-                $(this).on 'load', ->
-                  loaded.resolve()
-                allLoaded.push(loaded)
-              $q.all(allLoaded).then ->
-                that.close()
-                that.open(TheMap.getMap(), marker)
+          if options.place._detailSynced
+            that.open(TheMap.getMap(), marker)
+          else
+            that.on 'detailsLoaded', ->
+            # after details are loaded, wait for images to load
+              setTimeout ->
+              # wait until next cycle where img tags are all inserted
+                allLoaded = []
+                $(that._infoWindow.getContent()).find('img').each ->
+                  loaded = $q.defer()
+                  $(this).on 'load', ->
+                    loaded.resolve()
+                  allLoaded.push(loaded)
+                $q.all(allLoaded).then ->
+                  that.close()
+                  that.open(TheMap.getMap(), marker)
 
       @on 'destroy', =>
         @close()
