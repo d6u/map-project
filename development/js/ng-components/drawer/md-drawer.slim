@@ -34,7 +34,7 @@
           a(href ng-click="MapCtrl.addPlaceToList(place)")
             i.fa.fa-plus
 
-        a.md-places-item-header(href ng-click="MapCtrl.centerSavedPlace(place)")
+        a.md-places-item-header(href ng-click="MapCtrl.centerSearchResult(place)")
           .md-places-item-name
             | {{ place.get('name') }}
           address.md-places-item-address(ng-bind-html="place | assembleAddress")

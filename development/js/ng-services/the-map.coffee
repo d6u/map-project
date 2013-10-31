@@ -42,8 +42,10 @@ app.factory 'TheMap',
         @trigger 'destroyed'
 
       # --- API ---
-      @setMapCenter = (latLng) ->
+      @setCenter = (latLng) ->
         @$googleMap.setCenter(latLng)
+
+      @setMapCenter = @setCenter
 
       @fitBounds = (bounds, coordsCount) ->
         @$googleMap.fitBounds(bounds)

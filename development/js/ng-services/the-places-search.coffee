@@ -35,7 +35,7 @@ app.factory 'ThePlacesSearch',
       return @marker.getMarker()
 
     centerInMap: ->
-      TheMap.setMapCenter( @getMarker().getPosition() )
+      TheMap.setCenter( @getMarker().getPosition() )
 
     getDetails: ->
       PlacesService.getDetails(@get('reference')).then (result) =>
