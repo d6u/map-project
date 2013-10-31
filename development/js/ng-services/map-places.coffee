@@ -1,9 +1,10 @@
 app.factory 'MapPlaces',
-['MapMarkers','MapInfoWindows','MpProjects','TheMap','MpUser','$rootScope',
-( MapMarkers,  MapInfoWindows,  MpProjects,  TheMap,  MpUser,  $rootScope) ->
+['MapMarkers','MapInfoWindows','MpProjects','TheMap','MpUser','$rootScope','PlacesService', (MapMarkers, MapInfoWindows, MpProjects, TheMap, MpUser, $rootScope, PlacesService) ->
+
 
   # --- Model ---
   Place = Backbone.Model.extend {
+
     initialize: (attrs, options) ->
       # normalize attributes
       @set({$$saved: true})
@@ -13,14 +14,10 @@ app.factory 'MapPlaces',
         @set({order:   @collection.length})
 
       # load details about the place
-      @collection.$placesService.getDetails {
-        reference: @get('reference')
-      }, (result, status) =>
-        if status == google.maps.places.PlacesServiceStatus.OK
-          $rootScope.$apply =>
-            delete result.id
-            @set(result)
-            @infoWindows[0].setContent(@infoWindows[0].getContent())
+      if !options.detailSynced
+        @getDetails().then => @_detailSynced = true
+      else
+        @_detailSynced = true
 
       # marker
       coordMatch = /\((.+), (.+)\)/.exec(attrs.coord)
@@ -57,15 +54,23 @@ app.factory 'MapPlaces',
 
     openDirectionsInfoWindow: ->
       @infoWindows[1].open(TheMap.getMap(), @getMarker())
+
+    getDetails: ->
+      return PlacesService.getDetails(@get('reference')).then (result) =>
+        delete result.id
+        @set(result)
   }
 
 
   # --- Collection ---
   MapPlaces = Backbone.Collection.extend {
 
+    # --- Properties ---
     model:      Place
     comparator: 'order'
 
+
+    # --- Init ---
     initialize: ->
       TheMap.on 'initialized', =>
         @$placesService = new google.maps.places.PlacesService(TheMap.getMap())
@@ -83,6 +88,7 @@ app.factory 'MapPlaces',
         place.destroy()
 
 
+    # --- Actions ---
     initProject: (id, scope) ->
       if id?
         if MpProjects.initializing

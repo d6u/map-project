@@ -26,5 +26,6 @@
 
   / More Action Buttons
   .md-places-item-info-window-actions
-    a.md-places-item-info-window-action-button(href)
+    a.md-places-item-info-window-action-button(href
+      ng-click="MapCtrl.addPlaceToList(place)")
       i.fa.fa-plus

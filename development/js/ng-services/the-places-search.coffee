@@ -14,6 +14,8 @@ app.factory 'ThePlacesSearch',
       @on 'destroy', =>
         infoWindow.destroy() for infoWindow in @infoWindows
         @marker.destroy()
+        delete @marker
+        delete @infoWindows
 
       @marker = MapMarkers.add({
         title:    @get('name')
@@ -62,9 +64,6 @@ app.factory 'ThePlacesSearch',
 
       @on 'reset', (collection, options) ->
         place.destroy() for place in options.previousModels
-
-      @on 'remove', (place, collection, options) ->
-        place.destroy()
 
       @on 'destroy', (place) =>
         @remove(place)
