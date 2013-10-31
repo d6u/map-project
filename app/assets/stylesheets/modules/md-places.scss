@@ -1,19 +1,28 @@
 // --- Container ---
 .md-places {
-  list-style-type: none;
-  padding        : 0;
-  margin         : 0;
+  list-style: none;
+  padding: 0;
+  margin: 0;
 }
 
 
 // --- Level 1 ---
 .md-places-item {
   @extend .clearfix;
+  list-style: none;
   margin: 10px;
   background-color: #FFF;
   padding: 10px;
   box-shadow: 1px 1px 1px rgba(0, 0, 0, .3);
   color: $gray6;
+}
+
+.md-drawer-saved-place-sort-placeholder {
+  @extend .md-places-item;
+  background-color: transparent;
+  border: 5px dashed #FFF;
+  min-height: 100px;
+  box-shadow: none;
 }
 
 

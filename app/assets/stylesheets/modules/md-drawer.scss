@@ -88,7 +88,13 @@ $drawerWidth: 350px;
 
 
 // body
-.md-drawer-b-section {}
+.md-drawer-b-section {
+  .md-places::after {
+    content: '';
+    display: block;
+    height: 150px;
+  }
+}
 
 
 .md-drawer-b-s-header {
