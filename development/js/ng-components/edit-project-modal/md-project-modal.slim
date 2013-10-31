@@ -3,7 +3,7 @@
 
   / Close Button
   a.md-project-modal-close(href ng-click="MpUI.showProjectModal = false")
-    i.icon-remove
+    i.fa.fa-times
 
   / Navbar
   .md-project-modal-navbar
@@ -64,7 +64,7 @@
               | {{ user.get('name') }}
           a.md-project-modal-body-manage-friends-remove-button(href
             ng-click="MdProjectModalCtrl.removeUserFromProject(user)")
-            i.icon-remove
+            i.fa.fa-times
 
 
     / Invite friends

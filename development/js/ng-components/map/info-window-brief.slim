@@ -7,5 +7,5 @@
     | {{ place.get('vicinity') || place.get('address') }}
   .md-infowindow-options(ng-hide="place.get('$$saved')")
     a(href ng-click="MapCtrl.addPlaceToList(place)")
-      i.icon-ok
+      i.fa.fa-ok
       | Add to list

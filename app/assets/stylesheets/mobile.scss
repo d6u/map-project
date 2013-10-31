@@ -1,8 +1,8 @@
-//= require _libraries/font-awesome.scss
+//= require _libraries/font-awesome-4.0.1/font-awesome.scss
 //= require_self
 
 
-@import "_libraries/bootstrap-3.0.0.min";
+@import "_libraries/bootstrap-3.0.1.min";
 @import "_variables/colors";
 @import "_mixins/animation";
 @import "_mixins/flexbox";

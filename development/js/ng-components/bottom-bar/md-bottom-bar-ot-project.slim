@@ -4,7 +4,7 @@
   a.md-bb-button(href ng-click="MpUI.showSideMenu = true"
     bs-tooltip="Show Menu"
     bs-tooltip-placement="top")
-    i.icon-reorder
+    i.fa.fa-reorder
 
   / Login / Register
   a.md-bb-button-login(href
@@ -16,7 +16,7 @@
     ng-click="MpUI.showMapDrawer = !MpUI.showMapDrawer; MpUI.mapDrawerActiveSection = 'searchResults'"
     bs-tooltip="Show List of Search Results"
     bs-tooltip-placement="top")
-    i.icon-caret-up
+    i.fa.fa-caret-up
 
 / Middle
 .md-bb-section-middle
@@ -34,4 +34,4 @@
   a.md-bb-button-clear-input(href ng-show="MdBottomBarCtrl.inputVal.length"
     ng-click="MdBottomBarCtrl.clearInput()"
     bs-tooltip-placement="top" bs-tooltip="Clear all search results")
-    i.icon-remove
+    i.fa.fa-times
