@@ -55,7 +55,7 @@ app.factory 'MapMarkers', ['TheMap', (TheMap) ->
       if @length
         bounds = new google.maps.LatLngBounds
         bounds.extend(place.getPosition()) for place in @models
-        TheMap.fitBounds(bounds)
+        TheMap.fitBounds(bounds, @length)
   }
 
 

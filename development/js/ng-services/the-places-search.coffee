@@ -85,18 +85,13 @@ app.factory 'ThePlacesSearch',
     fitResultsBounds: ->
       bounds = new google.maps.LatLngBounds
       bounds.extend place.get('geometry').location for place in @models
-      TheMap.fitBounds(bounds)
-      if @length == 1
-        TheMap.setZoom(7) if TheMap.getZoom() > 7
-      else if 1 < @length < 4
-        TheMap.setZoom(9) if TheMap.getZoom() > 9
+      TheMap.fitBounds(bounds, @length)
 
 
     queryFirstThreePlacesDetails: ->
       for i in [0..2]
         if @models[i]?
           @models[i].getDetails()
-
   }
   # --- END ThePlacesSearch ---
 

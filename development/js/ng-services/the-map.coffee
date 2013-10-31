@@ -45,10 +45,15 @@ app.factory 'TheMap',
       @setMapCenter = (latLng) ->
         @$googleMap.setCenter(latLng)
 
-      @setMapBounds = (bounds) ->
+      @fitBounds = (bounds, coordsCount) ->
         @$googleMap.fitBounds(bounds)
+        if coordsCount
+          if coordsCount == 1
+            @setZoom(7) if @getZoom() > 7
+          else if 1 < coordsCount < 4
+            @setZoom(9) if @getZoom() > 9
 
-      @fitBounds = @setMapBounds
+      @setMapBounds = @fitBounds
 
       @getMap = ->
         @$googleMap
