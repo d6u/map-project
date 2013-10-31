@@ -1,6 +1,6 @@
 app.factory 'MapInfoWindows',
-['TheMap','$compile','mpTemplateCache','$templateCache','$q',
-( TheMap,  $compile,  mpTemplateCache,  $templateCache,  $q) ->
+['TheMap','$compile','mpTemplateCache','$templateCache',
+( TheMap,  $compile,  mpTemplateCache,  $templateCache) ->
 
   # preload template
   mpTemplateCache.get('/scripts/ng-components/map/info-window-brief.html')
@@ -8,31 +8,27 @@ app.factory 'MapInfoWindows',
 
   # --- Model ---
   InfoWindow = Backbone.Model.extend {
-
-    # --- Properties ---
-    sync: angular.noop
-
-    # --- Init ---
     initialize: (attrs, options) ->
       @scope       = options.scope
       @_infoWindow = new google.maps.InfoWindow(attrs)
 
-      # info window content
-      template = $templateCache.get(options.templateUrl)
-
-      if template?
-        content = $compile(template)(options.scope)[0]
+      # fix content undefined issue
+      if options.template?
+        content = $compile(options.template)(options.scope)[0]
       else
-        content = '<div></div>'
-        mpTemplateCache.get(options.templateUrl).then (template) =>
-          @_infoWindow.setContent($compile(template)(options.scope)[0])
+        template = $templateCache.get(options.templateUrl)
+        if template?
+          content = $compile(template)(options.scope)[0]
+        else
+          content = '<div></div>'
+          mpTemplateCache.get(options.templateUrl).then (template) =>
+            @_infoWindow.setContent($compile(template)(options.scope)[0])
 
       @_infoWindow.setContent(content)
 
-
       # listeners
       that   = this
-      marker = options.place.getMarker()
+      marker = options.place.marker.getMarker()
 
       @_infoWindow.addListener 'closeclick', ->
         marker._enableMouseover = true
@@ -40,25 +36,9 @@ app.factory 'MapInfoWindows',
       if options.event?
         marker.addListener options.event, ->
           that.collection.$mouseOverInfoWindow.close()
-          that.collection.closeAllInfoWindows()
+          infoWindow.close() for infoWindow in that.collection.models
           @_enableMouseover = false
-          that.open(TheMap.getMap(), marker) if options.place._detailSynced
-          # after details are loaded, wait for images to load
-          that.on 'detailsLoaded', ->
-            setTimeout -> # wait until next cycle where images are all inserted
-              allLoaded = []
-              $(that._infoWindow.getContent()).find('img').each ->
-                loaded = $q.defer()
-                $(this).on 'load', ->
-                  loaded.resolve()
-                allLoaded.push(loaded)
-              $q.all(allLoaded).then ->
-                that.close()
-                that.open(TheMap.getMap(), marker)
-
-      @on 'destroy', =>
-        @close()
-        @scope.$destroy()
+          that.open(TheMap.getMap(), marker)
 
 
     close: ->
@@ -68,6 +48,11 @@ app.factory 'MapInfoWindows',
     open: (map, marker) ->
       marker._enableMouseover = false
       @_infoWindow.open.apply(@_infoWindow, arguments)
+
+    destroy: ->
+      @close()
+      @scope.$destroy()
+      @collection?.remove(@)
 
     getInfoWindow: ->
       return @_infoWindow
@@ -83,29 +68,24 @@ app.factory 'MapInfoWindows',
   # --- Collection ---
   MapInfoWindows = Backbone.Collection.extend {
 
-    # --- Properties ---
     $mouseOverInfoWindow: new google.maps.InfoWindow {disableAutoPan: true}
     model: InfoWindow
-    sync:  angular.noop
 
+    create: ->
+      @push.apply(@, arguments)
 
-    # --- Init ---
-    initialize: ->
-      @on 'add', (infoWindow, MapInfoWindows, options) =>
-        @bindMouseOverInfoWindow(options.place)
-
-      @on 'destroy', (infoWindow) =>
-        @remove(infoWindow)
-
-
-    # --- Actions ---
     setMapScope: (scope) ->
       @_scope = scope
 
     createInfoWindowForSearchResult: (place) ->
+      place.marker.getMarker()._enableMouseover = true
+      @bindMouseOverInfoWindow(place)
       return [ @createDetailInfoWindowForSearchResult(place) ]
 
+
     createInfoWindowForSavedPlaces: (place) ->
+      place.getMarker()._enableMouseover = true
+      @bindMouseOverInfoWindow(place)
       return [ @createDetailInfoWindowForSavedPlace(place),
                @createDirectionInfoWindowForSavedPlace(place) ]
 
@@ -113,12 +93,11 @@ app.factory 'MapInfoWindows',
     # --- mouseover InfoWindow ---
     bindMouseOverInfoWindow: (place) ->
       that   = this
-      marker = place.getMarker()
-      title  = place.get('name')
+      marker = place.marker.getMarker()
 
       marker.addListener 'mouseover', () ->
         if @_enableMouseover
-          that.$mouseOverInfoWindow.setContent(title)
+          that.$mouseOverInfoWindow.setContent(place.get('name'))
           that.$mouseOverInfoWindow.open(TheMap.getMap(), marker)
 
       marker.addListener 'mouseout', () =>
@@ -127,42 +106,41 @@ app.factory 'MapInfoWindows',
 
     # --- Search Results ---
     createDetailInfoWindowForSearchResult: (place) ->
-      return @add({maxWidth: 294}, {
+      newScope       = @_scope.$new()
+      newScope.place = place
+      return @create({maxWidth: 320}, {
         place:       place
-        scope:       @$createScopeForPlace(place)
-        templateUrl: '/scripts/ng-components/map/info-window-detailed.html'
+        scope:       newScope
+        templateUrl: '/scripts/ng-components/map/info-window-brief.html'
         event:       'rightclick'
       })
 
 
     # --- Saved Places ---
     createDetailInfoWindowForSavedPlace: (place) ->
-      return @add({maxWidth: 294}, {
+      newScope       = @_scope.$new()
+      newScope.place = place
+      return @create({maxWidth: 320}, {
         place:       place
-        scope:       @$createScopeForPlace(place)
+        scope:       newScope
         templateUrl: '/scripts/ng-components/map/info-window-detailed.html'
         event:       'click'
       })
 
 
     createDirectionInfoWindowForSavedPlace: (place) ->
-      return @add({maxWidth: 294}, {
+      newScope       = @_scope.$new()
+      newScope.place = place
+      return @create({maxWidth: 320}, {
         place:       place
-        scope:       @$createScopeForPlace(place)
+        scope:       newScope
         templateUrl: '/scripts/ng-components/map/info-window-directions.html'
       })
 
 
     # --- Universal ---
-    closeAllInfoWindows: ->
+    closeAllInfoWindow: ->
       infoWindow.close() for infoWindow in @models
-
-
-    # --- Helpers --
-    $createScopeForPlace: (place) ->
-      newScope       = @_scope.$new()
-      newScope.place = place
-      return newScope
   }
   # --- END MapInfoWindows ---
 

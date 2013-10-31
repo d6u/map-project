@@ -1,19 +1,16 @@
 app.factory 'MapMarkers', ['TheMap', (TheMap) ->
 
   # --- Model ---
-  SearchMarker = SavedPlaceMarker = Backbone.Model.extend {
-
-    sync: angular.noop
-
+  SearchMarker = Backbone.Model.extend {
     initialize: (attrs, options) ->
       @_marker = new google.maps.Marker(_.assign({map: TheMap.getMap()}, attrs))
-      @_marker._enableMouseover = true
 
-      @on 'destroy', => @setMap(null)
-
+    destroy: ->
+      @setMap(null)
+      @collection?.remove(@)
 
     setMap: (map) ->
-      @getMarker().setMap(map)
+      @_marker.setMap(map)
 
     getPosition: ->
       return @_marker.getPosition()
@@ -23,24 +20,36 @@ app.factory 'MapMarkers', ['TheMap', (TheMap) ->
   }
 
 
+  SavedPlaceMarker = Backbone.Model.extend {
+    initialize: (attrs, options) ->
+      @_marker = new google.maps.Marker(_.assign({map: TheMap.getMap()}, attrs))
+
+    getMarker: ->
+      return @_marker
+
+    getPosition: ->
+      return @getMarker().getPosition()
+
+    setMap: (map) ->
+      @getMarker().setMap(map)
+
+    destroy: ->
+      @setMap(null)
+      @collection?.remove(@)
+  }
+
+
   # --- Collection ---
   MapMarkers = Backbone.Collection.extend {
 
-    # --- Properties ---
     model: (attrs, options) ->
       if options.type == 'place_service'
         return new SearchMarker(attrs, options)
       else if options.type == 'saved_place'
         return new SavedPlaceMarker(attrs, options)
 
-    # --- Init ---
-    initialize: ->
-      @on 'destroy', (marker) =>
-        @remove(marker)
-
-    # --- Actions ---
     create: ->
-      return @add.apply(@, arguments)
+      return @push.apply(@, arguments)
 
     displayAllMarkers: ->
       if @length
