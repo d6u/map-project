@@ -42,18 +42,29 @@ app.factory 'TheMap',
         @trigger 'destroyed'
 
       # --- API ---
-      @setMapCenter = (latLng) ->
+      @setCenter = (latLng) ->
         @$googleMap.setCenter(latLng)
 
-      @setMapBounds = (bounds) ->
+      @setMapCenter = @setCenter
+
+      @fitBounds = (bounds, coordsCount) ->
         @$googleMap.fitBounds(bounds)
-      @fitBounds = @setMapBounds
+        if coordsCount
+          if coordsCount == 1
+            @setZoom(7) if @getZoom() > 7
+          else if 1 < coordsCount < 4
+            @setZoom(9) if @getZoom() > 9
+
+      @setMapBounds = @fitBounds
 
       @getMap = ->
         @$googleMap
 
       @getBounds = ->
         @getMap()?.getBounds()
+
+      @getZoom = ->
+        @getMap()?.getZoom()
 
       @setZoom = (zoomLevel) ->
         @getMap().setZoom(zoomLevel)

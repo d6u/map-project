@@ -46,11 +46,9 @@ app.controller 'MapCtrl',
 
     @addPlaceToList = (place) ->
       place.destroy()
-      place.set({
-        coord: place.get('geometry').location.toString()
-      })
+      place.set({ coord: place.get('geometry').location.toString() })
       delete place.attributes.id
-      MapPlaces.create(place.attributes)
+      MapPlaces.create(place.attributes, {detailSynced: place._detailSynced})
 
 
     @removePlaceFromList = (place) ->

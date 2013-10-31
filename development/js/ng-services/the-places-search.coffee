@@ -6,46 +6,50 @@ app.factory 'ThePlacesSearch',
 
 
   # --- Model ---
-  Result = Backbone.Model.extend {
-    initialize: (result, options) ->
-      @marker = MapMarkers.create({
+  Place = Backbone.Model.extend {
+
+    sync: angular.noop # disable sync when destroy
+
+    initialize: (place, options) ->
+      @on 'destroy', =>
+        infoWindow.destroy() for infoWindow in @infoWindows
+        @marker.destroy()
+        delete @marker
+        delete @infoWindows
+
+      @marker = MapMarkers.add({
         title:    @get('name')
         position: @get('geometry').location
-      }, {place: @, type: 'place_service'})
+      }, {
+        place: @,
+        type: 'place_service'
+      })
 
       @infoWindows = MapInfoWindows.createInfoWindowForSearchResult(@)
 
       # load place details into info window
       google.maps.event.addListenerOnce @getMarker(), 'rightclick', =>
-        scope = @infoWindows[0].scope
-        @getDetails().then =>
-          mpTemplateCache
-          .get('/scripts/ng-components/map/info-window-detailed.html')
-          .then (template) =>
-            @infoWindows[0].setContent($compile(template)(scope)[0])
+        if !@_detailSynced
+          @getDetails().then => @infoWindows[0].trigger 'detailsLoaded'
 
-
-    destroy: ->
-      infoWindow.destroy() for infoWindow in @infoWindows
-      @marker.destroy()
-      @collection?.remove(@)
 
     getMarker: ->
       return @marker.getMarker()
 
     centerInMap: ->
-      TheMap.setMapCenter( @getMarker().getPosition() )
+      TheMap.setCenter( @getMarker().getPosition() )
 
     getDetails: ->
       PlacesService.getDetails(@get('reference')).then (result) =>
         @set(result)
+        @_detailSynced = true
   }
 
 
   # --- Collection ---
   ThePlacesSearch = Backbone.Collection.extend {
 
-    model: Result
+    model: Place
 
     initialize: () ->
       TheMap.on 'initialized', =>
@@ -61,8 +65,8 @@ app.factory 'ThePlacesSearch',
       @on 'reset', (collection, options) ->
         place.destroy() for place in options.previousModels
 
-      @on 'remove', (place, collection, options) ->
-        place.destroy()
+      @on 'destroy', (place) =>
+        @remove(place)
 
 
     # --- other ---
@@ -85,14 +89,13 @@ app.factory 'ThePlacesSearch',
     fitResultsBounds: ->
       bounds = new google.maps.LatLngBounds
       bounds.extend place.get('geometry').location for place in @models
-      TheMap.setMapBounds(bounds)
+      TheMap.fitBounds(bounds, @length)
 
 
     queryFirstThreePlacesDetails: ->
       for i in [0..2]
         if @models[i]?
           @models[i].getDetails()
-
   }
   # --- END ThePlacesSearch ---
 

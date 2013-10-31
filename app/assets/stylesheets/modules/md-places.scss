@@ -1,19 +1,28 @@
 // --- Container ---
 .md-places {
-  list-style-type: none;
-  padding        : 0;
-  margin         : 0;
+  list-style: none;
+  padding: 0;
+  margin: 0;
 }
 
 
 // --- Level 1 ---
 .md-places-item {
   @extend .clearfix;
+  list-style: none;
   margin: 10px;
   background-color: #FFF;
   padding: 10px;
   box-shadow: 1px 1px 1px rgba(0, 0, 0, .3);
   color: $gray6;
+}
+
+.md-drawer-saved-place-sort-placeholder {
+  @extend .md-places-item;
+  background-color: transparent;
+  border: 5px dashed #FFF;
+  min-height: 100px;
+  box-shadow: none;
 }
 
 
@@ -71,12 +80,19 @@
   margin-top: 10px;
 }
 
+// google map info window
+.md-places-item-info-window-actions {
+  margin-top: 10px;
+}
+
 
 // --- More Levels ---
 .md-places-item-name {
-  font-size: 16px;
+  font-size: 16px !important; // override rules in google map info window
   line-height: 1;
-  a {
+
+  a.reorder {
+    float: left;
     display: inline-block;
     color: $gray4;
     height: 16px;
@@ -89,13 +105,23 @@
       color: $gray6;
     }
   }
+
+  a.name {
+    overflow: hidden;
+    display: block;
+    color: inherit;
+    &:hover {
+      text-decoration: none;
+      color: inherit;
+    }
+  }
 }
 
 .md-places-item-address {
-  font-weight: 300;
+  font-weight: 300 !important; // override `.md-info-window-content *` rules
   margin-top: 5px;
   margin-bottom: 0;
-  line-height: 1.2;
+  line-height: 1.2 !important; // override rules in google map info window
 }
 
 .md-places-item-price {
@@ -119,4 +145,15 @@
 .md-places-item-more-action-button {
   @extend .btn;
   @extend .btn-default;
+}
+
+// google map info window
+.md-places-item-info-window-action-button {
+  @extend .btn;
+  @extend .btn-success;
+  @extend .btn-sm;
+  font-size: 12px !important;
+  i { font-size: inherit !important; }
+
+  &.remove { @extend .btn-danger; }
 }

@@ -34,7 +34,7 @@
           a(href ng-click="MapCtrl.addPlaceToList(place)")
             i.fa.fa-plus
 
-        a.md-places-item-header(href ng-click="MapCtrl.centerSavedPlace(place)")
+        a.md-places-item-header(href ng-click="MapCtrl.centerSearchResult(place)")
           .md-places-item-name
             | {{ place.get('name') }}
           address.md-places-item-address(ng-bind-html="place | assembleAddress")
@@ -44,7 +44,6 @@
           span.md-places-item-rating(ng-bind-html="place.get('rating') | renderRating")
           span.md-places-item-tel
             | {{ place.get('formatted_phone_number') }}
-          br
           a.md-places-item-website(
             ng-href="{{ place.get('website') }}"
             target="_blank")
@@ -57,7 +56,7 @@
         a.md-places-item-more-info-button(
           ng-show="place.has('url')"
           ng-href="{{ place.get('url') }}"
-          target="_blank") More Info
+          target="_blank") More Info from Google
 
 
   / --- Places ---
@@ -72,11 +71,12 @@
             ng-click="MapCtrl.removePlaceFromList(place)")
             i.fa.fa-times
 
-        .md-places-item-header(ng-click="MapCtrl.centerSavedPlace(place)")
+        .md-places-item-header()
           .md-places-item-name
-            a(href)
+            a.reorder(href)
               i.fa.fa-reorder
-            | {{ place.get('name') }}
+            a.name(href ng-click="MapCtrl.centerSavedPlace(place)")
+              | {{ place.get('name') }}
           address.md-places-item-address(ng-bind-html="place | assembleAddress")
 
         .md-places-item-detail(ng-show="place.has('price_level') || place.has('rating') || place.has('formatted_phone_number') || place.has('website')")
@@ -97,5 +97,6 @@
         / More Action Buttons
         .md-places-item-more-actions
           a.md-places-item-more-action-button(href) Send
-          a.md-places-item-more-action-button(href) Center
+          a.md-places-item-more-action-button(href
+            ng-click="MapCtrl.centerSavedPlace(place)") Center
           a.md-places-item-more-action-button(href) Edit Notes

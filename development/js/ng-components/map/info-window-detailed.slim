@@ -1,28 +1,36 @@
 .md-info-window-content
-  .md-iw-name
-    | {{ place.get('name') }}
-  a.md-iw-website(href ng-href="{{ place.get('website') }}" target="_blank")
-    | {{ place.get('website') }}
-  .md-iw-address
-    | {{ place.get('vicinity') }}
-  ol.md-iw-types
-    li.md-iw-type(ng-repeat="type in place.get('types')")
-      ' {{type}}
-  .md-iw-review-summary
-    | {{ place.get('review_summary') }}
 
-  / --- Directions ---
-  .md-iw-directions(ng-show="place.has('direction_leg')")
-    .md-iw-d-distance
-      | {{ place.get('direction_leg').distance.text }} to next place
-    .md-iw-d-duration
-      | {{ place.get('direction_leg').duration.text }}
+  .md-places-item-header
+    .md-places-item-name
+      | {{ place.get('name') }}
+    address.md-places-item-address(ng-bind-html="place | assembleAddress")
 
-  .md-iw-directions(ng-hide="place.has('direction_leg')")
-    | This is the last stop.
+  .md-places-item-detail(ng-show="place.has('price_level') || place.has('rating') || place.has('formatted_phone_number') || place.has('website')")
+    span.md-places-item-price(ng-bind-html="place.get('price_level') | renderPriceLevel")
+    span.md-places-item-rating(ng-bind-html="place.get('rating') | renderRating")
+    span.md-places-item-tel
+      | {{ place.get('formatted_phone_number') }}
+    a.md-places-item-website(
+      ng-href="{{ place.get('website') }}"
+      target="_blank")
+      | {{ place.get('website') }}
 
-  / --- Actions ---
-  .md-infowindow-options(ng-hide="place.get('$$saved')")
-    a(href ng-click="MapCtrl.addPlaceToList(place)")
-      i.fa.fa-ok
-      | Add to list
+  .md-places-item-photos(
+    ng-show="place.has('photos')"
+    ng-bind-html="place | renderPhoto")
+
+  a.md-places-item-more-info-button(
+    ng-show="place.has('url')"
+    ng-href="{{ place.get('url') }}"
+    target="_blank") More Info from Google
+
+  / More Action Buttons
+  .md-places-item-info-window-actions
+    a.md-places-item-info-window-action-button(href
+      ng-hide="place.get('$$saved')"
+      ng-click="MapCtrl.addPlaceToList(place)")
+      i.fa.fa-plus
+    a.md-places-item-info-window-action-button.remove(href
+      ng-show="place.get('$$saved')"
+      ng-click="MapCtrl.removePlaceFromList(place)")
+      i.fa.fa-times
