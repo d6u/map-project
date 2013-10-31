@@ -35,7 +35,6 @@ app.factory 'MapPlaces',
       @on 'destroy', (model, collection, options) =>
         infoWindow.destroy() for infoWindow in @infoWindows
         @marker.destroy()
-        @collection?.remove(@)
 
 
     sync: (method, model, options) ->

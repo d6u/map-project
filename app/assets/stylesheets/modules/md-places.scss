@@ -81,7 +81,9 @@
 .md-places-item-name {
   font-size: 16px !important; // override rules in google map info window
   line-height: 1;
-  a {
+
+  a.reorder {
+    float: left;
     display: inline-block;
     color: $gray4;
     height: 16px;
@@ -92,6 +94,16 @@
     &:hover {
       text-decoration: none;
       color: $gray6;
+    }
+  }
+
+  a.name {
+    overflow: hidden;
+    display: block;
+    color: inherit;
+    &:hover {
+      text-decoration: none;
+      color: inherit;
     }
   }
 }
@@ -133,4 +145,6 @@
   @extend .btn-sm;
   font-size: 12px !important;
   i { font-size: inherit !important; }
+
+  &.remove { @extend .btn-danger; }
 }
