@@ -17,7 +17,7 @@ js:
       - _libraries/masonry-3.1.2.js
       - _libraries/perfect-scrollbar-0.4.3.with-mousewheel.min.js
       - _libraries/lodash-2.2.1.compat.min.js
-      - _libraries/backbone-1.0.min.js
+      - _libraries/backbone-1.1.0.min.js
       - _libraries/socket.io.min.js
       - _libraries/angular-1.2.0rc3.min.js
       # - _libraries/angular-loader-1.2.0rc3.min.js
