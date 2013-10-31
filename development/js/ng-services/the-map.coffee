@@ -47,6 +47,7 @@ app.factory 'TheMap',
 
       @setMapBounds = (bounds) ->
         @$googleMap.fitBounds(bounds)
+
       @fitBounds = @setMapBounds
 
       @getMap = ->
@@ -54,6 +55,9 @@ app.factory 'TheMap',
 
       @getBounds = ->
         @getMap()?.getBounds()
+
+      @getZoom = ->
+        @getMap()?.getZoom()
 
       @setZoom = (zoomLevel) ->
         @getMap().setZoom(zoomLevel)
