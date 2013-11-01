@@ -63,6 +63,9 @@
   / --- Places ---
   .md-drawer-b-section.saved-places(ng-switch-when="places")
 
+    header.md-drawer-b-s-header(ng-hide="MapCtrl.savedPlaces.length")
+      | Start a search to save places
+
     ul.md-places(md-places-list-sortable)
       / place item
       li.md-places-item(ng-repeat="place in MapCtrl.savedPlaces")
