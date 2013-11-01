@@ -1,9 +1,9 @@
 app.controller 'MapCtrl',
 ['$scope','$routeSegment','TheMap','ThePlacesSearch','MapMarkers',
-'MapPlaces','MapInfoWindows','MapDirections', class MapCtrl
+'MapPlaces','MapInfoWindows','MapDirections','MpUI', class MapCtrl
 
   constructor: ($scope, $routeSegment, TheMap, ThePlacesSearch, MapMarkers,
-  MapPlaces, MapInfoWindows, MapDirections) ->
+  MapPlaces, MapInfoWindows, MapDirections, MpUI) ->
 
     # --- Callbacks ---
     # helper
@@ -73,4 +73,13 @@ app.controller 'MapCtrl',
 
     @toggleDirectionsAutoRender = ->
       MapDirections.toggleAutoRender()
+
+
+    # UI control
+    @toggleSavedPlacesList = ->
+      if MpUI.mapDrawerActiveSection == 'places' && MpUI.showMapDrawer
+        MpUI.showMapDrawer = false
+      else
+        MpUI.mapDrawerActiveSection = 'places'
+        MpUI.showMapDrawer = true
 ]
