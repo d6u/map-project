@@ -4,9 +4,9 @@ app.directive 'mdBottomBar', [->
   replace:     true
 
   controllerAs: 'MdBottomBarCtrl'
-  controller: ['$scope','$routeSegment','MapPlaces', class MdBottomBarCtrl
+  controller: ['$scope','$routeSegment','MapPlaces','MpUI', class MdBottomBarCtrl
 
-    constructor: ($scope, $routeSegment, MapPlaces) ->
+    constructor: ($scope, $routeSegment, MapPlaces, MpUI) ->
 
       # change bottom bar inner when user navigate
       $scope.$watch (->
@@ -31,6 +31,15 @@ app.directive 'mdBottomBar', [->
         return MapPlaces.project?.get('title')
       ), (newVal) =>
         @projectTitle = newVal if newVal?
+
+
+      # --- Actions ---
+      @toggleSearchResultsList = ->
+        if MpUI.mapDrawerActiveSection == 'searchResults' && MpUI.showMapDrawer
+          MpUI.showMapDrawer = false
+        else
+          MpUI.mapDrawerActiveSection = 'searchResults'
+          MpUI.showMapDrawer = true
   ]
 
   link: (scope, element, attrs, MdBottomBarCtrl) ->

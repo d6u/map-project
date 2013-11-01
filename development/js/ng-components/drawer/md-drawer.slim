@@ -19,9 +19,10 @@
 
 
 / --- Body ---
-.md-drawer-body
+.md-drawer-body(ng-switch="MpUI.mapDrawerActiveSection")
+
   / --- Search Results ---
-  .md-drawer-b-section(ng-show="MpUI.mapDrawerActiveSection == 'searchResults'")
+  .md-drawer-b-section.search-results(ng-switch-when="searchResults")
 
     header.md-drawer-b-s-header(ng-hide="MapCtrl.ThePlacesSearch.length")
       | Start a search in the search box on bottom bar.
@@ -60,7 +61,10 @@
 
 
   / --- Places ---
-  .md-drawer-b-section(ng-show="MpUI.mapDrawerActiveSection == 'places'")
+  .md-drawer-b-section.saved-places(ng-switch-when="places")
+
+    header.md-drawer-b-s-header(ng-hide="MapCtrl.savedPlaces.length")
+      | Start a search to save places
 
     ul.md-places(md-places-list-sortable)
       / place item

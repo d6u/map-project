@@ -15,7 +15,7 @@ app.factory 'MapDirections',
     }
 
     constructor: () ->
-      @$autoRender = true
+      @$autoRender = false
 
       @$directionService   = new google.maps.DirectionsService
       @$directionsRenderer = new google.maps.DirectionsRenderer({

@@ -15,10 +15,10 @@
 
   / show drawer
   a.md-bb-button(href
-    ng-click="MpUI.showMapDrawer = !MpUI.showMapDrawer; MpUI.mapDrawerActiveSection = 'searchResults'"
+    ng-click="MdBottomBarCtrl.toggleSearchResultsList()"
     bs-tooltip="Show List of Search Results"
     bs-tooltip-placement="top")
-    i.fa.fa-caret-up
+    i.fa.fa-ellipsis-vertical
 
 
 / Right
