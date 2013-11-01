@@ -21,15 +21,16 @@
       bs-tooltip="Display All Markers"
       ng-click="MapCtrl.displayAllMarkers()")
       i.fa.fa-globe
+
     / Toggle Render Direction
-    a.md-m-c-button(href
+    a.md-m-c-button.hide(href
       bs-tooltip-placement="right"
       bs-tooltip="Toggle Calculate Directions"
       ng-click="MapCtrl.toggleDirectionsAutoRender()"
       ng-class="{active: MapCtrl.MapDirections.$autoRender}")
       img(src="/img/get-directions-icon.png")
     / Show Direction
-    a.md-m-c-button#user-guide-directions(href bs-tooltip-placement="right"
+    a.md-m-c-button.hide#user-guide-directions(href bs-tooltip-placement="right"
       bs-tooltip="Show Direction Informations"
       ng-click="MapCtrl.openAllDirectionsInfoWindows()")
       img(src="/img/show-directions-info-windows-icon.png")
