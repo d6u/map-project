@@ -25,7 +25,6 @@
   top             : 5px;
   left            : 5px;
   width           : 40px;
-  background-color: $gray6;
 }
 
 
@@ -38,6 +37,7 @@
   font-size  : 16px;
   text-align : center;
   color      : #FFF;
+  background-color: $gray6;
 
   @include transition();
 
@@ -52,7 +52,11 @@
   }
 
   &.active {
-    color: $green;
+    background-color: $blueDark;
+  }
+
+  &.separator {
+    margin-top: 20px;
   }
 }
 
