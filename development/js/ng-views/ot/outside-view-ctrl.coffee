@@ -9,8 +9,22 @@ class OutsideViewCtrl
       # if has unsaved places
       if MapPlaces.length
         MpUser.fbLogin ->
-          MpProjects.createProject(TheProject.project).then (project) ->
-            $q.all(TheProject.savePlacesOfProject(TheProject.places, project)).then ->
+          MpProjects.createProject(MapPlaces.project).then (project) ->
+
+            allPlacesSaved = []
+            unsavedPlaces = MapPlaces.map((place) -> place.attributes)
+
+            MapPlaces.reset(null, {silent: true})
+            MapPlaces.url = "/api/projects/#{project.id}/places"
+
+            for place in unsavedPlaces
+              do (place) ->
+                saved = $q.defer()
+                MapPlaces.create(place, {success: -> saved.resolve()})
+                allPlacesSaved.push(saved)
+
+            $q.all(allPlacesSaved).then ->
+              MapPlaces.reset(null, {silent: true})
               $location.path "/project/#{project.id}"
               MpUI.showSideMenu = false
       else
