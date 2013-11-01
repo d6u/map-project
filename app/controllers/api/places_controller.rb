@@ -63,7 +63,7 @@ class Api::PlacesController < Api::ApiBaseController
   end
 
   def load_place
-    @place = @project.find_by_id(params[:id])
+    @place = @project.places.find_by_id(params[:id])
     head 406 if @place.nil?
   end
 
