@@ -1,6 +1,6 @@
 app.factory 'ChatHistories',
-['socket','MpUser','ParticipatingUsers','Backbone',
-( socket,  MpUser,  ParticipatingUsers,  Backbone) ->
+['socket','MpUser','ParticipatingUsers','Backbone','MapPlaces',
+( socket,  MpUser,  ParticipatingUsers,  Backbone,  MapPlaces) ->
 
 
   # --- Model ---
@@ -19,6 +19,17 @@ app.factory 'ChatHistories',
           else
             ParticipatingUsers.once 'sync', =>
               @$sender = ParticipatingUsers.get(attrs.user_id)
+
+
+      switch attrs.item_type
+        when 1
+          place = MapPlaces.get(attrs.content.pl_id)
+          if place?
+            @$place = place
+          else
+            MapPlaces.once 'sync', =>
+              @$place = MapPlaces.get(attrs.content.pl_id)
+
 
       @on 'sync', (model, resp, options) ->
         delete model.$sending
