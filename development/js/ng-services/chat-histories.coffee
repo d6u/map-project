@@ -10,7 +10,15 @@ app.factory 'ChatHistories',
         @$selfSender = true
         @$sender = MpUser.getUser()
       else
-        @$sender = options.sender || ParticipatingUsers.get(attrs.user_id)
+        if options.sender?
+          @$sender = options.sender
+        else
+          sender = ParticipatingUsers.get(attrs.user_id)
+          if sender?
+            @$sender = sender
+          else
+            ParticipatingUsers.once 'sync', =>
+              @$sender = ParticipatingUsers.get(attrs.user_id)
 
       @on 'sync', (model, resp, options) ->
         delete model.$sending
