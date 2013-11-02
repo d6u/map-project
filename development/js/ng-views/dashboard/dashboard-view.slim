@@ -29,5 +29,5 @@
         | {{ project.get('notes') }}
       ul.md-project-participants.clearfix(ng-show="project.get('participating_users').length")
         li.md-project-participants-item(ng-repeat="user in project.get('participating_users')")
-          img.md-project-participants-item(ng-src="{{user.profile_picture")
+          img.md-project-participants-item(ng-src="{{user.profile_picture}}")
       .md-project-lastmessage
