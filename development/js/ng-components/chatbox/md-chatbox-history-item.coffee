@@ -5,8 +5,10 @@ app.directive 'mdChatboxHistoryItem',
 ['$compile','mpTemplateCache', ($compile, mpTemplateCache) ->
 
   chooseTemplate = (item_type) ->
-    switch item_type
-      when 0 then type = 'message'
+    type = switch item_type
+      when 0 then 'message'
+      when 1 then 'place-added'
+      when 2 then 'place-removed'
     return "/scripts/ng-components/chatbox/item-templates/mp-chat-history-#{type}.html"
 
 

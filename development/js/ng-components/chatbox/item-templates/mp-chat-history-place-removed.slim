@@ -1,0 +1,15 @@
+/ Container
+/   li.md-chatbox-bh-item(ng-repeat="item in MdChatboxCtrl.chatHistories" md-chatbox-history-item)
+
+
+.md-chatbox-bhi-user-profile
+  img(ng-src="{{ item.$sender.get('profile_picture') }}")
+
+
+.md-chatbox-bhi-content
+
+  .md-chatbox-bhi-content-place-removed
+    | A place has been removed
+
+  time.md-chatbox-bhi-c-timestamp
+    | {{ item.get('created_at') | date:'shortTime' }}

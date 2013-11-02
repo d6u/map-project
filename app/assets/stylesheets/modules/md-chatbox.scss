@@ -144,6 +144,27 @@
   color: $gray4;
 }
 
+// chat histories place added
+.md-chatbox-bhi-content-place-added {
+  @extend .clearfix;
+  background-color: $gray2;
+  padding: 5px;
+}
+
+.md-chatbox-bhi-content-place-added-image {
+  float: left;
+  margin-right: 5px;
+  img { max-width: 20px; }
+}
+
+.md-chatbox-bhi-content-place-added-details {
+  overflow: hidden;
+}
+
+// chat histories place removed
+.md-chatbox-bhi-content-place-removed {
+  @extend .md-chatbox-bhi-content-place-added;
+}
 
 
 // inputs

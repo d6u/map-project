@@ -27,7 +27,8 @@
 
     / chat-history
     ol.md-chatbox-b-histories-container
-      li.md-chatbox-bh-item(ng-repeat="item in MdChatboxCtrl.chatHistories"
+      li.md-chatbox-bh-item(
+        ng-repeat="item in MdChatboxCtrl.chatHistories"
         md-chatbox-history-item
         ng-class="{'md-chatbox-bh-item-self-sender': item.$selfSender}")
 
