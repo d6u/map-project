@@ -31,7 +31,6 @@ class ChatHistory < ActiveRecord::Base
       project_id: project_id,
       item_type:  2,
       content: {
-        pl_id: place_id,
         pl_rf: place_reference
       }
     })
