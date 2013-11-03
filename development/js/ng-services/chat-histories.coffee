@@ -26,6 +26,11 @@ app.factory 'ChatHistories',
           place = MapPlaces.get(attrs.content.pl_id)
           if place?
             @$place = place
+          else if MapPlaces.length
+            MapPlaces.fetch({
+              success: =>
+                @$place = MapPlaces.get(attrs.content.pl_id)
+            })
           else
             MapPlaces.once 'sync', =>
               @$place = MapPlaces.get(attrs.content.pl_id)
