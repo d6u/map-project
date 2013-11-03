@@ -1,0 +1,22 @@
+/ Container
+/   li.md-chatbox-bh-item(ng-repeat="item in MdChatboxCtrl.chatHistories" md-chatbox-history-item)
+
+
+.md-chatbox-bhi-user-profile
+  img(ng-src="{{ item.$sender.get('profile_picture') }}")
+
+
+.md-chatbox-bhi-content
+
+  .md-chatbox-bhi-content-place-added
+    .md-chatbox-bhi-content-place-added-image
+      a(href ng-click="MdChatboxCtrl.showPlaceOnMap(chatItem.place)")
+        img(ng-src="/img/blue-marker-3d.png")
+    .md-chatbox-bhi-content-place-added-details
+      .md-places-item-name
+        | {{ item.$place.get('name') }}
+      address.md-places-item-address
+        | {{ item.$place.get('address') }}
+
+  time.md-chatbox-bhi-c-timestamp
+    | {{ item.get('created_at') | date:'shortTime' }}

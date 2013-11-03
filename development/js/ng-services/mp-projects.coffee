@@ -55,6 +55,21 @@ app.service 'MpProjects',
         })
 
       return found.promise
+
+
+    # return a promise of project model
+    #
+    createProject: (attrs={}) ->
+      created = $q.defer()
+
+      @create(attrs, {
+        success: (project, responseData, options) ->
+          created.resolve(project)
+        error: ->
+          created.reject()
+      })
+
+      return created.promise
   }
   # END MpProjects
 

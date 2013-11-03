@@ -9,7 +9,11 @@ class Api::ApiBaseController < ApplicationController
     $redis.publish 'notice_channel', notice.to_json
   end
 
-  protected :send_push_notice
+  def push_chat_hisotry_to_clients(chat_history)
+    $redis.publish 'chat_channel', chat_history.to_json
+  end
+
+  protected :send_push_notice, :push_chat_hisotry_to_clients
 
 
   # --- Private ---

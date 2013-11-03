@@ -62,12 +62,6 @@ class Api::ChatHistoriesController < Api::ApiBaseController
     @project = Project.find params[:project_id]
   end
 
-
-  def push_chat_hisotry_to_clients(chat_history)
-    $redis.publish 'chat_channel', chat_history.to_json
-  end
-
-
-  private :find_project, :push_chat_hisotry_to_clients
+  private :find_project
 
 end

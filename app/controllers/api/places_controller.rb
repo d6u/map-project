@@ -26,15 +26,8 @@ class Api::PlacesController < Api::ApiBaseController
     render :json => @place
 
     # send placeAdded event to Node server
-    (@project.participating_users + [@project.owner]).each do |user|
-      place_added = {
-        type:        'placeAdded',
-        sender:      @user.public_info,
-        receiver_id: @user.id,
-        place:       @place
-      }
-      $redis.publish 'notice_channel', MultiJson.dump(place_added)
-    end
+    chat_history = ChatHistory.create_place_added(@user.id, @project.id, @place.id, @place.reference)
+    push_chat_hisotry_to_clients(chat_history)
   end
 
 
@@ -53,6 +46,10 @@ class Api::PlacesController < Api::ApiBaseController
   def destroy
     @place.destroy
     render json: @place
+
+    # send placeAdded event to Node server
+    chat_history = ChatHistory.create_place_removed(@user.id, @project.id, @place.reference)
+    push_chat_hisotry_to_clients(chat_history)
   end
 
 
@@ -63,7 +60,7 @@ class Api::PlacesController < Api::ApiBaseController
   end
 
   def load_place
-    @place = @project.find_by_id(params[:id])
+    @place = @project.places.find_by_id(params[:id])
     head 406 if @place.nil?
   end
 
