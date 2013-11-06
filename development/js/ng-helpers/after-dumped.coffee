@@ -1,5 +1,7 @@
 app.factory '$afterDumped', [->
   return (callback) ->
-    @on('service:reset', callback)
-    callback() if !@$serviceLoaded
+    if !@$serviceLoaded
+      callback()
+    else
+      @once('service:reset', callback)
 ]
