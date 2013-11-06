@@ -22,18 +22,7 @@ app.factory 'ChatHistories',
 
 
       switch attrs.item_type
-        when 1
-          place = MapPlaces.get(attrs.content.pl_id)
-          if place?
-            @$place = place
-          else if MapPlaces.length
-            MapPlaces.fetch({
-              success: =>
-                @$place = MapPlaces.get(attrs.content.pl_id)
-            })
-          else
-            MapPlaces.once 'sync', =>
-              @$place = MapPlaces.get(attrs.content.pl_id)
+        when 1 then @$place = MapPlaces.get(attrs.content.pl_id)
 
 
       @on 'sync', (model, resp, options) ->
@@ -57,10 +46,15 @@ app.factory 'ChatHistories',
 
     initProject: (id, scope) ->
       @url = "/api/projects/#{id}/chat_histories"
-      @fetch({reset: true})
+      MapPlaces.afterLoaded(=> @fetch({reset: true}))
+      @destroyListenerDeregister = scope.$on('$destroy', => @resetService())
 
-      scope.$on '$destroy', =>
-        @reset()
+
+    resetService: ->
+      @destroyListenerDeregister()
+      delete @destroyListenerDeregister
+      delete @url
+      @reset()
   }
   # END ChatHistories
 

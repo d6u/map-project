@@ -4,8 +4,8 @@ MpProjects handles project CRUD (create/read/update/delete)
 
 
 app.service 'MpProjects',
-['Restangular','$q','Backbone','$http',
-( Restangular,  $q,  Backbone,  $http) ->
+['Restangular','$q','Backbone','$http','$afterLoaded','$afterDumped',
+( Restangular,  $q,  Backbone,  $http,  $afterLoaded,  $afterDumped) ->
 
 
   # --- Model ---
@@ -19,28 +19,41 @@ app.service 'MpProjects',
   # --- Collection ---
   MpProjects = Backbone.Collection.extend {
 
-    model: Project
-    comparator: 'updated_at'
-    url: '/api/projects'
+    # --- Properties ---
+    afterLoaded:    $afterLoaded
+    afterDumped:    $afterDumped
+    $serviceLoaded: false
 
+    model:       Project
+    comparator: 'updated_at'
+    url:        '/api/projects'
+
+
+    # --- Init ---
     initialize: () ->
+      @on('service:ready', => @$serviceLoaded = true)
+      @on('service:reset', => @$serviceLoaded = false)
       @on 'destroy', (model) =>
         @remove(model)
 
 
     initService: (scope) ->
-      @$scope = scope
-      @fetch({reset: true})
-      @initializing = true
-
-      @once 'sync', =>
-        delete @initializing
-
-      deregister = scope.$on '$destroy', =>
-        @reset()
-        deregister()
+      @fetch({
+        reset: true
+        success: =>
+          @trigger('service:ready')
+      })
+      @destroyListenerDeregister = scope.$on('$destroy', => @resetService())
 
 
+    resetService: ->
+      @destroyListenerDeregister()
+      delete @destroyListenerDeregister
+      @reset()
+      @trigger('service:reset')
+
+
+    # --- Custom Methods ---
     findProjectById: (id) ->
       found   = $q.defer()
       project = @get(id)
