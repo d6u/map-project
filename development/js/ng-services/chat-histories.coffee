@@ -1,6 +1,6 @@
 app.factory 'ChatHistories',
-['socket','MpUser','ParticipatingUsers','Backbone','MapPlaces',
-( socket,  MpUser,  ParticipatingUsers,  Backbone,  MapPlaces) ->
+['socket','MpUser','ParticipatingUsers','Backbone','MapPlaces','$q',
+( socket,  MpUser,  ParticipatingUsers,  Backbone,  MapPlaces,  $q) ->
 
 
   # --- Model ---
@@ -10,31 +10,10 @@ app.factory 'ChatHistories',
         @$selfSender = true
         @$sender = MpUser.getUser()
       else
-        if options.sender?
-          @$sender = options.sender
-        else
-          sender = ParticipatingUsers.get(attrs.user_id)
-          if sender?
-            @$sender = sender
-          else
-            ParticipatingUsers.once 'sync', =>
-              @$sender = ParticipatingUsers.get(attrs.user_id)
-
+        @$sender = options.sender || ParticipatingUsers.get(attrs.user_id)
 
       switch attrs.item_type
-        when 1
-          place = MapPlaces.get(attrs.content.pl_id)
-          if place?
-            @$place = place
-          else if MapPlaces.length
-            MapPlaces.fetch({
-              success: =>
-                @$place = MapPlaces.get(attrs.content.pl_id)
-            })
-          else
-            MapPlaces.once 'sync', =>
-              @$place = MapPlaces.get(attrs.content.pl_id)
-
+        when 1 then @$place = MapPlaces.get(attrs.content.pl_id)
 
       @on 'sync', (model, resp, options) ->
         delete model.$sending
@@ -57,10 +36,22 @@ app.factory 'ChatHistories',
 
     initProject: (id, scope) ->
       @url = "/api/projects/#{id}/chat_histories"
-      @fetch({reset: true})
 
-      scope.$on '$destroy', =>
-        @reset()
+      placesLoaded  = $q.defer()
+      friendsLoaded = $q.defer()
+      MapPlaces.afterLoaded(=> placesLoaded.resolve())
+      ParticipatingUsers.afterLoaded(=> friendsLoaded.resolve())
+      $q.all([placesLoaded.promise, friendsLoaded.promise])
+        .then(=> @fetch({reset: true}))
+
+      @destroyListenerDeregister = scope.$on('$destroy', => @resetService())
+
+
+    resetService: ->
+      @destroyListenerDeregister()
+      delete @destroyListenerDeregister
+      delete @url
+      @reset()
   }
   # END ChatHistories
 

@@ -1,6 +1,6 @@
 app.service 'MpFriends',
-['Restangular','socket','$q','Backbone',
-( Restangular,  socket,  $q,  Backbone) ->
+['Restangular','socket','$q','Backbone','$afterLoaded','$afterDumped',
+( Restangular,  socket,  $q,  Backbone,  $afterLoaded,  $afterDumped) ->
 
   # --- Model ---
   Friend = Backbone.Model.extend {
@@ -12,20 +12,30 @@ app.service 'MpFriends',
   # --- Collection --
   MpFriends = Backbone.Collection.extend {
 
-    model: Friend
-    url: "/api/friendships"
-    comparator: (a, b) ->
-      return b.get('status') - a.get('status')
-
+    # --- Properties ---
+    afterLoaded:    $afterLoaded
+    afterDumped:    $afterDumped
+    $serviceLoaded: false
 
     onlineIds: []
 
+    model: Friend
+    url:  '/api/friendships'
+    comparator: (a, b) -> b.get('status') - a.get('status')
 
+
+    # --- Init ---
     initialize: ->
+      @on('service:ready', => @$serviceLoaded = true)
+      @on('service:reset', => @$serviceLoaded = false)
 
 
     initService: (scope) ->
-      @fetch({reset: true})
+      @fetch({
+        reset: true
+        success: =>
+          @trigger('service:ready')
+      })
 
       socket.on 'friendsOnlineIds', (ids) =>
         @onlineIds = ids
@@ -41,19 +51,23 @@ app.service 'MpFriends',
         @onlineIds = _.without(@onlineIds, id)
         @updateFriendsOnlineStatus()
 
-
-      @on 'all', @updateFriendsOnlineStatus, @
-
-      # --- clean up ---
-      deregister = scope.$on '$destroy', =>
-        deregister()
-        @off 'all', @updateFriendsOnlineStatus, @
-        socket.removeAllListeners('friendGoOffline')
-        socket.removeAllListeners('friendGoOnline')
-        socket.removeAllListeners('friendsOnlineIds')
-        @reset()
+      @on('all', @updateFriendsOnlineStatus, @)
+      @destroyListenerDeregister = scope.$on('$destroy', => @resetService())
 
 
+    resetService: ->
+      @destroyListenerDeregister()
+      delete @destroyListenerDeregister
+      socket.removeAllListeners('friendGoOffline')
+      socket.removeAllListeners('friendGoOnline')
+      socket.removeAllListeners('friendsOnlineIds')
+      @off('all', @updateFriendsOnlineStatus, @)
+      @onlineIds = []
+      @reset()
+      @trigger('service:reset')
+
+
+    # --- Custom Methods ---
     updateFriendsOnlineStatus: ->
       @forEach (friend) =>
         if _.indexOf(@onlineIds, friend.id) > -1

@@ -1,5 +1,5 @@
 app.factory 'MapPlaces',
-['MapMarkers','MapInfoWindows','MpProjects','TheMap','MpUser','$rootScope','PlacesService', (MapMarkers, MapInfoWindows, MpProjects, TheMap, MpUser, $rootScope, PlacesService) ->
+['MapMarkers','MapInfoWindows','MpProjects','TheMap','MpUser','$rootScope','PlacesService','$afterLoaded','$afterDumped', (MapMarkers, MapInfoWindows, MpProjects, TheMap, MpUser, $rootScope, PlacesService, $afterLoaded, $afterDumped) ->
 
 
   # --- Model ---
@@ -65,12 +65,19 @@ app.factory 'MapPlaces',
   MapPlaces = Backbone.Collection.extend {
 
     # --- Properties ---
+    afterLoaded:    $afterLoaded
+    afterDumped:    $afterDumped
+    $serviceLoaded: false
+
     model:      Place
     comparator: 'order'
 
 
     # --- Init ---
     initialize: ->
+      @on('service:ready', => @$serviceLoaded = true)
+      @on('service:reset', => @$serviceLoaded = false)
+
       TheMap.on 'initialized', =>
         @$placesService = new google.maps.places.PlacesService(TheMap.getMap())
 
@@ -80,26 +87,36 @@ app.factory 'MapPlaces',
       TheMap.on 'destroyed', =>
         delete @$placesService
 
-      @on 'reset', (collection, options) ->
-        place.destroy() for place in options.previousModels
-
       @on 'remove', (place, collection, options) ->
         place.destroy()
 
 
-    # --- Actions ---
     initProject: (id, scope) ->
-      if id?
-        if MpProjects.initializing
-          MpProjects.once 'sync', =>
-            @$$loadProject(id)
-        else
-          @$$loadProject(id)
-
-      scope.$on '$destroy', =>
-        @reset()
+      MpProjects.afterLoaded(=> @$$loadProject(id)) if id?
+      @destroyListenerDeregister = scope.$on('$destroy', => @resetService())
 
 
+    $$loadProject: (id) ->
+      MpProjects.findProjectById(id).then (project) =>
+        @project = project
+        @url     = "/api/projects/#{@project.id}/places"
+        @fetch({
+          reset: true
+          success: =>
+            @trigger('service:ready')
+        })
+
+
+    resetService: ->
+      @destroyListenerDeregister()
+      delete @destroyListenerDeregister
+      delete @project
+      delete @url
+      @reset()
+      @trigger('service:reset')
+
+
+    # --- Custom Methods ---
     sync: (method, collection, options) ->
       if MpUser.getUser()?
         Backbone.sync.apply(@, arguments)
@@ -116,14 +133,6 @@ app.factory 'MapPlaces',
         bounds = new google.maps.LatLngBounds
         bounds.extend(place.getPosition()) for place in @models
         TheMap.fitBounds(bounds)
-
-
-    # --- Helpers ---
-    $$loadProject: (id) ->
-      MpProjects.findProjectById(id).then (project) =>
-        @project = project
-        @url     = "/api/projects/#{@project.id}/places"
-        @fetch({reset: true})
   }
 
 
