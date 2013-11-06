@@ -38,6 +38,7 @@ js:
       - ng-modules/md-section-jumper.coffee
       - ng-modules/ng-backbone.coffee
       - ng-app
+      - ng-resolver
       - ng-services
       - ng-views
       - ng-components/bottom-bar
