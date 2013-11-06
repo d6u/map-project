@@ -37,9 +37,9 @@ js:
       - ng-modules/md-collapse.coffee
       - ng-modules/md-section-jumper.coffee
       - ng-modules/ng-backbone.coffee
-      - ng-helpers
       - ng-app
-      - ng-resolver
+      - ng-helpers
+      - ng-resolvers
       - ng-services
       - ng-views
       - ng-components/bottom-bar
