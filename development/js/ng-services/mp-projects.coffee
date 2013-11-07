@@ -4,8 +4,8 @@ MpProjects handles project CRUD (create/read/update/delete)
 
 
 app.service 'MpProjects',
-['Restangular','$q','Backbone','$http','$afterLoaded','$afterDumped',
-( Restangular,  $q,  Backbone,  $http,  $afterLoaded,  $afterDumped) ->
+['$q','Backbone','$http',
+( $q,  Backbone,  $http) ->
 
 
   # --- Model ---
@@ -20,10 +20,6 @@ app.service 'MpProjects',
   MpProjects = Backbone.Collection.extend {
 
     # --- Properties ---
-    afterLoaded:    $afterLoaded
-    afterDumped:    $afterDumped
-    $serviceLoaded: false
-
     model:       Project
     comparator: 'updated_at'
     url:        '/api/projects'
@@ -31,8 +27,6 @@ app.service 'MpProjects',
 
     # --- Init ---
     initialize: () ->
-      @on('service:ready', => @$serviceLoaded = true)
-      @on('service:reset', => @$serviceLoaded = false)
       @on 'destroy', (model) =>
         @remove(model)
 
@@ -41,7 +35,7 @@ app.service 'MpProjects',
       @fetch({
         reset: true
         success: =>
-          @trigger('service:ready')
+          @enter('service:ready')
       })
       @destroyListenerDeregister = scope.$on('$destroy', => @resetService())
 
@@ -50,7 +44,7 @@ app.service 'MpProjects',
       @destroyListenerDeregister()
       delete @destroyListenerDeregister
       @reset()
-      @trigger('service:reset')
+      @leave('service:ready')
 
 
     # --- Custom Methods ---

@@ -1,6 +1,6 @@
 app.factory 'ParticipatingUsers',
-['$http','$afterLoaded','$afterDumped',
-( $http,  $afterLoaded,  $afterDumped) ->
+['$http','Backbone',
+( $http,  Backbone) ->
 
   # --- Model ---
   User = Backbone.Model.extend()
@@ -10,17 +10,11 @@ app.factory 'ParticipatingUsers',
   ParticipatingUsers = Backbone.Collection.extend {
 
     # --- Properties ---
-    afterLoaded:    $afterLoaded
-    afterDumped:    $afterDumped
-    $serviceLoaded: false
-
     model: User
 
 
     # --- Init ---
     initialize: ->
-      @on('service:ready', => @$serviceLoaded = true)
-      @on('service:reset', => @$serviceLoaded = false)
       @on 'remove', (user) =>
         $http.delete("/api/projects/#{@project_id}/remove_users", {params: {user_ids: user.id}})
 
@@ -31,7 +25,7 @@ app.factory 'ParticipatingUsers',
       @fetch({
         reset: true
         success: =>
-          @trigger('service:ready')
+          @enter('service:ready')
       })
       @destroyListenerDeregister = scope.$on('$destroy', => @resetService())
 
@@ -42,7 +36,7 @@ app.factory 'ParticipatingUsers',
       @reset()
       delete @url
       delete @project_id
-      @trigger('service:reset')
+      @leave('service:ready')
   }
   # END ParticipatingUsers
 
