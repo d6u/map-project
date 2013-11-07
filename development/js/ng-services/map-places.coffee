@@ -1,5 +1,5 @@
 app.factory 'MapPlaces',
-['MapMarkers','MapInfoWindows','MpProjects','TheMap','MpUser','PlacesService','Backbone', '$q', (MapMarkers, MapInfoWindows, MpProjects, TheMap, MpUser, PlacesService, Backbone, $q) ->
+['MapMarkers','MapInfoWindows','MpProjects','TheMap','MpUser','PlacesService','Backbone', '$q', 'PushDispatcher', (MapMarkers, MapInfoWindows, MpProjects, TheMap, MpUser, PlacesService, Backbone, $q, PushDispatcher) ->
 
 
   # --- Model ---
@@ -82,6 +82,9 @@ app.factory 'MapPlaces',
 
       @on 'remove', (place, collection, options) ->
         place.destroy()
+
+      PushDispatcher.on('placeAdded'  , => @fetch())
+      PushDispatcher.on('placeRemoved', => @fetch())
 
 
     initProject: (id, scope) ->
