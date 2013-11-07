@@ -6,49 +6,93 @@ angular.module('ngBackbone', [])
 # --- States Management ---
 .factory('ServiceStates', [->
   return {
-    while: (state, callback) ->
-      @states = {} if !@states?
-      if !@states[state]?
-        @states[state] = false
-      else if @states[state] == true
-        callback()
+    _checkState: (name, value) ->
+      @states       ?= {}
+      @states[name] ?= false
+      return if @states[name] == value then true else false
 
-      @_states = {}        if !@_states?
-      @_states[state] = [] if !@_states[state]?
-      @_states[state].push(callback)
+
+    _addStateCallback: (state, callback, whileNot) ->
+      if whileNot
+        @_notStates        ?= {}
+        @_notStates[state] ?= []
+        @_notStates[state].push(callback)
+      else
+        @_states        ?= {}
+        @_states[state] ?= []
+        @_states[state].push(callback)
+      return
+
+
+    _addOnceStateCallback: (state, callback, whileNot) ->
+      if whileNot
+        @_notOnceStates        ?= {}
+        @_notOnceStates[state] ?= []
+        @_notOnceStates[state].push(callback)
+      else
+        @_onceStates        ?= {}
+        @_onceStates[state] ?= []
+        @_onceStates[state].push(callback)
+      return
+
+
+    _triggerStateCallbacks: (state, whileNot) ->
+      if whileNot
+        i = @_notStates?[state]?.length
+        while i--
+          @_notStates[state][i]()
+        j = @_notOnceStates?[state]?.length
+        while j--
+          @_notOnceStates[state].pop()()
+      else
+        i = @_states?[state]?.length
+        while i--
+          @_states[state][i]()
+        j = @_onceStates?[state]?.length
+        while j--
+          @_onceStates[state].pop()()
+      return
+
+
+    while: (state, callback) ->
+      callback() if @_checkState(state, true)
+      @_addStateCallback(state, callback)
+      return
+
+
+    onceWhile: (state, callback) ->
+      if @_checkState(state, true)
+        callback()
+      else
+        @_addOnceStateCallback(state, callback)
       return
 
 
     whileNot: (state, callback) ->
-      @states = {} if !@states?
-      if !@states[state]?
-        @states[state] = false
-      if @states[state] == false
-        callback()
+      callback() if @_checkState(state, false)
+      @_addStateCallback(state, callback, true)
+      return
 
-      @_notStates = {}        if !@_notStates?
-      @_notStates[state] = [] if !@_notStates[state]?
-      @_notStates[state].push(callback)
+
+    onceWhileNot: (state, callback) ->
+      if @_checkState(state, false)
+        callback()
+      else
+        @_addOnceStateCallback(state, callback, true)
       return
 
 
     enter: (state) ->
-      @states = {} if !@states?
-      if !@states[state]? || @states[state] != true
+      if @_checkState(state, false)
         @states[state] = true
-        if @_states && @_states[state]?.length
-          callback() for callback in @_states[state]
+        @_triggerStateCallbacks(state)
       return
 
 
     leave: (state) ->
-      @states = {} if !@states?
-      if !@states[state]?
+      if @_checkState(state, true)
         @states[state] = false
-      if @states[state] != false
-        @states[state] = false
-        if @_notStates && @_notStates[state]?.length
-          callback() for callback in @_notStates[state]
+        @_triggerStateCallbacks(state, true)
       return
   }
 ])
