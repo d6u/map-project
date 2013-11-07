@@ -27,6 +27,20 @@ app.factory 'ChatHistories',
     comparator: 'id'
 
     initialize: () ->
+      serviceReadyCount = 0
+
+      @on 'dependency:ready', =>
+        @fetch({reset: true}) if serviceReadyCount == 2
+
+      ParticipatingUsers.while 'service:ready', =>
+        serviceReadyCount++
+        @trigger('dependency:ready')
+        ParticipatingUsers.onceWhileNot('service:ready', -> serviceReadyCount--)
+      MapPlaces.while 'service:ready', =>
+        serviceReadyCount++
+        @trigger('dependency:ready')
+        MapPlaces.onceWhileNot('service:ready', -> serviceReadyCount--)
+
       @on 'request', (model, xhr, options) ->
         model.$sending = true
 
@@ -36,14 +50,6 @@ app.factory 'ChatHistories',
 
     initProject: (id, scope) ->
       @url = "/api/projects/#{id}/chat_histories"
-
-      placesLoaded  = $q.defer()
-      friendsLoaded = $q.defer()
-      MapPlaces.afterLoaded(=> placesLoaded.resolve())
-      ParticipatingUsers.afterLoaded(=> friendsLoaded.resolve())
-      $q.all([placesLoaded.promise, friendsLoaded.promise])
-        .then(=> @fetch({reset: true}))
-
       @destroyListenerDeregister = scope.$on('$destroy', => @resetService())
 
 

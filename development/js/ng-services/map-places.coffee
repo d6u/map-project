@@ -1,5 +1,5 @@
 app.factory 'MapPlaces',
-['MapMarkers','MapInfoWindows','MpProjects','TheMap','MpUser','$rootScope','PlacesService','$afterLoaded','$afterDumped', (MapMarkers, MapInfoWindows, MpProjects, TheMap, MpUser, $rootScope, PlacesService, $afterLoaded, $afterDumped) ->
+['MapMarkers','MapInfoWindows','MpProjects','TheMap','MpUser','PlacesService','Backbone', '$q', (MapMarkers, MapInfoWindows, MpProjects, TheMap, MpUser, PlacesService, Backbone, $q) ->
 
 
   # --- Model ---
@@ -65,19 +65,12 @@ app.factory 'MapPlaces',
   MapPlaces = Backbone.Collection.extend {
 
     # --- Properties ---
-    afterLoaded:    $afterLoaded
-    afterDumped:    $afterDumped
-    $serviceLoaded: false
-
     model:      Place
     comparator: 'order'
 
 
     # --- Init ---
     initialize: ->
-      @on('service:ready', => @$serviceLoaded = true)
-      @on('service:reset', => @$serviceLoaded = false)
-
       TheMap.on 'initialized', =>
         @$placesService = new google.maps.places.PlacesService(TheMap.getMap())
 
@@ -92,7 +85,7 @@ app.factory 'MapPlaces',
 
 
     initProject: (id, scope) ->
-      MpProjects.afterLoaded(=> @$$loadProject(id)) if id?
+      MpProjects.onceWhile('service:ready', => @$$loadProject(id)) if id?
       @destroyListenerDeregister = scope.$on('$destroy', => @resetService())
 
 
@@ -103,7 +96,7 @@ app.factory 'MapPlaces',
         @fetch({
           reset: true
           success: =>
-            @trigger('service:ready')
+            @enter('service:ready')
         })
 
 
@@ -113,7 +106,7 @@ app.factory 'MapPlaces',
       delete @project
       delete @url
       @reset()
-      @trigger('service:reset')
+      @leave('service:ready')
 
 
     # --- Custom Methods ---

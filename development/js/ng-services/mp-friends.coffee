@@ -1,22 +1,15 @@
 app.service 'MpFriends',
-['Restangular','socket','$q','Backbone','$afterLoaded','$afterDumped',
-( Restangular,  socket,  $q,  Backbone,  $afterLoaded,  $afterDumped) ->
+['socket','$q','Backbone',
+( socket,  $q,  Backbone) ->
 
   # --- Model ---
-  Friend = Backbone.Model.extend {
-
-    initialize: ->
-  }
+  Friend = Backbone.Model.extend()
 
 
   # --- Collection --
   MpFriends = Backbone.Collection.extend {
 
     # --- Properties ---
-    afterLoaded:    $afterLoaded
-    afterDumped:    $afterDumped
-    $serviceLoaded: false
-
     onlineIds: []
 
     model: Friend
@@ -26,15 +19,13 @@ app.service 'MpFriends',
 
     # --- Init ---
     initialize: ->
-      @on('service:ready', => @$serviceLoaded = true)
-      @on('service:reset', => @$serviceLoaded = false)
 
 
     initService: (scope) ->
       @fetch({
         reset: true
         success: =>
-          @trigger('service:ready')
+          @enter('service:ready')
       })
 
       socket.on 'friendsOnlineIds', (ids) =>
@@ -64,7 +55,7 @@ app.service 'MpFriends',
       @off('all', @updateFriendsOnlineStatus, @)
       @onlineIds = []
       @reset()
-      @trigger('service:reset')
+      @leave('service:ready')
 
 
     # --- Custom Methods ---
